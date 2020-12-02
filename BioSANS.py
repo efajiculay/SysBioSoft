@@ -240,10 +240,10 @@ def mrun(par,E,defs2):
 	defs[15] = dict_trans(E[15].get())
 	defs[16] = range_trans(E[16].get())
 	defs[17] = range_prep(E[17].get())
-	if not defs[9] in ["Analyt","SAnalyt","Analyt-ftx","SAnalyt-ftk","k_est1","k_est2","k_est3","k_est4","k_est5","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11"]:
+	if not defs[9] in ["Analyt","SAnalyt","Analyt-ftx","SAnalyt-ftk","k_est1","k_est2","k_est3","k_est4","k_est5","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","NetLoc1","NetLoc2"]:
 		with open(defs[13]+"_"+defs[9]+"_params.dat","w") as f:
 			f.write("\n".join([str(x) for x in defs]))
-	if defs[9] in ["k_est1","k_est2","k_est3","k_est4","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","LNA2","LNA3","Analyt","Analyt-ftx","SAnalyt","SAnalyt-ftk","Analyt2","topoTosbml","topoTosbml2","topoTosbml3","LNA-vs","LNA-ks","LNA-xo"]:
+	if defs[9] in ["k_est1","k_est2","k_est3","k_est4","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","LNA2","LNA3","Analyt","Analyt-ftx","SAnalyt","SAnalyt-ftk","Analyt2","topoTosbml","topoTosbml2","topoTosbml3","LNA-vs","LNA-ks","LNA-xo","NetLoc1","NetLoc2"]:
 		par.destroy()
 	defs.append(items)
 	current_data = tprocess(defs)
@@ -329,7 +329,7 @@ def paramSet(method):
 	
 	B1 = ttk.Button(par, text="RUN", command=lambda : mrun(par,E,defs))
 	B1.grid(row = oplen, column = 0, sticky = gui.W, pady = 2) 
-	if method in ["k_est1","k_est2","k_est3","k_est4","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","LNA2","LNA3","LNA-vs","LNA-ks","LNA-xo","Analyt","SAnalyt-ftk","SAnalyt","Analyt-ftx","Analyt2","topoTosbml","topoTosbml2","topoTosbml3"]:
+	if method in ["k_est1","k_est2","k_est3","k_est4","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","LNA2","LNA3","LNA-vs","LNA-ks","LNA-xo","NetLoc1","NetLoc2","Analyt","SAnalyt-ftk","SAnalyt","Analyt-ftx","Analyt2","topoTosbml","topoTosbml2","topoTosbml3"]:
 		B1.invoke()
 	
 if __name__ == "__main__":
@@ -428,7 +428,12 @@ if __name__ == "__main__":
 	LNAMenu.add_command ( label="Symbolic, f(xo), Macroscopic",command=lambda: paramSet("LNA-xo"),background="white",foreground="Blue" )
 	LNAMenu.add_command ( label="Symbolic, f(ks), Macroscopic",command=lambda: paramSet("LNA-ks"),background="white",foreground="Blue" )
 	LNAMenu.add_command ( label="Symbolic, values, Macroscopic",command=lambda: paramSet("LNA-vs"),background="white",foreground="Blue" )
-	menubut2.menu.add_cascade(label="LNA", menu=LNAMenu)
+	menubut2.menu.add_cascade(label="Linear Noise Appx.", menu=LNAMenu)
+	
+	NetLMenu = gui.Menu(frame,tearoff = 0 )
+	NetLMenu.add_command ( label="Symbolic, Macroscopic",command=lambda: paramSet("NetLoc1"),background="white",foreground="Blue" )
+	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )
+	menubut2.menu.add_cascade(label="Network Localization", menu=NetLMenu)
 	
 	GilMenu = gui.Menu(frame,tearoff = 0 )
 	GilMenu.add_command ( label="Direct method",command=lambda: paramSet("Gillespie_"),background="white",foreground="Blue"  )

@@ -12,6 +12,7 @@ from mytauleap import *
 from Euler import *
 from LNAapprox import *
 from LNAapprox2 import *
+from NetworkLoc import *
 from ode_int import *
 from sde_int import *
 from runge_kutta4 import *
@@ -209,8 +210,14 @@ def process_hub(
 				plot_show = False
 				save = False			
 				tnew, z = LNA_symbolic(Sp,Ksn,concn,Rr,Rp,V,items=items,molar=True)				
-			elif method=="NetworkLoc":
-				pass			
+			elif method=="NetLoc1":
+				plot_show = False
+				save = False
+				tnew, z = NetLoc_symbolic(Sp,Ksn,concn,Rr,Rp,V,items=items,molar=True)	
+			elif method=="NetLoc2":
+				plot_show = False
+				save = False
+				tnew, z = NetLoc_symbolic(Sp,Ksn,concn,Rr,Rp,V,items=items,molar=True,numer=True)				
 			elif method=="ODE-1":
 				z = ODE_int(concn,t,Sp,Ksn,Rr,Rp,V,False,rfile)  
 				tnew = t
