@@ -16,7 +16,7 @@ The following summarized the symbolic and numeric features currently supported;
 2. Parameter estimation
 3. Network localization
 4. Deterministic analysis (ODE integration)
-  * odeint - pythpn LSODA library
+  * odeint - python LSODA library
   * runge-kutta4 (tau-adaptive and fixed interval version)
   * Euler (two differnt types of tau-adaptive version)
 5. Stochastic modeling
