@@ -2,110 +2,117 @@ import sympy
 
 #def abs(x):
 	#return sympy.fabs(x)
-
+	
 def acos(x):
-	return sympy.acos(x)
+	return sympy.acos(x).evalf()
 	
 def arccos(x):
-	return sympy.acos(x)
+	return sympy.acos(x).evalf()
 	
 def acosh(x):
-	return sympy.acosh(x)
+	return sympy.acosh(x).evalf()
 	
 def arccosh(x):
-	return sympy.acosh(x)
+	return sympy.acosh(x).evalf()
 	
 def acot(x):
-	return sympy.acot(x)
+	return sympy.acot(x).evalf()
 	
 def arccot(x):
-	return sympy.acot(x)
+	return sympy.acot(x).evalf()
 	
 def acoth(x):
-	return sympy.acoth(x)
+	return sympy.acoth(x).evalf()
 	
 def arccoth(x):
-	return sympy.acoth(x)
+	return sympy.acoth(x).evalf()
 	
 def acsc(x):
-	return sympy.acsc(x)
+	return sympy.acsc(x).evalf()
+	
+def arccsc(x):
+	return sympy.acsc(x).evalf()
 	
 def acsch(x):
-	return sympy.acsch(x)
+	return sympy.acsch(x).evalf()
 	
 def arccsch(x):
-	return sympy.acsch(x)
+	return sympy.acsch(x).evalf()
 	
 def arcsec(x):
-	return sympy.acsch(x)
+	return sympy.asec(x).evalf()
 	
 def asech(x):
-	return sympy.asech(x)
+	return sympy.asech(x).evalf()
 	
 def arcsech(x):
-	return sympy.asech(x)
+	return sympy.asech(x).evalf()
 	
 def asin(x):
-	return sympy.asin(x)
+	return sympy.asin(x).evalf()
+	
+def asinh(x):
+	return sympy.asinh(x).evalf()
+	
+def arcsinh(x):
+	return sympy.asinh(x).evalf()
 	
 def arcsin(x):
-	return sympy.asin(x)	
+	return sympy.asin(x).evalf()	
 	
 def atan(x):
-	return sympy.atan(x)
+	return sympy.atan(x).evalf()
 	
 def arctan(x):
-	return sympy.atan(x)
+	return sympy.atan(x).evalf()
 	
 def atanh(x):
-	return sympy.atanh(x)
+	return sympy.atanh(x).evalf()
 	
 def arctanh(x):
-	return sympy.atanh(x)
+	return sympy.atanh(x).evalf()
 	
 def ceil(x):
-	return sympy.ceiling(x)
+	return sympy.ceiling(x).evalf()
 	
 def ceiling(x):
-	return sympy.ceiling(x)
+	return sympy.ceiling(x).evalf()
 	
 def cos(x):
-	return sympy.cos(x)
+	return sympy.cos(x).evalf()
 	
 def cosh(x):
-	return sympy.cosh(x)
+	return sympy.cosh(x).evalf()
 	
 def cot(x):
-	return sympy.cot(x)	
+	return sympy.cot(x).evalf()	
 	
 def coth(x):
-	return sympy.coth(x)	
+	return sympy.coth(x).evalf()	
 	
 def csc(x):
-	return sympy.csc(x)
+	return sympy.csc(x).evalf()
 	
 def csch(x):
-	return sympy.csch(x)	
-	
-#def delay(x,y):
+	return sympy.csch(x).evalf()	
 	
 def factorial(x):
-	return sympy.factorial(x)
+	return sympy.factorial(x).evalf()
 	
 def exp(x):
-	return sympy.exp(x)
+	return sympy.exp(x).evalf()
 	
 def floor(x):
-	return sympy.floor(x)
+	return sympy.floor(x).evalf()
 	
 def ln(x):
-	return sympy.ln(x)
+	return sympy.ln(x).evalf()
 	
 def log(x):
-	return sympy.log(x,2)
+	return sympy.log(x).evalf()
 	
 def log10(x):
-	return sympy.log(x,10)
+	return sympy.log(x,10).evalf()
 	
 def piecewise(*x):
 	if len(x) == 3:	
@@ -117,40 +124,39 @@ def piecewise(*x):
 			if x[i+1]:
 				return x[i]
 		return x[-1]
-			
-			
+					
 def pow(x,y):
-	return sympy.Pow(x,y)
+	return sympy.Pow(x,y).evalf()
 	
 def power(x,y):
-	return sympy.Pow(x,y)
+	return sympy.Pow(x,y).evalf()
 	
 def root(n,x):
-	return sympy.root(x,n)
+	return sympy.root(x,n).evalf()
 	
 def sec(x):
-	return sympy.sec(x)
+	return sympy.sec(x).evalf()
 	
 def sech(x):
-	return sympy.sech(x)
+	return sympy.sech(x).evalf()
 	
 def sqr(x):
-	return sympy.sqrt(x)
+	return sympy.sqrt(x).evalf()
 	
 def sqrt(x):
-	return sympy.sqrt(x)
+	return sympy.sqrt(x).evalf()
 	
 def sin(x):
-	return sympy.sin(x)
+	return sympy.sin(x).evalf()
 	
 def sinh(x):
-	return sympy.sinh(x)
+	return sympy.sinh(x).evalf()
 	
 def tan(x):
-	return sympy.tan(x)
+	return sympy.tan(x).evalf()
 	
 def tanh(x):
-	return sympy.tanh(x)
+	return sympy.tanh(x).evalf()
 
 def And(*x):
 	for y in x:
@@ -233,7 +239,7 @@ def neq(x,y):
 	return True
 	
 def plus(*x):
-	return sympy.fsum(x)
+	return sympy.fsum(x).evalf()
 	
 def times(*x):
 	p = 1
@@ -251,4 +257,3 @@ def multiply(*x):
 	return times(*x)
 	
 exponentiale = exp(1)
-	

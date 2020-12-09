@@ -60,19 +60,24 @@ def rungek4_int(conc,time,Sp,Ks,Rr,Rp,V,molar=False,delx=1,rfile=""):
 	div = max(1,int(1/delx))
 	delt = (time[-1]-time[-2])/div
 	yconc = { x:conc[x] for x in conc }
-	apply_rules(conc, yconc)				
+	Si = [a for a in Sp]
+	apply_rules(conc, yconc,[0],[conc[a] for a in Sp],Si)				
 	z = [conc[a] for a in Sp]
 	Z = [z]
 	t = 0.0
 	Tc = [t]
 	nSp = [ x for x in conc if x not in Sp ]
 	dv = 0
+	Tc2 = [t]
+	Z2 = [z]
 	
 	while abs(t-tn)>1.0e-10:				
 		conc, t = runge_kutta_forth(Sp,Ks,conc,Rr,Rp,V,t,delt,nSp,molar)
 		#conc, yerr = rkck(delt,Sp,Ks,conc,Rr,Rp,V,t,nSp,molar) #higher order runge-kutta
 		#t = t + delt                                           #higher order runge-kutta
-		apply_rules(conc, yconc)	
+		apply_rules(conc, yconc, Tc2, Z2, Si)	
+		Z2.append([conc[a] for a in Sp])
+		Tc2.append(t)
 		if dv==div-1:
 			Z.append([conc[a] for a in Sp])
 			Tc.append(t)

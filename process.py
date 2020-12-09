@@ -11,6 +11,11 @@ from processes_hub import *
 #import mglobals as globals2
 import proc_global as proc_global
 from sbmlMath import *
+
+INF = np.inf
+NaN = np.nan
+inf = INF
+nan = NaN
 		
 def tofloat(val):
 	try:

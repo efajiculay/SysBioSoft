@@ -29,7 +29,7 @@ def replace_crucial_funct(trep):
 
 def extractSpecies(modk):
 	global OPERS_list, OPERS_list2
-	here = " "+str(modk).replace("e+"," ").replace("E+"," ").replace("e-"," ").replace("E-"," ")+" "
+	here = " "+str(modk).replace("time-","emit-").replace("e+"," ").replace("E+"," ").replace("e-"," ").replace("E-"," ").replace("emit-","time-")+" "
 	for x in OPERS_list:
 		here = here.replace(x,"  ")
 	here = " "+here+" "
@@ -654,7 +654,7 @@ def process_sbml(file,molar=False):
 	AlgebrRules = sympify(AlgebrRules)
 
 	for x in EventAssign:
-		if x not in species and x not in parameters and x.find("status")==-1 and x.find("finish")==-1 and x.find("dtime")==-1 and x.find("delay")==-1:
+		if x not in species and x not in parameters and x not in compartments and x.find("status")==-1 and x.find("finish")==-1 and x.find("dtime")==-1 and x.find("delay")==-1:
 			UseSpecies.add(x)
 			fftopofile.write("0 NONE => " + x +", 1\n")	
 			NONE_added = True			
@@ -727,6 +727,7 @@ def process_sbml(file,molar=False):
 	for x in nonConstant_comp:
 		if x not in RateRules and x not in AssignRules and x not in AlgebrRules:
 			fftopofile.write("0 NONE"+" => "+ x + ",0"+"\n")
+		NONE_added = True
 		
 	for x in nonConstPar:
 		if x not in RateRules and x not in AssignRules:
@@ -747,6 +748,10 @@ def process_sbml(file,molar=False):
 				
 		for x in parameters:
 			if x in InitialAssign and x not in RateRules:
+				fftopofile.write(x+" => 0 NONE, 0.0\n")
+				
+		if len(nonConstPar) == 0:
+			for x in parameters:
 				fftopofile.write(x+" => 0 NONE, 0.0\n")
 			
 		NONE_added = True
@@ -887,6 +892,8 @@ def process_sbml(file,molar=False):
 			for ih in range(len(EventAssign[x])):
 				if x in parameters:
 					ss = str(parameters[x][0])
+				elif x in nonConstant_comp:
+					ss = str(nonConstant_comp[x][0])
 				else:
 					if x.find("finish")>-1 or x.find("delay")>-1:
 						ss = "1"
@@ -908,7 +915,7 @@ def process_sbml(file,molar=False):
 				float(AssignRules[x])
 				fftopofile.write(x +", "+AssignRules[x]+"\n")	
 			except:
-				ss = varSubstitution(AssignRules[x],Rparams,parameters,compartments,RateRules)
+				ss = varSubstitution(AssignRules[x],Rparams,constant_par,compartments,RateRules)
 				fftopofile.write(x +", 0, lambda "+extractSpecies(ss)+" : "+ss+"\n")	
 				
 	for x in InitialAssign:
@@ -929,30 +936,30 @@ def process_sbml(file,molar=False):
 			try:
 				fftopofile.write(x +","+ss+","+ "lambda "+extractSpecies(str(dd[ssphere]))+" : "+str(dd[ssphere])+"\n")	
 			except:
-				fftopofile.write(x +","+ss+"\n")	
-		NONE_added = True	
+				fftopofile.write(x +","+ss+"\n")
+		NONE_added = True
 		
 	for x in nonConstant_comp:
-	
 		if x in InitialAssign and x not in RateRules and x not in AssignRules:
 			fftopofile.write(x +"," +str(eval(str(nonConstant_comp[x][0])))+"\n" "\n")
-			NONE_added = True			
-		elif x not in RateRules and x not in AssignRules:
+			NONE_added = True
+		elif x not in RateRules and x not in AssignRules and x not in EventAssign:
 			ssphere = newSymbol(x)
-			dd = solve(AlgebrRules,ssphere)	
+			dd = solve(AlgebrRules,ssphere)
 			fftopofile.write(x +"," +str(eval(str(nonConstant_comp[x][0])))+","+ "lambda "+extractSpecies(str(dd[ssphere]))+" : "+str(dd[ssphere])+"\n" "\n")
 			NONE_added = True
+			
+	if len(reactions) == 0:
+		if len(nonConstPar) == 0:
+			for x in parameters:
+				fftopofile.write(x+","+str(parameters[x][0])+"\n")
 		
 	if time_var != None:
 		fftopofile.write(time_var+", 0\n")
 		NONE_added = True
-						
+		
 	if NONE_added:
 		fftopofile.write("NONE , 1.0\n")
 		
 		
-	fftopofile.close()	
-
-	
-
-			
+	fftopofile.close()

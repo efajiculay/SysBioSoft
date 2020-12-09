@@ -8,11 +8,42 @@ import inspect
 
 OPERS_list = {"+","-","*","/","(",")",",","=",">","<",":"}
 OPERS_list2 = {
-	"abs","acos","arccos","acosh","arccosh","acot","arccot","acoth","arccoth","acsc","acsch","arccsch","arcsec","true","false","True","False",
-	"asech","arcsech","asin","arcsin","atan","arctan","atanh","arctanh","ceil","ceiling","cos","cosh","cot","coth","csc","csch","and","not",
-	"factorial","exp","floor","ln","log","log10","piecewise","pow","power","root","sec","sech","sqr","sqrt","sin","sinh","tan","None",
-	"tanh","And","Not","Or","or","xor","eq","geq","gt","leq","lt","neq","plus","times","minus","divide","if","else","multiply","lambda"
+	"abs","acos","arccos","acosh","arccosh","acot","arccot","acoth","arccoth","acsc","acsch","arccsch","arcsec","true","false","True","False","asinh",
+	"asech","arcsech","asin","arcsin","atan","arctan","atanh","arctanh","ceil","ceiling","cos","cosh","cot","coth","csc","csch","and","not","arcsinh",
+	"factorial","exp","floor","ln","log","log10","piecewise","pow","power","root","sec","sech","sqr","sqrt","sin","sinh","tan","None","pi","arccsc","avogadro",
+	"tanh","And","Not","Or","or","xor","eq","geq","gt","leq","lt","neq","plus","times","minus","divide","if","else","multiply","lambda","delay","rateOf"
 }
+
+def get_exponentSp(key,modk):
+	exponentInFormula = 1
+	query = "pow("+key+","
+	ind = modk.find(query)
+	if ind>=0:
+		st = ind+len(query)
+		ic = 0
+		exponentInFormula = ""
+		while modk[st+ic]!=")":
+			exponentInFormula = exponentInFormula + modk[st+ic]
+			ic = ic + 1
+	exponentInFormula = float(exponentInFormula)
+	
+	query = key+"**"
+	ind = modk.find(query)
+	if ind>=0:
+		st = ind+len(query)
+		ic = 0
+		exponentInFormula = ""
+		while modk[st+ic]!=")":
+			exponentInFormula = exponentInFormula + modk[st+ic]
+			ic = ic + 1
+			
+	query = "/"+key
+	ind = modk.find(query)
+	if ind>=0:
+		exponentInFormula = -1
+			
+	exponentInFormula = float(exponentInFormula)
+	return exponentInFormula  
 
 def replace_crucial_funct(trep):
 	return 	Add2spacesSep(trep) \
@@ -29,7 +60,7 @@ def replace_crucial_funct(trep):
 
 def extractSpecies(modk):
 	global OPERS_list, OPERS_list2
-	here = " "+str(modk).replace("time-","emit-").replace("e+"," ").replace("E+"," ").replace("e-"," ").replace("E-"," ").replace("emit-","time-")+" "
+	here = " "+str(modk).replace("time-","emit-").replace("time+","emit+").replace("e+"," ").replace("E+"," ").replace("e-"," ").replace("E-"," ").replace("emit-","time-").replace("emit+","time+")+" "
 	for x in OPERS_list:
 		here = here.replace(x,"  ")
 	here = " "+here+" "
@@ -177,7 +208,7 @@ def FunctRedefineVar(modk,ss):
 		modk = modk.replace(" "+spset[s1]+" ",str(ss[s1]))
 	return modk.split(":")[1]
 	
-def process_sbml(file,molar=False):
+def process_sbml(file,molar=False,variables=None):
 	global OPERS_list, OPERS_list2
 	
 	fftopofile = open(file+".topo","w")
@@ -192,14 +223,16 @@ def process_sbml(file,molar=False):
 	errors = document.getNumErrors();
 	
 	time_var = None
+	GCFactor = model.getConversionFactor()
 		
 	units = {}
-	for x in model.getListOfUnitDefinitions():
-		c = x.getListOfUnits()
-		units[x.getId()] = []
-		for y in c:
-			F = ( y.getMultiplier() * 10 ** y.getScale() ) ** y.getExponent()
-			units[x.getId()].append([F,SbmlUnits[y.getKind()], y.getExponent()])
+	if model.getNumUnitDefinitions()>0:
+		for x in model.getListOfUnitDefinitions():
+			c = x.getListOfUnits()
+			units[x.getId()] = []
+			for y in c:
+				F = ( y.getMultiplier() * 10 ** y.getScale() ) ** y.getExponent()
+				units[x.getId()].append([F,SbmlUnits[y.getKind()], y.getExponent()])
 	
 	compartments = {}
 	constant_comp = {}
@@ -228,12 +261,16 @@ def process_sbml(file,molar=False):
 	species_comp = {}
 	constant_species = {}
 	HasOnlySUnits = {}
+	sp_wCFactor = {}
 	for x in model.getListOfSpecies():
 		species[x.getId()] = x
 		species_comp[x.getId()] = x.getCompartment()
 		HasOnlySUnits[x.getId()] = x.getHasOnlySubstanceUnits()
 		if x.getConstant()==True:
 			constant_species[x.getId()] = True
+		if x.getConversionFactor():
+			sp_wCFactor[x.getId()] = x.getConversionFactor()	
+	#print(sp_wCFactor)
 			
 	SpInitialConc = {}
 	for x in species:
@@ -244,6 +281,7 @@ def process_sbml(file,molar=False):
 		elif sp.isSetInitialAmount():
 			val = sp.getInitialAmount()	
 			SpInitialConc[x] = val
+	#print(SpInitialConc)
 				
 	parameters = {}
 	nonConstPar = set()
@@ -263,7 +301,12 @@ def process_sbml(file,molar=False):
 	RateRules = {}
 	AlgebrRules = []
 	for x in model.getListOfRules():
-		ss = replace_crucial_funct(Mysbml.formulaToString(x.getMath()))
+		if x.getMath().isAvogadro():
+			ss = str(6.02214179e+23)
+		elif Mysbml.formulaToL3String(x.getMath()).find("avogadro")>=0:
+			ss = replace_crucial_funct(Mysbml.formulaToL3String(x.getMath()).replace("avogadro","(6.02214179e+23)"))
+		else:
+			ss = replace_crucial_funct(Mysbml.formulaToString(x.getMath()))
 		if x.isAssignment():
 			ss = parSubstitution(ss,constant_par)
 			AssignRules[x.getVariable()] = ss
@@ -290,7 +333,13 @@ def process_sbml(file,molar=False):
 	InitialAssign = {}
 	for x in model.getListOfInitialAssignments():
 		sp = x.getId()
-		ss = replace_crucial_funct(Mysbml.formulaToString(x.getMath()).replace("lambda(",""))
+		if x.getMath().isAvogadro():
+			ss = str(6.02214179e+23)
+		elif Mysbml.formulaToL3String(x.getMath()).find("avogadro")>=0:
+			ss = Mysbml.formulaToL3String(x.getMath()).replace("avogadro","(6.02214179e+23)")
+			ss = replace_crucial_funct(ss.replace("lambda(",""))
+		else:
+			ss = replace_crucial_funct(Mysbml.formulaToString(x.getMath()).replace("lambda(",""))
 		if sp in species:
 			ss = str(compartments[species_comp[sp]][0])+"*("+ss+")"
 		try: 
@@ -314,6 +363,7 @@ def process_sbml(file,molar=False):
 			constant_comp[sp][0] = ss
 		elif sp in nonConstant_comp:
 			nonConstant_comp[sp][0] = ss
+	#print(InitialAssign)
 					
 	Events = {}
 	EventAssign = {}
@@ -501,36 +551,67 @@ def process_sbml(file,molar=False):
 				fftopofile.write("#Reactions\n")
 	else:
 		fftopofile.write("#Reactions\n")
+		
 	Rparams = {}
 	UseSpecies = set()
 	fastRxnExp = {}
+	fastIrrev = {}
+	UseSpeciesInRxn = set()
+	StoichVar = {}
+	StoichPar = {}
+	CFinReact = []
+	CFinProdu = []
+	CFkeys = []
+	
+
 	for x in reactions:
 		Rparams = {}
-		Factor = 1
+		SFactor = 1
 		react = ""
 		row = []
 		if (reactions[x].isSetKineticLaw()):
 			for kx in reactions[x].getKineticLaw().getListOfParameters():
 				Rparams[kx.getId()] = kx.getValue()
-				
+		
+		withCF = False
 		for rx in reactions[x].getListOfReactants():
 			key = rx.getSpecies()
+			if key in sp_wCFactor:
+				CFkeys.append(sp_wCFactor[key])
+				sp_wCFactor[key] = parameters[sp_wCFactor[key]][0]
+				withCF = True
+				CFinReact.append(key)
+			elif GCFactor:
+				CFkeys.append(GCFactor)
+				sp_wCFactor[key] = parameters[GCFactor][0]
+				withCF = True
+				CFinReact.append(key)
 			UseSpecies.add(key)
+			UseSpeciesInRxn.add(key)
 			if rx.isSetStoichiometryMath():
 				dd = rx.getStoichiometryMath().getMath()
 				dd = replace_crucial_funct(Mysbml.formulaToString(dd))
 				dd = varSubstitution(dd,Rparams,parameters,constant_comp,RateRules)
 				dd = eval(dd)
 				react = react + str(dd) + " "  + key + " + "
+			elif rx.isSetId():
+				idrx = rx.getId()
+				if idrx in InitialAssign:
+					dd = varSubstitution(InitialAssign[idrx],Rparams,parameters,constant_comp,RateRules)
+					dd = eval(dd)
+					react = react + str(dd) + " "  + key + " + "
+				elif idrx in RateRules:
+					dd = varSubstitution(RateRules[idrx],Rparams,parameters,constant_comp,RateRules)
+					dd = eval(dd)
+					kxid = Mysbml.formulaToString(reactions[x].getKineticLaw().getMath())
+					if kxid in nonConstPar:
+						StoichVar[kxid] = dd
+					else:
+						StoichPar[idrx] = dd
+						SFactor = idrx
+					react = react + str(1) + " "  + key + " + "
 			else:			
 				react = react + str(rx.getStoichiometry()) + " "  + key + " + "
-			if HasOnlySUnits[key]:
-				pass
-			else:
-				if species_comp[key] in constant_comp:
-					Factor = Factor*(1/compartments[species_comp[key]][0])**rx.getStoichiometry()
-				else:
-					Factor = Factor*(1/newSymbol(species_comp[key]))**rx.getStoichiometry()
 
 		if len(react) == 0:
 			NONE_added = True
@@ -539,31 +620,72 @@ def process_sbml(file,molar=False):
 			react = react[0:-2]+" => "
 		
 		produ = ""
-		Pactor = 1
+		SPactor = 1
 		for rx in reactions[x].getListOfProducts():
 			key = rx.getSpecies()
+			if key in sp_wCFactor:
+				CFkeys.append(sp_wCFactor[key])
+				sp_wCFactor[key] = parameters[sp_wCFactor[key]][0]
+				withCF = True
+				CFinProdu.append(key)
+			elif GCFactor:
+				CFkeys.append(GCFactor)
+				sp_wCFactor[key] = parameters[GCFactor][0]
+				withCF = True
+				CFinProdu.append(key)
 			UseSpecies.add(key)
+			UseSpeciesInRxn.add(key)
 			if rx.isSetStoichiometryMath():
 				dd = rx.getStoichiometryMath().getMath()
 				dd = replace_crucial_funct(Mysbml.formulaToString(dd))
 				dd = varSubstitution(dd,Rparams,parameters,constant_comp,RateRules)
 				dd = eval(dd)
 				produ = produ + str(dd) + " "  + key + " + "
+			elif rx.isSetId():
+				idrx = rx.getId()
+				if idrx in InitialAssign:
+					dd = varSubstitution(InitialAssign[idrx],Rparams,parameters,constant_comp,RateRules)
+					dd = eval(dd)
+					produ = produ + str(dd) + " "  + key + " + "
+				elif idrx in RateRules:
+					dd = varSubstitution(RateRules[idrx],Rparams,parameters,constant_comp,RateRules)
+					dd = eval(dd)
+					kxid = Mysbml.formulaToString(reactions[x].getKineticLaw().getMath())
+					if kxid in nonConstPar:
+						StoichVar[kxid] = dd
+					else:
+						StoichPar[idrx] = dd
+						SPactor = idrx
+					produ = produ + str(1) + " "  + key + " + "
+				elif idrx in AssignRules:
+					dd = varSubstitution(AssignRules[idrx],Rparams,parameters,constant_comp,RateRules)
+					try:
+						dd = eval(dd)
+						kxid = Mysbml.formulaToString(reactions[x].getKineticLaw().getMath())
+						SPactor = idrx
+						if kxid in nonConstPar:
+							StoichVar[kxid] = dd
+						produ = produ + str(1) + " "  + key + " + "	
+					except:
+						kxid = Mysbml.formulaToString(reactions[x].getKineticLaw().getMath())
+						if kxid in nonConstPar:
+							StoichVar[kxid] = dd
+						else:
+							StoichPar[idrx] = dd
+							SPactor = idrx
+						produ = produ + str(1) + " "  + key + " + "								
+				
 			else:
 				produ = produ + str(rx.getStoichiometry()) + " "  + key + " + "
-			if HasOnlySUnits[key]:
-				pass
-			else:
-				if species_comp[key] in constant_comp:
-					Pactor = Pactor*(1/compartments[species_comp[key]][0])**rx.getStoichiometry()
-				else:
-					Pactor = Pactor*(1/newSymbol(species_comp[key]))**rx.getStoichiometry()
 
 		if len(produ) == 0:
 			NONE_added = True
 			produ = "0 NONE"
 			react = react + produ
 			react = react + ",1   :::::   "		
+		elif withCF == True:
+			react = react + "0 NONE" + ",1   :::::   "	
+			produ = "0 NONE => " + produ[0:-2] + ",1   :::::   "	
 		else:
 			react = react + produ
 			react = react[0:-2] + ",1   :::::   "		
@@ -582,7 +704,6 @@ def process_sbml(file,molar=False):
 			pass			
 			
 		modk = varSubstitution(modk,Rparams,constant_par,constant_comp,RateRules)	
-		
 		if reactions[x].getReversible() == True:
 			if modk.find("+ -")>-1:
 				modk = modk.split("+ -")
@@ -592,9 +713,46 @@ def process_sbml(file,molar=False):
 					modk[0] = "-"+modk[0]
 				else:
 					modk = modk.replace("-","+-").split("+")
+					
+			Factor = 1
+			mods = extractSpecies(modk[0])
+			for key in mods.split(","):
+				if key in species:
+					if HasOnlySUnits[key]:
+						pass
+					else:
+						exponentInFormula = get_exponentSp(key,modk[0])			
+						if species_comp[key] in constant_comp:
+							Factor = Factor*(1/compartments[species_comp[key]][0])**exponentInFormula
+						else:
+							Factor = Factor*(1/newSymbol(species_comp[key]))**exponentInFormula
+			
+			if SFactor != 1:			
+				Factor = "(("+str(Factor)+")*("+str(SFactor)+"))"
+			
+			Pactor = 1
+			mods = extractSpecies(modk[-1])
+			for key in mods.split(","):
+				if key in species:
+					if HasOnlySUnits[key]:
+						pass
+					else:
+						exponentInFormula = get_exponentSp(key,modk[-1])			
+						if species_comp[key] in constant_comp:
+							Pactor = Pactor*(1/compartments[species_comp[key]][0])**exponentInFormula
+						else:
+							Pactor = Pactor*(1/newSymbol(species_comp[key]))**exponentInFormula
+							
+			if SPactor != 1:
+				Pactor = "(("+str(Pactor)+")*("+str(SPactor)+"))"
 			
 			if modk[0] == modk[-1]:	
-				modk = "("+modk[0]+"*("+str(Factor)+")"
+				if SFactor!=1:
+					modk = "("+modk[0]+"*("+str(Factor)+")"
+				elif SPactor!=1:
+					modk = "("+modk[0]+"*("+str(Pactor)+")"
+				else:
+					modk = modk[0]
 			elif reactions[x].getFast() == True:
 				if modk[0][0] == "-" or modk[0][1] == "-":
 					modk = "1000*("+modk[0]+"*("+str(Pactor)+")+("+str(Factor)+")*"+modk[-1]+")"
@@ -611,6 +769,7 @@ def process_sbml(file,molar=False):
 				
 			if modk.count("(")>modk.count(")"):
 				modk = modk + ")"
+				
 			mods = extractSpecies(modk)
 			modk = "lambda "+mods+" : "+modk
 			for tt in mods.split(","):
@@ -622,15 +781,76 @@ def process_sbml(file,molar=False):
 			if reactions[x].getFast() == True:
 				sphere = mods.split(",")
 				for ss in sphere:
-					fastRxnExp[ss] = modk	
+					fastIrrev[ss] = modk
 					
+				for ss in reactions[x].getListOfProducts():
+					s = ss.getSpecies()
+					vv = 0
+					if species[s].isSetInitialConcentration():
+						vv = species[s].getInitialConcentration()
+					elif species[s].isSetInitialAmount():
+						vv = species[s].getInitialAmount()
+					modk2 = modk
+					for sp in mods.split(","):
+						vv2 = 0
+						if species[sp].isSetInitialConcentration():
+							vv2 = species[sp].getInitialConcentration()
+						elif species[sp].isSetInitialAmount():
+							vv2 = species[sp].getInitialAmount()
+						modk2 = modk2.replace(sp,str(vv2))
+					fastIrrev[ss.getSpecies()] = modk2+"+"+str(vv)+"-"+str(newSymbol(s))
+			
+			Factor = 1
+			for key in mods.split(","):
+				if key in species:
+					if HasOnlySUnits[key]:
+						pass
+					else:
+						exponentInFormula = get_exponentSp(key,modk)			
+						if species_comp[key] in constant_comp:
+							Factor = Factor*(1/compartments[species_comp[key]][0])**exponentInFormula
+						else:
+							Factor = Factor*(1/newSymbol(species_comp[key]))**exponentInFormula
+							
+			if SFactor != 1:			
+				Factor = "(("+str(Factor)+")*("+str(SFactor)+"))"
+			if SPactor != 1:			
+				Factor = "(("+str(Factor)+")*("+str(SPactor)+"))"
+
 			modk = "lambda "+mods+" :"+str(Factor)+"*"+modk
 			for tt in mods.split(","):
 				if tt not in species and tt not in parameters and tt not in compartments and tt.strip()!="" and tt.find("delay")==-1:
 					time_var  = tt
-					break			
-		react = react + modk	
-		fftopofile.write(react+"\n")
+					break	
+		if withCF == True:
+			moda = modk.split(":")
+			for key in CFinReact:
+				val = str(sp_wCFactor[key])
+				moda[1] = "("+moda[1]+")*("+val+")"
+			react = react + moda[0]+":"+moda[1]	
+			fftopofile.write(react+"\n")
+			moda = modk.split(":")
+			for key in CFinProdu:
+				val = str(sp_wCFactor[key])
+				moda[1] = "("+moda[1]+")*("+val+")"
+			produ = produ + moda[0]+":"+moda[1]	
+			fftopofile.write(produ+"\n")
+			NONE_added = True
+		else:
+			react = react + modk	
+			fftopofile.write(react+"\n")
+		#print(fastRxnExp)
+		#print(fastIrrev)
+		
+	for key in CFkeys:
+		fftopofile.write(key+" => 0 NONE, 0"+"\n")
+		
+	doneComp = set()
+	for key in sp_wCFactor:
+		comp = species_comp[key]
+		if comp not in doneComp and comp in constant_comp:
+			doneComp.add(comp)
+			fftopofile.write(comp+" => 0 NONE, 0"+"\n")
 
 	for y in range(len(AlgebrRules)):
 		ss = varSubstitution(AlgebrRules[y],{},constant_par,constant_comp,RateRules)
@@ -672,20 +892,79 @@ def process_sbml(file,molar=False):
 			
 			if modk == "":
 				modk = RateRules[x]
+				
+			reversible = False	
+			if modk.find("+ -")>-1:
+				modk = modk.split("+ -")
+				for iv in range(1,len(modk)):
+					modk[iv] = "-"+modk[iv]
+				reversible = True
+			elif modk.find("+-")>-1:
+				modk = modk.split("+-")
+				for iv in range(1,len(modk)):
+					modk[iv] = "-"+modk[iv]
+				reversible = True
+			else:
+				pass
+			
+			if reversible:							
+				Pactors = []
+				for iv in range(len(modk)):
+					Pactor = 1
+					mods = extractSpecies(modk[iv])
+					for key in mods.split(","):
+						if key in species:
+							if HasOnlySUnits[key]:
+								pass
+							else:
+								exponentInFormula = get_exponentSp(key,modk[iv])			
+								if species_comp[key] in constant_comp:
+									Pactor = Pactor*(1/compartments[species_comp[key]][0])**exponentInFormula
+								else:
+									Pactor = Pactor*(1/newSymbol(species_comp[key]))**exponentInFormula
+					Pactors.append(Pactor)
+									
+			else:	
+				Factor = 1
+				mods = extractSpecies(modk)
+				for key in mods.split(","):
+					if key in species:
+						if HasOnlySUnits[key]:
+							pass
+						else:
+							exponentInFormula = get_exponentSp(key,modk)			
+							if species_comp[key] in constant_comp:
+								Factor = Factor*(1/compartments[species_comp[key]][0])**exponentInFormula
+							else:
+								Factor = Factor*(1/newSymbol(species_comp[key]))**exponentInFormula					
+				
 			try:
 				float(modk)
 				if x in species:
 					if HasOnlySUnits[x]:
 						pass
 					else:
-						comp = compartments[species_comp[x]][0]
-						modk = str(eval(modk+"*"+str(comp)))
+						comp = compartments[species_comp[x]][0]															
+						modk = str(eval(modk+"*"+str(comp)+"*"+str(Factor)))
 				fftopofile.write("0 NONE"+" => "+ x +", "+modk+"\n")
 			except:
-				modk = modk.replace(x,"$"+x)
-				modk = varSubstitution(modk,{},constant_par,constant_comp,RateRules)
-				modk = "lambda "+extractSpecies(modk)+" : "+modk
-				modk = modk.replace("$"+x,x)
+				if not reversible:
+					modk = modk.replace(x,"$"+x)
+					modk = varSubstitution(modk,{},constant_par,constant_comp,RateRules)
+					modk = "lambda "+extractSpecies(modk)+" : "+modk
+					modk = modk.replace("$"+x,x)
+					modk = modk+"*"+str(Factor)
+				else:
+					modks = "("
+					for iv in range(len(modk)-1):
+						modks = modks + modk[iv]+"*("+str(Pactors[iv])+")"+"+"
+					modks = modks + modk[len(modk)-1]+"*("+str(Pactors[len(modk)-1])+")"+")"
+					modk = modks		
+					modk = modk.replace(x,"$"+x)
+					modk = varSubstitution(modk,{},constant_par,constant_comp,RateRules)
+					modk = "lambda "+extractSpecies(modk)+" : "+modk
+					modk = modk.replace("$"+x,x)							
+							
 				if x in species:
 					if HasOnlySUnits[x]:
 						pass
@@ -731,8 +1010,27 @@ def process_sbml(file,molar=False):
 		
 	for x in nonConstPar:
 		if x not in RateRules and x not in AssignRules:
-			fftopofile.write("0 NONE"+" => "+ x + ",0"+"\n")
-		NONE_added = True			
+			if x in StoichVar:
+				ss = StoichVar[x]
+				try:
+					float(ss)
+					fftopofile.write("0 NONE"+" => "+ x + ","+str(ss)+"\n")
+				except:
+					ss = varSubstitution(ss,Rparams,constant_par,compartments,RateRules)
+					fftopofile.write("0 NONE"+" => "+ x +",1 ::::: lambda "+extractSpecies(ss)+" : "+ss+"\n")
+			else:
+				fftopofile.write("0 NONE"+" => "+ x + ",0"+"\n")
+		NONE_added = True	
+
+	for x in StoichPar:
+		ss = StoichPar[x]
+		if x not in RateRules and x not in AssignRules:
+			try:
+				float(ss)
+				fftopofile.write("0 NONE"+" => "+ x + ","+str(ss)+"\n")
+			except:
+				ss = varSubstitution(ss,Rparams,constant_par,compartments,RateRules)
+				fftopofile.write("0 NONE"+" => "+ x +",1 ::::: lambda "+extractSpecies(ss)+" : "+ss+"\n")
 		
 	if len(reactions) == 0:
 		for x in species:
@@ -753,6 +1051,9 @@ def process_sbml(file,molar=False):
 		if len(nonConstPar) == 0:
 			for x in parameters:
 				fftopofile.write(x+" => 0 NONE, 0.0\n")
+		else:		
+			for x in constant_par:
+				fftopofile.write(x+" => 0 NONE, 0.0\n")
 			
 		NONE_added = True
 		
@@ -762,10 +1063,17 @@ def process_sbml(file,molar=False):
 			NONE_added = True
 			
 	if time_var != None:
-		if timevar == None:
+		if time_var in StoichPar:
+			fftopofile.write("0 NONE => "+time_var+", 0\n")
+		elif timevar == None:
 			fftopofile.write("0 NONE => "+time_var+", 1\n")
 		elif timevar == 0:
 			fftopofile.write("0 NONE => "+time_var+", 0\n")
+			
+	for key in constant_comp:
+		if key in variables:
+			fftopofile.write(key+" => 0 NONE, 0\n")
+			NONE_added = True
 		
 	fftopofile.write("\n@Concentrations\n")		
 	
@@ -804,17 +1112,28 @@ def process_sbml(file,molar=False):
 				val1 = sol[newSymbol(x)]
 			else:
 				val1 = 0
-
+		elif x in fastIrrev and sp.getBoundaryCondition() == False:				
+			eqst = sympify("Eq("+fastIrrev[x]+",0)")
+			ssz = extractSpecies(fastIrrev[x])
+			sol = solve(eqst,ssz)
+			if sol:
+				val1 = sol[0]
+			else:
+				val1 = 0
 		elif sp.isSetInitialConcentration():
 			val1 = sp.getInitialConcentration();
 		elif sp.isSetInitialAmount():
 			val1 = sp.getInitialAmount()
 		else:
 			val1 = ""
-		if x in InitialAssign:
-			ss = varSubstitution(InitialAssign[x],Rparams,parameters,compartments,RateRules)
-			for ini in SpInitialConc:
-				ss = ss.replace(ini,str(SpInitialConc[ini]))
+			
+		if x in InitialAssign or x in SpInitialConc and x not in fastRxnExp and x not in fastIrrev:
+			try:
+				ss = varSubstitution(InitialAssign[x],Rparams,parameters,compartments,RateRules)
+				for ini in SpInitialConc:
+					ss = ss.replace(ini,str(SpInitialConc[ini]))
+			except:
+				ss = str(SpInitialConc[x])
 			try:
 				val1 = eval(ss)
 			except:
@@ -838,7 +1157,7 @@ def process_sbml(file,molar=False):
 					val1 = 0
 
 		if x not in EventAssign:
-			cmod = ", "			
+			cmod = ", "	
 			if x in modifiersSp or x not in UseSpecies and x not in constant_species:
 				ssphere = newSymbol(x)
 				dd = solve(AlgebrRules,ssphere)
@@ -846,9 +1165,14 @@ def process_sbml(file,molar=False):
 					cmod = cmod + "lambda "+extractSpecies(str(dd[ssphere]))+" : "+str(dd[ssphere])
 			if cmod == ", ":
 				cmod = ""
-
 			if sp.getBoundaryCondition() == False and x not in AssignRules:
-				fftopofile.write(sp.getId()+" , "+str(val1)+cmod+"\n");
+				if species_comp[x] in nonConstant_comp and molar and x not in UseSpeciesInRxn:
+					fftopofile.write(sp.getId()+" , "+str(val1)+cmod+", lambda "+species_comp[x]+" :"+str(val1)+"/"+species_comp[x]+"\n");
+				else:
+					#if str(val1) in val2:
+						#fftopofile.write(sp.getId()+" , "+str(val1)+cmod+", lambda "+sss+":"+val2+"\n");
+					#else:
+					fftopofile.write(sp.getId()+" , "+str(val1)+cmod+"\n");
 			elif x in AssignRules:
 				newFunct = extractFunction(str(val2),Rparams,compartments,functions,functions_str)
 				if newFunct == "":
@@ -864,7 +1188,6 @@ def process_sbml(file,molar=False):
 			for ig in range(len(EventAssign[x])):
 				cmod = ", "		
 				cmod = cmod + EventAssign[x][ig]
-
 				if sp.getBoundaryCondition() == False:
 					fftopofile.write(sp.getId()+" , "+str(val1)+cmod+"\n");
 				else:
@@ -873,7 +1196,11 @@ def process_sbml(file,molar=False):
 					cond = ss[1].split("if")[1].split("and")[0].strip()
 					conPa = ss[1].split("if")[0].strip()
 					fftopofile.write(sp.getId()+" , "+str(val1)+", lambda "+lamPa +": None if not "+cond+" else "+conPa+"\n");		
-			
+	
+	if time_var != None and time_var not in StoichPar:
+		fftopofile.write(time_var+", 0, lambda "+time_var+" : round("+time_var+",10)\n")
+		NONE_added = True
+	
 	for x in RateRules:
 		if x in parameters and x not in EventAssign:
 			fftopofile.write(x+","+str(parameters[x][0])+"\n")	
@@ -916,7 +1243,10 @@ def process_sbml(file,molar=False):
 				fftopofile.write(x +", "+AssignRules[x]+"\n")	
 			except:
 				ss = varSubstitution(AssignRules[x],Rparams,constant_par,compartments,RateRules)
-				fftopofile.write(x +", 0, lambda "+extractSpecies(ss)+" : "+ss+"\n")	
+				if x in StoichPar:
+					fftopofile.write(x +", 1, lambda "+extractSpecies(ss)+" : "+ss+"\n")	
+				else:
+					fftopofile.write(x +", 0, lambda "+extractSpecies(ss)+" : "+ss+"\n")	
 				
 	for x in InitialAssign:
 		if x not in species and x not in RateRules:
@@ -929,14 +1259,18 @@ def process_sbml(file,molar=False):
 					fftopofile.write(x +", 0, lambda "+extractSpecies(ss)+" : "+ss+"\n")
 			
 	for x in nonConstPar:
-		if x not in RateRules and x not in AssignRules:
+		if x not in RateRules and x not in AssignRules:# and x not in InitialAssign:
 			ssphere = newSymbol(x)
 			dd = solve(AlgebrRules,ssphere)	
 			ss = str(parameters[x][0] if parameters[x][0] is not None else 0)
 			try:
 				fftopofile.write(x +","+ss+","+ "lambda "+extractSpecies(str(dd[ssphere]))+" : "+str(dd[ssphere])+"\n")	
 			except:
-				fftopofile.write(x +","+ss+"\n")
+				try:
+					float(ss)
+					fftopofile.write(x +","+ss+"\n")
+				except:
+					pass
 		NONE_added = True
 		
 	for x in nonConstant_comp:
@@ -952,12 +1286,36 @@ def process_sbml(file,molar=False):
 	if len(reactions) == 0:
 		if len(nonConstPar) == 0:
 			for x in parameters:
-				fftopofile.write(x+","+str(parameters[x][0])+"\n")
+				try:
+					fftopofile.write(x+","+str(parameters[x][0])+", lambda :"+str(eval(parameters[x][0]))+"\n")
+				except:
+					fftopofile.write(x+","+"0"+", lambda :"+str(parameters[x][0])+"\n")
+		else:		
+			for x in constant_par:
+				try:
+					fftopofile.write(x+","+str(parameters[x][0])+", lambda :"+str(eval(parameters[x][0]))+"\n")
+				except:
+					fftopofile.write(x+","+"0"+", lambda :"+str(parameters[x][0])+"\n")
+	
+	for key in CFkeys:
+		fftopofile.write(key+", "+str(parameters[key][0])+"\n")
 		
-	if time_var != None:
-		fftopofile.write(time_var+", 0\n")
-		NONE_added = True
+	for key in StoichPar:
+		if key not in AssignRules and key not in InitialAssign and key not in RateRules:
+			ss = StoichPar[key]
+			fftopofile.write(key+", "+str(1)+"\n")
 		
+	doneComp = set()
+	for key in sp_wCFactor:
+		comp = species_comp[key]
+		if comp not in doneComp and comp in constant_comp:
+			doneComp.add(comp)
+			fftopofile.write(comp+", "+str(constant_comp[comp][0])+"\n")
+			
+	for key in constant_comp:
+		if key in variables:
+			fftopofile.write(key+", "+str(constant_comp[key][0])+"\n")
+	
 	if NONE_added:
 		fftopofile.write("NONE , 1.0\n")
 		
