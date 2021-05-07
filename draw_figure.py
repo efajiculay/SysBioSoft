@@ -5,8 +5,7 @@ import mglobals as globals2
 def draw_figure(items,figure,loc=(0, 0)):
 	if items:
 		canvas,scroll_x,scroll_y = items
-		canva = Canvas(canvas,height = 426, width = 1030,bg='#ccffcc')
-		#canva.pack()	
+		canva = Canvas(canvas,height = 426, width = 1030,bg='#ccffcc')	
 		frame = Frame(canva, height = 425, width = 1000, borderwidth=0,bd=0)
 		frame.pack(side='top')		
 		figure_canvas = FigureCanvasTkAgg(figure, frame)

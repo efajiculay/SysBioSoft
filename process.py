@@ -280,7 +280,7 @@ def process(
 		concn[x] = Cinput[x]  
 	
 	t_o = time.time()
-	t = np.linspace(0,tn,tlen+1)
+	t = np.linspace(0,tn,int(tlen+1))
 	data = process_hub(t,Sp,Ksn,concn,Rr,Rp,V,Vm,miter,logx,logy,delX,normalize,method,mix_plot,save,out_fname,plot_show,vary,mult_proc,items,vary2,implicit,rfile,expDataFile)
 	#print(time.time()-t_o,"Process time")
 	return data

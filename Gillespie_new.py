@@ -66,9 +66,10 @@ def Gillespie(t,Sp,Ks,conc,Rr,Rp,V,rr,implicit=False,rfile=""):
 				r1 = np.random.uniform()
 			P = np.cumsum([ d/alp for d in D ])
 			dt = (1/alp)*(np.log(1/r1))
-			
+			#dtOri = 0
 			if index != tchlen:
 				if tc + dt>=globals2.tCheck[index]:
+					#dtOri = dt
 					dt = globals2.tCheck[index] - tc
 					index = index + 1
 					
@@ -99,21 +100,19 @@ def Gillespie(t,Sp,Ks,conc,Rr,Rp,V,rr,implicit=False,rfile=""):
 						elif "time" in Spc2:
 							concz["time"] = tc 
 						else:
-							pass						
-													
+							pass
+							
 						apply_rules(concz, yconc)
 						Z.append([concz[x] for x in Spc])
-						#tc = tc + dt
+
 						try:
-							if tc == t[tindex]:
-								Zc.append(Z[-1])
+							while tc>=t[tindex]:
+								Zc.append(Z[-2]) if tc>t[tindex] else Zc.append(Z[-1])
 								tindex = tindex + 1
-							else:
-								while tc>t[tindex]:
-									Zc.append(Z[-2])
-									tindex = tindex + 1
 						except:
 							pass
+						#if dtOri>0:
+							#tc = tc - dt + dtOri
 						tnew.append(tc)
 					else:
 						for x in range(len(Spc)):

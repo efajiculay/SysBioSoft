@@ -1,9 +1,11 @@
 from scrollable_text import *
 from propensity import *
 from sympy import *
+from recalculate_globals import *
+#import mglobals as globals2
 
-def for_wxmaxima(Sp,Ks,conc,Rr,Rp,V,items=None):
-
+def for_wxmaxima(Sp,Ks,conc,Rr,Rp,V,items=None,rfile=""):
+	get_globals(rfile)
 	if items:
 		text = prepare_scroll_text(items)
 		ffprint = lambda x: text.insert(INSERT," ".join([str(y) for y in x]))
@@ -31,7 +33,7 @@ def for_wxmaxima(Sp,Ks,conc,Rr,Rp,V,items=None):
 			row.append(Symbol(key, real = True, positive=True))  
 		KCs.append(row) 		
 		
-	f = Matrix(propensity_vec_molar(KCs,Cs,Rr,Rp))
+	f = Matrix(propensity_vec_molar(KCs,Cs,Rr,Rp,True))
 	S = Matrix(V)
 	#Cs might have change after call
 	for x in Sp:
@@ -71,7 +73,7 @@ def for_wxmaxima(Sp,Ks,conc,Rr,Rp,V,items=None):
 	for x in Sp:
 		Cso[x] = conc[x]
 		
-	f = Matrix(propensity_vec_molar(Ks,Cs,Rr,Rp))
+	f = Matrix(propensity_vec_molar(Ks,Cs,Rr,Rp,True))
 	S = Matrix(V)
 	#Cs might have change after call
 	for x in Sp:

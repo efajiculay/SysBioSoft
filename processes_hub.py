@@ -14,6 +14,7 @@ from LNAapprox import *
 from LNAapprox2 import *
 from NetworkLoc import *
 from ode_int import *
+from LNAfunctionOfTime import *
 from sde_int import *
 from runge_kutta4 import *
 from param_est import *
@@ -35,6 +36,7 @@ def process_hub(
 
 	Vv = []
 	nz = []
+	SiNew = []
 	Si = [x for x in Sp]
 	for row in range(V.shape[0]):
 		if np.sum(np.abs(V[row,:])) != 0 and Si[row][0]!="-":
@@ -72,6 +74,7 @@ def process_hub(
 						KSNS[-1][r1[k]][r2[k]] = kval[k][j]
 		else:
 			KSNS = [Ksn for x in range(miter)]			 
+			
 #		if __name__ == '__main__':
 		if 1 == 1:	 #always true, just use above  command on some OS
 			rands = [ x*np.random.rand() for x in range(miter) ]
@@ -140,7 +143,7 @@ def process_hub(
 						args = (t,Sp,KSNS[ih],CONCN[ih],Rr,Rp,V,delX,True,items,False,rfile)
 					) for ih in range(miter)
 				]
-				data = [ result.get() + [Si]  for result in results ]				 
+				data = [ result.get() + [Si]  for result in results ]
 			elif method=="Gillespie_":
 				results = [
 					pool.apply_async( 
@@ -190,6 +193,10 @@ def process_hub(
 				save = False			
 				tnew, z = Euler_int(t,Sp,Ksn,concn,Rr,Rp,V,delX,LNAsolve=True,items=items,rfile=rfile)  
 				tnew, z = Euler2_int(t,Sp,Ksn,concn,Rr,Rp,V,delX,False,None,implicit,True,rfile)
+			elif method=="LNA(t)":
+				z, SiNew, tnew = LNA_non_steady_state(concn,t,Sp,Ksn,Rr,Rp,V,molar=True,rfile=rfile,delX=delX)
+			elif method=="LNA2(t)":
+				z, SiNew, tnew = LNA_non_steady_state2(concn,t,Sp,Ksn,Rr,Rp,V,molar=True,rfile=rfile,delX=delX)
 			elif method=="LNA-vs":
 				plot_show = False
 				save = False			
@@ -309,7 +316,7 @@ def process_hub(
 			elif method=="Analyt2": 
 				plot_show = False
 				save = False				
-				tnew, z = for_wxmaxima(Sp,Ksn,concn,Rr,Rp,V,items=items)	
+				tnew, z = for_wxmaxima(Sp,Ksn,concn,Rr,Rp,V,items=items,rfile=rfile)	
 			elif method=="topoTosbml":
 				plot_show = False
 				save = False				
@@ -331,7 +338,12 @@ def process_hub(
 		if key not in reserve_events_words:
 			nz.append(row)	   
 	Sp = {Si[z]:Sp[Si[z]] for z in nz}
-	Si = [Si for Si in Sp]			
+	Si = [Si for Si in Sp]		
+
+	if len(SiNew)>0:
+		Si = SiNew
+		Sp = SiNew
+		nz = range(len(Si))
 				            
 	if save:
 		fname = out_fname+"_"+method+".dat"
@@ -358,6 +370,8 @@ def process_hub(
 			plt.figure(figsize=(9.68,3.95))
 			plt.xlabel("time (sec)")
 			plt.ylabel("conc") 	
+			if len(SiNew)>0:
+				plt.ylabel("cov" if SiNew[0][0:2]!="FF" else "FF") 
 			lines = []			
 			if logx:
 				plt.xscale('log')	
@@ -375,11 +389,11 @@ def process_hub(
 			else:
 				plt.legend(Si,fontsize='xx-small')
 			plt.tight_layout()
+			plt.savefig(out_fname+"_"+method+".jpg")
 			fig = plt.gcf() 
 			lines.append(line)
 			globals2.plotted.append([plt.gca(),fig,lines])
 			fig_canvas_agg = draw_figure(items,fig)		
-			plt.savefig(out_fname+"_"+method+".jpg")
 			plt.close()
 		else:
 			lines = []	
@@ -389,6 +403,8 @@ def process_hub(
 				plt.figure(figsize=(9.68,3.95))
 				plt.xlabel("time (sec)")
 				plt.ylabel("conc") 
+				if len(SiNew)>0:
+					plt.ylabel("cov" if SiNew[0][0:2]!="FF" else "FF") 
 				if logx:
 					plt.xscale('log')
 				if logy:
@@ -401,9 +417,9 @@ def process_hub(
 					lines.append(line)
 				plt.legend([Si[i]])
 				plt.tight_layout()
+				plt.savefig(out_fname+"_"+method+"_"+str(i)+".jpg")
 				fig = plt.gcf() 
 				globals2.plotted.append([plt.gca(),fig,lines])
 				fig_canvas_agg = draw_figure(items,fig)	
-				plt.savefig(out_fname+"_"+method+"_"+str(i)+".jpg")
 				plt.close()
 	return data

@@ -1071,9 +1071,10 @@ def process_sbml(file,molar=False,variables=None):
 			fftopofile.write("0 NONE => "+time_var+", 0\n")
 			
 	for key in constant_comp:
-		if key in variables:
-			fftopofile.write(key+" => 0 NONE, 0\n")
-			NONE_added = True
+		if variables:
+			if key in variables:
+				fftopofile.write(key+" => 0 NONE, 0\n")
+				NONE_added = True
 		
 	fftopofile.write("\n@Concentrations\n")		
 	
@@ -1313,8 +1314,9 @@ def process_sbml(file,molar=False,variables=None):
 			fftopofile.write(comp+", "+str(constant_comp[comp][0])+"\n")
 			
 	for key in constant_comp:
-		if key in variables:
-			fftopofile.write(key+", "+str(constant_comp[key][0])+"\n")
+		if variables:
+			if key in variables:
+				fftopofile.write(key+", "+str(constant_comp[key][0])+"\n")
 	
 	if NONE_added:
 		fftopofile.write("NONE , 1.0\n")
