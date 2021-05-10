@@ -394,7 +394,7 @@ def process_hub(
 			lines.append(line)
 			globals2.plotted.append([plt.gca(),fig,lines])
 			fig_canvas_agg = draw_figure(items,fig)		
-			plt.close()
+			#plt.close()
 		else:
 			lines = []	
 			Ssi = []
@@ -421,5 +421,5 @@ def process_hub(
 				fig = plt.gcf() 
 				globals2.plotted.append([plt.gca(),fig,lines])
 				fig_canvas_agg = draw_figure(items,fig)	
-				plt.close()
+				#plt.close()
 	return data
