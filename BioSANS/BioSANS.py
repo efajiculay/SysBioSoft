@@ -71,11 +71,22 @@ def load_data(items):
 		
 def create_file(items):
 	global file_name
+	try:
+		os.mkdir("Temporary_folder",777)
+	except:
+		for item in Path("Temporary_folder").iterdir():
+			if item.is_dir():
+				pass
+			else:
+				item.unlink()
+		
 	file_name['last_open'] = new_file(items)
+	file_name["topology"] = "Temporary_folder/temp.txt"
 	
 def save_file():
 	global file_name
 	file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+	file_name["topology"] = file.name
 	if file is None:
 		return
 	file.write(file_name['last_open'].get("0.0",END))
@@ -319,6 +330,11 @@ def plot_trajD2(current_data,items):
 
 def paramSet(method):
 	global file_name, items
+
+	if file_name["topology"] == "Temporary_folder/temp.txt":
+		with open(file_name["topology"],"w") as ff:
+			ff.write(file_name['last_open'].get("0.0",END))
+	
 	path = Path(file_name["topology"])
 	ss = str(file_name["topology"]).split("/")
 	ss = ss[-1] if len(ss)>1 else ""
