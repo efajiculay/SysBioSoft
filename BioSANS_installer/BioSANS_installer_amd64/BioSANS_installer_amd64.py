@@ -1,9 +1,16 @@
 import sys
-import os
+from os import getcwd, path
 from subprocess import Popen
-import wget
+from wget import download
 
+Bcwd = path.join(getcwd(),"BioSANSLib")
+file_path = path.join(getcwd(),"BioSANSLib","BioSANS_installer.bat")
+print(file_path)
+
+print("\nDownloading python from repository\n\n")
 url = "https://www.python.org/ftp/python/3.9.5/python-3.9.5-amd64.exe"
-wget.download(url, os.getcwd())
-p = Popen("BioSANS_installer.bat", cwd=os.getcwd())
+download(url, Bcwd)
+
+print("\n\nInstalling python and necessary libraries\n\n")
+p = Popen(file_path, cwd=Bcwd)
 stdout, stderr = p.communicate()
