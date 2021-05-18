@@ -12,6 +12,10 @@ def save_file(e,text):
 	file.close()
 	return "break"
 	
+def tab(e,text):
+    text.insert(INSERT, " " * 4)
+    return 'break'
+	
 def prepare_scroll_text(items):
 	canvas,scroll_x,scroll_y = items
 	frame = Frame(canvas, height = 415, width = 940, borderwidth=0,bd=0)
@@ -28,4 +32,5 @@ def prepare_scroll_text(items):
 	globals2.plot_i = globals2.plot_i + 1
 	
 	text.bind("<Button-2>",lambda e: save_file(e,text) )
+	text.bind("<Tab>",lambda e: tab(e,text))
 	return text

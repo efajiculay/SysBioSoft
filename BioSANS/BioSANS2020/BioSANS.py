@@ -11,6 +11,7 @@ import threading
 from queue import Queue
 from math import ceil as Myceil
 from sys import platform
+from subprocess import Popen, CREATE_NEW_CONSOLE
 
 import mglobals as globals
 import proc_global as proc_global
@@ -92,6 +93,16 @@ def save_file():
 		return
 	file.write(file_name['last_open'].get("0.0",END))
 	file.close()
+	
+def runpy_file():
+	global file_name
+	with open(file_name["topology"],"w") as ff:
+		ff.write(file_name['last_open'].get("0.0",END))
+		ff.write("\ninput('Press enter to exit:')")
+	Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
+	
+def run_SSL():
+	Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE) 
 	
 def load_data2(plot=False):
 	t_o = time.time()
@@ -332,9 +343,9 @@ def plot_trajD2(current_data,items):
 def paramSet(method):
 	global file_name, items
 
-	if file_name["topology"] == "Temporary_folder/temp.txt":
-		with open(file_name["topology"],"w") as ff:
-			ff.write(file_name['last_open'].get("0.0",END))
+	#if file_name["topology"] == "Temporary_folder/temp.txt":
+	with open(file_name["topology"],"w") as ff:
+		ff.write(file_name['last_open'].get("0.0",END))
 	
 	path = Path(file_name["topology"])
 	ss = str(file_name["topology"]).split("/")
@@ -426,6 +437,8 @@ if __name__ == "__main__":
 	menubut1.menu.add_cascade(label="Open", menu=LoadMenu)	
 	menubut1.menu.add_command ( label="New File",command=lambda: create_file(items))
 	menubut1.menu.add_command ( label="Save File",command=lambda: save_file() )
+	menubut1.menu.add_command ( label="Run File.py",command=lambda: runpy_file() )
+	menubut1.menu.add_command ( label="Run SSL",command=lambda: run_SSL() )
 	menubut1.place(x=2,y=5)
 
 	menubut2 = gui.Menubutton(frame,text="Propagation",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
@@ -550,7 +563,7 @@ if __name__ == "__main__":
 	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )
 	menubut3.menu.add_cascade(label="Network Localization", menu=NetLMenu)
 	menubut3.menu.add_cascade(label="Convert", menu=ConvMenu)	
-	menubut3.place(x=188,y=5)	
+	menubut3.place(x=189,y=5)	
 
 	frame1 = gui.Frame(frame, height = 435, width = 972, bg='#8c8c8c', borderwidth=2)
 	frame1.place(x=2,y=35) 

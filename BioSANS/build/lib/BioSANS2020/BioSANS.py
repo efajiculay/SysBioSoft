@@ -10,6 +10,7 @@ import time
 import threading
 from queue import Queue
 from math import ceil as Myceil
+from sys import platform
 
 import mglobals as globals
 import proc_global as proc_global
@@ -413,7 +414,7 @@ def paramSet(method):
 	
 if __name__ == "__main__":
 
-	menubut1 = gui.Menubutton(frame,text=" File/Model ",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white")
+	menubut1 = gui.Menubutton(frame,text=" File/Model ",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
 	menubut1.menu =  gui.Menu ( menubut1, tearoff = 1 )
 	menubut1["menu"] =  menubut1.menu
 	LoadMenu = gui.Menu(frame,tearoff = 1 )
@@ -427,7 +428,7 @@ if __name__ == "__main__":
 	menubut1.menu.add_command ( label="Save File",command=lambda: save_file() )
 	menubut1.place(x=2,y=5)
 
-	menubut2 = gui.Menubutton(frame,text="Propagation",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white")
+	menubut2 = gui.Menubutton(frame,text="Propagation",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
 	menubut2.menu =  gui.Menu ( menubut2, tearoff = 1 )
 	menubut2["menu"] =  menubut2.menu
 	AnalMenu = gui.Menu(frame,tearoff = 1 )
@@ -527,7 +528,7 @@ if __name__ == "__main__":
 	menubut2.menu.add_cascade(label="Estimate Params", menu=ParEsMenu)
 	menubut2.place(x=95,y=5)
 	
-	menubut3 = gui.Menubutton(frame,text="    Analysis    ",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white")
+	menubut3 = gui.Menubutton(frame,text="    Analysis    ",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
 	menubut3.menu =  gui.Menu ( menubut3, tearoff = 1 )
 	menubut3["menu"] =  menubut3.menu
 	menubut3.menu.add_command ( label="Covariance",command=lambda: calc_covariance(current_data,items),background="white",foreground="Blue"  )
@@ -549,7 +550,7 @@ if __name__ == "__main__":
 	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )
 	menubut3.menu.add_cascade(label="Network Localization", menu=NetLMenu)
 	menubut3.menu.add_cascade(label="Convert", menu=ConvMenu)	
-	menubut3.place(x=188,y=5)	
+	menubut3.place(x=189,y=5)	
 
 	frame1 = gui.Frame(frame, height = 435, width = 972, bg='#8c8c8c', borderwidth=2)
 	frame1.place(x=2,y=35) 

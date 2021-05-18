@@ -8,7 +8,7 @@ import mglobals as globals
 import matplotlib.pyplot as plt
 globals.init()
 
-cwd = str(pathlib.Path().absolute())
+cwd = os.getcwd()
 trj = {}
 
 def get_input():
@@ -246,7 +246,7 @@ def process_command(command):
 			
 if __name__ == '__main__':
 	print("###############################################################")
-	print("Welcome to Biostoch-SSL commandline interface\n") 
+	print("Welcome to BioSSL commandline interface\n") 
 	
 	abspath = os.path.abspath(cwd+"/"+"..")
 	dname = os.path.dirname(abspath)

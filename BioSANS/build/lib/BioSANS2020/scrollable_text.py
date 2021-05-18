@@ -1,6 +1,7 @@
 from tkinter import Text, INSERT, END, Scrollbar, RIGHT, LEFT, Y, Canvas, VERTICAL, Frame, Menu
 import mglobals as globals2
 from tkinter import filedialog
+from sys import platform
 
 def save_file(e,text):
 	global file_name
@@ -15,7 +16,7 @@ def prepare_scroll_text(items):
 	canvas,scroll_x,scroll_y = items
 	frame = Frame(canvas, height = 415, width = 940, borderwidth=0,bd=0)
 	frame.pack(side='top')	
-	text = Text(frame,width=106,height=24,fg='blue',font = ("Courier New", 11, "bold"))
+	text = Text(frame,width=106,height=24,fg='blue',font = ("Courier New", 11 if platform.lower() != "darwin" else 15, "bold"))
 	text.pack(side=LEFT)
 	tscroll = Scrollbar(frame,orient=VERTICAL)
 	tscroll.pack(side=RIGHT, fill=Y)
