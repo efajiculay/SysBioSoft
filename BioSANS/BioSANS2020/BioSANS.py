@@ -16,6 +16,8 @@ if platform == "win32":
 	from subprocess import Popen, CREATE_NEW_CONSOLE
 elif platform == "darwin":
 	from applescript import tell
+elif platform == "linux":
+	pass
 else:
 	from subprocess import Popen
 
@@ -109,6 +111,8 @@ def runpy_file():
 		Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
 	elif platform == "darwin":
 		tell.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
+	elif platform == "linux":
+		os.system("gnome-terminal -x python3 "+file_name["topology"])
 	else:
 		Popen(str(sys.executable)+" "+file_name["topology"],shell=True)
 					
@@ -117,6 +121,8 @@ def run_SSL():
 		Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE)
 	elif platform == "darwin":
 		tell.app("Terminal",'do script "'+str(sys.executable)+" "+os.path.join(os.getcwd(),"BioSSL.py")+'"')
+	elif platform == "linux":
+		os.system("gnome-terminal -x python3 "+os.path.join(os.getcwd(),"BioSSL.py"))
 	else:
 		Popen(str(sys.executable)+" "+os.path.join(os.getcwd(),"BioSSL.py"), shell=True)
 		
