@@ -30,6 +30,8 @@ def install_BioSANS():
         'pip3 install sdeint',
         'pip3 install func_timeout',
         'pip3 install python-libsbml',
+		'pip3 install pandas',
+		'pip3 install applescript',
         'Brew install python-tk',
         'python3 -m pip install -i https://test.pypi.org/simple/ BioSANS2020-efajiculay'
     ]
