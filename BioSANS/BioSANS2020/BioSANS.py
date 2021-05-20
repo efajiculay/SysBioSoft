@@ -11,7 +11,13 @@ import threading
 from queue import Queue
 from math import ceil as Myceil
 from sys import platform
-from subprocess import Popen, CREATE_NEW_CONSOLE
+
+if platform == "win32":
+	from subprocess import Popen, CREATE_NEW_CONSOLE
+elif platform == "darwin":
+	from applescript import tell
+else:
+	from subprocess import Popen
 
 import mglobals as globals
 import proc_global as proc_global
@@ -95,15 +101,25 @@ def save_file():
 	file.close()
 	
 def runpy_file():
-	global file_name
+	global file_name, PIPE
 	with open(file_name["topology"],"w") as ff:
 		ff.write(file_name['last_open'].get("0.0",END))
-		ff.write("\ninput('Press enter to exit:')")
-	Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
-	
-def run_SSL():
-	Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE) 
-	
+		ff.write("\ninput('Press enter to exit:')")		
+	if platform == "win32":
+		Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
+	elif platform == "darwin":
+		tell.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
+	else:
+		Popen(str(sys.executable)+" "+file_name["topology"],shell=True)
+					
+def run_SSL(): 
+	if platform == "win32":
+		Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE)
+	elif platform == "darwin":
+		tell.app("Terminal",'do script "'+str(sys.executable)+" "+os.path.join(os.getcwd(),"BioSSL.py")+'"')
+	else:
+		Popen(str(sys.executable)+" "+os.path.join(os.getcwd(),"BioSSL.py"), shell=True)
+		
 def load_data2(plot=False):
 	t_o = time.time()
 	global file_name, current_data
