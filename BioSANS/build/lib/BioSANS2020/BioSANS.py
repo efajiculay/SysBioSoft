@@ -11,7 +11,22 @@ import threading
 from queue import Queue
 from math import ceil as Myceil
 from sys import platform
-from subprocess import Popen, CREATE_NEW_CONSOLE
+
+if platform == "win32":
+	from subprocess import Popen, CREATE_NEW_CONSOLE
+elif platform == "darwin":
+	from applescript import tell
+	from subprocess import check_output
+elif platform == "linux":
+	pass
+else:
+	from subprocess import Popen
+	
+try:
+	import tempfile
+	Temporary_folder = str(tempfile.gettempdir()).replace("\\","/")+"/Temporary_folder"
+except:
+	Temporary_folder = "Temporary_folder"
 
 import mglobals as globals
 import proc_global as proc_global
@@ -72,18 +87,18 @@ def load_data(items):
 		file_name['last_open'] = topology_view.view_topo(file,items)
 		
 def create_file(items):
-	global file_name
+	global file_name, Temporary_folder
 	try:
-		os.mkdir("Temporary_folder",777)
+		os.mkdir(Temporary_folder,777)
 	except:
-		for item in Path("Temporary_folder").iterdir():
+		for item in Path(Temporary_folder).iterdir():
 			if item.is_dir():
 				pass
 			else:
 				item.unlink()
 		
 	file_name['last_open'] = new_file(items)
-	file_name["topology"] = "Temporary_folder/temp.txt"
+	file_name["topology"] = Temporary_folder+"/temp.txt"
 	
 def save_file():
 	global file_name
@@ -95,15 +110,38 @@ def save_file():
 	file.close()
 	
 def runpy_file():
-	global file_name
+	global file_name, PIPE
 	with open(file_name["topology"],"w") as ff:
 		ff.write(file_name['last_open'].get("0.0",END))
-		ff.write("\ninput('Press enter to exit:')")
-	Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
-	
-def run_SSL():
-	Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE) 
-	
+		ff.write("\ninput('Press enter to exit:')")		
+	if platform == "win32":
+		Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
+	elif platform == "darwin":
+		tell.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
+	elif platform == "linux":
+		os.system("gnome-terminal -x python3 "+file_name["topology"])
+	else:
+		Popen(str(sys.executable)+" "+file_name["topology"],shell=True)
+					
+def run_SSL(): 
+	if platform == "win32":
+		Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE)
+	elif platform == "darwin":
+		A = check_output(['pip3', 'show', 'BioSANS2020-efajiculay'])
+		A = str(A).split("\\n")
+		install_dir = ""
+		for row in A:
+			line = row.split(":")
+			if line[0].strip() == "Location":
+				install_dir = ("".join(line[1:]).strip("\\r\\n").replace("c\\","c:/").replace("\\","/").replace("//","/"))
+		if install_dir != "":
+			install_dir = str(install_dir)
+			tell.app("Terminal",'do script "'+str(sys.executable)+" "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
+	elif platform == "linux":
+		os.system("gnome-terminal -x python3 "+os.path.join(os.getcwd(),"BioSSL.py"))
+	else:
+		Popen(str(sys.executable)+" "+os.path.join(os.getcwd(),"BioSSL.py"), shell=True)
+		
 def load_data2(plot=False):
 	t_o = time.time()
 	global file_name, current_data
@@ -342,8 +380,6 @@ def plot_trajD2(current_data,items):
 
 def paramSet(method):
 	global file_name, items
-
-	#if file_name["topology"] == "Temporary_folder/temp.txt":
 	with open(file_name["topology"],"w") as ff:
 		ff.write(file_name['last_open'].get("0.0",END))
 	

@@ -11,6 +11,7 @@ import threading
 from queue import Queue
 from math import ceil as Myceil
 from sys import platform
+import webbrowser
 
 if platform == "win32":
 	from subprocess import Popen, CREATE_NEW_CONSOLE
@@ -21,6 +22,12 @@ elif platform == "linux":
 	pass
 else:
 	from subprocess import Popen
+	
+try:
+	import tempfile
+	Temporary_folder = str(tempfile.gettempdir()).replace("\\","/")+"/BioSANS_temporary_folder"
+except:
+	Temporary_folder = "BioSANS_temporary_folder"
 
 import mglobals as globals
 import proc_global as proc_global
@@ -61,7 +68,7 @@ frame.configure(
 )
 frame.pack(fill="both",expand=True)
 
-footer = gui.Label(top, text="Biological Stochastic Simulation Algorithms")
+footer = gui.Label(top, text="Biological Symbolic and Numeric Simulation Algorithms")
 footer.configure(
 	bg = "green",
 	fg = "white",
@@ -71,33 +78,41 @@ footer.configure(
 )
 footer.pack(fill="x")
 
-file_name = {}
+file_name = {"topology": Temporary_folder,"current_folder":None}
 def load_data(items):
 	global file_name
 	file = filedialog.askopenfilename(title = "Select file")
 	file_name["topology"] = file
+	file_name["current_folder"] = file
 	globals.toConvert = file
 	if os.path.isfile(file):
 		file_name['last_open'] = topology_view.view_topo(file,items)
 		
-def create_file(items):
-	global file_name
+def show_file_dir(path):
 	try:
-		os.mkdir("Temporary_folder",777)
+		webbrowser.open(os.path.dirname(path))
 	except:
-		for item in Path("Temporary_folder").iterdir():
+		pass
+
+def create_file(items):
+	global file_name, Temporary_folder
+	try:
+		os.mkdir(Temporary_folder,0o777)
+	except:
+		for item in Path(Temporary_folder).iterdir():
 			if item.is_dir():
 				pass
 			else:
 				item.unlink()
 		
 	file_name['last_open'] = new_file(items)
-	file_name["topology"] = "Temporary_folder/temp.txt"
+	file_name["topology"] = Temporary_folder+"/temp.txt"
 	
 def save_file():
 	global file_name
 	file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
 	file_name["topology"] = file.name
+	file_name["current_folder"] = file.name
 	if file is None:
 		return
 	file.write(file_name['last_open'].get("0.0",END))
@@ -141,6 +156,7 @@ def load_data2(plot=False):
 	global file_name, current_data
 	file = filedialog.askopenfilename(title = "Select file")
 	file_name["trajectory"] = file
+	file_name["current_folder"] = file
 	with open(file_name["trajectory"],"r") as f:
 		data = []
 		dd = []
@@ -168,6 +184,7 @@ def load_image(wdata=False):
 	global items, current_data
 	canvas,scroll_x,scroll_y = items
 	file = filedialog.askopenfilename(title = "Select file")
+	file_name["current_folder"] = file
 	load = Image2.open(file)
 	render = ImageTk.PhotoImage(load)
 	img = gui.Label(canvas, image=render)
@@ -350,12 +367,30 @@ def getChecked(L1,L,Si):
 			checkSi.append(Si.index(key))
 	return checkSi
 	
-def plot_trajD2(current_data,items):
+def plot_trajD2(current_data2,items):
+	global current_data
 	try:
-		data, Si = current_data
-		par = gui.Toplevel()
-		par.resizable(False, False)
-		par.wm_title("Plot species")
+		if "trajectory" not in file_name:
+			gui.messagebox.showinfo("Trajectory not loaded yet", "Please load the trajectory. BioSANS save it into a file during your last run.")
+			load_data2(False)
+			data, Si = current_data
+		else:
+			data, Si = current_data2
+		pard = gui.Toplevel()
+		pard.resizable(True, True)
+		pard.wm_title("Plot species")
+		pard.maxsize(width=300,height=700)
+		canvas, scroll_x, scroll_y = prepare_frame_for_plot(pard,width=200,height=200)	
+		par = gui.Frame(canvas,width=200,height=int(len(Si)*150))
+		par.pack(side="left",fill="both",expand=True)
+		pard.configure(
+			bg = "light blue", 
+			borderwidth=2,
+		)
+		canvas.configure(
+			bg = "light blue", 
+			borderwidth=2,
+		)
 		
 		Ls = len(Si)
 		L1 = [gui.StringVar() for i in range(Ls)]
@@ -364,18 +399,20 @@ def plot_trajD2(current_data,items):
 		[ L[i].grid(row = i, column = 0, sticky = gui.W, pady = 2) for i in range(Myceil(Ls/2)) ]
 		[ L[i].grid(row = i-Myceil(Ls/2), column = 1, sticky = gui.W, pady = 2) for i in range(Myceil(Ls/2),Ls) ]
 		
-		B1 = ttk.Button(par, text="PLOT", \
+		canvas.create_window(0, 0, anchor='n', window=par)
+		canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+		canvas.configure(scrollregion=canvas.bbox("all"))
+		
+		B1 = ttk.Button(pard, text="PLOT", \
 		command=lambda : \
 				plot_traj(data,Si,items,globals.plotted,mix_plot=True,logx=False,logy=False,normalize=False,SiTicked=getChecked(L1,L,Si)) \
 		)
-		B1.grid(row = Myceil(Ls/2), column = 0, sticky = gui.W, pady = 2)
+		B1.pack(side="bottom",fill="x")
 	except:
 		gui.messagebox.showinfo("Trajectory not loaded yet", "Please load the trajectory. BioSANS save it into a file during your last run.")
 
 def paramSet(method):
 	global file_name, items
-
-	#if file_name["topology"] == "Temporary_folder/temp.txt":
 	with open(file_name["topology"],"w") as ff:
 		ff.write(file_name['last_open'].get("0.0",END))
 	
@@ -466,6 +503,7 @@ if __name__ == "__main__":
 	LoadMenu.add_command ( label="Traj. w/ plot",command=lambda: tload_data2(True),background="white",foreground="Blue" )
 	LoadMenu.add_command ( label="Image of plot",command=load_image,background="white",foreground="Blue" )
 	LoadMenu.add_command ( label="Image w/ data",command=lambda: load_image(True),background="white",foreground="Blue" )
+	LoadMenu.add_command ( label="Current folder",command=lambda: show_file_dir(file_name["current_folder"]),background="white",foreground="Blue"  )
 	menubut1.menu.add_cascade(label="Open", menu=LoadMenu)	
 	menubut1.menu.add_command ( label="New File",command=lambda: create_file(items))
 	menubut1.menu.add_command ( label="Save File",command=lambda: save_file() )

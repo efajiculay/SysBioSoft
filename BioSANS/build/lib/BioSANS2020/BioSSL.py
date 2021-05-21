@@ -6,9 +6,18 @@ from ssl_calls import *
 import pandas as pd
 import mglobals as globals
 import matplotlib.pyplot as plt
-globals.init()
 
-cwd = os.getcwd()
+try:
+	import tempfile
+	cwd = os.path.join(tempfile.gettempdir(),"Temporary_folder")
+except:
+	cwd = os.path.join(os.getcwd(),"Temporary_folder")
+try:
+	os.mkdir(cwd,777)
+except:
+	pass
+
+globals.init()
 trj = {}
 
 def get_input():
@@ -248,7 +257,7 @@ if __name__ == '__main__':
 	print("###############################################################")
 	print("Welcome to BioSSL commandline interface\n") 
 	
-	abspath = os.path.abspath(cwd+"/"+"..")
+	abspath = os.path.abspath(cwd)
 	dname = os.path.dirname(abspath)
 	os.chdir(dname)
 	cwd = str(abspath)
