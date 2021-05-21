@@ -16,6 +16,7 @@ if platform == "win32":
 	from subprocess import Popen, CREATE_NEW_CONSOLE
 elif platform == "darwin":
 	from applescript import tell
+	from subprocess import check_output
 elif platform == "linux":
 	pass
 else:
@@ -120,7 +121,16 @@ def run_SSL():
 	if platform == "win32":
 		Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE)
 	elif platform == "darwin":
-		tell.app("Terminal",'do script "'+str(sys.executable)+" "+os.path.join(os.getcwd(),"BioSSL.py")+'"')
+		A = check_output(['pip3', 'show', 'BioSANS2020-efajiculay'])
+		A = str(A).split("\\n")
+		install_dir = ""
+		for row in A:
+			line = row.split(":")
+			if line[0].strip() == "Location":
+				install_dir = ("".join(line[1:]).strip("\\r\\n").replace("c\\","c:/").replace("\\","/").replace("//","/"))
+		if install_dir != "":
+			install_dir = str(install_dir)
+			tell.app("Terminal",'do script "'+str(sys.executable)+" "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
 	elif platform == "linux":
 		os.system("gnome-terminal -x python3 "+os.path.join(os.getcwd(),"BioSSL.py"))
 	else:

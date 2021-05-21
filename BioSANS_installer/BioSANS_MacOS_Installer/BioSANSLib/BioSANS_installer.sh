@@ -10,5 +10,7 @@ pip install spicy
 pip install sdeint
 pip install func_timeout
 pip install python-libsbml
+pip install pandas
+Pip install applescript
 Brew install python-tk
 python3 -m pip install -i https://test.pypi.org/simple/ BioSANS2020-efajiculay
