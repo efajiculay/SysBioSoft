@@ -1,8 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import numpy as np
-from propensity import *
+from BioSANS2020.propensity import *
 from scipy import linalg as LA
 from scipy.optimize import fsolve
-from scrollable_text import *
+from BioSANS2020.scrollable_text import *
 
 def rem_rowcol_zero(a):
 	return a[:,~np.all(a == 0, axis=0)][~np.all(a == 0, axis=1)]

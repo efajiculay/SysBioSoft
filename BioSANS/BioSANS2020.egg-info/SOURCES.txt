@@ -45,5 +45,6 @@ BioSANS2020/topology_view.py
 BioSANS2020.egg-info/PKG-INFO
 BioSANS2020.egg-info/SOURCES.txt
 BioSANS2020.egg-info/dependency_links.txt
+BioSANS2020.egg-info/entry_points.txt
 BioSANS2020.egg-info/requires.txt
 BioSANS2020.egg-info/top_level.txt

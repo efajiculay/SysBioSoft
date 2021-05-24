@@ -5,6 +5,9 @@
 
 #Personally coded by Erickson Fajiculay
 
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -18,7 +21,7 @@ from scipy.optimize import fsolve
 from scipy import linalg
 import math
 import time
-import proc_global as proc_global
+import BioSANS2020.proc_global as proc_global
 
 def log_likelihood(ks,custom_function,args=None):
 	return custom_function(ks,args)

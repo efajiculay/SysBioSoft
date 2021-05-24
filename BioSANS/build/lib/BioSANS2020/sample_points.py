@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 from numpy import linspace, interp
 
 def sample_points(edata,nsamp=50000):

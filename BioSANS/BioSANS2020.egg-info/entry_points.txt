@@ -1,0 +1,3 @@
+[console_scripts]
+BioSANS = BioSANS2020.BioSANS.py:main
+

@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import numpy as np
-from propensity import *
-from recalculate_globals import *
+from BioSANS2020.propensity import *
+from BioSANS2020.recalculate_globals import *
 
 def Tau_leaping(t,Sp,Ks,conc,Rr,Rp,V,rr,delX,implicit=False,rfile=""):
 	get_globals(rfile)

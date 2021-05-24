@@ -1,7 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 from scipy.integrate import odeint
-from propensity import *
+from BioSANS2020.propensity import *
 import sdeint
-import mglobals as globals2
+import BioSANS2020.mglobals as globals2
 
 def sde_fx(z,t,Sp,Ks,Rr,Rp,V,molar=False):  
 	Spc = [s for s in Sp]

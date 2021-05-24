@@ -1,9 +1,13 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import libsbml as Mysbml
 from sympy import Symbol as newSymbol
 from sympy import solve, sympify
 from sympy import sympify
-import mglobals as globals2
-from sbmlMath import *
+import BioSANS2020.mglobals as globals2
+from BioSANS2020.sbmlMath import *
 import inspect
 
 OPERS_list = {"+","-","*","/","(",")",",","=",">","<",":"}

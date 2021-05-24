@@ -15,16 +15,14 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 #twine upload dist/*
 
 
+#https://realpython.com/python-import/#create-and-install-a-local-package
+python -m pip install -e ./
+
 #https://packaging.python.org/tutorials/packaging-projects/
-py -m build 
-or 
-python3 -m build
-
-py -m twine upload --repository testpypi dist/* 
-or 
-python3 -m twine upload --repository testpypi dist/*
-
-
+#working
+python -m build
+python -m twine check dist/*
+python -m twine upload --repository testpypi dist/* 
 
 #working
 python setup.py sdist bdist_wheel
@@ -35,3 +33,6 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 #https://pyinstaller.readthedocs.io/en/stable/operating-mode.
 
 #https://docs.anaconda.com/anaconda/install/silent-mode/
+#https://godatadriven.com/blog/a-practical-guide-to-using-setup-py/
+
+#pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020==0.0.6

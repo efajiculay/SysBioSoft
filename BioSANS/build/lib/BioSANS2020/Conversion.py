@@ -1,8 +1,12 @@
-from scrollable_text import *
-from propensity import *
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
+from BioSANS2020.scrollable_text import *
+from BioSANS2020.propensity import *
 from sympy import *
 from libsbml import *
-import mglobals as globals2
+import BioSANS2020.mglobals as globals2
 
 	
 def topo_to_sbml(Sp,Ks,conc,Rr,Rp,V,Vm,items=None,molar=False):

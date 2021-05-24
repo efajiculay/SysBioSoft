@@ -1,5 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 from tkinter import Text, INSERT, END, Scrollbar, RIGHT, LEFT, Canvas, Frame, Menu, Widget
-import mglobals as globals2
+import BioSANS2020.mglobals as globals2
 from tkinter import filedialog
 from sys import platform
 

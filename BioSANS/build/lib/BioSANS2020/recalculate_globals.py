@@ -1,5 +1,9 @@
-import mglobals as globals2
-from sbmlMath import *
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
+import BioSANS2020.mglobals as globals2
+from BioSANS2020.sbmlMath import *
 import re
 #from sympy import *
 import numpy as np

@@ -1,0 +1,6 @@
+[console_scripts]
+BioSSL = BioSANS2020.RunBioSANS:BioSSL
+
+[gui_scripts]
+BioSANS = BioSANS2020.RunBioSANS:BioSANS
+

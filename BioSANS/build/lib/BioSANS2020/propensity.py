@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import numpy as np
-import mglobals as globals2
-from sbmlMath import *
+import BioSANS2020.mglobals as globals2
+from BioSANS2020.sbmlMath import *
 
 
 def propensity_vec(Ks,conc,Rr,Rp,odeint=False):  #this is for microscopic

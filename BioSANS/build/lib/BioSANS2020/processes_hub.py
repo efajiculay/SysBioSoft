@@ -1,31 +1,35 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing
 from matplotlib.cm import get_cmap
 import matplotlib._color_data as mcd
-from propensity import *
-from mystiffcle import *
-from Gillespie import *
-from Tau_leaping import *
-from Tau_leaping2 import *
-from mytauleap import *
-from Euler import *
-from LNAapprox import *
-from LNAapprox2 import *
-from NetworkLoc import *
-from ode_int import *
-from LNAfunctionOfTime import *
-from sde_int import *
-from runge_kutta4 import *
-from param_est import *
-from Analytical_sol import *
-from create_wxmaxima_command import *
-from Conversion import *
+from BioSANS2020.propensity import *
+from BioSANS2020.mystiffcle import *
+from BioSANS2020.Gillespie import *
+from BioSANS2020.Tau_leaping import *
+from BioSANS2020.Tau_leaping2 import *
+from BioSANS2020.mytauleap import *
+from BioSANS2020.Euler import *
+from BioSANS2020.LNAapprox import *
+from BioSANS2020.LNAapprox2 import *
+from BioSANS2020.NetworkLoc import *
+from BioSANS2020.ode_int import *
+from BioSANS2020.LNAfunctionOfTime import *
+from BioSANS2020.sde_int import *
+from BioSANS2020.runge_kutta4 import *
+from BioSANS2020.param_est import *
+from BioSANS2020.Analytical_sol import *
+from BioSANS2020.create_wxmaxima_command import *
+from BioSANS2020.Conversion import *
 
-from draw_figure import *
-import mglobals as globals2
-import proc_global as proc_global
-from param_slider import *
+from BioSANS2020.draw_figure import *
+import BioSANS2020.mglobals as globals2
+import BioSANS2020.proc_global as proc_global
+from BioSANS2020.param_slider import *
 
 def process_hub(
 	t,Sp,Ksn,concn,Rr,Rp,V,Vm=1,miter=5,logx=False,logy=False,

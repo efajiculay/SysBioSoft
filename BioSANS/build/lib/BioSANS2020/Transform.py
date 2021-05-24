@@ -1,11 +1,15 @@
-from sample_points import *
-from scrollable_text import *
-from draw_figure import *
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
+from BioSANS2020.sample_points import *
+from BioSANS2020.scrollable_text import *
+from BioSANS2020.draw_figure import *
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 import numpy as np
-import mglobals as globals
+import BioSANS2020.mglobals as globals
 
 def normalize(v):
 	norm = np.linalg.norm(v)

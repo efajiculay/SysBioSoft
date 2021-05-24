@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -7,10 +11,10 @@ import re
 
 import numpy as np
 import time
-from processes_hub import *
-#import mglobals as globals2
-import proc_global as proc_global
-from sbmlMath import *
+from BioSANS2020.processes_hub import *
+#import BioSANS2020.mglobals as globals2
+import BioSANS2020.proc_global as proc_global
+from BioSANS2020.sbmlMath import *
 
 INF = np.inf
 NaN = np.nan

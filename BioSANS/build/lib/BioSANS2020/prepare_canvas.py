@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 from tkinter import Canvas, Scrollbar
 #frame1a = Frame(frame1, height = 510, width = 1045, bg='#8c8c8c', borderwidth=2)
 #frame1a.place(x=2,y=75) 

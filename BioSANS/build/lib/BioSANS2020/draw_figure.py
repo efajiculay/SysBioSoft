@@ -1,6 +1,10 @@
-from tkinter import Frame, Canvas, Checkbutton, TOP, BOTH, IntVar
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
+from tkinter import Frame, Canvas, Checkbutton, IntVar
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk as NavigationToolbar2TkAgg
-import mglobals as globals2
+import BioSANS2020.mglobals as globals2
 
 def canvas_update_widgets(e,canvas):
 	#R = canvas._root().winfo_height()
@@ -10,6 +14,7 @@ def canvas_update_widgets(e,canvas):
 	#print(canvas.winfo_children())
 	H = canvas.winfo_height()
 	W = canvas.winfo_width()
+
 	objCan = canvas.find_all()
 	for x in objCan:
 		canvas.itemconfig(x,height=H,width=W-5)
@@ -25,16 +30,16 @@ def draw_figure(items,figure,loc=(0, 0)):
 		frame = Frame(canva, height = 425, width = 1000, borderwidth=0,bd=0)
 		frame.pack(side='top')		
 		figure_canvas = FigureCanvasTkAgg(figure, frame)
-		canva.pack()
+		canva.pack(fill="both",expand=True)
 		figure_canvas.get_tk_widget().pack(side='top')
 		toolbar = NavigationToolbar2TkAgg(figure_canvas, frame)
 		toolbar.update()
-		figure_canvas._tkcanvas.pack(side=TOP, fill=BOTH, expand=1)	
+		figure_canvas._tkcanvas.pack(side="top")	
 		globals2.IntVars.append(IntVar(value=-1))
-		C1 = Checkbutton(canva, text = "", variable = globals2.IntVars[-1], onvalue = globals2.plot_i, offvalue = -1, height=2, width = 2,bg="#ccffcc")
-		C1.place(x=1000,y=200)		
+		#C1 = Checkbutton(canva, text = "", variable = globals2.IntVars[-1], onvalue = globals2.plot_i, offvalue = -1, height=2, width = 2,bg="#ccffcc")
+		#C1.place(x=1000,y=200)		
 		wind1 = canva.create_window(2, 2, anchor='nw', window=frame)
-		wind2 = canva.create_window(1020, 216, anchor='ne', window=C1,tags="gg")
+		#wind2 = canva.create_window(1020, 216, anchor='ne', window=C1,tags="gg")
 		canvas.create_window(0, 450*globals2.plot_i, anchor='nw', window=canva)
 		globals2.Container.append([canvas,wind1])
 		#canvas.move(wind1,100,100)

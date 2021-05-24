@@ -1,11 +1,15 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import numpy as np
 from scipy.integrate import odeint
-from ode_int import *
-from myMCEM import *
+from BioSANS2020.ode_int import *
+from BioSANS2020.myMCEM import *
 from tkinter import filedialog
-from scrollable_text import *
+from BioSANS2020.scrollable_text import *
 from scipy import optimize
-import proc_global as proc_global
+import BioSANS2020.proc_global as proc_global
 
 def load_data(file=None):
 	if file == None:

@@ -1,7 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import numpy as np
-from propensity import *
-from recalculate_globals import *
-import mglobals as globals2
+from BioSANS2020.propensity import *
+from BioSANS2020.recalculate_globals import *
+import BioSANS2020.mglobals as globals2
 
 def rk4_model(Sp,Ks,conc,Rr,Rp,V,t,molar=False):	
 	if not molar:

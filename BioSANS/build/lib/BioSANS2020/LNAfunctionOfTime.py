@@ -1,8 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 from scipy.integrate import odeint
-from propensity import *
-from recalculate_globals import *
-from LNAapprox import lna_ss_jacobian, LNA_model_ss
-import mglobals as globals2
+from BioSANS2020.propensity import *
+from BioSANS2020.recalculate_globals import *
+from BioSANS2020.LNAapprox import lna_ss_jacobian, LNA_model_ss
+import BioSANS2020.mglobals as globals2
 import numpy as np
 
 def LNA_ode_model(z,t,Sp,Ks,Rr,Rp,V,molar=False):  

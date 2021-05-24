@@ -1,5 +1,9 @@
-from scrollable_text import *
-from propensity import *
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
+from BioSANS2020.scrollable_text import *
+from BioSANS2020.propensity import *
 from sympy import *
 
 def subs2(Z,cval):

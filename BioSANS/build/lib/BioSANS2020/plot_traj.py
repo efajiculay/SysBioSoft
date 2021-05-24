@@ -1,9 +1,13 @@
+import sys
+import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import matplotlib.pyplot as plt
 import multiprocessing
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits import mplot3d
 
-from draw_figure import *
+from BioSANS2020.draw_figure import *
 
 def plot_traj(data,Si,items,plotted,mix_plot=True,logx=False,logy=False,normalize=False,SiTicked=None):
 	miter = len(data)

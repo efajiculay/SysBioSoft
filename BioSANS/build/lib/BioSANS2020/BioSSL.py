@@ -1,19 +1,21 @@
 import sys
 import os
+sys.path.append(os.path.abspath("BioSANS2020"))
+
 import pathlib
-from process import *
-from ssl_calls import *
+from BioSANS2020.process import *
+from BioSANS2020.ssl_calls import *
 import pandas as pd
-import mglobals as globals
+import BioSANS2020.mglobals as globals
 import matplotlib.pyplot as plt
 
 try:
 	import tempfile
-	cwd = os.path.join(tempfile.gettempdir(),"Temporary_folder")
+	cwd = os.path.join(tempfile.gettempdir(),"BioSSL_temporary_folder")
 except:
-	cwd = os.path.join(os.getcwd(),"Temporary_folder")
+	cwd = os.path.join(os.getcwd(),"BioSSL_temporary_folder")
 try:
-	os.mkdir(cwd,777)
+	os.mkdir(cwd,0o777)
 except:
 	pass
 
@@ -150,7 +152,10 @@ def process_command(command):
 	elif rowc[0].lower() == "pwd":
 		print(cwd)
 	elif rowc[0].lower() == "mkdir":
-		os.mkdir(rowc[1])
+		try:
+			os.mkdir(cwd+"/"+rowc[1],0o777)
+		except:
+			pass
 	elif rowc[0].lower() == "ls":
 		dirs = []
 		try:
@@ -257,10 +262,10 @@ if __name__ == '__main__':
 	print("###############################################################")
 	print("Welcome to BioSSL commandline interface\n") 
 	
-	abspath = os.path.abspath(cwd)
+	abspath = cwd#os.path.abspath(cwd)
 	dname = os.path.dirname(abspath)
 	os.chdir(dname)
-	cwd = str(abspath)
+	cwd = str(abspath).replace("\\","/")
 		
 	row = " "
 	command = " "
