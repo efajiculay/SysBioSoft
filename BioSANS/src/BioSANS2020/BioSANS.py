@@ -136,7 +136,7 @@ def runpy_file():
 					
 def run_SSL(): 
 	if platform == "win32":
-		Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE)
+		Popen([sys.executable,"-m","BioSANS2020.BioSSL"], creationflags=CREATE_NEW_CONSOLE)
 	elif platform == "darwin":
 		A = check_output(['pip3', 'show', 'BioSANS2020-efajiculay'])
 		A = str(A).split("\\n")

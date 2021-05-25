@@ -1,6 +1,5 @@
 import sys
 import os
-sys.path.append(os.path.abspath("BioSANS2020"))
 
 from datetime import datetime
 import tkinter as gui
@@ -32,18 +31,18 @@ try:
 except:
 	Temporary_folder = "BioSANS_temporary_folder"
 
-import BioSANS2020.mglobals as globals
-import BioSANS2020.proc_global as proc_global
-from BioSANS2020.prepare_canvas import *
-from BioSANS2020.process import *
-from BioSANS2020.plot_traj import *
-from BioSANS2020.Transform import *
-from BioSANS2020.process_sbml import process_sbml as sbml_to_topo
+from BioSANS2020.myglobal import mglobals as globals2
+from BioSANS2020.myglobal import proc_global as proc_global
+from BioSANS2020.gui_functs.prepare_canvas import *
+from BioSANS2020.prepcodes.process import *
+from BioSANS2020.analysis.plotting.plot_traj import *
+from BioSANS2020.analysis.numeric.Transform import *
+from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
 
-import BioSANS2020.topology_view as topology_view
-from BioSANS2020.new_file import *
+import BioSANS2020.model.topology_view as topology_view
+from BioSANS2020.model.new_file import *
 
-globals.init()
+globals2.init()
 if __name__ == '__main__':
 	proc_global.init()
 
@@ -87,7 +86,7 @@ def load_data(items):
 	file = filedialog.askopenfilename(title = "Select file")
 	file_name["topology"] = file
 	file_name["current_folder"] = file
-	globals.toConvert = file
+	globals2.toConvert = file
 	if os.path.isfile(file):
 		file_name['last_open'] = topology_view.view_topo(file,items)
 		
@@ -173,7 +172,7 @@ def load_data2(plot=False):
 			dd.append(cols)
 		data.append(np.array(dd))
 	if plot:
-		plot_traj(data,Si,items,globals.plotted,mix_plot=True,logx=False,logy=False,normalize=False)
+		plot_traj(data,Si,items,globals2.plotted,mix_plot=True,logx=False,logy=False,normalize=False)
 	current_data = (data, Si)
 	print(time.time()-t_o)
 	
@@ -192,10 +191,10 @@ def load_image(wdata=False):
 	render = ImageTk.PhotoImage(load)
 	img = gui.Label(canvas, image=render)
 	img.image = render
-	canvas.create_window(0, 426*globals.plot_i, anchor='nw', window=img)
+	canvas.create_window(0, 426*globals2.plot_i, anchor='nw', window=img)
 	canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 	canvas.configure(scrollregion=canvas.bbox("all"))		
-	globals.plot_i = globals.plot_i+1
+	globals2.plot_i = globals2.plot_i+1
 	
 	if wdata:
 		file = str(file).replace("jpg", "dat").replace("png", "dat")
@@ -356,7 +355,7 @@ def plot_trajD(current_data,items):
 		E[-1].insert(gui.END,"0:-1")
 		
 		B1 = ttk.Button(par, text="PLOT", command=lambda : plot_traj2( \
-		data,Si,items,globals.plotted,logx=False,logy=False,normalize=False, \
+		data,Si,items,globals2.plotted,logx=False,logy=False,normalize=False, \
 		xlabel=optselVar[0].get() ,ylabel=optselVar[1].get(), zlabel=optselVar[2].get(), trange=E[-1].get()))
 		B1.grid(row = 5, column = 0, sticky = gui.W, pady = 2) 
 	except:
@@ -408,7 +407,7 @@ def plot_trajD2(current_data2,items):
 		
 		B1 = ttk.Button(pard, text="PLOT", \
 		command=lambda : \
-				plot_traj(data,Si,items,globals.plotted,mix_plot=True,logx=False,logy=False,normalize=False,SiTicked=getChecked(L1,L,Si)) \
+				plot_traj(data,Si,items,globals2.plotted,mix_plot=True,logx=False,logy=False,normalize=False,SiTicked=getChecked(L1,L,Si)) \
 		)
 		B1.pack(side="bottom",fill="x")
 	except:
@@ -630,7 +629,7 @@ if __name__ == "__main__":
 	ConvMenu.add_command ( label="Topo(molecules) to SBML",command=lambda: paramSet("topoTosbml"),background="white",foreground="Blue"  )	
 	ConvMenu.add_command ( label="Topo(molar) to SBML",command=lambda: paramSet("topoTosbml2"),background="white",foreground="Blue"  )	
 	ConvMenu.add_command ( label="Topo(no unit) to SBML",command=lambda: paramSet("topoTosbml3"),background="white",foreground="Blue"  )	
-	ConvMenu.add_command ( label="SBML to Topo",command=lambda: sbml_to_topo(globals.toConvert),background="white",foreground="Blue"  )	
+	ConvMenu.add_command ( label="SBML to Topo",command=lambda: sbml_to_topo(globals2.toConvert),background="white",foreground="Blue"  )	
 	NetLMenu = gui.Menu(frame,tearoff = 1 )
 	NetLMenu.add_command ( label="Symbolic, Macroscopic",command=lambda: paramSet("NetLoc1"),background="white",foreground="Blue" )
 	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )

@@ -1,3 +1,10 @@
+
+#print(os.environ["HOMEPATH"])
+#print(sys.version)
+#conda env remove -n BioSANS
+#conda create -n BioSANS python==3.8.8
+#conda activate BioSANS
+
 #9grwg8eew3ew7rqw13525O35o54h56ayyeAeryseryteyhyrreydeyp
 #pypi-AgENdGVzdC5weXBpLm9yZwIkMjhlODI0NjktOTNjOS00YjNjLWE5MzktNDE1NDZmYzA2NjdkAAIleyJwZXJtaXNzaW9ucyI6ICJ1c2VyIiwgInZlcnNpb24iOiAxfQAABiBNFUxK_KG7Hk3y0R55Xlu-NUjq3xqtSsyZ6p-f6dY1iQ
 
@@ -35,4 +42,4 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 #https://docs.anaconda.com/anaconda/install/silent-mode/
 #https://godatadriven.com/blog/a-practical-guide-to-using-setup-py/
 
-#pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020==0.0.6
+#pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020

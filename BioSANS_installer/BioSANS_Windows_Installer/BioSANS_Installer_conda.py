@@ -3,11 +3,6 @@ import os
 import subprocess
 import pkg_resources
 
-#print(os.environ["HOMEPATH"])
-#print(sys.version)
-#conda env remove -n BioSANS
-#conda create -n BioSANS python==3.8.8
-#conda activate BioSANS
 
 python_ok = False
 if sys.version_info[0] == 3 and sys.version_info[1] >= 7:
@@ -17,12 +12,13 @@ pythonCommand = "python"
 pipCommand = "pip"
 
 if python_ok:
-
+	
 	try:
-		os.system(pipCommand+" "+"install --upgrade pip --user")
+		os.system(pythonCommand+" -m pip install --upgrade pip")
 	except:
 		pass
-
+	
+	"""
 	required = {
 		"DateTime",
 		"pathlib",
@@ -35,7 +31,8 @@ if python_ok:
 		"scipy",
 		"sdeint",
 		"func_timeout",
-		"sympy"
+		"sympy",
+		"applescript"
 	}
 	
 	installed = {pkg.key for pkg in pkg_resources.working_set}
@@ -45,14 +42,15 @@ if python_ok:
 		try:
 			os.system("conda install "+item+"")
 		finally:
-			os.system(pipCommand+" "+"install "+item+"")		
+			#os.system(pipCommand+" "+"install "+item+"")
+			pass
+	"""
 
-	try:
-		os.system(pipCommand+" "+"install -i https://test.pypi.org/simple/ BioSANS2020-efajiculay --user")
-	finally:
-		pass
+	com = pipCommand+" "+"install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020"
+	rs = subprocess.Popen(com).communicate()[0]
 
-	A = subprocess.check_output([pipCommand, 'show', 'BioSANS2020-efajiculay'])
+	"""
+	A = subprocess.check_output([pipCommand, 'show', 'BioSANS2020'])
 	A = str(A).split("\\n")
 	install_dir = ""
 	for row in A:
@@ -83,7 +81,7 @@ if python_ok:
 	else:
 		print("software installed but directory of installation not automatically grabbed")
 		print("Locate installation directory using\n")
-		print(pipCommand+" "+"show BioSANS2020-efajiculay")
+		print(pipCommand+" "+"show BioSANS2020")
 		print()
 		print()
 		print("To run BioSANS GUI, type the following commands")
@@ -94,6 +92,30 @@ if python_ok:
 		print()
 		print(pythonCommand+" "+install_dir+"/BioSANS2020/BioSSL.py")
 		print()
+	"""
+	
+	print("####################################################################################")
+	print("To run BioSANS GUI, type either one of the following commands in the python terminal")
+	print()
+	print("BioSANS")
+	print(pythonCommand+" -m BioSANS2020")
+	print(pythonCommand+" -m BioSANS2020.BioSANS")
+	print()
+	print("####################################################################################")
+	print("To run BioSSL CLI, type either one of the following commands in the python terminal")
+	print()
+	print("BioSSL")
+	print(pythonCommand+" -m BioSANS2020.BioSSL")
+	print()
+	print("####################################################################################")
+
+	Shcut = open(os.path.join(os.environ["HOMEPATH"],"Desktop","BioSANS.bat"),"w")
+	Shcut.write("@echo off\n")
+	Shcut.write("start "+sys.executable.replace(".exe","w.exe")+" -m BioSANS2020.BioSANS")
+	Shcut.close()
+	print()
+	print("You may also launched BioSANS by double clicking the BioSANS.bat file in the desktop")
+	print()	
 		
 else:
 	print("Please install python 3.7 or higher first")

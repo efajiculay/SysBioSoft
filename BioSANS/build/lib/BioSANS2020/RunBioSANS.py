@@ -1,8 +1,9 @@
-import os
-import sys
+from os import system
+from subprocess import Popen
+from sys import executable
 
-def main1():
-	os.system(str(sys.executable)+" -m BioSANS2020.BioSANS")
+def BioSANS():
+	Popen(str(executable)+" -m BioSANS2020.BioSANS")
 
-def main2():
-	os.system(str(sys.executable)+" -m BioSANS2020.BioSSL")
+def BioSSL():
+	system(str(executable)+" -m BioSANS2020.BioSSL")

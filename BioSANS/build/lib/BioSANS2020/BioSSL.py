@@ -1,12 +1,12 @@
-import sys
+#import sys
 import os
-sys.path.append(os.path.abspath("BioSANS2020"))
+#sys.path.append(os.path.abspath("BioSANS2020"))
 
 import pathlib
-from BioSANS2020.process import *
-from BioSANS2020.ssl_calls import *
+from BioSANS2020.prepcodes.process import *
+from BioSANS2020.cli_functs.ssl_calls import *
 import pandas as pd
-import BioSANS2020.mglobals as globals
+from BioSANS2020.myglobal import mglobals as globals2
 import matplotlib.pyplot as plt
 
 try:
@@ -19,7 +19,7 @@ try:
 except:
 	pass
 
-globals.init()
+globals2.init()
 trj = {}
 
 def get_input():

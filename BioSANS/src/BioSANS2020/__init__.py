@@ -52,7 +52,7 @@ BIOSANS2020
 │   │
 │   └───param_est
 │           myMCEM.py
-│           param_est.py
+│           param_estimate.py
 │           param_slider.py
 │
 ├───myglobal

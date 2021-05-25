@@ -19,7 +19,7 @@ try:
 except:
 	pass
 
-globals.init()
+globals2.init()
 trj = {}
 
 def get_input():

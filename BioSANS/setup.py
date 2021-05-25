@@ -5,9 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
 	name="BioSANS2020",
-    #name="BioSANS2020-efajiculay",
-    #version="0.1.5",
-	version="0.1.1",
+	version="0.1.4",
     author="Erickson Erigio Fajiculay",
     author_email="efajiculay@yahoo.com",
     description="Symbolic and Numeric Software for Systems Biology",
@@ -18,7 +16,7 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
 	license="GPLv3",
     classifiers=[
-		"Development Status :: 3 - Alpha",
+		"Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 "
 		"(GPLv3)",
@@ -35,6 +33,7 @@ setuptools.setup(
 		"matplotlib==3.3.3",
 		"python-libsbml",
 		"scipy",
+		"func_timeout",
 		"sdeint",
 		"sympy",
 		"applescript"
