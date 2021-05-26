@@ -1,10 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+
 block_cipher = None
 
 
 a = Analysis(['BioSANS_installer_amd32.py'],
-             pathex=['C:\\Users\\efaji\\Documents\\GitHub\\SysBioSoft\\BioSANS_installer\\BioSANS_installer_amd32'],
+             pathex=['C:\\Users\\Erickson\\Documents\\GitHub\\SysBioSoft\\BioSANS_installer\\BioSANS_Windows_Installer\\BioSANS_installer_amd32'],
              binaries=[],
              datas=[('BioSANSLib/BioSANS.ico', 'BioSANSLib'), ('BioSANSLib/BioSANS_installer.bat', 'BioSANSLib'), ('BioSANSLib/short_cut_create.bat', 'BioSANSLib'), ('BioSANSLib/unattend.xml', 'BioSANSLib'), ('BioSANSLib/Window_Installer.py', 'BioSANSLib')],
              hiddenimports=[],

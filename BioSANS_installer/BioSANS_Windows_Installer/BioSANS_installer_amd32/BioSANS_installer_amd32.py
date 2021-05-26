@@ -3,8 +3,10 @@ from os import getcwd, path
 from subprocess import Popen, PIPE
 from wget import download
 
-gcwd = sys._MEIPASS 
-#gcwd = getcwd()
+try:
+	gcwd = sys._MEIPASS
+except:	
+	gcwd = getcwd()
 
 Bcwd = path.join(gcwd,"BioSANSLib")
 file_path = path.join(gcwd,"BioSANSLib","BioSANS_installer.bat")
