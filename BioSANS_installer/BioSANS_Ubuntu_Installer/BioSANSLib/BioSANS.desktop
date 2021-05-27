@@ -1,11 +1,10 @@
 [Desktop Entry]
-Name=BioSANS (0.0.9)
+Name=BioSANS
 Comment=BioSANS2020
-Exec=/home/killuagon/Desktop/UbuntuOSInstaller/BioSANSLib/dist/BioSANS
-Icon=/home/killuagon/Desktop/BioSANS.xpm
+Exec=/home/killuagon/BioSANSLib/BioSANS
+Icon=/home/killuagon/BioSANSLib/BioSANS.xpm
 Terminal=false
 Type=Application
 Categories=Development;
 StartupNotify=true
 NoDisplay=true
-

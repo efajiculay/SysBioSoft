@@ -18,8 +18,8 @@ import webbrowser
 if platform == "win32":
 	from subprocess import Popen, CREATE_NEW_CONSOLE
 elif platform == "darwin":
-	from applescript import tell
-	from subprocess import check_output
+	from applescript import tell as my_tell_us
+	from subprocess import check_output, call as my_call_us
 elif platform == "linux":
 	pass
 else:
@@ -91,10 +91,15 @@ def load_data(items):
 		file_name['last_open'] = topology_view.view_topo(file,items)
 		
 def show_file_dir(path):
-	try:
+	global platform
+	if platform == "win32":
+		os.startfile(os.path.dirname(path))
+	elif platform == "darwin":
+		my_call_us('open', os.path.dirname(path))
+	elif platform == "linux":
+		my_call_us('xdg-open', os.path.dirname(path))
+	else:
 		webbrowser.open(os.path.dirname(path))
-	except:
-		pass
 
 def create_file(items):
 	global file_name, Temporary_folder
@@ -128,7 +133,7 @@ def runpy_file():
 	if platform == "win32":
 		Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
 	elif platform == "darwin":
-		tell.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
+		my_tell_us.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
 	elif platform == "linux":
 		os.system("gnome-terminal -x python3 "+file_name["topology"])
 	else:
@@ -147,7 +152,7 @@ def run_SSL():
 				install_dir = ("".join(line[1:]).strip("\\r\\n").replace("c\\","c:/").replace("\\","/").replace("//","/"))
 		if install_dir != "":
 			install_dir = str(install_dir)
-			tell.app("Terminal",'do script "'+str(sys.executable)+" "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
+			my_tell_us.app("Terminal",'do script "'+str(sys.executable)+" "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
 	elif platform == "linux":
 		os.system("gnome-terminal -x python3 "+os.path.join(os.getcwd(),"BioSSL.py"))
 	else:
