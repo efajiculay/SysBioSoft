@@ -1,5 +1,7 @@
 from sympy import *
 import numpy as np
+from BioSANS2020.gui_functs.scrollable_text import *
+
 
 done_parsing = set()
 def process(x):
@@ -125,8 +127,15 @@ def print_stoich_prop(dxdt):
 	for c in np.array(w):
 		print(c)
 
-def transform_to_rxn(x, dxdt):
+def transform_to_rxn(x, dxdt, xo, ks, items):
 	global done_parsing
+	
+	if items:
+		text = prepare_scroll_text(items)
+		ffrint = lambda x: text.insert(INSERT,x+"\n")
+	else:
+		ffrint = lambda x: print(" ".join([str(y) for y in x]),end="")		
+	
 	done_parsing = set()
 	V, w = get_prop_stoich(dxdt)
 	S = np.around(np.array(V).astype(float),3)
@@ -157,54 +166,52 @@ def transform_to_rxn(x, dxdt):
 		Rxn.append(R.strip("+ ")+" => "+P.strip("+ ")+", 1 ::::: lambda "+inSp+" : "+str(w[ind]))
 		ind = ind + 1
 
-	print()
-	print("Function_Definitions:")
+	ffrint("Function_Definitions:")
 	for k in Ksn:
-		print(k.strip()+" = type actual value")
+		ffrint(k.strip()+" = type actual value") if k.strip() not in ks else ffrint(k.strip()+" = "+ks[k.strip()])
 	for c in x:
-		print(c.strip()+"o = type actual value")
+		ffrint(c.strip()+"_ini = type actual value") if c.strip() not in xo else ffrint(c.strip()+"_ini = "+xo[c.strip()])
 		
-	print()
-	print("#REACTIONS")
+	ffrint("\n")
+	ffrint("#REACTIONS")
 	for rx in Rxn:
-		print(rx)
+		ffrint(rx)
 		
-	print()
-	print("@CONCENTRATION")
+	ffrint("\n")
+	ffrint("@CONCENTRATION")
 	for c in x:
-		print(c+" , "+c.strip()+"o")
-		
-dd = open("NewText.txt","r")
-print()
-x = []
-dxdt = []
-for xx in dd:
-	row = xx.split("=")
-	x.append(row[0].strip())
-	dxdt.append(row[1])
-#print_stoich_prop(dxdt)
-#transform_to_rxn(x,dxdt)
+		ffrint(c+" , "+c.strip()+"_ini")
 
-print()
-dd = open("try.txt","r")
-print()
-x = []
-dxdt = []
-for xx in dd:
-	row = xx.split("=")
-	x.append(row[0].strip())
-	dxdt.append(row[1])
-#print_stoich_prop(dxdt)
-#transform_to_rxn(x,dxdt)
+def odedxdt_to_topo(mfile,items):		
+	dd = open(mfile,"r")
+	print()
+	x = []
+	xo = {}
+	ks = {}
+	dxdt = []
+	last = ""
+	for xx in dd:
+		if last == "ODE_DECLARATIONS" and xx.strip() not in ["INI_CONCENTRATIONS:","RATE_CONSTANTS:"]:
+			if xx.strip() != "":
+				row = xx.split("=")
+				x.append(row[0].strip())
+				dxdt.append(row[1])
+		elif last == "INI_CONCENTRATIONS" and xx.strip() not in ["ODE_DECLARATIONS:","RATE_CONSTANTS:"]:
+			if xx.strip() != "":
+				row = xx.split("=")
+				xo[row[0].strip()] = row[1].strip()
+		elif last == "RATE_CONSTANTS"  and xx.strip() not in ["ODE_DECLARATIONS:","INI_CONCENTRATIONS:"]:
+			if xx.strip() != "":
+				row = xx.split("=")
+				ks[row[0].strip()] = row[1].strip()	
+		elif xx.strip() == "ODE_DECLARATIONS:":
+			last = "ODE_DECLARATIONS"
+		elif xx.strip() == "INI_CONCENTRATIONS:":
+			last = "INI_CONCENTRATIONS"
+		elif xx.strip() == "RATE_CONSTANTS:":
+			last = "RATE_CONSTANTS"
+			
+	#print_stoich_prop(dxdt)
+	transform_to_rxn(x,dxdt,xo,ks,items)
 
-print()
-dd = open("try2.txt","r")
-print()
-x = []
-dxdt = []
-for xx in dd:
-	row = xx.split("=")
-	x.append(row[0].strip())
-	dxdt.append(row[1])
-print_stoich_prop(dxdt)
-transform_to_rxn(x,dxdt)
+#odedxdt_to_topo("NewText.txt")

@@ -193,7 +193,7 @@ def process(
 		if len(s)>1:
 			last = 1
 			for x in s:
-				if not isNumber(x) and x!="+":
+				if (not isNumber(x) or x.lower() == "e")  and x!="+":
 					Rp[ih][x] = last
 					last = 1
 					if x in Sp:
@@ -209,6 +209,7 @@ def process(
 				Sp[x].add(ih)
 			else:
 				Sp[x] = {ih}
+	#print(Sp)
 
 	V = []
 

@@ -38,7 +38,7 @@ from BioSANS2020.prepcodes.process import *
 from BioSANS2020.analysis.plotting.plot_traj import *
 from BioSANS2020.analysis.numeric.Transform import *
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
-from BioSANS2020.model.ode_parse import odeExtract
+#from BioSANS2020.model.ode_parse import odeExtract
 
 import BioSANS2020.model.topology_view as topology_view
 from BioSANS2020.model.new_file import *
@@ -636,7 +636,6 @@ if __name__ == "__main__":
 	ConvMenu.add_command ( label="Topo(molar) to SBML",command=lambda: paramSet("topoTosbml2"),background="white",foreground="Blue"  )	
 	ConvMenu.add_command ( label="Topo(no unit) to SBML",command=lambda: paramSet("topoTosbml3"),background="white",foreground="Blue"  )	
 	ConvMenu.add_command ( label="SBML to Topo",command=lambda: sbml_to_topo(globals2.toConvert),background="white",foreground="Blue"  )	
-	ConvMenu.add_command ( label="ODE to Topo",command=lambda: odeExtract.odedxdt_to_topo(file_name["topology"],items),background="white",foreground="Blue"  )
 	NetLMenu = gui.Menu(frame,tearoff = 1 )
 	NetLMenu.add_command ( label="Symbolic, Macroscopic",command=lambda: paramSet("NetLoc1"),background="white",foreground="Blue" )
 	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )
