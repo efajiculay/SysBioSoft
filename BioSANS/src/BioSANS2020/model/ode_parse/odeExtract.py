@@ -160,9 +160,9 @@ def transform_to_rxn(x, dxdt):
 	print()
 	print("Function_Definitions:")
 	for k in Ksn:
-		print(k+" = type actual value")
+		print(k.strip()+" = type actual value")
 	for c in x:
-		print(c+"o = type actual value")
+		print(c.strip()+"o = type actual value")
 		
 	print()
 	print("#REACTIONS")
@@ -172,25 +172,39 @@ def transform_to_rxn(x, dxdt):
 	print()
 	print("@CONCENTRATION")
 	for c in x:
-		print(c+" , "+c+"o")
+		print(c+" , "+c.strip()+"o")
 		
-dxdt = [
-	"-2*k1*A*B+k4*C",
-	"-4*k1*A*B+k5",
-	"k1*A*B-k6",
-]
-x = ['A','B','C']
+dd = open("NewText.txt","r")
+print()
+x = []
+dxdt = []
+for xx in dd:
+	row = xx.split("=")
+	x.append(row[0].strip())
+	dxdt.append(row[1])
+#print_stoich_prop(dxdt)
+#transform_to_rxn(x,dxdt)
 
+print()
+dd = open("try.txt","r")
+print()
+x = []
+dxdt = []
+for xx in dd:
+	row = xx.split("=")
+	x.append(row[0].strip())
+	dxdt.append(row[1])
+#print_stoich_prop(dxdt)
+#transform_to_rxn(x,dxdt)
+
+print()
+dd = open("try2.txt","r")
+print()
+x = []
+dxdt = []
+for xx in dd:
+	row = xx.split("=")
+	x.append(row[0].strip())
+	dxdt.append(row[1])
 print_stoich_prop(dxdt)
 transform_to_rxn(x,dxdt)
-
-dxdt = [
-	"2*A*B+k1*A/(2+B)+C*(D+A)/(G+W)",
-	"24*A*B+k1*A*3/(2+B)+C*(D+A)/(G+W)",
-	"24*A*B+k1*A*3/(2+B)+0.5*C*(D+A)/(G+W)",
-	"24*A*B+k1*A**2/(2+B**2)+0.5*C*(D+A)/(G+W)",
-	"24*A*B+k1*24/(2+B**2)+0.5*C*(D+A)/(G+W)",
-	"24*A*B+24/(2+B**2)/2+0.5*C*(D+A)/(G+W)",
-	"24*A*B+h123*245/(2+B**2)/2+0.5*C*(D+A)/(G+W)"
-]
-print_stoich_prop(dxdt)

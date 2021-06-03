@@ -38,6 +38,7 @@ from BioSANS2020.prepcodes.process import *
 from BioSANS2020.analysis.plotting.plot_traj import *
 from BioSANS2020.analysis.numeric.Transform import *
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
+from BioSANS2020.model.ode_parse import odeExtract
 
 import BioSANS2020.model.topology_view as topology_view
 from BioSANS2020.model.new_file import *
