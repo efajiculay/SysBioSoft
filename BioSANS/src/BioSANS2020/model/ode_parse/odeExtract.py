@@ -129,7 +129,7 @@ def transform_to_rxn(x, dxdt):
 	global done_parsing
 	done_parsing = set()
 	V, w = get_prop_stoich(dxdt)
-	S = np.array(V)
+	S = np.around(np.array(V).astype(float),3)
 	Rxn = []
 	Ksn = set()
 	ind = 0 
