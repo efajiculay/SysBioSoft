@@ -1,19 +1,19 @@
 from sympy import *
 import numpy as np
 
-done = set()
+done_parsing = set()
 def process(x):
-	global done
+	global done_parsing
 	xx =  x.strip("*").strip().replace("*/","/")
 	if xx[0] == "/":
 		xx = "1"+xx
 	if xx[-1] == "/":
 		xx = xx.strip("/")
 	val = sympify(xx.strip("*"))
-	if val in done:
+	if val in done_parsing:
 		return None
 	else:
-		done.add(val)
+		done_parsing.add(val)
 	return val
 
 def propExt(expr,prop):
@@ -88,8 +88,8 @@ def termExt(expr):
 def get_prop_stoich(dxdt):
 	prop = []
 	dAdt = []
-	for expr in dxdt:
-		expr = expand(sympify(expr))
+	for expro in dxdt:
+		expr = expand(sympify(expro))
 		propExt(expr,prop)
 		dAdt.append(expr)
 		
@@ -109,7 +109,81 @@ def get_prop_stoich(dxdt):
 	
 	return Matrix(V), Matrix(w)
 
-"""
+def print_stoich_prop(dxdt):
+	global done_parsing
+	done_parsing = set()
+	print()
+	V, w = get_prop_stoich(dxdt)
+	for t in V*w:
+		print(t)
+	print()
+
+	for c in np.array(V):
+		print([round(y,4) for y in c])
+	print()
+		
+	for c in np.array(w):
+		print(c)
+
+def transform_to_rxn(x, dxdt):
+	global done_parsing
+	done_parsing = set()
+	V, w = get_prop_stoich(dxdt)
+	S = np.array(V)
+	Rxn = []
+	Ksn = set()
+	ind = 0 
+
+	for col in S.T:
+		R = ""
+		P = ""
+		for i in range(len(col)):
+			if col[i] != 0:
+				if col[i]<0:
+					R = R + str(abs(col[i]))+" "+x[i] +" "+ "+ "
+				else:
+					P = P + str(abs(col[i]))+" "+x[i] +" "+ "+ "
+		if R.strip() == "":
+			R = "NONE"
+		
+		inSp = []
+		for s in w[ind].free_symbols:
+			ss = str(s)
+			if ss in x:
+				inSp.append(ss)
+			else:
+				Ksn.add(ss)
+		inSp = ",".join(inSp)
+		Rxn.append(R.strip("+ ")+" => "+P.strip("+ ")+", 1 ::::: lambda "+inSp+" : "+str(w[ind]))
+		ind = ind + 1
+
+	print()
+	print("Function_Definitions:")
+	for k in Ksn:
+		print(k+" = type actual value")
+	for c in x:
+		print(c+"o = type actual value")
+		
+	print()
+	print("#REACTIONS")
+	for rx in Rxn:
+		print(rx)
+		
+	print()
+	print("@CONCENTRATION")
+	for c in x:
+		print(c+" , "+c+"o")
+		
+dxdt = [
+	"-2*k1*A*B+k4*C",
+	"-4*k1*A*B+k5",
+	"k1*A*B-k6",
+]
+x = ['A','B','C']
+
+print_stoich_prop(dxdt)
+transform_to_rxn(x,dxdt)
+
 dxdt = [
 	"2*A*B+k1*A/(2+B)+C*(D+A)/(G+W)",
 	"24*A*B+k1*A*3/(2+B)+C*(D+A)/(G+W)",
@@ -119,52 +193,4 @@ dxdt = [
 	"24*A*B+24/(2+B**2)/2+0.5*C*(D+A)/(G+W)",
 	"24*A*B+h123*245/(2+B**2)/2+0.5*C*(D+A)/(G+W)"
 ]
-
-dxdt = [
-	"-2*k1*A*B",
-	"-4*k1*A*B",
-	"k1*A*B",
-]
-
-"""
-
-dxdt = [
-	"-2*k1*A*B+k4*C",
-	"-4*k1*A*B+k5",
-	"k1*A*B-k6",
-]
-
-x = ['A','B','C']
-
-
-print()
-V, w = get_prop_stoich(dxdt)
-for t in V*w:
-	print(t)
-print()
-
-for c in np.array(V):
-	print([round(x,4) for x in c])
-print()
-	
-for c in np.array(w):
-	print(c)
-
-S = np.array(V)
-Rxn = []
-ind = 0
-for col in S.T:
-	R = ""
-	P = ""
-	for i in range(len(col)):
-		if col[i] != 0:
-			if col[i]<0:
-				R = R + str(abs(col[i]))+" "+x[i] +" "+ "+ "
-			else:
-				P = P + str(abs(col[i]))+" "+x[i] +" "+ "+ "
-	if R.strip() == "":
-		R = "NONE"
-	Rxn.append(R.strip("+ ")+" => "+P.strip("+ ")+", 1 ::::: lambda :"+str(w[ind]))
-	ind = ind + 1
-	print(Rxn[-1])
-
+print_stoich_prop(dxdt)
