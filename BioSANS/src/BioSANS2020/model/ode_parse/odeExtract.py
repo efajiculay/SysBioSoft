@@ -153,7 +153,9 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
 				else:
 					P = P + str(abs(col[i]))+" "+x[i] +" "+ "+ "
 		if R.strip() == "":
-			R = "NONE"
+			R = "0 NONE"
+		if P.strip() == "":
+			P = "0 NONE"
 		
 		inSp = []
 		for s in w[ind].free_symbols:
@@ -172,15 +174,17 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
 	for c in x:
 		ffrint(c.strip()+"_ini = type actual value") if c.strip() not in xo else ffrint(c.strip()+"_ini = "+xo[c.strip()])
 		
-	ffrint("\n")
+	ffrint("")
 	ffrint("#REACTIONS")
 	for rx in Rxn:
 		ffrint(rx)
 		
-	ffrint("\n")
+	ffrint("")
 	ffrint("@CONCENTRATION")
 	for c in x:
 		ffrint(c+" , "+c.strip()+"_ini")
+	ffrint("NONE, 1")
+	return text
 
 def odedxdt_to_topo(mfile,items):		
 	dd = open(mfile,"r")
@@ -212,6 +216,6 @@ def odedxdt_to_topo(mfile,items):
 			last = "RATE_CONSTANTS"
 			
 	#print_stoich_prop(dxdt)
-	transform_to_rxn(x,dxdt,xo,ks,items)
+	return transform_to_rxn(x,dxdt,xo,ks,items)
 
 #odedxdt_to_topo("NewText.txt")

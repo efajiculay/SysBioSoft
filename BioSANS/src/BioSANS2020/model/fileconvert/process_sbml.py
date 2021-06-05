@@ -1327,3 +1327,4 @@ def process_sbml(file,molar=False,variables=None):
 		
 		
 	fftopofile.close()
+	return file+".topo"

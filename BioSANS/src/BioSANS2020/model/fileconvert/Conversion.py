@@ -7,10 +7,11 @@ from BioSANS2020.propagation.propensity import *
 from sympy import *
 from libsbml import *
 from BioSANS2020.myglobal import mglobals as globals2
+from BioSANS2020.propagation.recalculate_globals import *
 
 	
-def topo_to_sbml(Sp,Ks,conc,Rr,Rp,V,Vm,items=None,molar=False):
-	
+def topo_to_sbml(Sp,Ks,conc,Rr,Rp,V,Vm,items=None,molar=False,rfile=None):
+	get_globals(rfile)
 	Cs = {}
 	for x in Sp:
 		Cs[x] = Symbol(x, real = True, negative=False)

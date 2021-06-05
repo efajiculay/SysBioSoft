@@ -79,8 +79,7 @@ def cle_calculate(t,Sp,Ks,sconc,Rr,Rp,V,delX=10,rr=1,implicit=False,rfile=""):
 				for sp in Sp:
 					conc[sp] = max(0, conc[sp])
 				S.append(C)
-					
-					
+								
 				tnew.append(tnow)
 				tindex = tindex + 1
 			else:

@@ -327,15 +327,15 @@ def process_hub(
 			elif method=="topoTosbml":
 				plot_show = False
 				save = False				
-				tnew, z = topo_to_sbml(Sp,Ksn,concn,Rr,Rp,V,Vm,items=items,molar=False)		
+				tnew, z = topo_to_sbml(Sp,Ksn,concn,Rr,Rp,V,Vm,items=items,molar=False,rfile=rfile)		
 			elif method=="topoTosbml2":
 				plot_show = False
 				save = False				
-				tnew, z = topo_to_sbml(Sp,Ksn,concn,Rr,Rp,V,Vm,items=items,molar=True)
+				tnew, z = topo_to_sbml(Sp,Ksn,concn,Rr,Rp,V,Vm,items=items,molar=True,rfile=rfile)
 			elif method=="topoTosbml3":
 				plot_show = False
 				save = False				
-				tnew, z = topo_to_sbml(Sp,Ksn,concn,Rr,Rp,V,Vm,items=items,molar=None)
+				tnew, z = topo_to_sbml(Sp,Ksn,concn,Rr,Rp,V,Vm,items=items,molar=None,rfile=rfile)
 			data.append([tnew,z,Si])	
 
 	nz = []
