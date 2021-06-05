@@ -572,12 +572,6 @@ if __name__ == "__main__":
 	AnalMenu.add_command ( label="For wxmaxima",command=lambda: paramSet("Analyt2"),background="white",foreground="Blue"  )
 	menubut2.menu.add_cascade(label="Analytical soln.", menu=AnalMenu)
 	
-	ODEMenu = gui.Menu(frame,tearoff = 1 )
-	ODEMenu.add_command ( label="Molecules(micro)",command=lambda: paramSet("ODE-1"),background="white",foreground="Blue"  )
-	ODEMenu.add_command ( label="Molar(macro)",command=lambda: paramSet("ODE-2"),background="white",foreground="Blue"  )
-	ODEMenu.add_command ( label="Mole(macro)",command=lambda: paramSet("ODE-3"),background="white",foreground="Blue"  )
-	menubut2.menu.add_cascade(label="ODE int", menu=ODEMenu)
-	
 	Rungek4 = gui.Menu(frame,tearoff = 1 )
 	Rungek4.add_command ( label="Molecules(micro)",command=lambda: paramSet("rk4-1"),background="white",foreground="Blue"  )
 	Rungek4.add_command ( label="Molar(macro)",command=lambda: paramSet("rk4-2"),background="white",foreground="Blue"  )
@@ -601,6 +595,12 @@ if __name__ == "__main__":
 	EulrTau2.add_command ( label="Molar(macro)",command=lambda: paramSet("Euler2-2"),background="white",foreground="Blue" )
 	EulrTau2.add_command ( label="Mole(macro)",command=lambda: paramSet("Euler2-3"),background="white",foreground="Blue" )
 	menubut2.menu.add_cascade(label="Euler (tau-adaptive-2)", menu=EulrTau2)	
+	
+	ODEMenu = gui.Menu(frame,tearoff = 1 )
+	ODEMenu.add_command ( label="Molecules(micro)",command=lambda: paramSet("ODE-1"),background="white",foreground="Blue"  )
+	ODEMenu.add_command ( label="Molar(macro)",command=lambda: paramSet("ODE-2"),background="white",foreground="Blue"  )
+	ODEMenu.add_command ( label="Mole(macro)",command=lambda: paramSet("ODE-3"),background="white",foreground="Blue"  )
+	menubut2.menu.add_cascade(label="ODE int", menu=ODEMenu)
 	
 	#Itoints = gui.Menu(frame,tearoff = 1 )
 	#Itoints.add_command ( label="Molecules",command=lambda: paramSet("Itoint-1"),background="white",foreground="Blue" )

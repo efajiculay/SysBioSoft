@@ -150,8 +150,7 @@ def Euler2_int(t,Sp,Ks,conc,Rr,Rp,V,yscal=10,LNAsolve=False,items=None,implicit=
 		tnew.append(tnow)
 		tindex = 1
 		while tnew[-1]<t[-1]:
-			if tnow>t[tindex]:
-				conc_old = {x: conc[x] for x in conc}
+			conc_old = {x: conc[x] for x in conc}
 			conc, dt, delt, e = EulerHelp(delt, eps, yscal,Sp,Ks,conc,Rr,Rp,V,molar)	
 			tnow = tnow+dt
 			if tnow>t[tindex]:
@@ -171,8 +170,7 @@ def Euler2_int(t,Sp,Ks,conc,Rr,Rp,V,yscal=10,LNAsolve=False,items=None,implicit=
 		tnew.append(tnow)
 		tindex = 1
 		while tnew[-1]<t[-1]:
-			if tnow>t[tindex]:
-				conc_old = {x: conc[x] for x in conc}
+			conc_old = {x: conc[x] for x in conc}
 			conc, dt, delt, e = EulerHelp(delt, eps, yscal,Sp,Ks,conc,Rr,Rp,V,molar)	
 			tnow = tnow+dt
 			if tnow>t[tindex]:
