@@ -26,10 +26,13 @@ def Euler_model(Sp,Ks,conc,Rr,Rp,V,dt,delX,molar=False):
 			dxdt[ind] = 0	
 	return [dxdt.reshape(len(Sp)),dt]
 	
-def Euler_int(t,Sp,Ks,conc,Rr,Rp,V,delX=10,LNAsolve=False,items=None,implicit=False,molar=False,rfile=""):
+def Euler_int(t,Sp,Ks,sconc,Rr,Rp,V,delX=10,LNAsolve=False,items=None,implicit=False,molar=False,rfile=""):
 	get_globals(rfile)
 	tnew = []
 	dt = t[-1]-t[-2]
+	yconc = { x:sconc[x] for x in sconc }
+	conc = { x:sconc[x] for x in sconc }
+	apply_rules(conc, yconc)
 	S = [[conc[z] for z in Sp]]
 
 	if not implicit:	
@@ -39,12 +42,12 @@ def Euler_int(t,Sp,Ks,conc,Rr,Rp,V,delX=10,LNAsolve=False,items=None,implicit=Fa
 			m = np.nan_to_num(Euler_model(Sp,Ks,conc,Rr,Rp,V,dt,delX,molar))
 			mm = m[0].reshape(1,len(m[0]))[0] 
 			tnow = tnow+m[1]
-			S.append(S[-1]+mm)
-			conc = {}
 			ind = 0
 			for sp in Sp:
-				conc[sp] = S[-1][ind]
+				conc[sp] = S[-1][ind] + mm[ind]
 				ind = ind+1
+			apply_rules(conc, yconc)
+			S.append([conc[z] for z in Sp])
 			tnew.append(tnow)
 		if LNAsolve:   
 			return LNA_steady_state(t,Sp,Ks,conc,Rr,Rp,V,items=items)
@@ -62,24 +65,29 @@ def Euler_int(t,Sp,Ks,conc,Rr,Rp,V,delX=10,LNAsolve=False,items=None,implicit=Fa
 				m = np.nan_to_num(Euler_model(Sp,Ks,conc,Rr,Rp,V,dt2,delX,molar))
 				mm = m[0].reshape(1,len(m[0]))[0] 
 				tnow = tnow+m[1]
-				C = C + mm
-				S.append(C)
-				conc = {}
+				
 				ind = 0
 				for sp in Sp:
-					conc[sp] = C[ind]
+					conc[sp] = C[ind] + mm[ind]
 					ind = ind+1
+				apply_rules(conc, yconc)
+				C = [conc[z] for z in Sp]
+				for sp in Sp:
+					conc[sp] = max(0, conc[sp])
+				S.append(C)
+
 				tnew.append(tnow)
 				tindex = tindex + 1
 			else:
 				mm = m[0].reshape(1,len(m[0]))[0] 
-				C = C + mm
-				conc = {}
 				ind = 0
 				for sp in Sp:
-					conc[sp] = C[ind]
+					conc[sp] = C[ind] + mm[ind]
 					ind = ind+1
-				tnow = tnow+m[1]
+				apply_rules(conc, yconc)
+				C = [conc[z] for z in Sp]
+				for sp in Sp:
+					conc[sp] = max(0, conc[sp])
 	return (tnew, np.array(S))
 	
 def Euler2_model(Sp,Ks,conc,Rr,Rp,V,molar=False):	
@@ -140,11 +148,21 @@ def Euler2_int(t,Sp,Ks,conc,Rr,Rp,V,yscal=10,LNAsolve=False,items=None,implicit=
 	if not implicit:	
 		tnow = t[0]
 		tnew.append(tnow)
-		while tnow<t[-1]:
+		tindex = 1
+		while tnew[-1]<t[-1]:
+			conc_old = {x: conc[x] for x in conc}
 			conc, dt, delt, e = EulerHelp(delt, eps, yscal,Sp,Ks,conc,Rr,Rp,V,molar)	
-			S.append([conc[z] for z in Sp])
 			tnow = tnow+dt
+			if tnow>t[tindex]:
+				tnow = tnow - dt
+				dt = t[tindex] - tnow 
+				conc, e = EulerWerEst(dt,Sp,Ks,conc_old,Rr,Rp,V,molar)	
+				delt = 5*dt
+				tindex = tindex + 1
+				tnow = tnow+dt
+			S.append([conc[z] for z in Sp])
 			tnew.append(tnow)
+				
 		if LNAsolve:   
 			return LNA_steady_state(t,Sp,Ks,conc,Rr,Rp,V,items=items)
 	else:

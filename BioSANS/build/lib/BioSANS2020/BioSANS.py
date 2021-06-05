@@ -18,8 +18,8 @@ import webbrowser
 if platform == "win32":
 	from subprocess import Popen, CREATE_NEW_CONSOLE
 elif platform == "darwin":
-	from applescript import tell
-	from subprocess import check_output
+	from applescript import tell as my_tell_us
+	from subprocess import check_output, call as my_call_us
 elif platform == "linux":
 	pass
 else:
@@ -38,6 +38,7 @@ from BioSANS2020.prepcodes.process import *
 from BioSANS2020.analysis.plotting.plot_traj import *
 from BioSANS2020.analysis.numeric.Transform import *
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
+from BioSANS2020.model.ode_parse import odeExtract
 
 import BioSANS2020.model.topology_view as topology_view
 from BioSANS2020.model.new_file import *
@@ -91,12 +92,17 @@ def load_data(items):
 		file_name['last_open'] = topology_view.view_topo(file,items)
 		
 def show_file_dir(path):
-	try:
+	global platform
+	if platform == "win32":
+		os.startfile(os.path.dirname(path))
+	elif platform == "darwin":
+		my_call_us('open', os.path.dirname(path))
+	elif platform == "linux":
+		my_call_us('xdg-open', os.path.dirname(path))
+	else:
 		webbrowser.open(os.path.dirname(path))
-	except:
-		pass
 
-def create_file(items):
+def create_file(items,Ftype):
 	global file_name, Temporary_folder
 	try:
 		os.mkdir(Temporary_folder,0o777)
@@ -109,6 +115,35 @@ def create_file(items):
 		
 	file_name['last_open'] = new_file(items)
 	file_name["topology"] = Temporary_folder+"/temp.txt"
+	if Ftype == 1:
+		file_name['last_open'].insert(INSERT,"FUNCTION_DEFINITIONS:\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"@CONCENTRATION\n")
+	elif Ftype == 2:
+		file_name['last_open'].insert(INSERT,"ODE_DECLARATIONS:\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"INI_CONCENTRATIONS:\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"\n")
+		file_name['last_open'].insert(INSERT,"RATE_CONSTANTS:\n")		
+	
+def extractODE(items):
+	global file_name
+	file_name['last_open'] = odeExtract.odedxdt_to_topo(file_name["topology"],items)
+	file_name["topology"] = file_name["topology"]+".top"
+	
+def sbml_to_topo2(tocon,items):
+	file_name["topology"] = sbml_to_topo(tocon)
+	file_name['last_open'] = topology_view.view_topo(file_name["topology"],items)
 	
 def save_file():
 	global file_name
@@ -128,7 +163,7 @@ def runpy_file():
 	if platform == "win32":
 		Popen([sys.executable,file_name["topology"]], creationflags=CREATE_NEW_CONSOLE) 
 	elif platform == "darwin":
-		tell.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
+		my_tell_us.app("Terminal",'do script "'+str(sys.executable)+" "+file_name["topology"]+'"')
 	elif platform == "linux":
 		os.system("gnome-terminal -x python3 "+file_name["topology"])
 	else:
@@ -136,7 +171,7 @@ def runpy_file():
 					
 def run_SSL(): 
 	if platform == "win32":
-		Popen([sys.executable,os.path.join(os.getcwd(),"BioSSL.py")], creationflags=CREATE_NEW_CONSOLE)
+		Popen([sys.executable,"-m","BioSANS2020.BioSSL"], creationflags=CREATE_NEW_CONSOLE)
 	elif platform == "darwin":
 		A = check_output(['pip3', 'show', 'BioSANS2020-efajiculay'])
 		A = str(A).split("\\n")
@@ -147,7 +182,7 @@ def run_SSL():
 				install_dir = ("".join(line[1:]).strip("\\r\\n").replace("c\\","c:/").replace("\\","/").replace("//","/"))
 		if install_dir != "":
 			install_dir = str(install_dir)
-			tell.app("Terminal",'do script "'+str(sys.executable)+" "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
+			my_tell_us.app("Terminal",'do script "'+str(sys.executable)+" "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
 	elif platform == "linux":
 		os.system("gnome-terminal -x python3 "+os.path.join(os.getcwd(),"BioSSL.py"))
 	else:
@@ -507,10 +542,23 @@ if __name__ == "__main__":
 	LoadMenu.add_command ( label="Image w/ data",command=lambda: load_image(True),background="white",foreground="Blue" )
 	LoadMenu.add_command ( label="Current folder",command=lambda: show_file_dir(file_name["current_folder"]),background="white",foreground="Blue"  )
 	menubut1.menu.add_cascade(label="Open", menu=LoadMenu)	
-	menubut1.menu.add_command ( label="New File",command=lambda: create_file(items))
+	NewFMenu = gui.Menu(frame,tearoff = 1 )
+	NewFMenu.add_command ( label="Blank File",command=lambda: create_file(items,0))
+	NewFMenu.add_command ( label="Topo File",command=lambda: create_file(items,1))
+	NewFMenu.add_command ( label="ODE File",command=lambda: create_file(items,2))
+	menubut1.menu.add_cascade(label="New File", menu=NewFMenu)	
 	menubut1.menu.add_command ( label="Save File",command=lambda: save_file() )
 	menubut1.menu.add_command ( label="Run File.py",command=lambda: runpy_file() )
 	menubut1.menu.add_command ( label="Run SSL",command=lambda: run_SSL() )
+	ConvMenu = gui.Menu(frame,tearoff = 1 )
+	ConvMenu.add_command ( label="SBML to Topo",command=lambda: sbml_to_topo2(globals2.toConvert,items),background="white",foreground="Blue"  )	
+	ConvMenu.add_command ( label="ODE to Topo",command=lambda: extractODE(items),background="white",foreground="Blue"  )
+	TopSbml = gui.Menu(frame,tearoff = 1 )
+	TopSbml.add_command ( label="molecules",command=lambda: paramSet("topoTosbml"),background="white",foreground="Blue"  )	
+	TopSbml.add_command ( label="molar",command=lambda: paramSet("topoTosbml2"),background="white",foreground="Blue"  )	
+	TopSbml.add_command ( label="no unit",command=lambda: paramSet("topoTosbml3"),background="white",foreground="Blue"  )	
+	ConvMenu.add_cascade(label="Topo to SBML", menu=TopSbml)
+	menubut1.menu.add_cascade(label="Convert model", menu=ConvMenu)
 	menubut1.place(x=2,y=5)
 
 	menubut2 = gui.Menubutton(frame,text="Propagation",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
@@ -523,12 +571,6 @@ if __name__ == "__main__":
 	AnalMenu.add_command ( label="Semi-Symbolic :f(t,k)",command=lambda: paramSet("SAnalyt-ftk"),background="white",foreground="Blue"  )
 	AnalMenu.add_command ( label="For wxmaxima",command=lambda: paramSet("Analyt2"),background="white",foreground="Blue"  )
 	menubut2.menu.add_cascade(label="Analytical soln.", menu=AnalMenu)
-	
-	ODEMenu = gui.Menu(frame,tearoff = 1 )
-	ODEMenu.add_command ( label="Molecules(micro)",command=lambda: paramSet("ODE-1"),background="white",foreground="Blue"  )
-	ODEMenu.add_command ( label="Molar(macro)",command=lambda: paramSet("ODE-2"),background="white",foreground="Blue"  )
-	ODEMenu.add_command ( label="Mole(macro)",command=lambda: paramSet("ODE-3"),background="white",foreground="Blue"  )
-	menubut2.menu.add_cascade(label="ODE int", menu=ODEMenu)
 	
 	Rungek4 = gui.Menu(frame,tearoff = 1 )
 	Rungek4.add_command ( label="Molecules(micro)",command=lambda: paramSet("rk4-1"),background="white",foreground="Blue"  )
@@ -553,6 +595,12 @@ if __name__ == "__main__":
 	EulrTau2.add_command ( label="Molar(macro)",command=lambda: paramSet("Euler2-2"),background="white",foreground="Blue" )
 	EulrTau2.add_command ( label="Mole(macro)",command=lambda: paramSet("Euler2-3"),background="white",foreground="Blue" )
 	menubut2.menu.add_cascade(label="Euler (tau-adaptive-2)", menu=EulrTau2)	
+	
+	ODEMenu = gui.Menu(frame,tearoff = 1 )
+	ODEMenu.add_command ( label="Molecules(micro)",command=lambda: paramSet("ODE-1"),background="white",foreground="Blue"  )
+	ODEMenu.add_command ( label="Molar(macro)",command=lambda: paramSet("ODE-2"),background="white",foreground="Blue"  )
+	ODEMenu.add_command ( label="Mole(macro)",command=lambda: paramSet("ODE-3"),background="white",foreground="Blue"  )
+	menubut2.menu.add_cascade(label="ODE int", menu=ODEMenu)
 	
 	#Itoints = gui.Menu(frame,tearoff = 1 )
 	#Itoints.add_command ( label="Molecules",command=lambda: paramSet("Itoint-1"),background="white",foreground="Blue" )
@@ -624,17 +672,11 @@ if __name__ == "__main__":
 	menubut3.menu.add_command ( label="Hist. slice of time",command=lambda: Prob_density3(current_data,items),background="white",foreground="Blue"  )
 	menubut3.menu.add_command ( label="Average of traj.",command=lambda: Ave_traj(current_data,items),background="white",foreground="Blue"  )
 	menubut3.menu.add_command ( label="Phase portrait",command=lambda: plot_trajD(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Plot Data",command=lambda: plot_trajD2(current_data,items),background="white",foreground="Blue"  )
-	ConvMenu = gui.Menu(frame,tearoff = 1 )
-	ConvMenu.add_command ( label="Topo(molecules) to SBML",command=lambda: paramSet("topoTosbml"),background="white",foreground="Blue"  )	
-	ConvMenu.add_command ( label="Topo(molar) to SBML",command=lambda: paramSet("topoTosbml2"),background="white",foreground="Blue"  )	
-	ConvMenu.add_command ( label="Topo(no unit) to SBML",command=lambda: paramSet("topoTosbml3"),background="white",foreground="Blue"  )	
-	ConvMenu.add_command ( label="SBML to Topo",command=lambda: sbml_to_topo(globals2.toConvert),background="white",foreground="Blue"  )	
-	NetLMenu = gui.Menu(frame,tearoff = 1 )
+	menubut3.menu.add_command ( label="Plot Data",command=lambda: plot_trajD2(current_data,items),background="white",foreground="Blue"  )	
+	NetLMenu = gui.Menu(frame,tearoff = 1)
 	NetLMenu.add_command ( label="Symbolic, Macroscopic",command=lambda: paramSet("NetLoc1"),background="white",foreground="Blue" )
 	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )
 	menubut3.menu.add_cascade(label="Network Localization", menu=NetLMenu)
-	menubut3.menu.add_cascade(label="Convert", menu=ConvMenu)	
 	menubut3.place(x=189,y=5)	
 
 	frame1 = gui.Frame(frame, height = 435, width = 972, bg='#8c8c8c', borderwidth=2)

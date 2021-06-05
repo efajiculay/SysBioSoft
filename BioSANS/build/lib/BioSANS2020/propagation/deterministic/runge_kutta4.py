@@ -203,17 +203,29 @@ def rungek4a_int(t,Sp,Ks,conc,Rr,Rp,V,yscal=10,molar=False,implicit=False,rfile=
 	eps = 1.0e-8
 	nSp = [ x for x in conc if x not in Sp ]
 	yconc = { x:conc[x] for x in Sp }
-	apply_rules(conc, yconc)
+	Si = [a for a in Sp]
+	apply_rules(conc, yconc,[0],[conc[a] for a in Sp],Si)	
 	y = [ conc[a] for a in Sp ]
 	S = [y]
 	if not implicit:
 		tnow = t[0]
 		tnew.append(tnow)
-		while tnow<t[-1]:
+		tindex = 1
+		
+		while abs((tnew[-1]-t[-1])/t[-1])>1.0e-5: 
+				   
+			y_old = conc
 			conc, dt, delt, e = rkqs(delt, eps, yscal,Sp,Ks, conc ,Rr,Rp,V,tnow,nSp,molar)	
-			apply_rules(conc, yconc)		
+			tnow = tnow + dt
+			apply_rules(conc, yconc)				
+			if tnow>t[tindex]:
+				tnow = tnow - dt
+				dt = t[tindex] - tnow
+				conc, tnow = runge_kutta_forth(Sp,Ks,y_old,Rr,Rp,V,tnow,dt,nSp,molar)	
+				delt = 5*dt	
+				apply_rules(conc, yconc)						
+				tindex = tindex + 1	
 			S.append([ conc[a] for a in Sp ])
-			tnow = tnow+dt
 			tnew.append(tnow)	
 	else:
 		tnow = t[0]
