@@ -30,10 +30,11 @@ def canvas_update_widgets(e,canvas):
 	H = canvas.winfo_height()
 	W = canvas.winfo_width()
 	objCan = canvas.find_all()
+	objLen = len(objCan)
 	for x in objCan:
 		canvas.itemconfig(x,height=H,width=W-5)
 		x1, y1, x2, y2 = canvas.bbox(x)
-		canvas.move(x,0,(x-1)*H-y1+3)
+		canvas.move(x,0,(objLen-(x-1))*H-y1+3)
 	canvas.configure(scrollregion=canvas.bbox("all"))
 	return "break"
 

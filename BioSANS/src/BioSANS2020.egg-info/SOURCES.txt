@@ -34,6 +34,8 @@ src/BioSANS2020/model/topology_view.py
 src/BioSANS2020/model/fileconvert/Conversion.py
 src/BioSANS2020/model/fileconvert/__init__.py
 src/BioSANS2020/model/fileconvert/process_sbml.py
+src/BioSANS2020/model/ode_parse/__init__.py
+src/BioSANS2020/model/ode_parse/odeExtract.py
 src/BioSANS2020/model/param_est/__init__.py
 src/BioSANS2020/model/param_est/myMCEM.py
 src/BioSANS2020/model/param_est/param_estimate.py
