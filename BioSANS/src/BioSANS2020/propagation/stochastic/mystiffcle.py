@@ -11,11 +11,11 @@ def cle_model(Sp,Ks,conc,Rr,Rp,V,dt,delX,reg=False):
 	D = propensity_vec(Ks,conc,Rr,Rp)
 	G = np.sqrt(D)
 	N = np.random.randn(len(D)).reshape(len(D),1)
-	fx = np.matmul(V,D)
+	fx = np.matmul(V,D)    
 	gx = np.matmul(V,G*N)  
 	if not reg:
-		h1 = np.abs(fx)+1.0e-30
-		h2 = np.abs(gx)+1.0e-30
+		h1 = np.abs(D)+1.0e-30  # np.abs(fx)+1.0e-30
+		h2 = np.abs(G)+1.0e-30	# np.abs(gx)+1.0e-30
 		dt = min(delX*min( np.min(1/h1),np.min(1/h2) ),dt)
 	sqdt = np.sqrt(dt)
 	
@@ -106,18 +106,19 @@ def cle2_calculate(t,Sp,Ks,sconc,Rr,Rp,V,delX=1,rr=1,rfile=""):
 	tnow = t[0]
 	tnew = [tnow]
 	dv = 0
-	
+	C = S[-1]
 	while abs(tnow-t[-1])>1.0e-10:
-		m = np.nan_to_num(cle_model(Sp,Ks,conc,Rr,Rp,V,dt,delX,True))
+		m = np.nan_to_num(cle_model(Sp,Ks,conc,Rr,Rp,V,dt,1,True))
 		mm = m[0].reshape(1,len(m[0]))[0] 
 		tnow = tnow+m[1]
 		ind = 0
 		for sp in Sp:
-			conc[sp] = S[-1][ind] + mm[ind]
+			conc[sp] = C[ind] + mm[ind]
 			ind = ind+1
 		apply_rules(conc, yconc)
+		C = [conc[z] for z in Sp]
 		if dv == div-1:
-			S.append([conc[z] for z in Sp])
+			S.append(C)
 			tnew.append(tnow)
 			dv = 0
 		else:

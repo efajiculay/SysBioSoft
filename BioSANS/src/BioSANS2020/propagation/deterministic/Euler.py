@@ -143,7 +143,7 @@ def Euler2_int(t,Sp,Ks,conc,Rr,Rp,V,yscal=10,LNAsolve=False,items=None,implicit=
 	tnew = []
 	delt = t[-1]-t[-2]
 	S = [[conc[z] for z in Sp]]
-	eps = 1.0e-8
+	eps = 1.0e-4
 
 	if not implicit:	
 		tnow = t[0]
