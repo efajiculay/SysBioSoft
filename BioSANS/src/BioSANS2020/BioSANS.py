@@ -215,6 +215,29 @@ def tload_data2(plot=False):
 	if __name__ == '__main__':
 		t = threading.Thread(target=load_data2, args=(plot,), daemon=False)
 		t.start()
+		
+def delete_this(frame,canvas):
+	canvas.delete(frame)
+	canvas_update_widgets(None,canvas) 
+		
+def canvas_update_widgets(e,canvas):
+	#R = canvas._root().winfo_height()
+	#root = canvas._root()
+	#width = root.winfo_screenwidth()
+	#height = root.winfo_screenheight()	
+	#print(canvas.winfo_children())
+	H = canvas.winfo_height()
+	W = canvas.winfo_width()
+	objCan = canvas.find_all()
+	objLen = len(objCan)
+	ind = 0
+	for x in objCan:
+		canvas.itemconfig(x,height=H,width=W-5)
+		x1, y1, x2, y2 = canvas.bbox(x)
+		canvas.move(x,0,(objLen-ind)*H-y1+3)
+		ind = ind + 1
+	canvas.configure(scrollregion=canvas.bbox("all"))
+	return "break"
 	
 def load_image(wdata=False):
 	t_o = time.time()
@@ -226,9 +249,14 @@ def load_image(wdata=False):
 	render = ImageTk.PhotoImage(load)
 	img = gui.Label(canvas, image=render)
 	img.image = render
-	canvas.create_window(0, 426*globals2.plot_i, anchor='nw', window=img)
+	
+	fframe = canvas.create_window(0, 426*globals2.plot_i, anchor='nw', window=img)
+	B = Button(img, text =" X ", fg='red',highlightcolor='blue', bg='white',height=1,relief='raised', command = lambda : delete_this(fframe,canvas) )
+	B.place(rely=0.0, relx=1.0, x=-15, y=0, anchor="ne")		
+	
 	canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 	canvas.configure(scrollregion=canvas.bbox("all"))		
+	canvas.bind("<Configure>", lambda e: canvas_update_widgets(e,canvas))
 	globals2.plot_i = globals2.plot_i+1
 	
 	if wdata:
@@ -247,6 +275,7 @@ def load_image(wdata=False):
 			data.append(np.array(dd))
 		current_data = (data, Si)
 	print(time.time()-t_o)
+	canvas_update_widgets(None,canvas)
 			
 def eval2(x):
 	try:
