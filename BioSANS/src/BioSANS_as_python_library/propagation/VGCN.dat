@@ -1,0 +1,10 @@
+#REACTIONS
+    X <=> 2 Y, 512, 512
+X + Y <=> Z  ,   8,   8
+Y + Z <=> X  ,   1,   1
+
+@CONCENTRATION
+X, 0.5
+Y, 0.5
+Z, 0.5
+

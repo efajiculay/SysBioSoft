@@ -50,13 +50,14 @@ def process(
 	save=True,
 	out_fname="",
 	plot_show=True,
-	Cinput={},
+	time_unit="time (sec)",
 	vary = "",
 	vary2 = "",
 	mult_proc=False,
 	implicit=False,
 	items=None,
-	expDataFile = None
+	expDataFile = None,
+	Cinput = {}
 ):
 
 	
@@ -281,11 +282,11 @@ def process(
 		if x not in concn:
 			concn[x] = conc[x]
 				
-	for x in Cinput:
-		concn[x] = Cinput[x]  
+	#for x in Cinput:
+		#concn[x] = Cinput[x]  
 	
 	t_o = time.time()
 	t = np.linspace(0,tn,int(tlen+1))
-	data = process_hub(t,Sp,Ksn,concn,Rr,Rp,V,Vm,miter,logx,logy,delX,normalize,method,mix_plot,save,out_fname,plot_show,vary,mult_proc,items,vary2,implicit,rfile,expDataFile)
+	data = process_hub(t,Sp,Ksn,concn,Rr,Rp,V,Vm,miter,logx,logy,delX,normalize,method,mix_plot,save,out_fname,plot_show,time_unit,vary,mult_proc,items,vary2,implicit,rfile,expDataFile)
 	#print(time.time()-t_o,"Process time")
 	return data

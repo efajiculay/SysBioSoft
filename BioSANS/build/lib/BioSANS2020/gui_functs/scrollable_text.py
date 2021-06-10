@@ -2,7 +2,7 @@
 #import os
 #sys.path.append(os.path.abspath("BioSANS2020"))
 
-from tkinter import Text, INSERT, END, Scrollbar, RIGHT, LEFT, Canvas, Frame, Menu, Widget
+from tkinter import Text, INSERT, END, Scrollbar, RIGHT, LEFT, Canvas, Frame, Menu, Widget, Button
 from BioSANS2020.myglobal import mglobals as globals2
 from tkinter import filedialog
 from sys import platform
@@ -31,12 +31,18 @@ def canvas_update_widgets(e,canvas):
 	W = canvas.winfo_width()
 	objCan = canvas.find_all()
 	objLen = len(objCan)
+	ind = 0
 	for x in objCan:
 		canvas.itemconfig(x,height=H,width=W-5)
 		x1, y1, x2, y2 = canvas.bbox(x)
-		canvas.move(x,0,(objLen-(x-1))*H-y1+3)
+		canvas.move(x,0,(objLen-ind)*H-y1+3)
+		ind = ind + 1
 	canvas.configure(scrollregion=canvas.bbox("all"))
 	return "break"
+	
+def delete_this(frame,canvas):
+	canvas.delete(frame)
+	canvas_update_widgets(None,canvas) 
 
 def prepare_scroll_text(items):
 	canvas,scroll_x,scroll_y = items
@@ -57,7 +63,10 @@ def prepare_scroll_text(items):
 	Vscroll.config(command=text.yview)
 	Hscroll.config(command=text.xview)
 	
-	canvas.create_window(0, 450*globals2.plot_i, anchor='nw', window=frame)
+	fframe = canvas.create_window(0, 450*globals2.plot_i, anchor='nw', window=frame)
+	B = Button(frame, text =" X ", fg='red',highlightcolor='blue', bg='white',height=1,relief='raised', command = lambda : delete_this(fframe,canvas) )
+	B.place(rely=0.0, relx=1.0, x=-15, y=0, anchor="ne")	
+	
 	#canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 	canvas.configure(yscrollcommand=scroll_y.set)
 	canvas.configure(scrollregion=canvas.bbox("all"))
@@ -66,6 +75,7 @@ def prepare_scroll_text(items):
 	
 	text.bind("<Button-2>",lambda e: save_file(e,text) )
 	text.bind("<Tab>",lambda e: tab(e,text))
+	#text.bind("<Button-3>",lambda e: print("kkkk"))
 	canvas.bind("<Configure>", lambda e: canvas_update_widgets(e,canvas))
 	#canvas.bind("<Configure>", lambda e: [ canvas.itemconfig(xx,width=canvas.winfo_width()) for xx in canvas.find_all() ])
 	return text

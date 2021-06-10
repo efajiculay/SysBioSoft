@@ -1,0 +1,8 @@
+Function_Definitions:
+
+#Reactions Volume = 1.0
+1.0 S1  => 1.0 S2 ,1   :::::   lambda S1 :1.0*(1.0)*(1.0)*S1
+
+@Concentrations
+S1 , 0.00015
+S2 , 0.0

@@ -124,7 +124,7 @@ def param_estimate(conc,t,Sp,Ks,Rr,Rp,V,items,molar=False,mode="MCEM",TrueDataFi
 		
 		rands = [ (x+1)*np.random.uniform(0,1) for x in range(200000) ]
 		ind = 0
-		while er>1.0e-8 and k<=10000:
+		while er>1.0e-6 and k<=10000:
 			ks, er_min = run_MCEM(min(f,10),npar,f,k*f,positive_only=True,likelihood=custom_likelihood,arg=(data,conc,t,Sp,Ks,Rr,Rp,V,Cmiss,Kmiss,molar),rr=rands[ind])
 			er = ave_abs_dev(ks,(data,conc,t,Sp,Ks,Rr,Rp,V,Cmiss,Kmiss,molar))
 			if er<best_er:
