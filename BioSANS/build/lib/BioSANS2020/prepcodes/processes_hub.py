@@ -37,7 +37,7 @@ from BioSANS2020.gui_functs.draw_figure import *
 def process_hub(
 	t,Sp,Ksn,concn,Rr,Rp,V,Vm=1,miter=5,logx=False,logy=False,
 	delX=10,normalize=False,method="CLE",mix_plot=True,save=True,
-	out_fname="",plot_show=True,vary="",mult_proc=False,items=None,
+	out_fname="",plot_show=True,time_unit="time (sec)",vary="",mult_proc=False,items=None,
 	vary2="",implicit=False,rfile="",expDataFile=None
 ):
 
@@ -261,19 +261,19 @@ def process_hub(
 			elif method=="k_est1": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,TrueDataFil=expDataFile) 				
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,TrueDataFil=expDataFile,rfile=rfile) 				
 			elif method=="k_est2": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est3": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="DEvol",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="DEvol",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est4": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="DEvol",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="DEvol",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est5": 
 				setP = [logx, logy, normalize, items]
 				z = ParamODE_int(concn,t,Sp,Ksn,Rr,Rp,V,True,rfile,setP)  
@@ -283,27 +283,27 @@ def process_hub(
 			elif method=="k_est6": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="NeldMead",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="NeldMead",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est7": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="NeldMead",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="NeldMead",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est8": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="Powell",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="Powell",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est9": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="Powell",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="Powell",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est10": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="L-BFGS-B",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="L-BFGS-B",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est11": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="L-BFGS-B",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="L-BFGS-B",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="Analyt": 
 				plot_show = False
 				save = False
@@ -365,6 +365,16 @@ def process_hub(
 		file.close()
 				
 	if plot_show:
+	
+		yaxis_name = "conc"
+		if method in ["rk4-1","rk4-1a","Euler-1","Euler2-1","ODE-1"]:
+			yaxis_name = "molecules"
+		elif method in ["rk4-2","rk4-2a","Euler-2","Euler2-2","ODE-2"]:
+			yaxis_name = "moles/L"
+		elif method in ["rk4-3","rk4-3a","Euler-3","Euler2-3","ODE-3"]:
+			yaxis_name = "moles"
+		elif method in ["CLE","CLE2","Tau-leaping","Tau-leaping2","Sim-TauLeap"]:
+			yaxis_name = "molecules"
 		
 		Splen = len(Sp)
 		if Splen<=10:
@@ -375,8 +385,8 @@ def process_hub(
 			col = [ name for name in mcd.CSS4_COLORS ]
 		if mix_plot:
 			plt.figure(figsize=(9.68,3.95))
-			plt.xlabel("time (sec)")
-			plt.ylabel("conc") 	
+			plt.xlabel(time_unit)
+			plt.ylabel(yaxis_name) 	
 			if len(SiNew)>0:
 				plt.ylabel("cov" if SiNew[0][0:2]!="FF" else "FF") 
 			lines = []			
@@ -408,8 +418,8 @@ def process_hub(
 			for i in nz:
 				Ssi.append(Si[i])
 				plt.figure(figsize=(9.68,3.95))
-				plt.xlabel("time (sec)")
-				plt.ylabel("conc") 
+				plt.xlabel(time_unit)
+				plt.ylabel(yaxis_name) 
 				if len(SiNew)>0:
 					plt.ylabel("cov" if SiNew[0][0:2]!="FF" else "FF") 
 				if logx:

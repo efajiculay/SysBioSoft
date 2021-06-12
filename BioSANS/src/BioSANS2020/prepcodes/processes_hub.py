@@ -261,19 +261,19 @@ def process_hub(
 			elif method=="k_est1": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,TrueDataFil=expDataFile) 				
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,TrueDataFil=expDataFile,rfile=rfile) 				
 			elif method=="k_est2": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est3": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="DEvol",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="DEvol",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est4": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="DEvol",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="DEvol",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est5": 
 				setP = [logx, logy, normalize, items]
 				z = ParamODE_int(concn,t,Sp,Ksn,Rr,Rp,V,True,rfile,setP)  
@@ -283,27 +283,27 @@ def process_hub(
 			elif method=="k_est6": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="NeldMead",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="NeldMead",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est7": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="NeldMead",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="NeldMead",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est8": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="Powell",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="Powell",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est9": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="Powell",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="Powell",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est10": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="L-BFGS-B",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=True,mode="L-BFGS-B",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="k_est11": 
 				plot_show = False
 				save = False				
-				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="L-BFGS-B",TrueDataFil=expDataFile) 
+				tnew, z = param_estimate(concn,t,Sp,Ksn,Rr,Rp,V,items=items,molar=False,mode="L-BFGS-B",TrueDataFil=expDataFile,rfile=rfile) 
 			elif method=="Analyt": 
 				plot_show = False
 				save = False

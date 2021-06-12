@@ -8,12 +8,20 @@ from BioSANS2020.cli_functs.ssl_calls import *
 import pandas as pd
 from BioSANS2020.myglobal import mglobals as globals2
 import matplotlib.pyplot as plt
+import webbrowser
 
-try:
-	import tempfile
-	cwd = os.path.join(tempfile.gettempdir(),"BioSSL_temporary_folder")
-except:
-	cwd = os.path.join(os.getcwd(),"BioSSL_temporary_folder")
+
+if 'USERPROFILE' in os.environ:
+	cwd = os.path.join(os.environ['USERPROFILE'],"BioSSL_temporary_folder")	
+elif 'HOME' in os.environ:
+	cwd = os.path.join(os.environ['HOME'],"BioSSL_temporary_folder")	
+else:
+	try:	
+		import tempfile
+		cwd = os.path.join(tempfile.gettempdir(),"BioSSL_temporary_folder")
+	except:
+		cwd = os.path.join(os.getcwd(),"BioSSL_temporary_folder")
+		
 try:
 	os.mkdir(cwd,0o777)
 except:
@@ -21,6 +29,17 @@ except:
 
 globals2.init()
 trj = {}
+
+def show_file_dir(path):
+	global platform
+	if platform == "win32":
+		os.startfile(os.path.dirname(path))
+	elif platform == "darwin":
+		my_call_us('open', os.path.dirname(path))
+	elif platform == "linux":
+		my_call_us('xdg-open', os.path.dirname(path))
+	else:
+		webbrowser.open(os.path.dirname(path))
 
 def get_input():
 	try:
@@ -257,6 +276,8 @@ def process_command(command):
 				print("read_traj filename as variable")
 		else:
 			print("invalid syntax")
+	elif rowc[0].lower() == "open_pwd":
+		show_file_dir(cwd+"/.")
 			
 if __name__ == '__main__':
 	print("###############################################################")
@@ -271,7 +292,7 @@ if __name__ == '__main__':
 	command = " "
 
 	while row.strip() != "quit()":
-		row = " "+get_input()
+		row = " "+get_input().strip()
 		if row[-1]==";":
 			command = command + " " + row.strip().replace(";","")
 			if command.strip() != "":

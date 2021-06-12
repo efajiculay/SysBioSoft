@@ -209,7 +209,8 @@ def load_data2(plot=False):
 	if plot:
 		plot_traj(data,Si,items,globals2.plotted,mix_plot=True,logx=False,logy=False,normalize=False)
 	current_data = (data, Si)
-	print(time.time()-t_o)
+	gui.messagebox.showinfo("showinfo","Trajectory loaded succesfully")
+	#print(time.time()-t_o)
 	
 def tload_data2(plot=False):
 	if __name__ == '__main__':
@@ -308,66 +309,34 @@ def convert(x, con):
 def range_trans(x1):
 	x3 = []
 	x2 = x1.split(",")
-	x2 = [ convert(x2[x],float) for x in range(len(x2)) ]
-	if len(x2)>=4:
-		try:
-			w = 'linspace'
-			if len(x2) == 5:
-				w = x2[4]
-			if w == 'linspace':
-				x4 = np.linspace(x2[1],x2[2],x2[3])
-			if w == 'logspace':
-				x4 = np.logspace(x2[1],x2[2],x2[2])
-			if w == 'uniform':
-				x4 = np.random.uniform(x2[1],x2[2],int(x2[3]))		
-			if w == 'normal':
-				x4 = np.random.normal(x2[1],x2[2],int(x2[3]))			
-			if w == 'lognormal':
-				x4 = np.random.lognormal(x2[1],x2[2],int(x2[3]))				
-			for x in x4:
-				x3.append(x)
-			x3.append(x2[0])
-		except:
-			cc = ",".join([str(x) for x in x2[1:]])
-			x3 = list(eval(cc))
-			x3.append(x2[0])
+	if len(x2)>1:
+		x3 = x2[1:]
+		x3.append(x2[0])
 	return x3
 	
 def range_prep(x1):
 	x3 = []
 	x2 = x1.split(",")
-	x2 = [ convert(x2[x],float) for x in range(len(x2)) ]
-	if len(x2)>=4:
+	if len(x2)>1:
+		x2 = [ convert(x2[x],float) for x in range(len(x2)) ]
 		cc = x2[0].lower().split("f")
 		r2 = 0
 		if len(cc)<2:
 			cc = x2[0].lower().split("b")
 			r2 = 1
 		r1 = int(cc[1])-1
-		try:
-			w = 'linspace'
-			if len(x2) == 5:
-				w = x2[4]
-			if w == 'linspace':
-				x4 = np.linspace(x2[1],x2[2],x2[3])
-			if w == 'logspace':
-				x4 = np.logspace(x2[1],x2[2],x2[2])
-			if w == 'uniform':
-				x4 = np.random.uniform(x2[1],x2[2],int(x2[3]))		
-			if w == 'normal':
-				x4 = np.random.normal(x2[1],x2[2],int(x2[3]))			
-			if w == 'lognormal':
-				x4 = np.random.lognormal(x2[1],x2[2],int(x2[3]))				
-			for x in x4:
-				x3.append(x)
-		except:
-			cc = ",".join([str(x) for x in x2[1:]])
-			x3 = list(eval(cc))
+		cc = ",".join([str(x) for x in x2[1:]])
+		x3 = list(eval(cc))
 		return [[r1,r2],x3]
 	return x1
 
-def mrun(par,E,defs2):
-	global items,current_data
+def mrun_propagation(par,E,defs2):
+	global items,current_data, file_name
+	try:
+		del file_name["trajectory"]
+	except:
+		pass
+		
 	defs = []
 	for i in range(len(E)):
 		try:
@@ -376,7 +345,7 @@ def mrun(par,E,defs2):
 		except:
 			val = eval2(defs2[i].get())
 			defs.append(val)
-	defs[15] = dict_trans(E[15].get())
+	#defs[15] = dict_trans(E[15].get())
 	defs[16] = range_trans(E[16].get())
 	defs[17] = range_prep(E[17].get())
 	if not defs[9] in ["Analyt","SAnalyt","Analyt-ftx","SAnalyt-ftk","k_est1","k_est2","k_est3","k_est4","k_est5","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","NetLoc1","NetLoc2"]:
@@ -386,17 +355,56 @@ def mrun(par,E,defs2):
 		par.destroy()
 	defs.append(items)
 	current_data = tprocess(defs)
-	
+
+super_thread_run = None
 def tprocess(defs):
+	global super_thread_run
 	if defs[9] == "k_est5":
 		process(*defs)
 	else:
 		if __name__ == '__main__':
+			super_thread_run = 1
 			t = threading.Thread(target=lambda: process(*defs), daemon=False)
 			t.start()
 			
+def analysis_case(anaCase,items):
+	global current_data, file_name
+	if "trajectory" not in file_name:
+		gui.messagebox.showinfo("Trajectory not loaded yet", "Please load the trajectory. BioSANS save it into a file during your last run.")
+		try:
+			load_data2(False)
+		except:
+			try:
+				del file_name["trajectory"]
+			except:
+				pass
+			return None
+		data, Si = current_data
+	
+	if anaCase == "cov":
+		return calc_covariance(current_data,items)
+	elif anaCase == "fanoF":
+		return fano_factor(current_data,items)
+	elif anaCase == "corr":
+		return calc_cross_corr(current_data,items)
+	elif anaCase == "pdens1":
+		return Prob_density(current_data,items)
+	elif anaCase == "pdens2":
+		return Prob_density2(current_data,items)
+	elif anaCase == "pdens3":
+		return Prob_density3(current_data,items)
+	elif anaCase == "avetrj":
+		return Ave_traj(current_data,items)
+	elif anaCase == "phaseP":
+		return plot_trajD(current_data,items)
+	elif anaCase == "plotD":
+		return plot_trajD2(current_data,items)
+			
 def plot_trajD(current_data,items):
-	try:
+	global super_thread_run	
+	if super_thread_run == 1:
+		gui.messagebox.showinfo("Warning: Unsafe thread","If you want to have a 3D Phase portrait, restart BioSANS and load trajectory. For 2D phase portrait, just continue")
+	try:	
 		data, Si = current_data
 		par = gui.Toplevel()
 		par.resizable(False, False)
@@ -433,15 +441,9 @@ def getChecked(L1,L,Si):
 			checkSi.append(Si.index(key))
 	return checkSi
 	
-def plot_trajD2(current_data2,items):
-	global current_data
+def plot_trajD2(current_data,items):
 	try:
-		if "trajectory" not in file_name:
-			gui.messagebox.showinfo("Trajectory not loaded yet", "Please load the trajectory. BioSANS save it into a file during your last run.")
-			load_data2(False)
-			data, Si = current_data
-		else:
-			data, Si = current_data2
+		data, Si = current_data
 		pard = gui.Toplevel()
 		pard.resizable(True, True)
 		pard.wm_title("Plot species")
@@ -505,13 +507,13 @@ def paramSet(method):
 		"save",
 		"out fname",
 		"show plot",
-		"modify Cini",
+		"time label",
 		"Cini range",
 		"K-range",
 		"mult proc",
 		"Implicit"
 	]
-	defs = [file_name["topology"],1,gui.StringVar(),1.0,100,1.5,False,False,False,method,1000,True,True,name,True,"","","",False,False]
+	defs = [file_name["topology"],1,gui.StringVar(),1.0,100,1.5,False,False,False,method,1000,True,True,name,True,"time (sec)","","",False,False]
 	defs[2].set('molecules')
 	
 	topfile = open(file_name["topology"],"r")
@@ -553,7 +555,7 @@ def paramSet(method):
 		E[5].delete(0, gui.END)
 		E[5].insert(gui.END,str(10))	
 	
-	B1 = ttk.Button(par, text="RUN", command=lambda : mrun(par,E,defs))
+	B1 = ttk.Button(par, text="RUN", command=lambda : mrun_propagation(par,E,defs))
 	B1.grid(row = oplen, column = 0, sticky = gui.W, pady = 2) 
 	if method in ["k_est1","k_est2","k_est3","k_est4","k_est6","k_est7","k_est8","k_est9","k_est10","k_est11","LNA2","LNA3","LNA-vs","LNA-ks","LNA-xo","NetLoc1","NetLoc2","Analyt","SAnalyt-ftk","SAnalyt","Analyt-ftx","Analyt2","topoTosbml","topoTosbml2","topoTosbml3"]:
 		B1.invoke()
@@ -572,9 +574,9 @@ if __name__ == "__main__":
 	LoadMenu.add_command ( label="Current folder",command=lambda: show_file_dir(file_name["current_folder"]),background="white",foreground="Blue"  )
 	menubut1.menu.add_cascade(label="Open", menu=LoadMenu)	
 	NewFMenu = gui.Menu(frame,tearoff = 1 )
-	NewFMenu.add_command ( label="Blank File",command=lambda: create_file(items,0))
-	NewFMenu.add_command ( label="Topo File",command=lambda: create_file(items,1))
-	NewFMenu.add_command ( label="ODE File",command=lambda: create_file(items,2))
+	NewFMenu.add_command ( label="Blank File",command=lambda: create_file(items,0),background="white",foreground="Blue")
+	NewFMenu.add_command ( label="Topo File",command=lambda: create_file(items,1),background="white",foreground="Blue")
+	NewFMenu.add_command ( label="ODE File",command=lambda: create_file(items,2),background="white",foreground="Blue")
 	menubut1.menu.add_cascade(label="New File", menu=NewFMenu)	
 	menubut1.menu.add_command ( label="Save File",command=lambda: save_file() )
 	menubut1.menu.add_command ( label="Run File.py",command=lambda: runpy_file() )
@@ -588,6 +590,19 @@ if __name__ == "__main__":
 	TopSbml.add_command ( label="no unit",command=lambda: paramSet("topoTosbml3"),background="white",foreground="Blue"  )	
 	ConvMenu.add_cascade(label="Topo to SBML", menu=TopSbml)
 	menubut1.menu.add_cascade(label="Convert model", menu=ConvMenu)
+	ParEsMenu = gui.Menu(frame,tearoff = 1 )
+	ParEsMenu.add_command ( label="Nelder-Mead (NM), Macroscopic",command=lambda: paramSet("k_est6"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="Nelder-Mead (NM), Microscopic",command=lambda: paramSet("k_est7"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="Powell, Macroscopic",command=lambda: paramSet("k_est8"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="Powell, Microscopic",command=lambda: paramSet("k_est9"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="L-BFGS-B, Macroscopic",command=lambda: paramSet("k_est10"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="L-BFGS-B, Microscopic",command=lambda: paramSet("k_est11"),background="white",foreground="Blue" )		
+	ParEsMenu.add_command ( label="NM-Diff. Evol., Macroscopic",command=lambda: paramSet("k_est3"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="NM-Diff. Evol., Microscopic",command=lambda: paramSet("k_est4"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="Parameter slider/scanner",command=lambda: paramSet("k_est5"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="MCEM, Macroscopic",command=lambda: paramSet("k_est1"),background="white",foreground="Blue" )
+	ParEsMenu.add_command ( label="MCEM, Microscopic",command=lambda: paramSet("k_est2"),background="white",foreground="Blue" )
+	menubut1.menu.add_cascade(label="Estimate Params", menu=ParEsMenu)
 	menubut1.place(x=2,y=5)
 
 	menubut2 = gui.Menubutton(frame,text="Propagation",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
@@ -674,34 +689,20 @@ if __name__ == "__main__":
 	#GilMenu.add_command ( label="Next Rxn Method",command=lambda: print("Not implemented yet"),background="white",foreground="Blue"  )
 	#GilMenu.add_command ( label="Optimized Direct",command=lambda: print("Not implemented yet"),background="white",foreground="Blue"  )
 	menubut2.menu.add_cascade(label="Gillespie", menu=GilMenu)
-	
-	ParEsMenu = gui.Menu(frame,tearoff = 1 )
-	ParEsMenu.add_command ( label="Nelder-Mead (NM), Macroscopic",command=lambda: paramSet("k_est6"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="Nelder-Mead (NM), Microscopic",command=lambda: paramSet("k_est7"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="Powell, Macroscopic",command=lambda: paramSet("k_est8"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="Powell, Microscopic",command=lambda: paramSet("k_est9"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="L-BFGS-B, Macroscopic",command=lambda: paramSet("k_est10"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="L-BFGS-B, Microscopic",command=lambda: paramSet("k_est11"),background="white",foreground="Blue" )		
-	ParEsMenu.add_command ( label="NM-Diff. Evol., Macroscopic",command=lambda: paramSet("k_est3"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="NM-Diff. Evol., Microscopic",command=lambda: paramSet("k_est4"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="Parameter slider/scanner",command=lambda: paramSet("k_est5"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="MCEM, Macroscopic",command=lambda: paramSet("k_est1"),background="white",foreground="Blue" )
-	ParEsMenu.add_command ( label="MCEM, Microscopic",command=lambda: paramSet("k_est2"),background="white",foreground="Blue" )
-	menubut2.menu.add_cascade(label="Estimate Params", menu=ParEsMenu)
 	menubut2.place(x=95,y=5)
 	
 	menubut3 = gui.Menubutton(frame,text="    Analysis    ",activebackground="#f2f20d",activeforeground="red",bg="#00cc00",fg="white" if platform.lower() != "darwin" else "green")
 	menubut3.menu =  gui.Menu ( menubut3, tearoff = 1 )
 	menubut3["menu"] =  menubut3.menu
-	menubut3.menu.add_command ( label="Covariance",command=lambda: calc_covariance(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Fano Factor",command=lambda: fano_factor(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Cross correlation",command=lambda: calc_cross_corr(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Probability density",command=lambda: Prob_density(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Freq. Dist w/r to t",command=lambda: Prob_density2(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Hist. slice of time",command=lambda: Prob_density3(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Average of traj.",command=lambda: Ave_traj(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Phase portrait",command=lambda: plot_trajD(current_data,items),background="white",foreground="Blue"  )
-	menubut3.menu.add_command ( label="Plot Data",command=lambda: plot_trajD2(current_data,items),background="white",foreground="Blue"  )	
+	menubut3.menu.add_command ( label="Covariance",command=lambda: analysis_case("cov",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Fano Factor",command=lambda: analysis_case("fanoF",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Cross correlation",command=lambda: analysis_case("corr",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Probability density",command=lambda: analysis_case("pdens1",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Freq. Dist w/r to t",command=lambda: analysis_case("pdens2",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Hist. slice of time",command=lambda: analysis_case("pdens3",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Average of traj.",command=lambda: analysis_case("avetrj",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Phase portrait",command=lambda: analysis_case("phaseP",items),background="white",foreground="Blue"  )
+	menubut3.menu.add_command ( label="Plot Data",command=lambda: analysis_case("plotD",items),background="white",foreground="Blue"  )	
 	NetLMenu = gui.Menu(frame,tearoff = 1)
 	NetLMenu.add_command ( label="Symbolic, Macroscopic",command=lambda: paramSet("NetLoc1"),background="white",foreground="Blue" )
 	NetLMenu.add_command ( label="Numeric, Macroscopic",command=lambda: paramSet("NetLoc2"),background="white",foreground="Blue" )
