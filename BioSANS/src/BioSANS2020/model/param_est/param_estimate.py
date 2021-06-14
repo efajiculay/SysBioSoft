@@ -112,7 +112,7 @@ def param_estimate(conc,t,Sp,Ks,Rr,Rp,V,items,molar=False,mode="MCEM",TrueDataFi
 		text = prepare_scroll_text(items)
 		ffprint = lambda x: text.insert(INSERT," ".join([str(y) for y in x]))	
 	else:
-		ffprint = lambda x: 1
+		ffprint = lambda x: print(" ".join([str(y) for y in x]))
 	
 	param_res = {}
 	if mode=="MCEM":

@@ -63,6 +63,8 @@ def process_command(command):
 	norm = False
 	logx = False
 	logy = False
+	EdataFile = None
+	topo = None
 	if rowc[0].lower() == "propagate":
 		rlen = len(rowc)
 		i = 1
@@ -71,90 +73,101 @@ def process_command(command):
 			rxns = rxns+" "+rowc[i]
 			i = i+1
 		rxns = rxns.split("&")
-		try:
-			fFile = cwd+"/temp.txt"
-			f = open(fFile,"w")
-			f.write("#REACTIONS\n")
-			for rx in rxns:
-				f.write(rx+"\n")
-			f.write("\n")
-			Mname = ""
-			f.write("@CONCENTRATION\n")
-			conc = ""
-			
+		#try:
+		fFile = cwd+"/temp.txt"
+		f = open(fFile,"w")
+		f.write("#REACTIONS\n")
+		for rx in rxns:
+			f.write(rx+"\n")
+		f.write("\n")
+		Mname = ""
+		f.write("@CONCENTRATION\n")
+		conc = ""
+		
+		i = i+1
+		while rowc[i] != "using" and i<rlen:
+			conc = conc+rowc[i]
+			Mname = rowc[i+2]
 			i = i+1
-			while rowc[i] != "using" and i<rlen:
-				conc = conc+rowc[i]
-				Mname = rowc[i+2]
-				i = i+1
 
-			for cx in conc.split("&"):
-				f.write(cx.replace("=",",")+"\n")
-			f.write("\n")			
-			f.close()
-			
-			i = i+3
-			opts = ""
-			while i<rlen:
-				opts = opts+rowc[i]
-				i = i+1
-			opts = opts.split("&")
-			optsv = {}
-			for op in opts:
-				opr = op.split("=")
+		for cx in conc.split("&"):
+			f.write(cx.replace("=",",")+"\n")
+		f.write("\n")			
+		f.close()
+		
+		i = i+3
+		opts = ""
+		while i<rlen:
+			opts = opts+rowc[i]
+			i = i+1
+		opts = opts.split("&")
+		optsv = {}
+		for op in opts:
+			opr = op.split("=")
+			try:
 				optsv[opr[0].strip()] = opr[1]
-				
-			if 'tn' in optsv:
-				tn = float(optsv['tn'])
-			if 'tlen' in optsv:
-				tlen = int(optsv['tlen'])
-			if 'Vol' in optsv:
-				Vol = float(optsv['Vol'])
-			if 'tsc' in optsv:
-				tsc = float(optsv['tsc'])				
-			if 'miter' in optsv:
-				miter = int(optsv['miter'])	
-			if 'mult_proc' in optsv:
-				mult_proc = optsv['mult_proc'].lower() == "true"
-			if 'fout' in optsv:
-				fout = optsv['fout']
-			if 'plot' in optsv:
-				plot = optsv['plot'].lower() == "true"		
-			if 'norm' in optsv:
-				norm = optsv['norm'].lower() == "true"	
-			if 'mixp' in optsv:
-				mixp = optsv['mixp'].lower() == "true"	
-			if 'logx' in optsv:
-				norm = optsv['norm'].lower() == "logx"	
-			if 'logy' in optsv:
-				norm = optsv['norm'].lower() == "logy"					
-			if 'fileUnit' in optsv:
-				fileUnit = optsv['fileUnit'].lower()		
-				
-			Fname = cwd+"/"+fout
-			process(
-				rfile=fFile,
-				miter=miter,
-				inMolar= fileUnit,
-				Vm=Vol,
-				tn=tn,
-				delX=tsc,
-				normalize=norm,
-				logx=logx,
-				logy=logy,
-				method=Mname,
-				tlen=tlen,
-				mix_plot=mixp,
-				save=True,
-				out_fname=Fname,
-				plot_show=plot,
-				Cinput={},
-				vary = "",
-				mult_proc=mult_proc,
-				items=None
-			)
-		except:
-			print("temp.txt file not found")
+			except:
+				pass
+			
+		if 'tn' in optsv:
+			tn = float(optsv['tn'])
+		if 'tlen' in optsv:
+			tlen = int(optsv['tlen'])
+		if 'Vol' in optsv:
+			Vol = float(optsv['Vol'])
+		if 'tsc' in optsv:
+			tsc = float(optsv['tsc'])				
+		if 'miter' in optsv:
+			miter = int(optsv['miter'])	
+		if 'mult_proc' in optsv:
+			mult_proc = optsv['mult_proc'].lower() == "true"
+		if 'fout' in optsv:
+			fout = optsv['fout']
+		if 'plot' in optsv:
+			plot = optsv['plot'].lower() == "true"		
+		if 'norm' in optsv:
+			norm = optsv['norm'].lower() == "true"	
+		if 'mixp' in optsv:
+			mixp = optsv['mixp'].lower() == "true"	
+		if 'logx' in optsv:
+			norm = optsv['norm'].lower() == "logx"	
+		if 'logy' in optsv:
+			norm = optsv['norm'].lower() == "logy"					
+		if 'fileUnit' in optsv:
+			fileUnit = optsv['fileUnit'].lower()	
+		if 'EdataFile' in optsv:
+			EdataFile = optsv['EdataFile']
+			EdataFile = os.path.join(cwd,EdataFile)
+		if 'topo' in optsv:
+			topo = optsv['topo']
+			topo = os.path.join(cwd,topo)
+			fFile = topo
+			
+		Fname = cwd+"/"+fout
+		process(
+			rfile=fFile,
+			miter=miter,
+			inMolar= fileUnit,
+			Vm=Vol,
+			tn=tn,
+			delX=tsc,
+			normalize=norm,
+			logx=logx,
+			logy=logy,
+			method=Mname,
+			tlen=tlen,
+			mix_plot=mixp,
+			save=True,
+			out_fname=Fname,
+			plot_show=plot,
+			Cinput={},
+			vary = "",
+			mult_proc=mult_proc,
+			items=None, 
+			expDataFile = EdataFile
+		)
+		#except:
+			#print("temp.txt file not found")
 	elif rowc[0].lower() == "load":
 		sslfile = cwd+"/"+rowc[1]
 		f = open(sslfile)	
@@ -191,10 +204,18 @@ def process_command(command):
 				print("file      : "+x)
 	elif rowc[0].lower() == "cd":
 		try:
-			abspath = os.path.abspath(cwd+"/"+rowc[1])
-			dname = os.path.dirname(abspath)
-			os.chdir(dname)
-			cwd = str(abspath)
+			if os.path.isdir(cwd+"/"+rowc[1]):
+				abspath = os.path.abspath(cwd+"/"+rowc[1])
+				dname = os.path.dirname(abspath)
+				os.chdir(dname)
+				cwd = str(abspath)
+			elif os.path.isdir(rowc[1].strip()):
+				abspath = os.path.abspath(rowc[1])
+				dname = os.path.dirname(abspath)
+				os.chdir(dname)
+				cwd = str(abspath)
+			else:
+				print("No such directory")
 		except:
 			print("cannot change dir")
 	elif rowc[0].lower() == "read_traj":

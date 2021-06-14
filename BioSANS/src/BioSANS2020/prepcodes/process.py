@@ -16,6 +16,8 @@ from BioSANS2020.prepcodes.processes_hub import *
 from BioSANS2020.myglobal import proc_global as proc_global
 from BioSANS2020.math_functs.sbmlMath import *
 
+from tkinter import messagebox as message_upon_error
+
 INF = np.inf
 NaN = np.nan
 inf = INF
@@ -228,65 +230,71 @@ def process(
 
 	Ksn = {}
 	concn = {}
-	for r in range(Rxn):
-		Ksn[r] = [0]*2
-		if len(Rr[r])==1:
-			for x in Rr[r]:
-				if Rr[r][x] == 0:
-					Ksn[r][0] = Ks[r][0]*AV
-				elif Rr[r][x] == 1:
-					Ksn[r][0] = Ks[r][0]
-				elif Rr[r][x] == 2:
-					Ksn[r][0] = fa*Ks[r][0]/AV
-				else:
-					Ksn[r][0] = Ks[r][0]
-				concn[x] = conc[x]*AV
+	try:
+		for r in range(Rxn):
+			Ksn[r] = [0]*2
+			if len(Rr[r])==1:
+				for x in Rr[r]:
+					if Rr[r][x] == 0:
+						Ksn[r][0] = Ks[r][0]*AV
+					elif Rr[r][x] == 1:
+						Ksn[r][0] = Ks[r][0]
+					elif Rr[r][x] == 2:
+						Ksn[r][0] = fa*Ks[r][0]/AV
+					else:
+						Ksn[r][0] = Ks[r][0]
+					concn[x] = conc[x]*AV
 
-		elif len(Rr[r])==2:
-			Ksn[r][0] = Ks[r][0]/AV
-			for x in Rr[r]:
-				concn[x] = conc[x]*AV
+			elif len(Rr[r])==2:
+				Ksn[r][0] = Ks[r][0]/AV
+				for x in Rr[r]:
+					concn[x] = conc[x]*AV
 
-		if len(Rp[r])==1:
-			for x in Rp[r]:
-				if Rp[r][x] == 0:
-					if len(Ks[r])==2:
-						Ksn[r][1] = Ks[r][1]*AV
+			if len(Rp[r])==1:
+				for x in Rp[r]:
+					if Rp[r][x] == 0:
+						if len(Ks[r])==2:
+							Ksn[r][1] = Ks[r][1]*AV
+						else:
+							Ksn[r] = [Ksn[r][0]]
+					elif Rp[r][x] == 1:
+						if len(Ks[r])==2:
+							Ksn[r][1] = Ks[r][1]
+						else:
+							Ksn[r] = [Ksn[r][0]]
+					elif Rp[r][x] == 2:
+						if len(Ks[r])==2:
+							Ksn[r][1] = fa*Ks[r][1]/AV
+						else:
+							Ksn[r] = [Ksn[r][0]]
 					else:
-						Ksn[r] = [Ksn[r][0]]
-				elif Rp[r][x] == 1:
-					if len(Ks[r])==2:
-						Ksn[r][1] = Ks[r][1]
-					else:
-						Ksn[r] = [Ksn[r][0]]
-				elif Rp[r][x] == 2:
-					if len(Ks[r])==2:
-						Ksn[r][1] = fa*Ks[r][1]/AV
-					else:
-						Ksn[r] = [Ksn[r][0]]
+						if len(Ks[r])==2:
+							Ksn[r][1] = Ks[r][1]
+						else:
+							Ksn[r] = [Ksn[r][0]]
+					concn[x] = conc[x]*AV
+			elif len(Rp[r])==2:
+				if len(Ks[r])==2:
+					Ksn[r][1] = Ks[r][1]/AV
 				else:
-					if len(Ks[r])==2:
-						Ksn[r][1] = Ks[r][1]
-					else:
-						Ksn[r] = [Ksn[r][0]]
-				concn[x] = conc[x]*AV
-		elif len(Rp[r])==2:
-			if len(Ks[r])==2:
-				Ksn[r][1] = Ks[r][1]/AV
-			else:
-				Ksn[r] = [Ksn[r][0]]
-			for x in Rp[r]:
-				concn[x] = conc[x]*AV
+					Ksn[r] = [Ksn[r][0]]
+				for x in Rp[r]:
+					concn[x] = conc[x]*AV
+					
+		for x in conc:
+			if x not in concn:
+				concn[x] = conc[x]
 				
-	for x in conc:
-		if x not in concn:
-			concn[x] = conc[x]
+		#for x in Cinput:
+			#concn[x] = Cinput[x]  
+		
+		t_o = time.time()
+		t = np.linspace(0,tn,int(tlen+1))
+		data = process_hub(t,Sp,Ksn,concn,Rr,Rp,V,Vm,miter,logx,logy,delX,normalize,method,mix_plot,save,out_fname,plot_show,time_unit,vary,mult_proc,items,vary2,implicit,rfile,expDataFile)
+		#print(time.time()-t_o,"Process time")
+		
+		return data
+	except Exception as e:
+		message_upon_error.showinfo("showinfo", "Check your topology files for missing species in reaction and concentration tag : "+str(e))
 				
-	#for x in Cinput:
-		#concn[x] = Cinput[x]  
 	
-	t_o = time.time()
-	t = np.linspace(0,tn,int(tlen+1))
-	data = process_hub(t,Sp,Ksn,concn,Rr,Rp,V,Vm,miter,logx,logy,delX,normalize,method,mix_plot,save,out_fname,plot_show,time_unit,vary,mult_proc,items,vary2,implicit,rfile,expDataFile)
-	#print(time.time()-t_o,"Process time")
-	return data
