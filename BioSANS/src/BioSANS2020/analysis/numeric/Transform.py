@@ -50,7 +50,7 @@ def calc_cross_corr(edata,items):
 				plt.tight_layout()
 				globals2.plotted.append([plt.gca(),fig,[line]])
 				fig_canvas_agg = draw_figure(items,fig)		
-				plt.close()
+				#plt.close()
 
 def calc_covariance2(edata):
 	ndata, Si = sample_points(edata)
@@ -180,7 +180,7 @@ def Prob_density(edata,items):
 		fig = plt.gcf()		
 		globals2.plotted.append([plt.gca(),fig,[line]])
 		fig_canvas_agg = draw_figure(items,fig)			
-		plt.close()
+		#plt.close()
 		
 def Prob_density2(edata,items):
 	data, Si = edata
@@ -206,7 +206,7 @@ def Prob_density2(edata,items):
 		plt.tight_layout()
 		globals2.plotted.append([plt.gca(),fig,[cntr]])
 		fig_canvas_agg = draw_figure(items,fig)		
-		plt.close()
+		#plt.close()
 		
 def Prob_density3(edata,items,bins=50):
 	if len(edata[0])!=3:
@@ -245,7 +245,7 @@ def Prob_density3(edata,items,bins=50):
 			ax.view_init(elev=40, azim=-120)
 			globals2.plotted.append([ax,fig,lines])
 			fig_canvas_agg = draw_figure(items,fig)	
-			plt.close()			
+			#plt.close()			
 			
 def Ave_traj(edata,items):
 	if len(edata[0])!=3:
@@ -274,4 +274,4 @@ def Ave_traj(edata,items):
 		plt.tight_layout()
 		globals2.plotted.append([plt.gca(),fig,lines])
 		fig_canvas_agg = draw_figure(items,fig)		
-		plt.close()
+		#plt.close()

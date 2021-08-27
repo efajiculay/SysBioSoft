@@ -36,7 +36,7 @@ def plot_traj(data,Si,items,plotted,mix_plot=True,logx=False,logy=False,normaliz
 		lines.append(line)
 		plotted.append([plt.gca(),fig,lines])
 		fig_canvas_agg = draw_figure(items,fig)			
-		plt.close()
+		#plt.close()
 	else:
 		lines = []	
 		for i in range(len(Si)):
@@ -59,7 +59,7 @@ def plot_traj(data,Si,items,plotted,mix_plot=True,logx=False,logy=False,normaliz
 			fig = plt.gcf() 
 			plotted.append([plt.gca(),fig,lines])
 			fig_canvas_agg = draw_figure(items,fig)	
-			plt.close()
+			#plt.close()
 
 def plot_traj2(data,Si,items,plotted,logx=False,logy=False,normalize=False,xlabel="conc",ylabel="conc",zlabel="conc",trange=None):
 	miter = len(data)
@@ -90,7 +90,7 @@ def plot_traj2(data,Si,items,plotted,logx=False,logy=False,normalize=False,xlabe
 		lines.append(line)
 		plotted.append([plt.gca(),fig,lines])
 		fig_canvas_agg = draw_figure(items,fig)			
-		plt.close()
+		#plt.close()
 	else:
 		ax = plt.axes(projection ='3d') 
 		for j in range(miter):
