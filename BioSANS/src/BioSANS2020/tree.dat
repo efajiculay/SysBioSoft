@@ -12,7 +12,7 @@ BIOSANS2020
 │   │
 │   ├───numeric
 │   │   │   sample_points.py
-│   │   │   Transform.py
+│   │   │   transform_data.py
 │   │   │   __init__.py
 │   │
 │   ├───plotting

@@ -1,6 +1,6 @@
 #import sys
 #import os
-#sys.path.append(os.path.abspath("BioSANS2020"))
+# sys.path.append(os.path.abspath("BioSANS2020"))
 
 from BioSANS2020.prepcodes.process import *
 
@@ -25,20 +25,16 @@ process(
 """
 
 process(
-	rfile="VGCN/VGCN.dat",
-	miter=1,
-	logx=True,
-	Vm=1.0e-20,
-	inMolar=True,
-	tn=1,
-	delX=10,
-	#normalize=False,
-	method="CLE",
-	#tlen=100000,
-	mix_plot=True,
-	out_fname="VGCN/Faji"
+    rfile="VGCN/VGCN.dat",
+    miter=1,
+    logx=True,
+    Vm=1.0e-20,
+    inMolar=True,
+    tn=1,
+    delX=10,
+    # normalize=False,
+    method="CLE",
+    # tlen=100000,
+    mix_plot=True,
+    out_fname="VGCN/Faji"
 )
-
-
-
-
