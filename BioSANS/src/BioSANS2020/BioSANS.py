@@ -170,9 +170,9 @@ def save_file():
 
 def runpy_file():
     global file_name, PIPE
-    with open(file_name["topology"], "w") as ff:
-        ff.write(file_name['last_open'].get("0.0", END))
-        ff.write("\ninput('Press enter to exit:')")
+    with open(file_name["topology"], "w") as ffvar:
+        ffvar.write(file_name['last_open'].get("0.0", END))
+        ffvar.write("\ninput('Press enter to exit:')")
     if platform == "win32":
         Popen([sys.executable, file_name["topology"]],
               creationflags=CREATE_NEW_CONSOLE)
@@ -527,7 +527,7 @@ def plot_trajD2(current_data, items):
         B1 = ttk.Button(pard, text="PLOT",
                         command=lambda:
                         plot_traj(data, slabels, items, globals2.plotted, mix_plot=True, logx=False,
-                                  logy=False, normalize=False, SiTicked=getChecked(L1, L, slabels))
+                                  logy=False, normalize=False, si_ticked=getChecked(L1, L, slabels))
                         )
         B1.pack(side="bottom", fill="x")
     except:
@@ -537,8 +537,8 @@ def plot_trajD2(current_data, items):
 
 def paramSet(method):
     global file_name, items
-    with open(file_name["topology"], "w") as ff:
-        ff.write(file_name['last_open'].get("0.0", END))
+    with open(file_name["topology"], "w") as ffvar:
+        ffvar.write(file_name['last_open'].get("0.0", END))
 
     path = Path(file_name["topology"])
     ss = str(file_name["topology"]).split("/")

@@ -147,17 +147,17 @@ def run_MCEM(chains, params, maxiter=5, inner_loop=5*1000, positive_only=False, 
     results = [pool.apply_async(MH_call, args=(proc_global.lst, rands[ih], maxiter*(
         ih+1), inner_loop*(ih+1), params, positive_only, likelihood, arg, thr)) for ih in range(chains)]
 
-    ff = [result.get() for result in results]
+    ffvar = [result.get() for result in results]
     pool.close()
 
-    ff = [result.get() for result in results]
+    ffvar = [result.get() for result in results]
     er = []
-    for x in ff:
+    for x in ffvar:
         er.append(x[1])
 
     er_min = min(er)
     ks = []
-    for x in ff:
+    for x in ffvar:
         if x[1] <= er_min:
             ks = x[0]
     return (ks, er_min)

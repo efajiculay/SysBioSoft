@@ -78,14 +78,14 @@ def calc_covariance(edata, points=100):
                 print(label.ljust(50) + " = " + str(vvv[i, j]))
 
     FF = 0
-    CV = 0
+    cvcaps = 0
     for i in range(nlen):
         ddvar = 0
         ddvar = ddvar + (data[i][-points:, 1:] - ddm)**2
         FF = FF + np.mean(ddvar, 0) / ddm
-        CV = CV + np.mean(np.sqrt(ddvar), 0) / ddm
+        cvcaps = cvcaps + np.mean(np.sqrt(ddvar), 0) / ddm
     FF = FF / (nlen - 1)
-    CV = CV / (nlen - 1)
+    cvcaps = cvcaps / (nlen - 1)
     print("\nFano Factor\n")
     for i in range(dlen):
         if str(FF[i]) not in {"None", "nan", "0.0"}:
@@ -93,8 +93,8 @@ def calc_covariance(edata, points=100):
 
     print("\nCoefficient of variation\n")
     for i in range(dlen):
-        if str(CV[i]) not in {"None", "nan", "0.0"}:
-            print(slabels[i].ljust(50) + " = " + str(CV[i]))
+        if str(cvcaps[i]) not in {"None", "nan", "0.0"}:
+            print(slabels[i].ljust(50) + " = " + str(cvcaps[i]))
 
 
 def calc_covariance_per_traj(edata, points=100, Fname="", Mname=""):
@@ -108,8 +108,8 @@ def calc_covariance_per_traj(edata, points=100, Fname="", Mname=""):
     ddm = np.mean(ddm / (nlen - 1), 0)
 
     vvar = []
-    ff = []
-    cv = []
+    ffvar = []
+    cvlcase = []
     dlen = len(slabels)
     for k in range(1, nlen):
         ddvar = data[k][-points:, 1:] - ddm
@@ -122,17 +122,17 @@ def calc_covariance_per_traj(edata, points=100, Fname="", Mname=""):
             fff[i] = ddd[i, i] / ddm[i]
             cvv[i] = np.sqrt(ddd[i, i]) / ddm[i]
         vvar.append(ddd)
-        ff.append(fff)
-        cv.append(cvv)
+        ffvar.append(fff)
+        cvlcase.append(cvv)
     vvar = np.array(vvar)
-    ff = np.array(ff)
-    cv = np.array(cv)
+    ffvar = np.array(ffvar)
+    cvlcase = np.array(cvlcase)
     mvv = np.mean(vvar, axis=0)
     svv = np.std(vvar, axis=0)
-    mff = np.mean(ff, axis=0)
-    sff = np.std(ff, axis=0)
-    mcv = np.mean(cv, axis=0)
-    scv = np.std(cv, axis=0)
+    mff = np.mean(ffvar, axis=0)
+    sff = np.std(ffvar, axis=0)
+    mcv = np.mean(cvlcase, axis=0)
+    scv = np.std(cvlcase, axis=0)
     print("\ncovariance\n")
     for i in range(dlen):
         for j in range(i, dlen):
@@ -159,7 +159,7 @@ def calc_covariance_per_traj(edata, points=100, Fname="", Mname=""):
     plt.figure(figsize=(9.68, 3.95))
     plt.xlabel("Fano factor(P)")
     plt.ylabel("prob")
-    plt.hist(ff[:, dlen - 1], bins=50, density=True, orientation='vertical')
+    plt.hist(ffvar[:, dlen - 1], bins=50, density=True, orientation='vertical')
     plt.axvline(mff[dlen - 1])
     plt.tight_layout()
     plt.savefig(Fname + "_" + Mname + "_Fano factor(P).jpg")
@@ -173,7 +173,8 @@ def calc_covariance_per_traj(edata, points=100, Fname="", Mname=""):
     plt.figure(figsize=(9.68, 3.95))
     plt.xlabel("Coeff. of Var.(P)")
     plt.ylabel("prob")
-    plt.hist(cv[:, dlen - 1], bins=50, density=True, orientation='vertical')
+    plt.hist(cvlcase[:, dlen - 1], bins=50, density=True,
+             orientation='vertical')
     plt.axvline(mcv[dlen - 1])
     plt.tight_layout()
     plt.savefig(Fname + "_" + Mname + "_CoeffOfVar(P).jpg")
@@ -202,8 +203,8 @@ def calc_covariance_bootsrap(
         ddm = np.mean(ddm / Msamp, 0)
 
         vvar = []
-        ff = []
-        cv = []
+        ffvar = []
+        cvlcase = []
         dlen = len(slabels)
         for k in curr_list:
             ddvar = data[k][-points:, 1:] - ddm
@@ -216,17 +217,17 @@ def calc_covariance_bootsrap(
                 fff[i] = ddd[i, i] / ddm[i]
                 cvv[i] = np.sqrt(ddd[i, i]) / ddm[i]
             vvar.append(ddd)
-            ff.append(fff)
-            cv.append(cvv)
+            ffvar.append(fff)
+            cvlcase.append(cvv)
         vvar = np.array(vvar)
-        ff = np.array(ff)
-        cv = np.array(cv)
+        ffvar = np.array(ffvar)
+        cvlcase = np.array(cvlcase)
         mvv = np.mean(vvar, axis=0)
         svv = np.std(vvar, axis=0)
-        mff = np.mean(ff, axis=0)
-        sff = np.std(ff, axis=0)
-        mcv = np.mean(cv, axis=0)
-        scv = np.std(cv, axis=0)
+        mff = np.mean(ffvar, axis=0)
+        sff = np.std(ffvar, axis=0)
+        mcv = np.mean(cvlcase, axis=0)
+        scv = np.std(cvlcase, axis=0)
         bmvv.append(mvv)
         bsvv.append(svv)
         bmff.append(mff)
