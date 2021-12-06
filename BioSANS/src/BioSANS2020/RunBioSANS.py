@@ -8,4 +8,4 @@ def BioSANS():
 
 
 def BioSSL():
-    system(str(executable)+" -m BioSANS2020.BioSSL")
+    system(str(executable) + " -m BioSANS2020.BioSSL")

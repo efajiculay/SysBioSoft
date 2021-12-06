@@ -28,8 +28,8 @@ else:
 try:
     import tempfile
     Temporary_folder = str(tempfile.gettempdir()).replace(
-        "\\", "/")+"/BioSANS_temporary_folder"
-except:
+        "\\", "/") + "/BioSANS_temporary_folder"
+except BaseException:
     Temporary_folder = "BioSANS_temporary_folder"
 
 from BioSANS2020.myglobal import mglobals as globals2
@@ -112,7 +112,7 @@ def create_file(items, Ftype):
     global file_name, Temporary_folder
     try:
         os.mkdir(Temporary_folder, 0o777)
-    except:
+    except BaseException:
         for item in Path(Temporary_folder).iterdir():
             if item.is_dir():
                 pass
@@ -120,7 +120,7 @@ def create_file(items, Ftype):
                 item.unlink()
 
     file_name['last_open'] = new_file(items)
-    file_name["topology"] = Temporary_folder+"/temp.txt"
+    file_name["topology"] = Temporary_folder + "/temp.txt"
     if Ftype == 1:
         file_name['last_open'].insert(INSERT, "FUNCTION_DEFINITIONS:\n")
         file_name['last_open'].insert(INSERT, "\n")
@@ -148,7 +148,7 @@ def extractODE(items):
     global file_name
     file_name['last_open'] = odeExtract.odedxdt_to_topo(
         file_name["topology"], items)
-    file_name["topology"] = file_name["topology"]+".top"
+    file_name["topology"] = file_name["topology"] + ".top"
 
 
 def sbml_to_topo2(tocon, items):
@@ -178,11 +178,11 @@ def runpy_file():
               creationflags=CREATE_NEW_CONSOLE)
     elif platform == "darwin":
         my_tell_us.app("Terminal", 'do script "' +
-                       str(sys.executable)+" "+file_name["topology"]+'"')
+                       str(sys.executable) + " " + file_name["topology"] + '"')
     elif platform == "linux":
-        os.system("gnome-terminal -x python3 "+file_name["topology"])
+        os.system("gnome-terminal -x python3 " + file_name["topology"])
     else:
-        Popen(str(sys.executable)+" "+file_name["topology"], shell=True)
+        Popen(str(sys.executable) + " " + file_name["topology"], shell=True)
 
 
 def run_SSL():
@@ -200,13 +200,13 @@ def run_SSL():
                     "c\\", "c:/").replace("\\", "/").replace("//", "/"))
         if install_dir != "":
             install_dir = str(install_dir)
-            my_tell_us.app("Terminal", 'do script "'+str(sys.executable) +
-                           " "+install_dir+"/BioSANS2020/BioSSL.py"+'"')
+            my_tell_us.app("Terminal", 'do script "' + str(sys.executable) +
+                           " " + install_dir + "/BioSANS2020/BioSSL.py" + '"')
     elif platform == "linux":
         os.system("gnome-terminal -x python3 " +
                   os.path.join(os.getcwd(), "BioSSL.py"))
     else:
-        Popen(str(sys.executable)+" " +
+        Popen(str(sys.executable) + " " +
               os.path.join(os.getcwd(), "BioSSL.py"), shell=True)
 
 
@@ -231,9 +231,9 @@ def load_data2(plot=False):
     if plot:
         plot_traj(data, slabels, items, globals2.plotted, mix_plot=True,
                   logx=False, logy=False, normalize=False)
-    print(data[0],"\n\n")
-    print(data[1],"\n\n")
-    print(data[2],"\n")
+    print(data[0], "\n\n")
+    print(data[1], "\n\n")
+    print(data[2], "\n")
     current_data = (data, slabels)
     gui.messagebox.showinfo("showinfo", "Trajectory loaded succesfully")
     # print(time.time()-t_o)
@@ -262,9 +262,9 @@ def canvas_update_widgets(e, canvas):
     objLen = len(objCan)
     ind = 0
     for x in objCan:
-        canvas.itemconfig(x, height=H, width=W-5)
+        canvas.itemconfig(x, height=H, width=W - 5)
         x1, y1, x2, y2 = canvas.bbox(x)
-        canvas.move(x, 0, (objLen-ind)*H-y1+3)
+        canvas.move(x, 0, (objLen - ind) * H - y1 + 3)
         ind = ind + 1
     canvas.configure(scrollregion=canvas.bbox("all"))
     return "break"
@@ -282,7 +282,7 @@ def load_image(wdata=False):
     img.image = render
 
     fframe = canvas.create_window(
-        0, 426*globals2.plot_i, anchor='nw', window=img)
+        0, 426 * globals2.plot_i, anchor='nw', window=img)
     B = Button(img, text=" X ", fg='red', highlightcolor='blue', bg='white',
                height=1, relief='raised', command=lambda: delete_this(fframe, canvas))
     B.place(rely=0.0, relx=1.0, x=-15, y=0, anchor="ne")
@@ -290,7 +290,7 @@ def load_image(wdata=False):
     canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
     canvas.configure(scrollregion=canvas.bbox("all"))
     canvas.bind("<Configure>", lambda e: canvas_update_widgets(e, canvas))
-    globals2.plot_i = globals2.plot_i+1
+    globals2.plot_i = globals2.plot_i + 1
 
     if wdata:
         file = str(file).replace("jpg", "dat").replace("png", "dat")
@@ -307,18 +307,18 @@ def load_image(wdata=False):
                 ddvar.append(cols)
             data.append(np.array(ddvar))
         current_data = (data, slabels)
-    print(time.time()-t_o)
+    print(time.time() - t_o)
     canvas_update_widgets(None, canvas)
 
 
 def eval2(x):
     try:
         return eval(x)
-    except:
+    except BaseException:
         try:
             par = str(x).lower().capitalize()
             return eval(par)
-        except:
+        except BaseException:
             return str(x)
 
 
@@ -332,7 +332,7 @@ def dict_trans(x1):
         for x in x2:
             r = x.split("=")
             x3[r[0].strip()] = float(r[1])
-    except:
+    except BaseException:
         pass
     return x3
 
@@ -340,7 +340,7 @@ def dict_trans(x1):
 def convert(x, con):
     try:
         return con(x)
-    except:
+    except BaseException:
         return x
 
 
@@ -363,7 +363,7 @@ def range_prep(x1):
         if len(cc) < 2:
             cc = x2[0].lower().split("b")
             r2 = 1
-        r1 = int(cc[1])-1
+        r1 = int(cc[1]) - 1
         cc = ",".join([str(x) for x in x2[1:]])
         x3 = list(eval(cc))
         return [[r1, r2], x3]
@@ -374,7 +374,7 @@ def mrun_propagation(par, E, defs2):
     global items, current_data, file_name
     try:
         del file_name["trajectory"]
-    except:
+    except BaseException:
         pass
 
     defs = []
@@ -382,16 +382,18 @@ def mrun_propagation(par, E, defs2):
         try:
             val = eval2(E[i].get())
             defs.append(val)
-        except:
+        except BaseException:
             val = eval2(defs2[i].get())
             defs.append(val)
     #defs[15] = dict_trans(E[15].get())
     defs[16] = range_trans(E[16].get())
     defs[17] = range_prep(E[17].get())
-    if not defs[9] in ["Analyt", "SAnalyt", "Analyt-ftx", "SAnalyt-ftk", "k_est1", "k_est2", "k_est3", "k_est4", "k_est5", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "NetLoc1", "NetLoc2"]:
-        with open(defs[13]+"_"+defs[9]+"_params.dat", "w") as f:
+    if not defs[9] in ["Analyt", "SAnalyt", "Analyt-ftx", "SAnalyt-ftk", "k_est1", "k_est2", "k_est3",
+                       "k_est4", "k_est5", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "NetLoc1", "NetLoc2"]:
+        with open(defs[13] + "_" + defs[9] + "_params.dat", "w") as f:
             f.write("\n".join([str(x) for x in defs]))
-    if defs[9] in ["k_est1", "k_est2", "k_est3", "k_est4", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "LNA2", "LNA3", "Analyt", "Analyt-ftx", "SAnalyt", "SAnalyt-ftk", "Analyt2", "topoTosbml", "topoTosbml2", "topoTosbml3", "LNA-vs", "LNA-ks", "LNA-xo", "NetLoc1", "NetLoc2"]:
+    if defs[9] in ["k_est1", "k_est2", "k_est3", "k_est4", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "LNA2", "LNA3", "Analyt",
+                   "Analyt-ftx", "SAnalyt", "SAnalyt-ftk", "Analyt2", "topoTosbml", "topoTosbml2", "topoTosbml3", "LNA-vs", "LNA-ks", "LNA-xo", "NetLoc1", "NetLoc2"]:
         par.destroy()
     defs.append(items)
     current_data = tprocess(defs)
@@ -418,10 +420,10 @@ def analysis_case(anaCase, items):
                                 "Please load the trajectory. BioSANS save it into a file during your last run.")
         try:
             load_data2(False)
-        except:
+        except BaseException:
             try:
                 del file_name["trajectory"]
-            except:
+            except BaseException:
                 pass
             return None
         data, slabels = current_data
@@ -478,7 +480,7 @@ def plot_trajD(current_data, items):
             data, slabels, items, globals2.plotted, logx=False, logy=False, normalize=False,
             xlabel=optselVar[0].get(), ylabel=optselVar[1].get(), zlabel=optselVar[2].get(), trange=E[-1].get()))
         B1.grid(row=5, column=0, sticky=gui.W, pady=2)
-    except:
+    except BaseException:
         gui.messagebox.showinfo("Trajectory not loaded yet",
                                 "Please load the trajectory. BioSANS save it into a file during your last run.")
 
@@ -501,7 +503,7 @@ def plot_trajD2(current_data, items):
         pard.maxsize(width=300, height=700)
         canvas, scroll_x, scroll_y = prepare_frame_for_plot(
             pard, width=200, height=200)
-        par = gui.Frame(canvas, width=200, height=int(len(slabels)*150))
+        par = gui.Frame(canvas, width=200, height=int(len(slabels) * 150))
         par.pack(side="left", fill="both", expand=True)
         pard.configure(
             bg="light blue",
@@ -518,9 +520,9 @@ def plot_trajD2(current_data, items):
         L = [gui.Checkbutton(par, text=slabels[i], variable=L1[i],
                              onvalue=slabels[i], offvalue="0") for i in range(Ls)]
         [L[i].grid(row=i, column=0, sticky=gui.W, pady=2)
-         for i in range(Myceil(Ls/2))]
-        [L[i].grid(row=i-Myceil(Ls/2), column=1, sticky=gui.W, pady=2)
-         for i in range(Myceil(Ls/2), Ls)]
+         for i in range(Myceil(Ls / 2))]
+        [L[i].grid(row=i - Myceil(Ls / 2), column=1, sticky=gui.W, pady=2)
+         for i in range(Myceil(Ls / 2), Ls)]
 
         canvas.create_window(0, 0, anchor='n', window=par)
         canvas.configure(yscrollcommand=scroll_y.set,
@@ -533,7 +535,7 @@ def plot_trajD2(current_data, items):
                                   logy=False, normalize=False, si_ticked=getChecked(L1, L, slabels))
                         )
         B1.pack(side="bottom", fill="x")
-    except:
+    except BaseException:
         gui.messagebox.showinfo("Trajectory not loaded yet",
                                 "Please load the trajectory. BioSANS save it into a file during your last run.")
 
@@ -546,7 +548,8 @@ def paramSet(method):
     path = Path(file_name["topology"])
     ss = str(file_name["topology"]).split("/")
     ss = ss[-1] if len(ss) > 1 else ""
-    name = str(path.parent)+"/"+ss+"_"+datetime.now().strftime("%Y%m%d_%H%M%S")
+    name = str(path.parent) + "/" + ss + "_" + \
+        datetime.now().strftime("%Y%m%d_%H%M%S")
     par = gui.Toplevel()
     par.resizable(False, False)
     par.wm_title("Parameter setting")
@@ -598,11 +601,11 @@ def paramSet(method):
     oplen = len(opts)
     L = [gui.Label(par, text=opts[i], fg="blue") for i in range(oplen)]
     [L[i].grid(row=i, column=0, sticky=gui.W, pady=2) for i in range(10)]
-    [L[10+i].grid(row=i, column=2, sticky=gui.W, pady=2) for i in range(10)]
+    [L[10 + i].grid(row=i, column=2, sticky=gui.W, pady=2) for i in range(10)]
     E = [gui.Entry(par, bd=5) if i != 2 else gui.OptionMenu(
         par, defs[2], 'molecules', 'molar', 'moles') for i in range(oplen)]
     [E[i].grid(row=i, column=1, sticky=gui.W, pady=2) for i in range(10)]
-    [E[10+i].grid(row=i, column=3, sticky=gui.W, pady=2) for i in range(10)]
+    [E[10 + i].grid(row=i, column=3, sticky=gui.W, pady=2) for i in range(10)]
     [E[i].insert(gui.END, str(defs[i])) if i !=
      2 else None for i in range(oplen)]
     E[9].configure(state="disable")
@@ -620,7 +623,8 @@ def paramSet(method):
     B1 = ttk.Button(par, text="RUN",
                     command=lambda: mrun_propagation(par, E, defs))
     B1.grid(row=oplen, column=0, sticky=gui.W, pady=2)
-    if method in ["k_est1", "k_est2", "k_est3", "k_est4", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "LNA2", "LNA3", "LNA-vs", "LNA-ks", "LNA-xo", "NetLoc1", "NetLoc2", "Analyt", "SAnalyt-ftk", "SAnalyt", "Analyt-ftx", "Analyt2", "topoTosbml", "topoTosbml2", "topoTosbml3"]:
+    if method in ["k_est1", "k_est2", "k_est3", "k_est4", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "LNA2", "LNA3", "LNA-vs",
+                  "LNA-ks", "LNA-xo", "NetLoc1", "NetLoc2", "Analyt", "SAnalyt-ftk", "SAnalyt", "Analyt-ftx", "Analyt2", "topoTosbml", "topoTosbml2", "topoTosbml3"]:
         B1.invoke()
 
 

@@ -7,10 +7,11 @@ from BioSANS2020.propagation.propensity import *
 from BioSANS2020.propagation.recalculate_globals import *
 
 
-def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr, delX, implicit=False, rfile=""):
+def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
+                delX, implicit=False, rfile=""):
     get_globals(rfile)
     tmax = t[-1]
-    np.random.seed(int(rr*100))
+    np.random.seed(int(rr * 100))
     tnew = []
     V2 = V**2
     S = V.T
@@ -48,8 +49,8 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr, delX, implicit=False, rfile=""):
                 gi.append(lambda x: 2)
         elif maxrlen == 2:
             try:
-                gi.append(lambda x: 2+1/(x-1))
-            except:
+                gi.append(lambda x: 2 + 1 / (x - 1))
+            except BaseException:
                 gi.append(lambda x: 2)
         else:
             gi.append(lambda x: 1)
@@ -63,23 +64,23 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr, delX, implicit=False, rfile=""):
             r1 = np.random.uniform()
             while r1 == 0:
                 r1 = np.random.uniform()
-            dt1 = (1/alp)*(np.log(1/r1))
+            dt1 = (1 / alp) * (np.log(1 / r1))
 
             uuj = np.matmul(V, D)
             sig = np.matmul(V2, D)
-            exigi = np.array([Z[-1][j]*(1/gi[j](Z[-1][j]))
-                             for j in range(len(Spc))])*0.03*delX
+            exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
+                              for j in range(len(Spc))]) * 0.03 * delX
             exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
-            dt2 = min(np.min(exigi1/np.abs(uuj)),
-                      np.min(exigi1*exigi1/np.abs(sig)))
+            dt2 = min(np.min(exigi1 / np.abs(uuj)),
+                      np.min(exigi1 * exigi1 / np.abs(sig)))
 
             dt = max(dt1, dt2)
-            K = np.round(np.random.poisson(D*dt))
+            K = np.round(np.random.poisson(D * dt))
             Allpos = True
             cc = {}
-            bb = np.sum(K*S[:, UpdateSp], 0)
+            bb = np.sum(K * S[:, UpdateSp], 0)
             for x in range(len(Spc)):
-                holder = Z[-1][x]+bb[x]
+                holder = Z[-1][x] + bb[x]
                 if holder >= 0 or Spc[x] in globals2.modified:
                     cc[Spc[x]] = holder
                 else:
@@ -105,25 +106,25 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr, delX, implicit=False, rfile=""):
             r1 = np.random.uniform()
             while r1 == 0:
                 r1 = np.random.uniform()
-            dt1 = (1/alp)*(np.log(1/r1))
+            dt1 = (1 / alp) * (np.log(1 / r1))
 
             uuj = np.matmul(V, D)
             sig = np.matmul(V2, D)
-            exigi = np.array([Z[-1][j]*(1/gi[j](Z[-1][j]))
-                             for j in range(len(Spc))])*0.03*delX
+            exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
+                              for j in range(len(Spc))]) * 0.03 * delX
             exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
-            dt2 = min(np.min(exigi1/np.abs(uuj)),
-                      np.min(exigi1*exigi1/np.abs(sig)))
+            dt2 = min(np.min(exigi1 / np.abs(uuj)),
+                      np.min(exigi1 * exigi1 / np.abs(sig)))
 
             dt = max(dt1, dt2)
             if tc + dt > t[tindex]:
-                dt = max(0, t[tindex]-tc)
-                K = np.round(np.random.poisson(D*dt))
+                dt = max(0, t[tindex] - tc)
+                K = np.round(np.random.poisson(D * dt))
                 Allpos = True
                 cc = {}
-                bb = np.sum(K*S[:, UpdateSp], 0)
+                bb = np.sum(K * S[:, UpdateSp], 0)
                 for x in range(len(Spc)):
-                    holder = Z[-1][x]+bb[x]
+                    holder = Z[-1][x] + bb[x]
                     if holder >= 0 or Spc[x] in globals2.modified:
                         cc[Spc[x]] = holder
                     else:
@@ -141,12 +142,12 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr, delX, implicit=False, rfile=""):
                     tindex = tindex + 1
             else:
                 dt = max(0, dt)
-                K = np.round(np.random.poisson(D*dt))
+                K = np.round(np.random.poisson(D * dt))
                 Allpos = True
                 cc = {}
-                bb = np.sum(K*S[:, UpdateSp], 0)
+                bb = np.sum(K * S[:, UpdateSp], 0)
                 for x in range(len(Spc)):
-                    holder = Z[-1][x]+bb[x]
+                    holder = Z[-1][x] + bb[x]
                     if holder >= 0 or Spc[x] in globals2.modified:
                         cc[Spc[x]] = holder
                     else:

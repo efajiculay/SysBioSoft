@@ -19,12 +19,12 @@ else:
     try:
         import tempfile
         cwd = os.path.join(tempfile.gettempdir(), "BioSSL_temporary_folder")
-    except:
+    except BaseException:
         cwd = os.path.join(os.getcwd(), "BioSSL_temporary_folder")
 
 try:
     os.mkdir(cwd, 0o777)
-except:
+except BaseException:
     pass
 
 globals2.init()
@@ -46,7 +46,7 @@ def show_file_dir(path):
 def get_input():
     try:
         return raw_input("> ")
-    except:
+    except BaseException:
         return input("> ")
 
 
@@ -73,43 +73,43 @@ def process_command(command):
         i = 1
         rxns = ""
         while rowc[i] != "where" and i < rlen:
-            rxns = rxns+" "+rowc[i]
-            i = i+1
+            rxns = rxns + " " + rowc[i]
+            i = i + 1
         rxns = rxns.split("&")
         # try:
-        fFile = cwd+"/temp.txt"
+        fFile = cwd + "/temp.txt"
         f = open(fFile, "w")
         f.write("#REACTIONS\n")
         for rx in rxns:
-            f.write(rx+"\n")
+            f.write(rx + "\n")
         f.write("\n")
         Mname = ""
         f.write("@CONCENTRATION\n")
         conc = ""
 
-        i = i+1
+        i = i + 1
         while rowc[i] != "using" and i < rlen:
-            conc = conc+rowc[i]
-            Mname = rowc[i+2]
-            i = i+1
+            conc = conc + rowc[i]
+            Mname = rowc[i + 2]
+            i = i + 1
 
         for cx in conc.split("&"):
-            f.write(cx.replace("=", ",")+"\n")
+            f.write(cx.replace("=", ",") + "\n")
         f.write("\n")
         f.close()
 
-        i = i+3
+        i = i + 3
         opts = ""
         while i < rlen:
-            opts = opts+rowc[i]
-            i = i+1
+            opts = opts + rowc[i]
+            i = i + 1
         opts = opts.split("&")
         optsv = {}
         for op in opts:
             opr = op.split("=")
             try:
                 optsv[opr[0].strip()] = opr[1]
-            except:
+            except BaseException:
                 pass
 
         if 'tn' in optsv:
@@ -146,7 +146,7 @@ def process_command(command):
             topo = os.path.join(cwd, topo)
             fFile = topo
 
-        Fname = cwd+"/"+fout
+        Fname = cwd + "/" + fout
         process(
             rfile=fFile,
             miter=miter,
@@ -172,7 +172,7 @@ def process_command(command):
         # except:
         #print("temp.txt file not found")
     elif rowc[0].lower() == "load":
-        sslfile = cwd+"/"+rowc[1]
+        sslfile = cwd + "/" + rowc[1]
         f = open(sslfile)
         command = ""
         for row in f:
@@ -188,27 +188,27 @@ def process_command(command):
         print(cwd)
     elif rowc[0].lower() == "mkdir":
         try:
-            os.mkdir(cwd+"/"+rowc[1], 0o777)
-        except:
+            os.mkdir(cwd + "/" + rowc[1], 0o777)
+        except BaseException:
             pass
     elif rowc[0].lower() == "ls":
         dirs = []
         try:
             if len(rowc) > 1:
-                dirs = os.listdir(cwd+"/"+rowc[1])
+                dirs = os.listdir(cwd + "/" + rowc[1])
             else:
                 dirs = os.listdir(cwd)
-        except:
+        except BaseException:
             pass
         for x in dirs:
             if os.path.isdir(x):
-                print("directory : "+x)
+                print("directory : " + x)
             else:
-                print("file      : "+x)
+                print("file      : " + x)
     elif rowc[0].lower() == "cd":
         try:
-            if os.path.isdir(cwd+"/"+rowc[1]):
-                abspath = os.path.abspath(cwd+"/"+rowc[1])
+            if os.path.isdir(cwd + "/" + rowc[1]):
+                abspath = os.path.abspath(cwd + "/" + rowc[1])
                 dname = os.path.dirname(abspath)
                 os.chdir(dname)
                 cwd = str(abspath)
@@ -219,20 +219,20 @@ def process_command(command):
                 cwd = str(abspath)
             else:
                 print("No such directory")
-        except:
+        except BaseException:
             print("cannot change dir")
     elif rowc[0].lower() == "read_traj":
         if len(rowc) == 4:
             if rowc[2].lower() == "as":
                 name = rowc[3].strip()
                 try:
-                    sslfile = cwd+"/"+rowc[1]
+                    sslfile = cwd + "/" + rowc[1]
                     trj[name] = load_data_traj(sslfile)
-                except:
+                except BaseException:
                     try:
                         sslfile = rowc[1]
                         trj[name] = load_data_traj(sslfile)
-                    except:
+                    except BaseException:
                         print("File not found")
             else:
                 print("use as to assign content to variable")
@@ -244,11 +244,12 @@ def process_command(command):
             if len(rowc) == 3:
                 try:
                     print(trj[rowc[1].strip()][eval(rowc[2].strip())])
-                except:
-                    print(trj[rowc[1].strip()][eval("'"+rowc[2].strip()+"'")])
+                except BaseException:
+                    print(trj[rowc[1].strip()]
+                          [eval("'" + rowc[2].strip() + "'")])
             else:
                 print(trj[rowc[1].strip()])
-        except:
+        except BaseException:
             pass
     elif rowc[0].lower() == "plot":
         if len(rowc) == 4:
@@ -267,35 +268,35 @@ def process_command(command):
     elif rowc[0].lower() == "calc_covariance":
         try:
             calc_covariance(trj[rowc[1].strip()], int(rowc[2]))
-        except:
+        except BaseException:
             calc_covariance(trj[rowc[1].strip()], 100)
     elif rowc[0].lower() == "prob_density":
-        prob_density_calc(trj[rowc[1].strip()], cwd+"/"+rowc[1].strip())
+        prob_density_calc(trj[rowc[1].strip()], cwd + "/" + rowc[1].strip())
     elif rowc[0].lower() == "prob_density_wtime":
         prob_density_calc_wtime(trj[rowc[1].strip()], cwd +
-                           "/"+rowc[1].strip(), "Mname")
+                                "/" + rowc[1].strip(), "Mname")
     elif rowc[0].lower() == "calc_average":
         try:
             calc_average_conc_at_tend(trj[rowc[1].strip()], int(rowc[2]))
-        except:
+        except BaseException:
             calc_average_conc_at_tend(trj[rowc[1].strip()], 100)
     elif rowc[0].lower() == "length":
         try:
             print(len(trj[rowc[1].strip()]))
-        except:
+        except BaseException:
             pass
     elif rowc[0].lower() == "pdread_traj":
         if len(rowc) == 4:
             if rowc[2].lower() == "as":
                 name = rowc[3].strip()
                 try:
-                    sslfile = cwd+"/"+rowc[1]
+                    sslfile = cwd + "/" + rowc[1]
                     trj[name] = pd.read_csv(sslfile, delimiter="\t")
-                except:
+                except BaseException:
                     try:
                         sslfile = rowc[1]
                         trj[name] = pd.read_csv(sslfile, delimiter="\t")
-                    except:
+                    except BaseException:
                         print("file not found")
             else:
                 print("use as to assign content to variable")
@@ -303,7 +304,7 @@ def process_command(command):
         else:
             print("invalid syntax")
     elif rowc[0].lower() == "open_pwd":
-        show_file_dir(cwd+"/.")
+        show_file_dir(cwd + "/.")
 
 
 if __name__ == '__main__':
@@ -319,7 +320,7 @@ if __name__ == '__main__':
     command = " "
 
     while row.strip() != "quit()":
-        row = " "+get_input().strip()
+        row = " " + get_input().strip()
         if row[-1] == ";":
             command = command + " " + row.strip().replace(";", "")
             if command.strip() != "":

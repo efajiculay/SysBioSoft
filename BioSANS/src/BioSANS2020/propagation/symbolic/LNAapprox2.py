@@ -23,7 +23,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
 
     for x in Sp:
         Cs[x] = Symbol(x, real=True, negative=False)
-        Cso[x] = Symbol(x+'o', real=True, negative=False) * \
+        Cso[x] = Symbol(x + 'o', real=True, negative=False) * \
             (0 if conc[x] == 0 else 1)
         equivals.append((Cso[x], conc[x]))
         equiCo.append((Cso[x], conc[x]))
@@ -32,16 +32,16 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
     for i in range(len(Ks)):
         row = []
         if len(Ks[i]) == 1:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
             equivals.append((row[0], Ks[i][0]))
             equiKs.append((row[0], Ks[i][0]))
         else:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
             equivals.append((row[0], Ks[i][0]))
             equiKs.append((row[0], Ks[i][0]))
-            key = 'kb'+str(i+1)
+            key = 'kb' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
             equivals.append((row[1], Ks[i][1]))
             equiKs.append((row[1], Ks[i][1]))
@@ -73,23 +73,23 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
             nz.append(row)
     Ss = Matrix(Ss)
 
-    dA_dt = Ss*f
+    dA_dt = Ss * f
     # print(dA_dt)
     ccs = [Cs[x] for x in Cs]
     js = [ccs[x] for x in nz]
     A = dA_dt.jacobian(js)
-    F = [[0]*len(f) for x in range(len(f))]
+    F = [[0] * len(f) for x in range(len(f))]
     for i in range(len(f)):
         F[i][i] = F[i][i] + f[i]
     F = Matrix(F)
 
-    BBT = Ss*F*Ss.T
+    BBT = Ss * F * Ss.T
 
     cov = []
     for i in nz:
         row = []
         for j in nz:
-            key = "C"+str(min(i+1, j+1))+"_"+str(max(i+1, j+1))
+            key = "C" + str(min(i + 1, j + 1)) + "_" + str(max(i + 1, j + 1))
             if i == j:
                 row.append(Symbol(key, real=True, negative=False))
             else:
@@ -98,8 +98,8 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
     cov = Matrix(cov)
     # print(Ss)
     same = {}
-    for i in range(Ss.shape[0]-1):
-        for j in range(i+1, Ss.shape[0]):
+    for i in range(Ss.shape[0] - 1):
+        for j in range(i + 1, Ss.shape[0]):
             if Ss[i, :] == Ss[j, :]:
                 same[(i, j)] = 1
             elif Ss[i, :] == -Ss[j, :]:
@@ -107,7 +107,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
             else:
                 pass
 
-    L = A*cov + cov*A.T + BBT
+    L = A * cov + cov * A.T + BBT
 
     xs = list(dict.fromkeys(flatten(cov)))
 
@@ -123,9 +123,10 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
     for i in nz:
         for j in nz:
             if j >= i:
-                key = "C"+str(min(i+1, j+1))+"_"+str(max(i+1, j+1))
-                ffprint([key, " = ", str(Sps[i])+"_"+str(Sps[j]), "\n"])
-                CSps[key] = Sps[i]+"_"+Sps[j]
+                key = "C" + str(min(i + 1, j + 1)) + "_" + \
+                    str(max(i + 1, j + 1))
+                ffprint([key, " = ", str(Sps[i]) + "_" + str(Sps[j]), "\n"])
+                CSps[key] = Sps[i] + "_" + Sps[j]
 
     eqs = []
     ffprint(["\nEquations to solve\n\n"])
@@ -139,7 +140,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
     for en in same:
         i, j = en
         for k in range(j, Ss.shape[0]):
-            eqs.append(cov[j, k] - same[en]*cov[i, k])
+            eqs.append(cov[j, k] - same[en] * cov[i, k])
 
     post_proc = False
     multiple_cval = False
@@ -210,7 +211,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
 
         Fe = [dA_dt]
         for s in sets:
-            Fe.append(sum([Cs[x]-Cso[x] for x in s]))
+            Fe.append(sum([Cs[x] - Cso[x] for x in s]))
 
         if mode == "Numeric":
             Fe = [entry.subs(equivals) for entry in Fe]
@@ -249,7 +250,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
         for en in same:
             i, j = en
             for k in range(j, Ss.shape[0]):
-                eqs.append(cov[j, k] - same[en]*cov[i, k])
+                eqs.append(cov[j, k] - same[en] * cov[i, k])
 
         sol = solve(eqs, xs)
 
@@ -264,7 +265,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
         for x in sol:
             Ch = factor(simplify(subs2(sol[x], cval)))
             #Ch = sol[x]
-            ffprint(["Cov("+str(CSps[str(x)])+")", " = ", Ch, "\n\n"])
+            ffprint(["Cov(" + str(CSps[str(x)]) + ")", " = ", Ch, "\n\n"])
     else:
         print(2)
         ffprint(["\nMultiple solutions detected"])
@@ -292,7 +293,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
             for en in same:
                 i, j = en
                 for k in range(j, Ss.shape[0]):
-                    eqs.append(cov[i, k] - same[en]*cov[j, k])
+                    eqs.append(cov[i, k] - same[en] * cov[j, k])
 
             sol = solve(eqs, xs)
             if not sol:
@@ -303,14 +304,15 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
             for x in sol:
                 u, w = str(x).split("_")
                 Ch = factor(simplify(subs2(sol[x], cval))).subs(equivals)
-                if u == 'C'+w and Ch < 0:
+                if u == 'C' + w and Ch < 0:
                     fact = -1
                     break
 
             for x in sol:
                 Ch = factor(simplify(subs2(sol[x], cval)))
                 #Ch = sol[x]
-                ffprint(["Cov("+str(CSps[str(x)])+")", " = ", Ch*fact, "\n\n"])
-            valset = valset+1
+                ffprint(["Cov(" + str(CSps[str(x)]) + ")",
+                         " = ", Ch * fact, "\n\n"])
+            valset = valset + 1
 
     return [0, 0]

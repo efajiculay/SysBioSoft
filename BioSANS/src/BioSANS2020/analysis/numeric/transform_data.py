@@ -190,8 +190,8 @@ def calc_covariance(edata, items, points=100):
         for jnd in range(ind, dlen):
             if str(cumulative_cov[ind, jnd]) not in {"None", "nan", "0.0"}:
                 vvv[ind, jnd] = cumulative_cov[ind, jnd] \
-                                / np.sqrt(cumulative_cov[ind, ind]
-                                          * cumulative_cov[jnd, jnd])
+                    / np.sqrt(cumulative_cov[ind, ind]
+                              * cumulative_cov[jnd, jnd])
                 label = slabels[ind] + " and " + slabels[jnd]
                 text.insert(INSERT, label.ljust(50) + " = "
                             + str(vvv[ind, jnd]) + "\n")
@@ -283,7 +283,7 @@ def prob_density_calc(edata, items):
 
 def prob_density_calc2(edata, items):
     """This function calculates the probability density of edata[0] and
-    returns a plot of the probability density.
+    returns a plot of the probability density with time.
     Args:
         edata : two dimensional array of data & labels (data, label).
                 data is a 3D array where each row are the individual

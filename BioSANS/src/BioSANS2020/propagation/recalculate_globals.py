@@ -25,7 +25,7 @@ def rateOf(x):
     if len(orasP) < 2:
         return 0
     delt = orasP[-1] - orasP[-2]
-    rate = (concP[-1][indx] - concP[-2][indx])/delt
+    rate = (concP[-1][indx] - concP[-2][indx]) / delt
     return rate
 
 
@@ -35,15 +35,15 @@ def delay(x, y):
         last = orasP[-1]
         first = orasP[0]
         if last - y >= 0:
-            delt = orasP[-1]-orasP[-2]
-            inc = int(y/delt)
+            delt = orasP[-1] - orasP[-2]
+            inc = int(y / delt)
             i = inc
-            while abs(abs(last-orasP[-i])/y-1.0) > 1.0e-2:
-                if last-orasP[-i] < y:
+            while abs(abs(last - orasP[-i]) / y - 1.0) > 1.0e-2:
+                if last - orasP[-i] < y:
                     i = i + 1
                 else:
                     i = i - 1
-            return concP[-inc-1][SiP.index(actualSp)]
+            return concP[-inc - 1][SiP.index(actualSp)]
         else:
             try:
                 # if True:
@@ -57,8 +57,8 @@ def delay(x, y):
                         spvar = [c.strip() for c in spvar]
                         if "t" in spvar or "time" in spvar:
                             try:
-                                return pfunc(last+delt-y)
-                            except:
+                                return pfunc(last + delt - y)
+                            except BaseException:
                                 sprv = []
                                 for c in range(len(spvar)):
                                     sprv.append(concP2[spvar[c].strip()])
@@ -91,10 +91,10 @@ def apply_rules(conc, yconc, oras=[], spconc=[], slabels=[]):
                 suby = pfunc(*sprv)
                 try:
                     suby = sympy.re(suby.evalf())
-                except:
+                except BaseException:
                     pass
-                if not type(suby) == tuple:
-                    if suby != None:
+                if not isinstance(suby, tuple):
+                    if suby is not None:
                         yconc[x] = suby
                 else:
                     tuples_pfunct.append(
@@ -104,10 +104,10 @@ def apply_rules(conc, yconc, oras=[], spconc=[], slabels=[]):
                 suby = pfunc()
                 try:
                     suby = sympy.re(suby.evalf())
-                except:
+                except BaseException:
                     pass
-                if not type(suby) == tuple:
-                    if suby != None:
+                if not isinstance(suby, tuple):
+                    if suby is not None:
                         yconc[x] = suby
                 else:
                     tuples_pfunct.append(
@@ -134,9 +134,9 @@ def apply_rules(conc, yconc, oras=[], spconc=[], slabels=[]):
                 last = ih
 
         row = tuples_pfunct.pop()
-        if current_key == None:
+        if current_key is None:
             current_key = row[0]
-        if row[2] != None:
+        if row[2] is not None:
             x = row[1]
             yconc[x] = row[2]
             if current_key == row[0]:
@@ -193,16 +193,16 @@ def get_globals(rfile):
                         if len(cvar) >= 3:
                             cc = ",".join(cvar[2:])
                             try:
-                                res = re.findall("\w{1,3}\(t,.+\)\s", cc)
+                                res = re.findall(r"\w{1,3}\(t,.+\)\s", cc)
                                 if res:
                                     try:
                                         rr = float(str(res[0]).split(
                                             ",")[1].replace(")", ""))
-                                    except:
+                                    except BaseException:
                                         rr = eval(str(res[0]).split(
                                             ",")[1].replace(")", ""))
                                     globals2.tCheck.append(rr)
-                            except:
+                            except BaseException:
                                 pass
                             cc2 = cc.split(":")[0].replace(
                                 "lambda", "").split(",")
@@ -211,7 +211,7 @@ def get_globals(rfile):
                                 "delay_", "_yaled").find("delay")
                             if delayPos >= 0:
                                 dfirst = ""
-                                for ib in range(delayPos+6, len(cc)):
+                                for ib in range(delayPos + 6, len(cc)):
                                     dvar = cc[ib]
                                     if dvar == ",":
                                         break
@@ -222,12 +222,12 @@ def get_globals(rfile):
                                     dfirst] + [x for x in cc2 if x.strip() != dfirst.strip()]
                                 cc2 = cc2new
                                 gcc = cc.split(":")[1]
-                                cc = "lambda "+",".join(cc2)+":"+gcc
+                                cc = "lambda " + ",".join(cc2) + ":" + gcc
 
                             RatePos = cc.find("rateOf")
                             if RatePos >= 0:
                                 dfirst = ""
-                                for ib in range(RatePos+7, len(cc)):
+                                for ib in range(RatePos + 7, len(cc)):
                                     dvar = cc[ib]
                                     if dvar == ")":
                                         break
@@ -238,7 +238,7 @@ def get_globals(rfile):
                                 ) != dfirst.strip()] + [dfirst]
                                 cc2 = cc2new
                                 gcc = cc.split(":")[1]
-                                cc = "lambda "+",".join(cc2)+":"+gcc
+                                cc = "lambda " + ",".join(cc2) + ":" + gcc
 
                             if cvar[0].strip() not in globals2.modified:
                                 globals2.modified[cvar[0].strip()] = [
@@ -253,7 +253,7 @@ def get_globals(rfile):
                         for x in gg:
                             xx = x.split("=")
                             globals2.settings[xx[0].strip()] = xx[1].strip()
-                    except:
+                    except BaseException:
                         pass
                 elif row[0] == "@":
                     last = "@"
@@ -281,5 +281,5 @@ def get_globals(rfile):
                                           str(ih)] = [(cc2, eval(krow[0]))]
 
         globals2.tCheck.sort()
-    except:
+    except BaseException:
         pass

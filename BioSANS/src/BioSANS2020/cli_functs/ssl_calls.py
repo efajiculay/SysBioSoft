@@ -93,7 +93,7 @@ def calc_covariance(edata, points=100):
                 the first column is time and the remaining columns are
                 the corresponding components.
         points : last number of points considered in covariance
-                 calculation from -points to the end of array 
+                 calculation from -points to the end of array
                  or equivalent to [-points:] slice.
     """
     data, slabels = edata
@@ -153,8 +153,8 @@ def calc_covariance(edata, points=100):
 
 
 def calc_covariance_per_traj(edata, points=100, fname="", mname=""):
-    """This function calculates the covariance of edata[0], prints the
-    result in a console, and plots data into image.
+    """This function calculates the covariance of edata[0] per rows,
+    prints the result in a console, and plots data into image.
     Args:
         edata : two dimensional array of data & labels (data, label).
                 data is a 3D array where each row are the individual
@@ -251,6 +251,21 @@ def calc_covariance_per_traj(edata, points=100, fname="", mname=""):
 
 def calc_covariance_bootsrap(
         edata, points=100, msamp=1000, fname="", mname=""):
+    """This function calculates the covariance of edata[0] with sampling
+    , prints the result in a console, and plots data into image.
+    Args:
+        edata : two dimensional array of data & labels (data, label).
+                data is a 3D array where each row are the individual
+                trajectories. Each trajectory is a 2D numpy array where
+                the first column is time and the remaining columns are
+                the corresponding components.
+        points : last number of points considered in covariance
+                 calculation from -points to the end of array
+                 or equivalent to [-points:] slice.
+        msamp : number of randomly chosen trajectories
+        fname : prepended name to plots fname_mname*
+        mname : prepended name to plots fname_mname*
+    """
     data, slabels = edata
     nlen = len(data)
     bmvv = []
@@ -365,6 +380,17 @@ def calc_covariance_bootsrap(
 
 
 def prob_density_calc_wtime(edata, fname, mname):
+    """This function calculates the probability density of edata[0] and
+    returns a plot of the probability density with time.
+    Args:
+        edata : two dimensional array of data & labels (data, label).
+                data is a 3D array where each row are the individual
+                trajectories. Each trajectory is a 2D numpy array where
+                the first column is time and the remaining columns are
+                the corresponding components.
+        fname : prepended name to plots fname_mname*
+        mname : prepended name to plots fname_mname*
+    """
     data, slabels = edata
     nlen = len(data)
     dlen = len(slabels)
@@ -413,7 +439,10 @@ def prob_density_calc_tslice(edata, bins=50, fname=""):
     bins and returns a plot of the probability density.
     Args:
         edata : two dimensional array of data & labels (data, label).
-                data[0] is time and data[1:] are trajectories
+                data is a 3D array where each row are the individual
+                trajectories. Each trajectory is a 2D numpy array where
+                the first column is time and the remaining columns are
+                the corresponding components.
         bins : number of bins an entire trajectory will be discretized
         fname : name prepended to plot name
     """
@@ -461,7 +490,10 @@ def prob_density_calc(edata, fname):
     returns a plot of the probability density.
     Args:
         edata : two dimensional array of data & labels (data, label).
-                data[0] is time and data[1:] are trajectories
+                data is a 3D array where each row are the individual
+                trajectories. Each trajectory is a 2D numpy array where
+                the first column is time and the remaining columns are
+                the corresponding components.
         items : three dimensional array of [canvas, scroll_x, scroll_y]
     """
     data, slabels = edata

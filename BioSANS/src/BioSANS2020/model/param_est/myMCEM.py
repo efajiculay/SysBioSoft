@@ -34,26 +34,27 @@ def cost_value(ks, custom_function, args=None):
     return abs(log_likelihood(ks, custom_function, args))
 
 
-def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, likelihood=None, args=None, thr=1.0e-10):
-    np.random.seed(int(sd*100))
+def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3,
+            positive_only=False, likelihood=None, args=None, thr=1.0e-10):
+    np.random.seed(int(sd * 100))
     sd = np.random.uniform(0, 1)
 
-    stds = [0]*lenks
+    stds = [0] * lenks
     for i in range(lenks):
         if positive_only:
             stds[i] = abs(np.random.normal(sd, 0.01))
         else:
             stds[i] = abs(np.random.normal(sd, 100))
 
-    kso = [0]*lenks
+    kso = [0] * lenks
     for i in range(lenks):
         if positive_only:
             kso[i] = np.random.lognormal(0, stds[i])
         else:
             kso[i] = np.random.normal(0, stds[i])
 
-    valo = [0]*lenks
-    valp = [0]*lenks
+    valo = [0] * lenks
+    valp = [0] * lenks
     for i in range(lenks):
         valo[i] = 1
         valp[i] = 2
@@ -70,7 +71,7 @@ def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, 
     error = 1000
     sigma = 1
 
-    delta = int(np.ceil(inner_loop/(maxiter-0.33*maxiter)))
+    delta = int(np.ceil(inner_loop / (maxiter - 0.33 * maxiter)))
     inner_loop_orig = inner_loop
     inner_loop = delta
     while iteration < maxiter:
@@ -80,12 +81,12 @@ def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, 
         for i in range(lenks):
             kis.append([])
 
-        R = vmax*log_likelihood(kso, likelihood, args)
+        R = vmax * log_likelihood(kso, likelihood, args)
 
         for i in range(inner_loop):
             if lst:
                 break
-            ksp = [0]*lenks
+            ksp = [0] * lenks
             for j in range(lenks):
                 if positive_only:
                     ksp[j] = np.random.lognormal(
@@ -93,10 +94,10 @@ def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, 
                 else:
                     ksp[j] = np.random.normal(kso[j], stds[j])
 
-            L = vmax*log_likelihood(ksp, likelihood, args)
+            L = vmax * log_likelihood(ksp, likelihood, args)
 
             U = np.random.uniform(0, 1)
-            check = np.exp(L-R)
+            check = np.exp(L - R)
             if check > U:
 
                 for j in range(lenks):
@@ -119,11 +120,11 @@ def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, 
                 valo[i] = valp[i]
                 valp[i] = np.array(kis[i]).mean()
             else:
-                stds[i] = abs(np.random.normal(2*stds[i], 0.1*stds[i]))
+                stds[i] = abs(np.random.normal(2 * stds[i], 0.1 * stds[i]))
 
         test = 0
         for i in range(lenks):
-            test = test + abs((valo[i]-valp[i])/valo[i])
+            test = test + abs((valo[i] - valp[i]) / valo[i])
 
         if test < 1.0e-15:
             break
@@ -137,15 +138,16 @@ def MH_call(lst, sd, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, 
     return (valp, error)
 
 
-def run_MCEM(chains, params, maxiter=5, inner_loop=5*1000, positive_only=False, likelihood=None, arg=None, rr=np.random.uniform(0, 1)):
+def run_MCEM(chains, params, maxiter=5, inner_loop=5 * 1000,
+             positive_only=False, likelihood=None, arg=None, rr=np.random.uniform(0, 1)):
     mp = proc_global.mp
     pool = mp.Pool(chains)
-    np.random.seed(int(rr*100))
-    rands = [(x+1)*np.random.uniform(0, 1) for x in range(chains)]
+    np.random.seed(int(rr * 100))
+    rands = [(x + 1) * np.random.uniform(0, 1) for x in range(chains)]
 
     thr = 1.0e-10
-    results = [pool.apply_async(MH_call, args=(proc_global.lst, rands[ih], maxiter*(
-        ih+1), inner_loop*(ih+1), params, positive_only, likelihood, arg, thr)) for ih in range(chains)]
+    results = [pool.apply_async(MH_call, args=(proc_global.lst, rands[ih], maxiter * (
+        ih + 1), inner_loop * (ih + 1), params, positive_only, likelihood, arg, thr)) for ih in range(chains)]
 
     ffvar = [result.get() for result in results]
     pool.close()

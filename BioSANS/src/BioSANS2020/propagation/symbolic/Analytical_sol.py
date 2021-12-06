@@ -69,7 +69,7 @@ def grab_steady_state(Rr, Rp, Cs, Cso, dA_dt, js):
     sets = get_sets(Rr, Rp)
     Fez = [dA_dt]
     for s in sets:
-        Fez.append(sum([Cs[x]-Cso[x] for x in s]))
+        Fez.append(sum([Cs[x] - Cso[x] for x in s]))
     val2 = solve(Fez, {x for x in js})
     xs = Matrix([val2[js[ih]] for ih in range(len(js))])
     return xs
@@ -85,7 +85,8 @@ def CstoCsR(fx, Cs, CsR, not_semi):
         return fx
 
 
-def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mode=None):
+def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
+                rfile="", not_semi=True, mode=None):
     get_globals(rfile)
     MyEquations = {}
 
@@ -100,7 +101,8 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
 
     if not_semi:
         ffprint(["\n\nComplex Analytical expressions\n"])
-        ffprint(["\n\nThe complex expression is because sympy do not know how you want to simplify the expression\n\n"])
+        ffprint(
+            ["\n\nThe complex expression is because sympy do not know how you want to simplify the expression\n\n"])
     else:
         ffprint(["Simple semi-analytical expression\n\n"])
 
@@ -114,11 +116,11 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
         Cs[x] = Function(x, negative=False, real=True)(t)
         CsR[x] = Symbol(x, negative=False, real=True)
         if mode == "ftxo":
-            Cso[x] = Symbol(x+"o", negative=False, real=True)
+            Cso[x] = Symbol(x + "o", negative=False, real=True)
         elif mode == "ftks":
             Cso[x] = conc[x]
         else:
-            Cso[x] = Symbol(x+"o", negative=False,
+            Cso[x] = Symbol(x + "o", negative=False,
                             real=True) if not_semi else conc[x]
         equivals.append((Cso[x], conc[x]))
 
@@ -126,14 +128,14 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
     for i in range(len(Ks)):
         row = []
         if len(Ks[i]) == 1:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, negative=False, real=True))
             equivals.append((row[0], Ks[i][0]))
         else:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, negative=False, real=True))
             equivals.append((row[0], Ks[i][0]))
-            key = 'kb'+str(i+1)
+            key = 'kb' + str(i + 1)
             row.append(Symbol(key, negative=False, real=True))
             equivals.append((row[1], Ks[i][1]))
         KCs.append(row)
@@ -161,7 +163,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
             nz.append(row)
     Ss = Matrix(Ss)
 
-    dA_dt = Ss*f
+    dA_dt = Ss * f
     ccs = [Cs[x] for x in Cs]
     ccso = [Cso[x] for x in Cso]
     js = [ccs[x] for x in nz]
@@ -175,7 +177,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
 
     LHS = dA_dt.jacobian(js)
     # print(LHS)
-    RHS = dA_dt-LHS*Matrix(js)
+    RHS = dA_dt - LHS * Matrix(js)
     # print(RHS)
     # print(Fe)
     # print(dA_dt)
@@ -198,7 +200,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
             Fe2 = []
             for s in sets:
                 Fe2.append(
-                    Eq(sum([Cs[x]/stoich(x)-Cso[x]/stoich(x) for x in s]), 0))
+                    Eq(sum([Cs[x] / stoich(x) - Cso[x] / stoich(x) for x in s]), 0))
             xret = solve(Fe2, js)
             # print(xret)
             # print(Fe)
@@ -209,7 +211,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
             denom = CstoCsR(Fe[-1].rhs, Cs, CsR, not_semi)
             itvar = CstoCsR(js[-1], Cs, CsR, not_semi)
             #potAn = integrate(1/denom,(itvar,jso[-1],js[-1]))-t
-            potAn = integrate(1/Fe[-1].rhs, (js[-1], jso[-1], js[-1]))-t
+            potAn = integrate(1 / Fe[-1].rhs, (js[-1], jso[-1], js[-1])) - t
             Fe2.append(potAn)
             try:
                 sol = func_timeout(20, solve, args=(Fe2, js))
@@ -240,8 +242,8 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                 try:
                     xs = grab_steady_state(Rr, Rp, Cs, Cso, dA_dt, js)
                     try:
-                        expD = func_timeout(200, exp, args=(LHS*t,))
-                        x_sol = xs + expD*(xo - xs)
+                        expD = func_timeout(200, exp, args=(LHS * t,))
+                        x_sol = xs + expD * (xo - xs)
                         ind = 0
                         for x in x_sol:
                             varSp = str(js[ind])
@@ -253,17 +255,17 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                         work = True
                     except FunctionTimedOut:
                         work = False
-                except:
+                except BaseException:
                     pass
             else:
                 # print("llll",2)
                 try:
                     try:
-                        xs = simplify(-LHS**-1*RHS)
-                        x_sol = xs + exp(LHS*t)*(xo - xs)
-                    except:
+                        xs = simplify(-LHS**-1 * RHS)
+                        x_sol = xs + exp(LHS * t) * (xo - xs)
+                    except BaseException:
                         x_sol = simplify(
-                            exp(LHS*t)*xo+integrate(exp(LHS*t)*RHS, (s, 0, t)))
+                            exp(LHS * t) * xo + integrate(exp(LHS * t) * RHS, (s, 0, t)))
                     ind = 0
                     for x in x_sol:
                         varSp = str(js[ind])
@@ -273,7 +275,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                         if varSp not in MyEquations:
                             MyEquations[varSp] = answer
                     work = True
-                except:
+                except BaseException:
                     pass
 
     if not work:
@@ -294,7 +296,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
 
             except FunctionTimedOut:
                 float("jjj")
-        except:
+        except BaseException:
             try:
                 print(2)
                 ind = 0
@@ -324,7 +326,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                 # print(good)
                 # print(notF)
                 ffprint(["\n\n", "Attempting to evaluate", "\n\n"])
-                flen = 2*len(notF)
+                flen = 2 * len(notF)
                 cc = 0
 
                 sets = get_sets(Rr, Rp)
@@ -332,7 +334,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                 # print(slabels,V)
                 for s in sets:
                     Fez.append(
-                        Eq(sum([Cs[x]/stoich(x)-Cso[x]/stoich(x) for x in s]), 0))
+                        Eq(sum([Cs[x] / stoich(x) - Cso[x] / stoich(x) for x in s]), 0))
                 xret = solve(Fez, js)
                 # print(xret)
 
@@ -357,7 +359,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                         try:
                             # print(x[0],x[1],333)
                             sol = [dsolve(x[0], ics=x[1])]
-                            Fez.append(Eq(sol[0].lhs[0]-sol[0].rhs, 0))
+                            Fez.append(Eq(sol[0].lhs[0] - sol[0].rhs, 0))
                             good.append([sol[0].lhs, sol[0].rhs])
                             if str(sol[0].lhs) not in used3:
                                 varSp = str(sol[0].lhs)
@@ -366,11 +368,11 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                 if varSp not in MyEquations:
                                     MyEquations[varSp] = answer
                                 used3[varSp] = True
-                        except:
+                        except BaseException:
                             denom = CstoCsR(x[0].rhs, Cs, CsR, not_semi)
                             itvar = CstoCsR(spc[0], Cs, CsR, not_semi)
                             val = integrate(
-                                1/denom, (itvar, x[1][spc[0].subs(t, 0)], spc[0]))-t
+                                1 / denom, (itvar, x[1][spc[0].subs(t, 0)], spc[0])) - t
                             Fez.append(val)
                             sol = solve(val, spc[0])
                             if type(sol) == dict:
@@ -386,7 +388,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                             used3[varSp] = True
                     elif len(spr) == 2 and terms == 1 and (len(Rr) == 1 or len(Rp) == 1) and not_semi:
                         subt = Eq(
-                            spr[0]-spr[1], jso[js.index(spr[0])]-jso[js.index(spr[1])])
+                            spr[0] - spr[1], jso[js.index(spr[0])] - jso[js.index(spr[1])])
                         if spr[0] != spc[0]:
                             vari = spr[0]
                         else:
@@ -437,17 +439,17 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                         x[0].rhs, Cs, CsR, not_semi)
                                     itvar = CstoCsR(spc, Cs, CsR, not_semi)
                                     val = integrate(
-                                        1/denom, (itvar, x[1][spc.subs(t, 0)], spc))-t
-                                except:
+                                        1 / denom, (itvar, x[1][spc.subs(t, 0)], spc)) - t
+                                except BaseException:
                                     denom = CstoCsR(x[0].rhs, Cs, CsR, False)
                                     itvar = CstoCsR(spc, Cs, CsR, False)
                                     val = integrate(
-                                        1/denom, (itvar, x[1][spc.subs(t, 0)], spc))-t
+                                        1 / denom, (itvar, x[1][spc.subs(t, 0)], spc)) - t
 
                                 ffprint(
                                     ["\n", "Not simplified solution", "\n\n"])
                                 ffprint(["need to solve for ", spc,
-                                        " to simplify :\n", val, "\n\n"])
+                                         " to simplify :\n", val, "\n\n"])
                                 Fez.append(val)
                                 sol = solve(val, spc)
                                 if type(sol) == dict:
@@ -462,7 +464,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                 #MyEquations[varSp] = answer
                             else:
                                 notF.append([x[0], x[1]])
-                        except:
+                        except BaseException:
                             notF.append([x[0], x[1]])
                         cc = cc + 1
 
@@ -484,7 +486,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                     MyEquations[varSp] = answer
                                 ind = ind + 1
                             break
-            except:
+            except BaseException:
                 print(3)
                 ind = 0
                 notF = []
@@ -512,7 +514,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
 
                 # print(notF,1111111111111111111)
                 ffprint(["\n\n", "Attempting to evaluate", "\n\n"])
-                flen = 2*len(notF)
+                flen = 2 * len(notF)
                 cc = 0
 
                 sets = get_sets(Rr, Rp)
@@ -535,7 +537,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                         try:
                             # print(x[0],x[1],333)
                             sol = [dsolve(x[0], ics=x[1])]
-                            Fez.append(Eq(sol[0].lhs[0]-sol[0].rhs, 0))
+                            Fez.append(Eq(sol[0].lhs[0] - sol[0].rhs, 0))
                             good.append([sol[0].lhs, sol[0].rhs])
                             if str(sol[0].lhs) not in used3:
                                 varSp = str(sol[0].lhs)
@@ -544,11 +546,11 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                 if varSp not in MyEquations:
                                     MyEquations[varSp] = answer
                                 used3[varSp] = True
-                        except:
+                        except BaseException:
                             denom = CstoCsR(x[0].rhs, Cs, CsR, not_semi)
                             itvar = CstoCsR(spc[0], Cs, CsR, not_semi)
                             val = integrate(
-                                1/denom, (itvar, x[1][spc[0].subs(t, 0)], spc[0]))-t
+                                1 / denom, (itvar, x[1][spc[0].subs(t, 0)], spc[0])) - t
                             Fez.append(val)
                             sol = solve(val, spc[0])
                             if type(sol) == dict:
@@ -602,18 +604,18 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                     itvar = CstoCsR(spc, Cs, CsR, not_semi)
                                     # print(1/denom,(itvar,x[1][spc.subs(t,0)],spc),1111)
                                     val = integrate(
-                                        1/denom, (itvar, x[1][spc.subs(t, 0)], spc))-t
-                                except:
+                                        1 / denom, (itvar, x[1][spc.subs(t, 0)], spc)) - t
+                                except BaseException:
                                     denom = CstoCsR(x[0].rhs, Cs, CsR, False)
                                     itvar = CstoCsR(spc, Cs, CsR, False)
                                     # print(1/denom,(itvar,x[1][spc.subs(t,0)],spc),2222)
                                     val = integrate(
-                                        1/denom, (itvar, x[1][spc.subs(t, 0)], spc))-t
+                                        1 / denom, (itvar, x[1][spc.subs(t, 0)], spc)) - t
 
                                 ffprint(
                                     ["\n", "Not simplified solution", "\n\n"])
                                 ffprint(["need to solve for ", spc,
-                                        " to simplify :\n", val, "\n\n"])
+                                         " to simplify :\n", val, "\n\n"])
                                 Fez.append(val)
                                 sol = solve(val, spc)
                                 if type(sol) == dict:
@@ -628,7 +630,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None, rfile="", not_semi=True, mo
                                     MyEquations[varSp] = answer
                             else:
                                 notF.append([x[0], x[1]])
-                        except:
+                        except BaseException:
                             notF.append([x[0], x[1]])
                         cc = cc + 1
 

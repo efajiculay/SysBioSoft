@@ -10,7 +10,7 @@ def process(x):
     global done_parsing
     xx = x.strip("*").strip().replace("*/", "/")
     if xx[0] == "/":
-        xx = "1"+xx
+        xx = "1" + xx
     if xx[-1] == "/":
         xx = xx.strip("/")
     val = sympify(xx.strip("*"))
@@ -32,7 +32,7 @@ def propExt(expr, prop):
         if v in ["+", "-"] and diff == 0:
             if len(collect) > 0:
                 d = process(collect)
-                if d != None:
+                if d is not None:
                     prop.append(d)
                 collect = ""
                 open = 0
@@ -57,7 +57,7 @@ def propExt(expr, prop):
         diff = open - close
 
     d = process(collect)
-    if d != None:
+    if d is not None:
         prop.append(d)
 
 
@@ -73,7 +73,7 @@ def termExt(expr):
     for v in ex:
         if v in ["+", "-"] and diff == 0:
             if len(collect) > 0:
-                term.append(last_sign+collect)
+                term.append(last_sign + collect)
                 collect = ""
                 open = 0
                 close = 0
@@ -88,7 +88,7 @@ def termExt(expr):
             collect = collect + v
         diff = open - close
 
-    term.append(last_sign+collect)
+    term.append(last_sign + collect)
     return term
 
 
@@ -107,10 +107,10 @@ def get_prop_stoich(dxdt):
         for j in range(len(w)):
             s = 0
             for xx in termExt(dAdt[i]):
-                x = sympify(xx)/w[j]
+                x = sympify(xx) / w[j]
                 try:
                     s = s + float(x)
-                except:
+                except BaseException:
                     pass
             V[i][j] = s
 
@@ -122,7 +122,7 @@ def print_stoich_prop(dxdt):
     done_parsing = set()
     print()
     V, w = get_prop_stoich(dxdt)
-    for t in V*w:
+    for t in V * w:
         print(t)
     print()
 
@@ -139,7 +139,7 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
 
     if items:
         text = prepare_scroll_text(items)
-        def ffrint(x): return text.insert(INSERT, x+"\n")
+        def ffrint(x): return text.insert(INSERT, x + "\n")
     else:
         def ffrint(x): return print(" ".join([str(y) for y in x]), end="")
 
@@ -156,9 +156,9 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
         for i in range(len(col)):
             if col[i] != 0:
                 if col[i] < 0:
-                    R = R + str(abs(col[i]))+" "+x[i] + " " + "+ "
+                    R = R + str(abs(col[i])) + " " + x[i] + " " + "+ "
                 else:
-                    P = P + str(abs(col[i]))+" "+x[i] + " " + "+ "
+                    P = P + str(abs(col[i])) + " " + x[i] + " " + "+ "
         if R.strip() == "":
             R = "0 NONE"
         if P.strip() == "":
@@ -172,17 +172,17 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
             else:
                 Ksn.add(ss)
         inSp = ",".join(inSp)
-        Rxn.append(R.strip("+ ")+" => "+P.strip("+ ") +
-                   ", 1 ::::: lambda "+inSp+" : "+str(w[ind]))
+        Rxn.append(R.strip("+ ") + " => " + P.strip("+ ") +
+                   ", 1 ::::: lambda " + inSp + " : " + str(w[ind]))
         ind = ind + 1
 
     ffrint("Function_Definitions:")
     for k in Ksn:
-        ffrint(k.strip()+" = type actual value") if k.strip(
-        ) not in ks else ffrint(k.strip()+" = "+ks[k.strip()])
+        ffrint(k.strip() + " = type actual value") if k.strip(
+        ) not in ks else ffrint(k.strip() + " = " + ks[k.strip()])
     for c in x:
-        ffrint(c.strip()+"_ini = type actual value") if c.strip(
-        ) not in xo else ffrint(c.strip()+"_ini = "+xo[c.strip()])
+        ffrint(c.strip() + "_ini = type actual value") if c.strip(
+        ) not in xo else ffrint(c.strip() + "_ini = " + xo[c.strip()])
 
     ffrint("")
     ffrint("#REACTIONS")
@@ -192,7 +192,7 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
     ffrint("")
     ffrint("@CONCENTRATION")
     for c in x:
-        ffrint(c+" , "+c.strip()+"_ini")
+        ffrint(c + " , " + c.strip() + "_ini")
     ffrint("NONE, 1")
     return text
 
@@ -206,7 +206,8 @@ def odedxdt_to_topo(mfile, items):
     dxdt = []
     last = ""
     for xx in ddvar:
-        if last == "ODE_DECLARATIONS" and xx.strip() not in ["INI_CONCENTRATIONS:", "RATE_CONSTANTS:"]:
+        if last == "ODE_DECLARATIONS" and xx.strip(
+        ) not in ["INI_CONCENTRATIONS:", "RATE_CONSTANTS:"]:
             if xx.strip() != "":
                 row = xx.split("=")
                 x.append(row[0].strip())

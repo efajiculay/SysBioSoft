@@ -13,11 +13,11 @@ def cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX, reg=False):
     G = np.sqrt(D)
     nlen = np.random.randn(len(D)).reshape(len(D), 1)
     fx = np.matmul(V, D)
-    gx = np.matmul(V, G*nlen)
+    gx = np.matmul(V, G * nlen)
     if not reg:
-        h1 = np.abs(D)+1.0e-30  # np.abs(fx)+1.0e-30
-        h2 = np.abs(G)+1.0e-30  # np.abs(gx)+1.0e-30
-        dt = min(delX*min(np.min(1/h1), np.min(1/h2)), dt)
+        h1 = np.abs(D) + 1.0e-30  # np.abs(fx)+1.0e-30
+        h2 = np.abs(G) + 1.0e-30  # np.abs(gx)+1.0e-30
+        dt = min(delX * min(np.min(1 / h1), np.min(1 / h2)), dt)
     sqdt = np.sqrt(dt)
 
     ind = 0
@@ -27,15 +27,16 @@ def cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX, reg=False):
             gx[ind] = 0
         ind = ind + 1
 
-    fd = fx*dt+gx*sqdt
+    fd = fx * dt + gx * sqdt
     return [fd.reshape(len(Sp)), dt]
 
 
-def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, rr=1, implicit=False, rfile=""):
+def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
+                  rr=1, implicit=False, rfile=""):
     get_globals(rfile)
-    np.random.seed(int(rr*100))
+    np.random.seed(int(rr * 100))
     tnew = []
-    dt = t[-1]-t[-2]
+    dt = t[-1] - t[-2]
     yconc = {x: sconc[x] for x in sconc}
     conc = {x: sconc[x] for x in sconc}
     apply_rules(conc, yconc)
@@ -47,11 +48,11 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, rr=1, implicit=False, rf
         while tnow < t[-1]:
             m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX))
             mm = m[0].reshape(1, len(m[0]))[0]
-            tnow = tnow+m[1]
+            tnow = tnow + m[1]
             ind = 0
             for sp in Sp:
                 conc[sp] = S[-1][ind] + mm[ind]
-                ind = ind+1
+                ind = ind + 1
             apply_rules(conc, yconc)
             S.append([conc[z] for z in Sp])
             for sp in Sp:
@@ -64,19 +65,19 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, rr=1, implicit=False, rf
         C = [conc[z] for z in Sp]
         while tnew[-1] < t[-1]:
             m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX))
-            tnow = tnow+m[1]
+            tnow = tnow + m[1]
             if tnow > t[tindex]:
-                tnow = tnow-m[1]
-                dt2 = t[tindex]-tnow
+                tnow = tnow - m[1]
+                dt2 = t[tindex] - tnow
                 m = np.nan_to_num(
                     cle_model(Sp, Ks, conc, Rr, Rp, V, dt2, delX, True))
                 mm = m[0].reshape(1, len(m[0]))[0]
-                tnow = tnow+m[1]
+                tnow = tnow + m[1]
 
                 ind = 0
                 for sp in Sp:
                     conc[sp] = C[ind] + mm[ind]
-                    ind = ind+1
+                    ind = ind + 1
                 apply_rules(conc, yconc)
                 C = [conc[z] for z in Sp]
                 for sp in Sp:
@@ -90,7 +91,7 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, rr=1, implicit=False, rf
                 ind = 0
                 for sp in Sp:
                     conc[sp] = C[ind] + mm[ind]
-                    ind = ind+1
+                    ind = ind + 1
                 apply_rules(conc, yconc)
                 C = [conc[z] for z in Sp]
                 for sp in Sp:
@@ -100,9 +101,9 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, rr=1, implicit=False, rf
 
 def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
     get_globals(rfile)
-    np.random.seed(int(rr*100))
-    div = max(1, int(1/delX))
-    dt = (t[-1]-t[-2])/div
+    np.random.seed(int(rr * 100))
+    div = max(1, int(1 / delX))
+    dt = (t[-1] - t[-2]) / div
     yconc = {x: sconc[x] for x in sconc}
     conc = {x: sconc[x] for x in sconc}
     apply_rules(conc, yconc)
@@ -111,17 +112,17 @@ def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
     tnew = [tnow]
     dv = 0
     C = S[-1]
-    while abs(tnow-t[-1]) > 1.0e-10:
+    while abs(tnow - t[-1]) > 1.0e-10:
         m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, 1, True))
         mm = m[0].reshape(1, len(m[0]))[0]
-        tnow = tnow+m[1]
+        tnow = tnow + m[1]
         ind = 0
         for sp in Sp:
             conc[sp] = C[ind] + mm[ind]
-            ind = ind+1
+            ind = ind + 1
         apply_rules(conc, yconc)
         C = [conc[z] for z in Sp]
-        if dv == div-1:
+        if dv == div - 1:
             S.append(C)
             tnew.append(tnow)
             dv = 0

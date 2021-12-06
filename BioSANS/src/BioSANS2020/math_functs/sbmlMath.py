@@ -1,328 +1,404 @@
-#import sys
-#import os
+"""
+
+                  This module in the sbmlMath module
+
+This contains function needed to interpret SBML files.
+
+"""
+
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 import sympy
 
-# def abs(x):
-# return sympy.fabs(x)
+# def abs(xvar):
+# return sympy.fabs(xvar)
 
 
-def acos(x):
-    return sympy.acos(x).evalf()
+def acos(xvar):
+    """returns sympy.acos(xvar).evalf()"""
+    return sympy.acos(xvar).evalf()
 
 
-def arccos(x):
-    return sympy.acos(x).evalf()
+def arccos(xvar):
+    """returns sympy.acos(xvar).evalf()"""
+    return sympy.acos(xvar).evalf()
 
 
-def acosh(x):
-    return sympy.acosh(x).evalf()
+def acosh(xvar):
+    """returns sympy.acosh(xvar).evalf()"""
+    return sympy.acosh(xvar).evalf()
 
 
-def arccosh(x):
-    return sympy.acosh(x).evalf()
+def arccosh(xvar):
+    """returns sympy.acosh(xvar).evalf()"""
+    return sympy.acosh(xvar).evalf()
 
 
-def acot(x):
-    return sympy.acot(x).evalf()
+def acot(xvar):
+    """returns sympy.acot(xvar).evalf()"""
+    return sympy.acot(xvar).evalf()
 
 
-def arccot(x):
-    return sympy.acot(x).evalf()
+def arccot(xvar):
+    """returns sympy.acot(xvar).evalf()"""
+    return sympy.acot(xvar).evalf()
 
 
-def acoth(x):
-    return sympy.acoth(x).evalf()
+def acoth(xvar):
+    """returns sympy.acoth(xvar).evalf()"""
+    return sympy.acoth(xvar).evalf()
 
 
-def arccoth(x):
-    return sympy.acoth(x).evalf()
+def arccoth(xvar):
+    """returns sympy.acoth(xvar).evalf()"""
+    return sympy.acoth(xvar).evalf()
 
 
-def acsc(x):
-    return sympy.acsc(x).evalf()
+def acsc(xvar):
+    """returns sympy.acsc(xvar).evalf()"""
+    return sympy.acsc(xvar).evalf()
 
 
-def arccsc(x):
-    return sympy.acsc(x).evalf()
+def arccsc(xvar):
+    """returns sympy.acsc(xvar).evalf()"""
+    return sympy.acsc(xvar).evalf()
 
 
-def acsch(x):
-    return sympy.acsch(x).evalf()
+def acsch(xvar):
+    """returns sympy.acsch(xvar).evalf()"""
+    return sympy.acsch(xvar).evalf()
 
 
-def arccsch(x):
-    return sympy.acsch(x).evalf()
+def arccsch(xvar):
+    """returns sympy.acsch(xvar).evalf()"""
+    return sympy.acsch(xvar).evalf()
 
 
-def arcsec(x):
-    return sympy.asec(x).evalf()
+def arcsec(xvar):
+    """returns sympy.asec(xvar).evalf()"""
+    return sympy.asec(xvar).evalf()
 
 
-def asech(x):
-    return sympy.asech(x).evalf()
+def asech(xvar):
+    """returns sympy.asech(xvar).evalf()"""
+    return sympy.asech(xvar).evalf()
 
 
-def arcsech(x):
-    return sympy.asech(x).evalf()
+def arcsech(xvar):
+    """returns sympy.asech(xvar).evalf()"""
+    return sympy.asech(xvar).evalf()
 
 
-def asin(x):
-    return sympy.asin(x).evalf()
+def asin(xvar):
+    """returns sympy.asin(xvar).evalf()"""
+    return sympy.asin(xvar).evalf()
 
 
-def asinh(x):
-    return sympy.asinh(x).evalf()
+def asinh(xvar):
+    """returns sympy.asinh(xvar).evalf()"""
+    return sympy.asinh(xvar).evalf()
 
 
-def arcsinh(x):
-    return sympy.asinh(x).evalf()
+def arcsinh(xvar):
+    """returns sympy.asinh(xvar).evalf()"""
+    return sympy.asinh(xvar).evalf()
 
 
-def arcsin(x):
-    return sympy.asin(x).evalf()
+def arcsin(xvar):
+    """returns sympy.asin(xvar).evalf()"""
+    return sympy.asin(xvar).evalf()
 
 
-def atan(x):
-    return sympy.atan(x).evalf()
+def atan(xvar):
+    """returns sympy.atan(xvar).evalf()"""
+    return sympy.atan(xvar).evalf()
 
 
-def arctan(x):
-    return sympy.atan(x).evalf()
+def arctan(xvar):
+    """returns sympy.atan(xvar).evalf()"""
+    return sympy.atan(xvar).evalf()
 
 
-def atanh(x):
-    return sympy.atanh(x).evalf()
+def atanh(xvar):
+    """returns sympy.atanh(xvar).evalf()"""
+    return sympy.atanh(xvar).evalf()
 
 
-def arctanh(x):
-    return sympy.atanh(x).evalf()
+def arctanh(xvar):
+    """returns sympy.atanh(xvar).evalf()"""
+    return sympy.atanh(xvar).evalf()
 
 
-def ceil(x):
-    return sympy.ceiling(x).evalf()
+def ceil(xvar):
+    """returns sympy.ceiling(xvar).evalf()"""
+    return sympy.ceiling(xvar).evalf()
 
 
-def ceiling(x):
-    return sympy.ceiling(x).evalf()
+def ceiling(xvar):
+    """returns sympy.ceiling(xvar).evalf()"""
+    return sympy.ceiling(xvar).evalf()
 
 
-def cos(x):
-    return sympy.cos(x).evalf()
+def cos(xvar):
+    """returns sympy.cos(xvar).evalf()"""
+    return sympy.cos(xvar).evalf()
 
 
-def cosh(x):
-    return sympy.cosh(x).evalf()
+def cosh(xvar):
+    """returns sympy.cosh(xvar).evalf()"""
+    return sympy.cosh(xvar).evalf()
 
 
-def cot(x):
-    return sympy.cot(x).evalf()
+def cot(xvar):
+    """returns sympy.cot(xvar).evalf()"""
+    return sympy.cot(xvar).evalf()
 
 
-def coth(x):
-    return sympy.coth(x).evalf()
+def coth(xvar):
+    """returns sympy.coth(xvar).evalf()"""
+    return sympy.coth(xvar).evalf()
 
 
-def csc(x):
-    return sympy.csc(x).evalf()
+def csc(xvar):
+    """returns sympy.csc(xvar).evalf()"""
+    return sympy.csc(xvar).evalf()
 
 
-def csch(x):
-    return sympy.csch(x).evalf()
+def csch(xvar):
+    """returns sympy.csch(xvar).evalf()"""
+    return sympy.csch(xvar).evalf()
 
 
-def factorial(x):
-    return sympy.factorial(x).evalf()
+def factorial(xvar):
+    """returns sympy.factorial(xvar).evalf()"""
+    return sympy.factorial(xvar).evalf()
 
 
-def exp(x):
-    return sympy.exp(x).evalf()
+def exp(xvar):
+    """returns sympy.exp(xvar).evalf()"""
+    return sympy.exp(xvar).evalf()
 
 
-def floor(x):
-    return sympy.floor(x).evalf()
+def floor(xvar):
+    """returns sympy.floor(xvar).evalf()"""
+    return sympy.floor(xvar).evalf()
 
 
-def ln(x):
-    return sympy.ln(x).evalf()
+def ln(xvar):
+    """returns sympy.ln(xvar).evalf()"""
+    return sympy.ln(xvar).evalf()
 
 
-def log(x):
-    return sympy.log(x).evalf()
+def log(xvar):
+    """returns sympy.log(xvar).evalf()"""
+    return sympy.log(xvar).evalf()
 
 
-def log10(x):
-    return sympy.log(x, 10).evalf()
+def log10(xvar):
+    """returns sympy.log(xvar, 10).evalf()"""
+    return sympy.log(xvar, 10).evalf()
 
 
-def piecewise(*x):
-    if len(x) == 3:
-        return x[0] if x[1] else x[2]
-    else:
-        ans = []
-        xlen = len(x) - 1
-        for i in range(0, xlen, 2):
-            if x[i+1]:
-                return x[i]
-        return x[-1]
+def piecewise(*xvar):
+    """returns the value before the first True value in xvar. If there
+    is no True value, returns the last element in vxar"""
+    if len(xvar) == 3:
+        return xvar[0] if xvar[1] else xvar[2]
 
+    # ans = []
+    xlen = len(xvar) - 1
+    for i in range(0, xlen, 2):
+        if xvar[i + 1]:
+            return xvar[i]
+    return xvar[-1]
 
-def pow(x, y):
-    return sympy.Pow(x, y).evalf()
 
+def pow(xvar, yvar):
+    """sympy.Pow(xvar, yvar).evalf()"""
+    return sympy.Pow(xvar, yvar).evalf()
 
-def power(x, y):
-    return sympy.Pow(x, y).evalf()
 
+def power(xvar, yvar):
+    """sympy.Pow(xvar, yvar).evalf()"""
+    return sympy.Pow(xvar, yvar).evalf()
 
-def root(n, x):
-    return sympy.root(x, n).evalf()
 
+def root(nvar, xvar):
+    """sympy.root(xvar, nvar).evalf()"""
+    return sympy.root(xvar, nvar).evalf()
 
-def sec(x):
-    return sympy.sec(x).evalf()
 
+def sec(xvar):
+    """returns sympy.sec(xvar).evalf("""
+    return sympy.sec(xvar).evalf()
 
-def sech(x):
-    return sympy.sech(x).evalf()
 
+def sech(xvar):
+    """sympy.sech(xvar).evalf()"""
+    return sympy.sech(xvar).evalf()
 
-def sqr(x):
-    return sympy.sqrt(x).evalf()
 
+def sqr(xvar):
+    """sympy.sqrt(xvar).evalf()"""
+    return sympy.sqrt(xvar).evalf()
 
-def sqrt(x):
-    return sympy.sqrt(x).evalf()
 
+def sqrt(xvar):
+    """sympy.sqrt(xvar).evalf()"""
+    return sympy.sqrt(xvar).evalf()
 
-def sin(x):
-    return sympy.sin(x).evalf()
 
+def sin(xvar):
+    """sympy.sin(xvar).evalf()"""
+    return sympy.sin(xvar).evalf()
 
-def sinh(x):
-    return sympy.sinh(x).evalf()
 
+def sinh(xvar):
+    """sympy.sinh(xvar).evalf()"""
+    return sympy.sinh(xvar).evalf()
 
-def tan(x):
-    return sympy.tan(x).evalf()
 
+def tan(xvar):
+    """sympy.tan(xvar).evalf()"""
+    return sympy.tan(xvar).evalf()
 
-def tanh(x):
-    return sympy.tanh(x).evalf()
 
+def tanh(xvar):
+    """sympy.tanh(xvar).evalf()"""
+    return sympy.tanh(xvar).evalf()
 
-def And(*x):
-    for y in x:
-        if y == False:
+
+def And(*xvar):
+    """returns True if all elements of xvar is True else returns False"""
+    for yvar in xvar:
+        # if yvar == False:
+        if not yvar:
             return False
     return True
 
 
-def Not(x):
-    return not x
+def Not(xvar):
+    """returns the reverse of the boolean value of xvar"""
+    return not xvar
 
 
-def Or(*x):
-    for y in x:
-        if y == True:
+def Or(*xvar):
+    """returns True if at least one value in xvar is True else False"""
+    for yvar in xvar:
+        # if yvar == True:
+        if not yvar:
             return True
     return False
 
 
-def xor(*x):
+def xor(*xvar):
+    """returns True if there is odd number of True else returns False"""
     odd = 0
-    for y in x:
-        if y == True:
+    for yvar in xvar:
+        # if yvar == True:
+        if yvar:
             odd = odd + 1
     if odd % 2 == 0:
         return False
-    else:
-        return True
+
+    return True
 
 
-def eq(*x):
+def eq(*xvar):
+    """returns True if xvar[0] == xvar[1:] else returns False"""
     last = None
-    for y in x:
-        if last == None:
-            last = y
+    for yvar in xvar:
+        if last is None:
+            last = yvar
         else:
-            if y != last:
+            if yvar != last:
                 return False
     return True
 
 
-def geq(*x):
+def geq(*xvar):
+    """returns True if xvar[0] >= xvar[1:] else returns False"""
     last = None
-    for y in x:
-        if last == None:
-            last = y
+    for yvar in xvar:
+        if last is None:
+            last = yvar
         else:
-            if last < y:
+            if last < yvar:
                 return False
     return True
 
 
-def gt(*x):
+def gt(*xvar):
+    """returns True if xvar[0] > xvar[1:] else returns False"""
     last = None
-    for y in x:
-        if last == None:
-            last = y
+    for yvar in xvar:
+        if last is None:
+            last = yvar
         else:
-            if last <= y:
+            if last <= yvar:
                 return False
     return True
 
 
-def leq(*x):
+def leq(*xvar):
+    """returns True if xvar[0] <= xvar[1:] else returns False"""
     last = None
-    for y in x:
-        if last == None:
-            last = y
+    for yvar in xvar:
+        if last is None:
+            last = yvar
         else:
-            if last > y:
+            if last > yvar:
                 return False
     return True
 
 
-def lt(*x):
+def lt(*xvar):
+    """returns True if xvar[0] < xvar[1:] else returns False"""
     last = None
-    for y in x:
-        if last == None:
-            last = y
+    for yvar in xvar:
+        if last is None:
+            last = yvar
         else:
-            if last >= y:
+            if last >= yvar:
                 return False
     return True
 
 
-def neq(x, y):
-    if x == y:
+def neq(xvar, yvar):
+    """returns True if xvar != yvar else returns False"""
+    if xvar == yvar:
         return False
     return True
 
 
-def plus(*x):
-    return sympy.fsum(x).evalf()
+def plus(*xvar):
+    """sum(xvar).evalf()"""
+    return sum(xvar).evalf()
 
 
-def times(*x):
-    p = 1
-    for y in x:
-        p = p*y
-    return p
+def times(*xvar):
+    """returns the product of all elements in the list xvar"""
+    pvar = 1
+    for yvar in xvar:
+        pvar = pvar * yvar
+    return pvar
 
 
-def minus(x, y):
-    return x - y
+def minus(xvar, yvar):
+    """returns xvar - yvar"""
+    return xvar - yvar
 
 
-def divide(x, y):
-    return x/y
+def divide(xvar, yvar):
+    """returns xvar / yvar"""
+    return xvar / yvar
 
 
-def multiply(*x):
-    return times(*x)
+def multiply(*xvar):
+    """returns the product of all elements in the list xvar"""
+    return times(*xvar)
 
 
 exponentiale = exp(1)

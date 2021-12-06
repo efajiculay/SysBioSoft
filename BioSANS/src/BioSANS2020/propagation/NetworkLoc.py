@@ -13,7 +13,8 @@ def subs2(Z, cval):
     return Z
 
 
-def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None, numer=False):
+def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
+                    molar=False, mode=None, numer=False):
 
     if items:
         text = prepare_scroll_text(items)
@@ -30,7 +31,7 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None,
 
     for x in Sp:
         Cs[x] = Symbol(x, real=True, negative=False)
-        Cso[x] = Symbol(x+'o', real=True, negative=False) * \
+        Cso[x] = Symbol(x + 'o', real=True, negative=False) * \
             (0 if conc[x] == 0 else 1)
         equivals.append((Cso[x], conc[x]))
         equiCo.append((Cso[x], conc[x]))
@@ -39,16 +40,16 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None,
     for i in range(len(Ks)):
         row = []
         if len(Ks[i]) == 1:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
             equivals.append((row[0], Ks[i][0]))
             equiKs.append((row[0], Ks[i][0]))
         else:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
             equivals.append((row[0], Ks[i][0]))
             equiKs.append((row[0], Ks[i][0]))
-            key = 'kb'+str(i+1)
+            key = 'kb' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
             equivals.append((row[1], Ks[i][1]))
             equiKs.append((row[1], Ks[i][1]))
@@ -97,7 +98,8 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None,
             KNAMES.append(KCs[i][0])
             KNAMES.append(KCs[i][1])
 
-    ffprint(["When k decrease, the sign of the sensitivity tells what happen to species activity\n"])
+    ffprint(
+        ["When k decrease, the sign of the sensitivity tells what happen to species activity\n"])
     ffprint(["When k increase, the reverse of the sign of the sensitivity tells what happen to species activity\n\n"])
 
     if numer:
@@ -111,7 +113,7 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None,
             for ij in range(S.shape[1]):
                 try:
                     ffprint([KNAMES[ih], "\t", js[ij], "\t", S[ih, ij], "\n"])
-                except:
+                except BaseException:
                     pass
             ffprint(["\n"])
     except NonSquareMatrixError:

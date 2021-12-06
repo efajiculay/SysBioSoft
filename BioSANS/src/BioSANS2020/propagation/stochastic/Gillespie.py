@@ -11,7 +11,7 @@ from BioSANS2020.myglobal import mglobals as globals2
 def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
     get_globals(rfile)
     tmax = t[-1]
-    np.random.seed(int(rr*100))
+    np.random.seed(int(rr * 100))
     tnew = []
     S = V.T
     AllSp = [z for z in Sp]
@@ -32,8 +32,8 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
             r1 = np.random.uniform()
             while r1 == 0:
                 r1 = np.random.uniform()
-            P = np.cumsum([d/alp for d in D])
-            dt = (1/alp)*(np.log(1/r1))
+            P = np.cumsum([d / alp for d in D])
+            dt = (1 / alp) * (np.log(1 / r1))
             if np.isnan(dt) or np.isinf(dt):
                 break
             r2 = np.random.uniform()
@@ -41,7 +41,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x]+S[i][UpdateSp[x]]
+                        holder = Z[-1][x] + S[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.modified:
                             concz[Spc[x]] = holder
                         else:
@@ -69,8 +69,8 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
             r1 = np.random.uniform()
             while r1 == 0:
                 r1 = np.random.uniform()
-            P = np.cumsum([d/alp for d in D])
-            dt = (1/alp)*(np.log(1/r1))
+            P = np.cumsum([d / alp for d in D])
+            dt = (1 / alp) * (np.log(1 / r1))
 
             if index != tchlen:
                 if tc + dt >= globals2.tCheck[index]:
@@ -88,7 +88,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x]+S[i][UpdateSp[x]]
+                        holder = Z[-1][x] + S[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.modified:
                             concz[Spc[x]] = holder
                         else:
@@ -117,7 +117,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                                 while tc > t[tindex]:
                                     Zc.append(Z[-2])
                                     tindex = tindex + 1
-                        except:
+                        except BaseException:
                             pass
                         tnew.append(tc)
                     else:

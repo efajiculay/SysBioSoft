@@ -27,7 +27,7 @@ nan = NaN
 def tofloat(val):
     try:
         return float(eval(val))
-    except:
+    except BaseException:
         return float(val)
 
 
@@ -35,7 +35,7 @@ def isNumber(x):
     try:
         tofloat(x)
         return True
-    except:
+    except BaseException:
         return False
 
 
@@ -74,8 +74,9 @@ def process(
     # exec(func,globals())
 
     if inMolar == "molar":
-        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1", "CLE", "CLE2", "Tau-leaping", "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
-            AV = A*Vm
+        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1", "CLE",
+                      "CLE2", "Tau-leaping", "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
+            AV = A * Vm
             fa = 2
         elif method in ["ODE-3", "rk4-3", "rk4-3a", "Euler-3", "Euler2-3"]:
             AV = Vm
@@ -85,20 +86,21 @@ def process(
             fa = 1
     elif inMolar == "molecules":
         if method in ["ODE-2", "rk4-2", "rk4-2a", "Euler-2", "Euler2-2"]:
-            AV = 1/A*Vm
-            fa = 1/2
+            AV = 1 / A * Vm
+            fa = 1 / 2
         elif method in ["ODE-3", "rk4-3", "rk4-3a", "Euler-3", "Euler2-3"]:
-            AV = 1/A
-            fa = 1/2
+            AV = 1 / A
+            fa = 1 / 2
         else:
             AV = 1
             fa = 1
     elif inMolar == "moles":
-        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1", "CLE", "CLE2", "Tau-leaping", "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
+        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1", "CLE",
+                      "CLE2", "Tau-leaping", "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
             AV = A
             fa = 2
         if method in ["ODE-2", "rk4-2", "rk4-2a", "Euler-2", "Euler2-2"]:
-            AV = 1/Vm
+            AV = 1 / Vm
             fa = 1
         else:
             AV = 1
@@ -223,7 +225,7 @@ def process(
         for r in range(Rxn):
             prod = Rp[r][sp] if sp in Rp[r] else 0
             rect = Rr[r][sp] if sp in Rr[r] else 0
-            row.append(prod-rect)
+            row.append(prod - rect)
             if len(Ks[r]) == 2:
                 row.append(-row[-1])
         V.append(row)
@@ -234,29 +236,29 @@ def process(
     concn = {}
     try:
         for r in range(Rxn):
-            Ksn[r] = [0]*2
+            Ksn[r] = [0] * 2
             if len(Rr[r]) == 1:
                 for x in Rr[r]:
                     if Rr[r][x] == 0:
-                        Ksn[r][0] = Ks[r][0]*AV
+                        Ksn[r][0] = Ks[r][0] * AV
                     elif Rr[r][x] == 1:
                         Ksn[r][0] = Ks[r][0]
                     elif Rr[r][x] == 2:
-                        Ksn[r][0] = fa*Ks[r][0]/AV
+                        Ksn[r][0] = fa * Ks[r][0] / AV
                     else:
                         Ksn[r][0] = Ks[r][0]
-                    concn[x] = conc[x]*AV
+                    concn[x] = conc[x] * AV
 
             elif len(Rr[r]) == 2:
-                Ksn[r][0] = Ks[r][0]/AV
+                Ksn[r][0] = Ks[r][0] / AV
                 for x in Rr[r]:
-                    concn[x] = conc[x]*AV
+                    concn[x] = conc[x] * AV
 
             if len(Rp[r]) == 1:
                 for x in Rp[r]:
                     if Rp[r][x] == 0:
                         if len(Ks[r]) == 2:
-                            Ksn[r][1] = Ks[r][1]*AV
+                            Ksn[r][1] = Ks[r][1] * AV
                         else:
                             Ksn[r] = [Ksn[r][0]]
                     elif Rp[r][x] == 1:
@@ -266,7 +268,7 @@ def process(
                             Ksn[r] = [Ksn[r][0]]
                     elif Rp[r][x] == 2:
                         if len(Ks[r]) == 2:
-                            Ksn[r][1] = fa*Ks[r][1]/AV
+                            Ksn[r][1] = fa * Ks[r][1] / AV
                         else:
                             Ksn[r] = [Ksn[r][0]]
                     else:
@@ -274,14 +276,14 @@ def process(
                             Ksn[r][1] = Ks[r][1]
                         else:
                             Ksn[r] = [Ksn[r][0]]
-                    concn[x] = conc[x]*AV
+                    concn[x] = conc[x] * AV
             elif len(Rp[r]) == 2:
                 if len(Ks[r]) == 2:
-                    Ksn[r][1] = Ks[r][1]/AV
+                    Ksn[r][1] = Ks[r][1] / AV
                 else:
                     Ksn[r] = [Ksn[r][0]]
                 for x in Rp[r]:
-                    concn[x] = conc[x]*AV
+                    concn[x] = conc[x] * AV
 
         for x in conc:
             if x not in concn:
@@ -291,7 +293,7 @@ def process(
             #concn[x] = Cinput[x]
 
         t_o = time.time()
-        t = np.linspace(0, tn, int(tlen+1))
+        t = np.linspace(0, tn, int(tlen + 1))
         data = process_hub(t, Sp, Ksn, concn, Rr, Rp, V, Vm, miter, logx, logy, delX, normalize, method, mix_plot,
                            save, out_fname, plot_show, time_unit, vary, mult_proc, items, vary2, implicit, rfile, expDataFile)
         #print(time.time()-t_o,"Process time")
@@ -299,4 +301,4 @@ def process(
         return data
     except Exception as e:
         message_upon_error.showinfo(
-            "showinfo", "Check your topology files for missing species in reaction and concentration tag : "+str(e))
+            "showinfo", "Check your topology files for missing species in reaction and concentration tag : " + str(e))

@@ -11,5 +11,5 @@ def view_topo(topo, items):
     def ffprint(x): return text.insert(INSERT, " ".join([str(y) for y in x]))
     with open(topo) as f:
         for x in f:
-            ffprint([x.replace("\t", " "*4)])
+            ffprint([x.replace("\t", " " * 4)])
     return text

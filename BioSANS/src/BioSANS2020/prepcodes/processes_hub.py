@@ -64,7 +64,7 @@ def process_hub(
         miter = len(kval)
     if mult_proc:
         pool = multiprocessing.Pool(
-            min(miter, round(0.9*multiprocessing.cpu_count())))
+            min(miter, round(0.9 * multiprocessing.cpu_count())))
         CONCN = []
         KSNS = []
         if len(vary) > 0:
@@ -76,7 +76,7 @@ def process_hub(
         if len(vary2) > 0:
             for j in range(miter):
                 KSNS.append({x: Ksn[x][:] for x in Ksn})
-                if type(r1) == int:
+                if isinstance(r1, int):
                     KSNS[-1][r1][r2] = kval[j]
                 else:
                     for k in range(len(r1)):
@@ -86,7 +86,7 @@ def process_hub(
 
 #		if __name__ == '__main__':
         if 1 == 1:  # always true, just use above  command on some OS
-            rands = [x*np.random.rand() for x in range(miter)]
+            rands = [x * np.random.rand() for x in range(miter)]
             if method == "Tau-leaping":
                 results = [
                     pool.apply_async(
@@ -174,14 +174,14 @@ def process_hub(
                 print("Multiprocessing not supported for your method of choice")
         pool.close()
     else:
-        rands = [x*np.random.rand() for x in range(miter)]
+        rands = [x * np.random.rand() for x in range(miter)]
         for j in range(miter):
             tnew = []
             rr = rands[j]
             if len(vary) > 0:
                 concn[hold] = vary[j]
             if len(vary2) > 0:
-                if type(r1) == int:
+                if isinstance(r1, int):
                     Ksn[r1][r2] = kval[j]
                 else:
                     for k in range(len(r1)):
@@ -408,16 +408,16 @@ def process_hub(
         nz = range(len(slabels))
 
     if save:
-        fname = out_fname+"_"+method+".dat"
+        fname = out_fname + "_" + method + ".dat"
         file = open(fname, "w")
-        file.write("time\t"+"\t".join(slabels)+"\n")
+        file.write("time\t" + "\t".join(slabels) + "\n")
         for traj in data:
             x = traj[0]
             y = traj[1]
             xlen = len(x)
             for ih in range(xlen):
-                file.write(str(x[ih])+"\t"+"\t".join([str(yi)
-                           for yi in y[ih][nz]])+"\n")
+                file.write(str(x[ih]) + "\t" + "\t".join([str(yi)
+                                                          for yi in y[ih][nz]]) + "\n")
         file.close()
 
     if plot_show:
@@ -434,7 +434,7 @@ def process_hub(
 
         Splen = len(Sp)
         if Splen <= 10:
-            col = ['C'+str(i) for i in range(10)]
+            col = ['C' + str(i) for i in range(10)]
         elif Splen > 10 and Splen <= 40:
             col = [x for x in get_cmap("tab20").colors] + \
                 [x for x in get_cmap("tab20b").colors]
@@ -456,7 +456,7 @@ def process_hub(
                 for i in nz:
                     if normalize:
                         line = plt.plot(
-                            data[j][0], data[j][1][:, i]/(np.max(data[j][1][:, i])+1.0e-30), color=col[i])
+                            data[j][0], data[j][1][:, i] / (np.max(data[j][1][:, i]) + 1.0e-30), color=col[i])
                     else:
                         line = plt.plot(data[j][0], data[j]
                                         [1][:, i], color=col[i])
@@ -465,7 +465,7 @@ def process_hub(
             else:
                 plt.legend(slabels, fontsize='xx-small')
             plt.tight_layout()
-            plt.savefig(out_fname+"_"+method+".jpg")
+            plt.savefig(out_fname + "_" + method + ".jpg")
             fig = plt.gcf()
             lines.append(line)
             globals2.plotted.append([plt.gca(), fig, lines])
@@ -488,14 +488,14 @@ def process_hub(
                 for j in range(miter):
                     if normalize:
                         line = plt.plot(
-                            data[j][0], data[j][1][:, i]/(np.max(data[j][1][:, i])+1.0e-30), color=col[i])
+                            data[j][0], data[j][1][:, i] / (np.max(data[j][1][:, i]) + 1.0e-30), color=col[i])
                     else:
                         line = plt.plot(data[j][0], data[j]
                                         [1][:, i], color=col[i])
                     lines.append(line)
                 plt.legend([slabels[i]])
                 plt.tight_layout()
-                plt.savefig(out_fname+"_"+method+"_"+str(i)+".jpg")
+                plt.savefig(out_fname + "_" + method + "_" + str(i) + ".jpg")
                 fig = plt.gcf()
                 globals2.plotted.append([plt.gca(), fig, lines])
                 fig_canvas_agg = draw_figure(items, fig)

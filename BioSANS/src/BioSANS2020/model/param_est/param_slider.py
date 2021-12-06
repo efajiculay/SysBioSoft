@@ -27,7 +27,7 @@ def load_data():
                 ddvar.append(cols)
             data.append(np.array(ddvar))
             return (data, slabels)
-    except:
+    except BaseException:
         return None
 
 
@@ -130,7 +130,7 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
     fig, axf = plt.subplots(figsize=(12, 4))
     plt.subplots_adjust(left=0.1, right=0.70)
     if data2:
-        plt.ylim(0, np.max(data)*1.05)
+        plt.ylim(0, np.max(data) * 1.05)
     if setP[0] == True:
         plt.xscale("log")
     if setP[1] == True:
@@ -138,7 +138,7 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
 
     if data2:
         for ih in range(len(Si2)):
-            plt.plot(t, data[:, ih], lw=1, ls='--', label=Si2[ih]+"_True")[0]
+            plt.plot(t, data[:, ih], lw=1, ls='--', label=Si2[ih] + "_True")[0]
 
     l = []
     for ih in nz:
@@ -150,34 +150,37 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
     CKglobals = []
     cc = 0
     for ih in range(len(Ks)):
-        strt1 = round(abs(Ks[ih][0]*0.10), 2)
-        ends1 = round(abs(Ks[ih][0]*1.90), 2)
+        strt1 = round(abs(Ks[ih][0] * 0.10), 2)
+        ends1 = round(abs(Ks[ih][0] * 1.90), 2)
         if len(Ks[ih]) == 1:
-            sk = plt.axes([0.73, 0.93-0.05*cc, 0.1, 0.04], facecolor=axcolor)
-            sd = Slider(sk, 'kf'+str(ih+1), strt1, ends1,
-                        valinit=Ks[ih][0], valstep=Ks[ih][0]/100)
+            sk = plt.axes([0.73, 0.93 - 0.05 * cc, 0.1, 0.04],
+                          facecolor=axcolor)
+            sd = Slider(sk, 'kf' + str(ih + 1), strt1, ends1,
+                        valinit=Ks[ih][0], valstep=Ks[ih][0] / 100)
             KKglobals.append(sd)
             CKglobals.append(TextBox(plt.axes(
-                [0.93, 0.93-0.05*cc, 0.08, 0.04]), 'range', initial=str(strt1)+', '+str(ends1)))
+                [0.93, 0.93 - 0.05 * cc, 0.08, 0.04]), 'range', initial=str(strt1) + ', ' + str(ends1)))
             cc = cc + 1
         else:
-            sk = plt.axes([0.73, 0.93-0.05*cc, 0.1, 0.04], facecolor=axcolor)
-            sd = Slider(sk, 'kf'+str(ih+1), strt1, ends1,
-                        valinit=Ks[ih][0], valstep=Ks[ih][0]/100)
+            sk = plt.axes([0.73, 0.93 - 0.05 * cc, 0.1, 0.04],
+                          facecolor=axcolor)
+            sd = Slider(sk, 'kf' + str(ih + 1), strt1, ends1,
+                        valinit=Ks[ih][0], valstep=Ks[ih][0] / 100)
             KKglobals.append(sd)
             CKglobals.append(TextBox(plt.axes(
-                [0.93, 0.93-0.05*cc, 0.08, 0.04]), 'range', initial=str(strt1)+', '+str(ends1)))
+                [0.93, 0.93 - 0.05 * cc, 0.08, 0.04]), 'range', initial=str(strt1) + ', ' + str(ends1)))
             cc = cc + 1
 
-            strt2 = round(abs(Ks[ih][1]*0.10), 2)
-            ends2 = round(abs(Ks[ih][1]*1.90), 2)
+            strt2 = round(abs(Ks[ih][1] * 0.10), 2)
+            ends2 = round(abs(Ks[ih][1] * 1.90), 2)
 
-            sk = plt.axes([0.73, 0.93-0.05*cc, 0.1, 0.04], facecolor=axcolor)
-            sd = Slider(sk, 'kb'+str(ih+1), strt2, ends2,
-                        valinit=Ks[ih][1], valstep=Ks[ih][1]/100)
+            sk = plt.axes([0.73, 0.93 - 0.05 * cc, 0.1, 0.04],
+                          facecolor=axcolor)
+            sd = Slider(sk, 'kb' + str(ih + 1), strt2, ends2,
+                        valinit=Ks[ih][1], valstep=Ks[ih][1] / 100)
             KKglobals.append(sd)
             CKglobals.append(TextBox(plt.axes(
-                [0.93, 0.93-0.05*cc, 0.08, 0.04]), 'range', initial=str(strt2)+', '+str(ends2)))
+                [0.93, 0.93 - 0.05 * cc, 0.08, 0.04]), 'range', initial=str(strt2) + ', ' + str(ends2)))
             cc = cc + 1
 
     for ih in range(len(CKglobals)):
@@ -187,8 +190,8 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
     FunnyEvents = []
     for ih in range(len(CKglobals)):
         # Why do this - because ih lambda get is only the last value
-        funny = "CKglobals["+str(ih) + \
-            "].on_submit(lambda v : submit(v,KKglobals["+str(ih)+"]))"
+        funny = "CKglobals[" + str(ih) + \
+            "].on_submit(lambda v : submit(v,KKglobals[" + str(ih) + "]))"
         FunnyEvents.append(funny)
 
     for fun in FunnyEvents:

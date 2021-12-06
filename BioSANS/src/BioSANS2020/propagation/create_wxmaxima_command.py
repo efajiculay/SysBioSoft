@@ -24,18 +24,18 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
     t = Symbol('t', real=True, positive=True)
     for x in Sp:
         Cs[x] = Function(x, positive=True)(t)
-        Cso[x] = Symbol(x+"o", real=True, negative=False)
+        Cso[x] = Symbol(x + "o", real=True, negative=False)
 
     KCs = []
     for i in range(len(Ks)):
         row = []
         if len(Ks[i]) == 1:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
         else:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
-            key = 'kb'+str(i+1)
+            key = 'kb' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
         KCs.append(row)
 
@@ -53,7 +53,7 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
             nz.append(row)
     Ss = Matrix(Ss)
 
-    dA_dt = Ss*f
+    dA_dt = Ss * f
     ccs = [Cs[x] for x in Cs]
     ccso = [Cso[x] for x in Cso]
     js = [ccs[x] for x in nz]
@@ -65,15 +65,15 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
 
     Fe = []
     for i in range(len(dA_dt2)):
-        ffprint(["f"+str(i+1)+":"+str(dA_dt2[i]).replace("Derivative",
-                "diff")+" = "+str(dA_dt[i])+";", "\n"])
-        Fe.append("f"+str(i+1))
+        ffprint(["f" + str(i + 1) + ":" + str(dA_dt2[i]).replace("Derivative",
+                                                                 "diff") + " = " + str(dA_dt[i]) + ";", "\n"])
+        Fe.append("f" + str(i + 1))
     ffprint(["\n"])
     for x in range(len(js)):
-        ffprint(["atvalue("+str(js[x])+",t=0,"+str(jso[x])+");", "\n"])
+        ffprint(["atvalue(" + str(js[x]) + ",t=0," + str(jso[x]) + ");", "\n"])
 
-    ffprint(["\ndesolve("+str(Fe).replace('"', '').replace("'", '') +
-            ","+str([x for x in js])+");"])
+    ffprint(["\ndesolve(" + str(Fe).replace('"', '').replace("'", '') +
+             "," + str([x for x in js]) + ");"])
     ffprint(["\n"])
     ffprint(["\n\n/*Copy and paste to wxmaxima and run the cell*/\n"])
     ffprint(["\n"])
@@ -95,7 +95,7 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
             nz.append(row)
     Ss = Matrix(Ss)
 
-    dA_dt = Ss*f
+    dA_dt = Ss * f
     ccs = [Cs[x] for x in Cs]
     ccso = [Cso[x] for x in Cso]
     js = [ccs[x] for x in nz]
@@ -107,14 +107,14 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
 
     Fe = []
     for i in range(len(dA_dt2)):
-        ffprint(["f"+str(i+1)+":"+str(dA_dt2[i]).replace("Derivative",
-                "diff")+" = "+str(dA_dt[i])+";", "\n"])
-        Fe.append("f"+str(i+1))
+        ffprint(["f" + str(i + 1) + ":" + str(dA_dt2[i]).replace("Derivative",
+                                                                 "diff") + " = " + str(dA_dt[i]) + ";", "\n"])
+        Fe.append("f" + str(i + 1))
     ffprint(["\n"])
     for x in range(len(js)):
-        ffprint(["atvalue("+str(js[x])+",t=0,"+str(jso[x])+");", "\n"])
+        ffprint(["atvalue(" + str(js[x]) + ",t=0," + str(jso[x]) + ");", "\n"])
 
-    ffprint(["\ndesolve("+str(Fe).replace('"', '').replace("'", '') +
-            ","+str([x for x in js])+");"])
+    ffprint(["\ndesolve(" + str(Fe).replace('"', '').replace("'", '') +
+             "," + str([x for x in js]) + ");"])
 
     return [0, 0]

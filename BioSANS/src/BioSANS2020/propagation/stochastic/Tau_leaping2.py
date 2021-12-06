@@ -7,14 +7,15 @@ from BioSANS2020.propagation.propensity import *
 from BioSANS2020.propagation.recalculate_globals import *
 
 
-def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile=""):
+def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
+                 delX=1, implicit=False, rfile=""):
     get_globals(rfile)
     tmax = t[-1]
-    np.random.seed(int(rr*100))
+    np.random.seed(int(rr * 100))
     tnew = []
     V2 = V**2
     S = V.T
-    dto = t[-1]-t[-2]
+    dto = t[-1] - t[-2]
     tchlen = len(globals2.tCheck)
 
     AllSp = [z for z in Sp]
@@ -55,8 +56,8 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
                 gi.append(lambda x: 2)
         elif maxrlen == 2:
             try:
-                gi.append(lambda x: 2+1/(x-1))
-            except:
+                gi.append(lambda x: 2 + 1 / (x - 1))
+            except BaseException:
                 gi.append(lambda x: 2)
         else:
             gi.append(lambda x: 1)
@@ -72,7 +73,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
 
                 for x in range(len(Vcri[0])):
                     i, j = [Vcri[0][x], Vcri[1][x]]
-                    if abs(Z[-1][i]/V[i, j]) < 10 and D[j] > 0:
+                    if abs(Z[-1][i] / V[i, j]) < 10 and D[j] > 0:
                         Lcri.add(j)
                     else:
                         Lncr.add(j)
@@ -81,37 +82,37 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
 
             if len(Lcri) == len(V[0]):
                 alp = np.sum(D)
-                dt = (1/alp)*(np.log(1/np.random.uniform()))
+                dt = (1 / alp) * (np.log(1 / np.random.uniform()))
             elif len(Lcri) == 0:
                 alp = np.sum(D)
                 uuj = np.matmul(V, D)
                 sig = np.matmul(V2, D)
-                exigi = np.array([Z[-1][j]*(1/gi[j](Z[-1][j]))
-                                 for j in range(len(Spc))])*0.03*delX
+                exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
+                                  for j in range(len(Spc))]) * 0.03 * delX
                 exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
-                dt = min(np.min(exigi1/np.abs(uuj)),
-                         np.min(exigi1*exigi1/np.abs(sig)))
+                dt = min(np.min(exigi1 / np.abs(uuj)),
+                         np.min(exigi1 * exigi1 / np.abs(sig)))
             else:
                 Lcri = np.array(list(Lcri))
                 Lncr = np.array(list(Lncr))
                 alpc = np.sum(D[Lcri])
-                dtc = (1/alpc)*(np.log(1/np.random.uniform()))
+                dtc = (1 / alpc) * (np.log(1 / np.random.uniform()))
 
                 alp = np.sum(D[Lncr])
                 uuj = np.matmul(V[:, Lncr], D[Lncr])
                 sig = np.matmul(V2[:, Lncr], D[Lncr])
-                exigi = np.array([Z[-1][j]*(1/gi[j](Z[-1][j]))
-                                 for j in range(len(Spc))])*0.03*delX
+                exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
+                                  for j in range(len(Spc))]) * 0.03 * delX
                 exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
-                dt = min(np.min(exigi1/np.abs(uuj)),
-                         np.min(exigi1*exigi1/np.abs(sig)), dtc)
+                dt = min(np.min(exigi1 / np.abs(uuj)),
+                         np.min(exigi1 * exigi1 / np.abs(sig)), dtc)
 
-            K = np.random.poisson(D*dt)
+            K = np.random.poisson(D * dt)
             Allpos = True
             cc = {}
-            bb = np.sum(K*S[:, UpdateSp], 0)
+            bb = np.sum(K * S[:, UpdateSp], 0)
             for x in range(len(Spc)):
-                holder = Z[-1][x]+bb[x]
+                holder = Z[-1][x] + bb[x]
                 if holder >= 0 or Spc[x] in globals2.modified:
                     cc[Spc[x]] = holder
                 else:
@@ -141,7 +142,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
 
                 for x in range(len(Vcri[0])):
                     i, j = [Vcri[0][x], Vcri[1][x]]
-                    if abs(Z[-1][i]/V[i, j]) < 10 and D[j] > 0:
+                    if abs(Z[-1][i] / V[i, j]) < 10 and D[j] > 0:
                         Lcri.add(j)
                     else:
                         Lncr.add(j)
@@ -158,11 +159,11 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
                 alp = np.sum(D[Lncr])
                 uuj = np.matmul(V[:, Lncr], D[Lncr])
                 sig = np.matmul(V2[:, Lncr], D[Lncr])
-                exigi = np.array([C[j]*(1/gi[j](C[j]))
-                                 for j in range(len(Spc))])*epsilon*delX
+                exigi = np.array([C[j] * (1 / gi[j](C[j]))
+                                  for j in range(len(Spc))]) * epsilon * delX
                 exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
-                dt1 = min(np.min(exigi1/np.abs(uuj)),
-                          np.min(exigi1*exigi1/np.abs(sig)))
+                dt1 = min(np.min(exigi1 / np.abs(uuj)),
+                          np.min(exigi1 * exigi1 / np.abs(sig)))
 
             Allpos = False
             while Allpos == False:
@@ -182,18 +183,18 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
                             Gupdate = True
 
                     if tc + dt > t[tindex]:
-                        dt = max(0, t[tindex]-tc)
-                        K = np.round(np.random.poisson(D*dt))*Kmul
+                        dt = max(0, t[tindex] - tc)
+                        K = np.round(np.random.poisson(D * dt)) * Kmul
                         Allpos = True
                         cc = {}
-                        bb = np.sum(K*S[:, UpdateSp], 0)
+                        bb = np.sum(K * S[:, UpdateSp], 0)
                         for x in range(len(Spc)):
-                            holder = C[x]+bb[x]
+                            holder = C[x] + bb[x]
                             if holder >= 0 or Spc[x] in globals2.modified:
                                 cc[Spc[x]] = holder
                             else:
                                 Allpos = False
-                                dt1 = dt1/2
+                                dt1 = dt1 / 2
                                 break
                         if Allpos:
                             for x in range(len(Spc)):
@@ -211,17 +212,17 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr, delX=1, implicit=False, rfile="
                                 index = index - 1
                     else:
                         dt = max(0, dt)
-                        K = np.round(np.random.poisson(D*dt))*Kmul
+                        K = np.round(np.random.poisson(D * dt)) * Kmul
                         Allpos = True
                         cc = {}
-                        bb = np.sum(K*S[:, UpdateSp], 0)
+                        bb = np.sum(K * S[:, UpdateSp], 0)
                         for x in range(len(Spc)):
-                            holder = C[x]+bb[x]
+                            holder = C[x] + bb[x]
                             if holder >= 0 or Spc[x] in globals2.modified:
                                 cc[Spc[x]] = holder
                             else:
                                 Allpos = False
-                                dt1 = dt1/2
+                                dt1 = dt1 / 2
                                 break
                         if Allpos:
                             for x in range(len(Spc)):
@@ -253,14 +254,14 @@ def step_3to5(D, Lcri, dt1):
 
     alpo = np.sum(D)
     doSSA = False
-    if dt1 < 10*(1/alpo):
-        dt = (1/alpo)*(np.log(1/r1))
+    if dt1 < 10 * (1 / alpo):
+        dt = (1 / alpo) * (np.log(1 / r1))
         doSSA = True
     else:
         # step 4
         if len(Lcri) > 0:
             alpc = np.sum(D[Lcri])
-            dt2 = (1/alpc)*(np.log(1/r1))
+            dt2 = (1 / alpc) * (np.log(1 / r1))
         else:
             dt2 = 1.0e+5
             #dt2 = dt1
@@ -274,7 +275,7 @@ def step_3to5(D, Lcri, dt1):
             dt = dt2
             if len(Lcri) > 0:
                 Kmul[Lcri] = 0
-                P = np.cumsum([d/alpc for d in D[Lcri]])
+                P = np.cumsum([d / alpc for d in D[Lcri]])
                 r2 = np.random.uniform()
                 while r2 == 0:
                     r2 = np.random.uniform()
@@ -288,7 +289,8 @@ def step_3to5(D, Lcri, dt1):
     return [Kmul, dt, doSSA, alpo]
 
 
-def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[], Spc=None, Spc2=None, concz=None, yconc=None, UpdateSp=None):
+def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[
+], Spc=None, Spc2=None, concz=None, yconc=None, UpdateSp=None):
     get_globals(rfile)
     S = V.T
     Z = [[concz[z] for z in Spc]]
@@ -304,8 +306,8 @@ def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[], 
             r1 = np.random.uniform()
             while r1 == 0:
                 r1 = np.random.uniform()
-            P = np.cumsum([d/alp for d in D])
-            dt = (1/alp)*(np.log(1/r1))
+            P = np.cumsum([d / alp for d in D])
+            dt = (1 / alp) * (np.log(1 / r1))
 
             #Gupdate = False
             if index != tchlen:
@@ -328,7 +330,7 @@ def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[], 
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x]+S[i][UpdateSp[x]]
+                        holder = Z[-1][x] + S[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.modified:
                             concz[Spc[x]] = holder
                         else:
@@ -348,7 +350,7 @@ def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[], 
                                 while tc > t[tindex]:
                                     Zc.append(Z[-2])
                                     tindex = tindex + 1
-                        except:
+                        except BaseException:
                             pass
                     else:
                         for x in range(len(Spc)):

@@ -10,7 +10,8 @@ from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.propagation.recalculate_globals import *
 
 
-def topo_to_sbml(Sp, Ks, conc, Rr, Rp, V, Vm, items=None, molar=False, rfile=None):
+def topo_to_sbml(Sp, Ks, conc, Rr, Rp, V, Vm,
+                 items=None, molar=False, rfile=None):
     get_globals(rfile)
     Cs = {}
     for x in Sp:
@@ -20,12 +21,12 @@ def topo_to_sbml(Sp, Ks, conc, Rr, Rp, V, Vm, items=None, molar=False, rfile=Non
     for i in range(len(Ks)):
         row = []
         if len(Ks[i]) == 1:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
         else:
-            key = 'kf'+str(i+1)
+            key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
-            key = 'kb'+str(i+1)
+            key = 'kb' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
         KCs.append(row)
 
@@ -242,7 +243,7 @@ def topo_to_sbml(Sp, Ks, conc, Rr, Rp, V, Vm, items=None, molar=False, rfile=Non
     rxns = []
     for r in Rr:
         rxns.append(model.createReaction())
-        rxns[-1].setId("Rf"+str(int(r)+1))
+        rxns[-1].setId("Rf" + str(int(r) + 1))
         rxns[-1].setReversible(False)
         R = []
         for a in Rr[r]:
@@ -259,7 +260,7 @@ def topo_to_sbml(Sp, Ks, conc, Rr, Rp, V, Vm, items=None, molar=False, rfile=Non
                 P[-1].setStoichiometry(Rp[r][b])
         if len(Ks[r]) == 2:
             rxns.append(model.createReaction())
-            rxns[-1].setId("Rb"+str(int(r)+1))
+            rxns[-1].setId("Rb" + str(int(r) + 1))
             rxns[-1].setReversible(False)
             R = []
             for a in Rr[r]:
@@ -281,6 +282,6 @@ def topo_to_sbml(Sp, Ks, conc, Rr, Rp, V, Vm, items=None, molar=False, rfile=Non
         kinetic_law[-1].setMath(parseL3Formula(str(f[r]).replace("**", "^")))
 
     document.setModel(model)
-    writeSBMLToFile(document, globals2.toConvert+".xml")
+    writeSBMLToFile(document, globals2.toConvert + ".xml")
 
     return [0, 0]
