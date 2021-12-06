@@ -43,7 +43,7 @@ BIOSANS2020
 │   │   __init__.py
 │   │
 │   ├───fileconvert
-│   │   │   Conversion.py
+│   │   │   convtopotosbml.py
 │   │   │   process_sbml.py
 │   │   │   __init__.py
 │   │

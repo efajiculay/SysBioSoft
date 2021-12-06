@@ -56,8 +56,7 @@ def delete_this(frame, canvas):
     canvas_update_widgets(None, canvas)
 
 
-# def draw_figure(items, figure, loc=(0, 0)):
-def draw_figure(items, figure, _):
+def draw_figure(items, figure, loc=(0, 0)):
     """This function draws figure to the canvas by first adding a canvas
     object to the canvas, adding a frame to the newly created canvas and
     putting the figure to FigureCanvasTkAgg with frame as the parent.
@@ -98,3 +97,4 @@ def draw_figure(items, figure, _):
         canvas.configure(scrollregion=canvas.bbox("all"))
         globals2.plot_i = globals2.plot_i + 1
         canvas_update_widgets(None, canvas)
+        print(loc)

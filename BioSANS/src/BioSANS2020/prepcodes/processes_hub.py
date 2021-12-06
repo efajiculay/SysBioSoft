@@ -26,7 +26,7 @@ from BioSANS2020.propagation.symbolic.LNAapprox2 import *
 from BioSANS2020.propagation.symbolic.Analytical_sol import *
 from BioSANS2020.model.param_est.param_estimate import *
 
-from BioSANS2020.model.fileconvert.Conversion import *
+from BioSANS2020.model.fileconvert.convtopotosbml import *
 from BioSANS2020.model.param_est.param_slider import *
 
 from BioSANS2020.myglobal import mglobals as globals2

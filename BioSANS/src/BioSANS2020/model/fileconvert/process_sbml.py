@@ -1,58 +1,83 @@
-#import sys
-#import os
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
-import libsbml as Mysbml
+from inspect import getargspec as inspect_getargspec
 from sympy import Symbol as newSymbol
 from sympy import solve, sympify
-from sympy import sympify
-from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.math_functs.sbmlMath import *
-import inspect
+import libsbml as Mysbml
 
-OPERS_list = {"+", "-", "*", "/", "(", ")", ",", "=", ">", "<", ":"}
-OPERS_list2 = {
-    "abs", "acos", "arccos", "acosh", "arccosh", "acot", "arccot", "acoth", "arccoth", "acsc", "acsch", "arccsch", "arcsec", "true", "false", "True", "False", "asinh",
-    "asech", "arcsech", "asin", "arcsin", "atan", "arctan", "atanh", "arctanh", "ceil", "ceiling", "cos", "cosh", "cot", "coth", "csc", "csch", "and", "not", "arcsinh",
-    "factorial", "exp", "floor", "ln", "log", "log10", "piecewise", "pow", "power", "root", "sec", "sech", "sqr", "sqrt", "sin", "sinh", "tan", "None", "pi", "arccsc", "avogadro",
-    "tanh", "And", "Not", "Or", "or", "xor", "eq", "geq", "gt", "leq", "lt", "neq", "plus", "times", "minus", "divide", "if", "else", "multiply", "lambda", "delay", "rateOf"
+from BioSANS2020.myglobal import mglobals as globals2
+from BioSANS2020.math_functs.sbmlMath import acos, arccos, acosh, \
+    arccosh, acot, arccot, acoth, arccoth, acsc, arccsc, acsch, \
+    arccsch, arcsec, asech, arcsech, asin, asinh, arcsinh, arcsin, \
+    atan, arctan, atanh, arctanh, ceil, ceiling, cos, cosh, cot, \
+    coth, csc, csch, factorial, exp, floor, ln, log, log10, \
+    piecewise, pow, power, root, sec, sech, sqr, sqrt, sin, sinh, \
+    tan, tanh, And, Not, Or, xor, eq, geq, gt, leq, lt, neq, \
+    plus, times, minus, divide, multiply
+
+
+SBML_FUNCT_LIST = [
+    acos, arccos, acosh, arccosh, acot, arccot, acoth, arccoth,
+    acsc, arccsc, acsch, arccsch, arcsec, asech, arcsech, asin,
+    asinh, arcsinh, arcsin, atan, arctan, atanh, arctanh, ceil,
+    ceiling, cos, cosh, cot, coth, csc, csch, factorial, exp,
+    floor, ln, log, log10, piecewise, pow, power, root, sec,
+    sech, sqr, sqrt, sin, sinh, tan, tanh, And, Not, Or, xor,
+    eq, geq, gt, leq, lt, neq, plus, times, minus, divide,
+    multiply
+]
+
+OPERS_LIST = {"+", "-", "*", "/", "(", ")", ",", "=", ">", "<", ":"}
+OPERS_LIST2 = {
+    "abs", "acos", "arccos", "acosh", "arccosh", "acot", "arccot", "acoth",
+    "arccoth", "acsc", "acsch", "arccsch", "arcsec", "true", "false", "True",
+    "False", "asinh", "asech", "arcsech", "asin", "arcsin", "atan", "arctan",
+    "atanh", "arctanh", "ceil", "ceiling", "cos", "cosh", "cot", "coth", "csc",
+    "csch", "and", "not", "arcsinh", "factorial", "exp", "floor", "ln", "log",
+    "log10", "piecewise", "pow", "power", "root", "sec", "sech", "sqr", "sqrt",
+    "sin", "sinh", "tan", "None", "pi", "arccsc", "avogadro", "tanh", "And",
+    "Not", "Or", "or", "xor", "eq", "geq", "gt", "leq", "lt", "neq", "plus",
+    "times", "minus", "divide", "if", "else", "multiply", "lambda", "delay",
+    "rateOf"
 }
 
 
-def get_exponentSp(key, modk):
-    exponentInFormula = 1
+def get_exponent_sp(key, modk):
+    exponent_in_formula = 1
     query = "pow(" + key + ","
     ind = modk.find(query)
     if ind >= 0:
-        st = ind + len(query)
-        ic = 0
-        exponentInFormula = ""
-        while modk[st + ic] != ")":
-            exponentInFormula = exponentInFormula + modk[st + ic]
-            ic = ic + 1
-    exponentInFormula = float(exponentInFormula)
+        stvar = ind + len(query)
+        icvar = 0
+        exponent_in_formula = ""
+        while modk[stvar + icvar] != ")":
+            exponent_in_formula = exponent_in_formula + modk[stvar + icvar]
+            icvar = icvar + 1
+    exponent_in_formula = float(exponent_in_formula)
 
     query = key + "**"
     ind = modk.find(query)
     if ind >= 0:
-        st = ind + len(query)
-        ic = 0
-        exponentInFormula = ""
-        while modk[st + ic] != ")":
-            exponentInFormula = exponentInFormula + modk[st + ic]
-            ic = ic + 1
+        stvar = ind + len(query)
+        icvar = 0
+        exponent_in_formula = ""
+        while modk[stvar + icvar] != ")":
+            exponent_in_formula = exponent_in_formula + modk[stvar + icvar]
+            icvar = icvar + 1
 
     query = "/" + key
     ind = modk.find(query)
     if ind >= 0:
-        exponentInFormula = -1
+        exponent_in_formula = -1
 
-    exponentInFormula = float(exponentInFormula)
-    return exponentInFormula
+    exponent_in_formula = float(exponent_in_formula)
+    return exponent_in_formula
 
 
 def replace_crucial_funct(trep):
-    return Add2spacesSep(trep) \
+    return Add2spacessep(trep) \
         .replace("and", "And") \
         .replace("not", "Not") \
         .replace("or", "Or") \
@@ -65,100 +90,104 @@ def replace_crucial_funct(trep):
         .replace("+-", "+ -")
 
 
-def extractSpecies(modk):
-    global OPERS_list, OPERS_list2
-    here = " " + str(modk).replace("time-", "emit-").replace("time+", "emit+").replace("e+", " ").replace(
-        "E+", " ").replace("e-", " ").replace("E-", " ").replace("emit-", "time-").replace("emit+", "time+") + " "
-    for x in OPERS_list:
-        here = here.replace(x, "  ")
+def extract_species(modk):
+    # global OPERS_LIST, OPERS_LIST2
+    here = " " + str(modk).replace("time-", "emit-") \
+        .replace("time+", "emit+").replace("e+", " ").replace("E+", " ") \
+        .replace("e-", " ").replace("E-", " ").replace("emit-", "time-") \
+        .replace("emit+", "time+") + " "
+    for xvar in OPERS_LIST:
+        here = here.replace(xvar, "  ")
     here = " " + here + " "
-    for x in OPERS_list2:
-        here = here.replace(" " + x + " ", " ")
+    for xvar in OPERS_LIST2:
+        here = here.replace(" " + xvar + " ", " ")
     here = here.split()
-    sp = set()
-    for x in here:
+    sp_comp = set()
+    for xvar in here:
         try:
-            float(x)
+            float(xvar)
         except BaseException:
             try:
-                float(eval(x))
+                float(eval(xvar))
             except BaseException:
-                sp.add(x)
-    return ",".join(sp)
+                sp_comp.add(xvar)
+    return ",".join(sp_comp)
 
 
-def extractParNum(modk):
-    global OPERS_list, OPERS_list2
+def extract_par_num(modk):
+    # global OPERS_LIST, OPERS_LIST2
     here = " " + str(modk) + " "
-    for x in OPERS_list:
-        here = here.replace(x, "  ")
+    for xvar in OPERS_LIST:
+        here = here.replace(xvar, "  ")
 
     here = " " + here + " "
-    for x in OPERS_list2:
-        here = here.replace(" " + x + " ", " ")
+    for xvar in OPERS_LIST2:
+        here = here.replace(" " + xvar + " ", " ")
     here = here.split()
-    sp = set()
-    for x in here:
+    sp_comp = set()
+    for xvar in here:
         try:
-            float(x)
-            sp.add(x)
+            float(xvar)
+            sp_comp.add(xvar)
         except BaseException:
             pass
 
-    return sp
+    return sp_comp
 
 
-def extractVarFunc(ss):
-    v = ""
-    lastComma = 0
+def extract_var_func(ssv):
+    # v = ""
+    last_comma = 0
     oper = {"+", "-", "*", "/", "(", ")"}
-    p = 0
-    for x in ss + ")":
-        if x == ",":
-            lastComma = p
-        elif x not in oper:
+    pvar = 0
+    for xvar in ssv + ")":
+        if xvar == ",":
+            last_comma = pvar
+        elif xvar not in oper:
             pass
         else:
-            return [ss[0:lastComma], ss[lastComma + 1:]]
-        p = p + 1
+            return [ssv[0:last_comma], ssv[last_comma + 1:]]
+        pvar = pvar + 1
     return ["", ""]
 
 
-def extractFunction(pforms, Rparams, compartments, functions, functions_str):
-    global OPERS_list, OPERS_list2
+def extract_function(pforms, rbig_params, compartments, functions,
+                     functions_str):
+    # global OPERS_LIST, OPERS_LIST2
     spcorm = pforms.replace("(", " ").replace(")", " ").replace(
         ",", " ").replace("*", " ").split()
     modk = ""
     ind2 = 0
-    for sp in spcorm:
-        if sp in Rparams:
+    for sp_comp in spcorm:
+        if sp_comp in rbig_params:
             pass
-        elif sp in compartments:
+        elif sp_comp in compartments:
             pass
-        elif sp in functions:
-            npar = len(inspect.getargspec(functions[sp])[0])
-            ind = spcorm.index(sp)
-            ind2 = pforms.index(sp)
-            ss = []
-            for y in spcorm[ind + 1:]:
+        elif sp_comp in functions:
+            npar = len(inspect_getargspec(functions[sp_comp])[0])
+            ind = spcorm.index(sp_comp)
+            ind2 = pforms.index(sp_comp)
+            ssv = []
+            for yvar in spcorm[ind + 1:]:
                 try:
-                    float(y)
+                    float(yvar)
                 except BaseException:
-                    if y not in OPERS_list and y not in OPERS_list2 and y not in functions:
-                        ss.append(newSymbol(y))
-            if len(ss) == npar:
+                    if yvar not in OPERS_LIST and yvar not in OPERS_LIST2 \
+                            and yvar not in functions:
+                        ssv.append(newSymbol(yvar))
+            if len(ssv) == npar:
                 try:
-                    modk = str(functions[sp](*ss))
+                    modk = str(functions[sp_comp](*ssv))
                 except BaseException:
-                    modk = functions_str[sp]
-                    modk = FunctRedefineVar(modk, ss)
+                    modk = functions_str[sp_comp]
+                    modk = FunctRedefineVar(modk, ssv)
             else:
-                modk = "lambda " + ",".join([str(s)
-                                             for s in ss]) + " : " + pforms[ind2:]
+                modk = "lambda " \
+                    + ",".join([str(s) for s in ssv]) + " : " + pforms[ind2:]
                 try:
-                    modk = str(eval(modk)(*ss))
+                    modk = str(eval(modk)(*ssv))
                 except BaseException:
-                    modk = str(eval(modk[0:-1])(*ss))
+                    modk = str(eval(modk[0:-1])(*ssv))
             break
         else:
             pass
@@ -169,225 +198,237 @@ def extractFunction(pforms, Rparams, compartments, functions, functions_str):
 
 
 def parSubstitution(modk, parameters, index=0):
-    global OPERS_list
+    # global OPERS_LIST
     modk = str(modk)
-    for y in OPERS_list:
-        modk = modk.replace(y, " " + y + " ")
+    for yvar in OPERS_LIST:
+        modk = modk.replace(yvar, " " + yvar + " ")
     modk = " " + modk + " "
-    for y in parameters:
-        if parameters[y][0] is not None:
-            modk = modk.replace(" " + y + " ", str(parameters[y][index]))
+    for yvar in parameters:
+        if parameters[yvar][0] is not None:
+            modk = modk.replace(" " + yvar + " ", str(parameters[yvar][index]))
     return modk.replace(" ", "")
 
 
-def Add2spacesSep(modk):
+def Add2spacessep(modk):
     modk = str(modk)
-    for y in OPERS_list:
-        modk = modk.replace(y, "  " + y + "  ")
+    for yvar in OPERS_LIST:
+        modk = modk.replace(yvar, "  " + yvar + "  ")
     return modk
 
 
 def SpSubstitution(modk, parameters):
-    global OPERS_list
+    # global OPERS_LIST
     modk = str(modk)
-    for y in OPERS_list:
-        modk = modk.replace(y, " " + y + " ")
+    for yvar in OPERS_LIST:
+        modk = modk.replace(yvar, " " + yvar + " ")
     modk = " " + modk + " "
-    for y in parameters:
-        if parameters[y] is not None:
-            modk = modk.replace(" " + y + " ", str(parameters[y]))
+    for yvar in parameters:
+        if parameters[yvar] is not None:
+            modk = modk.replace(" " + yvar + " ", str(parameters[yvar]))
     return modk.replace(" ", "")
 
 
-def varSubstitution(modk, Rparams, parameters, compartments, RateRules):
-    global OPERS_list
+def varSubstitution(modk, rbig_params, parameters, compartments, RateRules):
+    # global OPERS_LIST
     modk = str(modk)
-    for y in OPERS_list:
-        modk = modk.replace(y, "  " + y + "  ")
+    for yvar in OPERS_LIST:
+        modk = modk.replace(yvar, "  " + yvar + "  ")
     modk = " " + modk + " "
 
-    for y in Rparams:
-        if y not in RateRules:
-            modk = modk.replace(" " + y + " ", "(" + str(Rparams[y]) + ")")
-    for y in parameters:
-        if y not in RateRules:
-            modk = modk.replace(" " + y + " ",
-                                "(" + str(parameters[y][0]) + ")")
-    for y in compartments:
-        modk = modk.replace(" " + y + " ", "(" + str(compartments[y][0]) + ")")
+    for yvar in rbig_params:
+        if yvar not in RateRules:
+            modk = modk.replace(" " + yvar + " ", "("
+                                + str(rbig_params[yvar]) + ")")
+    for yvar in parameters:
+        if yvar not in RateRules:
+            modk = modk.replace(" " + yvar + " ",
+                                "(" + str(parameters[yvar][0]) + ")")
+    for yvar in compartments:
+        modk = modk.replace(" " + yvar + " ", "("
+                            + str(compartments[yvar][0]) + ")")
     return modk.replace(" ", "")
 
 
-def FunctRedefineVar(modk, ss):
+def FunctRedefineVar(modk, ssv):
     spset = [b.strip() for b in modk.split(
         ":")[0].split("lambda")[1].split(",")]
-    for y in OPERS_list:
-        modk = modk.replace(y, " " + y + " ")
+    for yvar in OPERS_LIST:
+        modk = modk.replace(yvar, " " + yvar + " ")
     modk = " " + modk + " "
-    for s1 in range(len(ss)):
-        modk = modk.replace(" " + spset[s1] + " ", str(ss[s1]))
+    for s1 in range(len(ssv)):
+        modk = modk.replace(" " + spset[s1] + " ", str(ssv[s1]))
     return modk.split(":")[1]
 
 
 def process_sbml(file, molar=False, variables=None):
-    global OPERS_list, OPERS_list2
+    # global OPERS_LIST, OPERS_LIST2
 
     fftopofile = open(file + ".topo", "w")
 
     SbmlUnits = {
-        0: "ampere", 1: "avogadro", 2: "becquerel", 3: "candela", 5: "coulomb", 6: "dimensionless", 7: "farad", 8: "gram", 9: "gray", 10: "henry", 11: "hertz", 13: "joule", 14: "katal", 15: "kelvin", 18: "litre", 19: "lumen", 20: "lux", 22: "metre", 23: "mole", 24: "newton", 25: "ohm", 26: "pascal", 27: "radian", 28: "second", 29: "siemens", 30: "sievert", 31: "steradian", 32: "tesla", 34: "watt", 35: "weber"
+        0: "ampere", 1: "avogadro", 2: "becquerel", 3: "candela", 5: "coulomb",
+        6: "dimensionless", 7: "farad", 8: "gram", 9: "gray", 10: "henry",
+        11: "hertz", 13: "joule", 14: "katal", 15: "kelvin", 18: "litre",
+        19: "lumen", 20: "lux", 22: "metre", 23: "mole", 24: "newton",
+        25: "ohm", 26: "pascal", 27: "radian", 28: "second", 29: "siemens",
+        30: "sievert", 31: "steradian", 32: "tesla", 34: "watt", 35: "weber"
     }
 
     reader = Mysbml.SBMLReader()
     document = reader.readSBML(file)
     model = document.getModel()
-    errors = document.getNumErrors()
+    # errors = document.getNumErrors()
 
     time_var = None
     GCFactor = model.getConversionFactor()
 
     units = {}
     if model.getNumUnitDefinitions() > 0:
-        for x in model.getListOfUnitDefinitions():
-            c = x.getListOfUnits()
-            units[x.getId()] = []
-            for y in c:
-                F = (y.getMultiplier() * 10 ** y.getScale()) ** y.getExponent()
-                units[x.getId()].append(
-                    [F, SbmlUnits[y.getKind()], y.getExponent()])
+        for xvar in model.getListOfUnitDefinitions():
+            c = xvar.getListOfUnits()
+            units[xvar.getId()] = []
+            for yvar in c:
+                F = (yvar.getMultiplier() * 10 ** yvar.getScale()) \
+                    ** yvar.getExponent()
+                units[xvar.getId()].append(
+                    [F, SbmlUnits[yvar.getKind()], yvar.getExponent()])
 
     compartments = {}
     constant_comp = {}
     nonConstant_comp = {}
     orig_size = {}
-    for x in model.getListOfCompartments():
-        if x.isSetSize():
-            orig_size[x.getId()] = x.getSize()
+    for xvar in model.getListOfCompartments():
+        if xvar.isSetSize():
+            orig_size[xvar.getId()] = xvar.getSize()
             if not molar:
-                compartments[x.getId()] = [x.getSize(), x.getUnits()]
+                compartments[xvar.getId()] = [xvar.getSize(), xvar.getUnits()]
             else:
-                compartments[x.getId()] = [1, x.getUnits()]
+                compartments[xvar.getId()] = [1, xvar.getUnits()]
         else:
-            orig_size[x.getId()] = 1
-            compartments[x.getId()] = [1, x.getUnits()]
-        if x.getConstant() == True:
-            constant_comp[x.getId()] = compartments[x.getId()]
+            orig_size[xvar.getId()] = 1
+            compartments[xvar.getId()] = [1, xvar.getUnits()]
+        # if xvar.getConstant() == True:
+        if xvar.getConstant():
+            constant_comp[xvar.getId()] = compartments[xvar.getId()]
         else:
-            nonConstant_comp[x.getId()] = compartments[x.getId()]
+            nonConstant_comp[xvar.getId()] = compartments[xvar.getId()]
 
     reactions = {}
-    for x in model.getListOfReactions():
-        reactions[x.getId()] = x
+    for xvar in model.getListOfReactions():
+        reactions[xvar.getId()] = xvar
 
     species = {}
     species_comp = {}
     constant_species = {}
     HasOnlySUnits = {}
     sp_wCFactor = {}
-    for x in model.getListOfSpecies():
-        species[x.getId()] = x
-        species_comp[x.getId()] = x.getCompartment()
-        HasOnlySUnits[x.getId()] = x.getHasOnlySubstanceUnits()
-        if x.getConstant() == True:
-            constant_species[x.getId()] = True
-        if x.getConversionFactor():
-            sp_wCFactor[x.getId()] = x.getConversionFactor()
+    for xvar in model.getListOfSpecies():
+        species[xvar.getId()] = xvar
+        species_comp[xvar.getId()] = xvar.getCompartment()
+        HasOnlySUnits[xvar.getId()] = xvar.getHasOnlySubstanceUnits()
+        # if xvar.getConstant() == True:
+        if xvar.getConstant():
+            constant_species[xvar.getId()] = True
+        if xvar.getConversionFactor():
+            sp_wCFactor[xvar.getId()] = xvar.getConversionFactor()
     # print(sp_wCFactor)
 
     SpInitialConc = {}
-    for x in species:
-        sp = species[x]
-        if sp.isSetInitialConcentration():
-            val = sp.getInitialConcentration()
-            SpInitialConc[x] = val
-        elif sp.isSetInitialAmount():
-            val = sp.getInitialAmount()
-            SpInitialConc[x] = val
+    for xvar in species:
+        sp_comp = species[xvar]
+        if sp_comp.isSetInitialConcentration():
+            val = sp_comp.getInitialConcentration()
+            SpInitialConc[xvar] = val
+        elif sp_comp.isSetInitialAmount():
+            val = sp_comp.getInitialAmount()
+            SpInitialConc[xvar] = val
     # print(SpInitialConc)
 
     parameters = {}
     nonConstPar = set()
     constant_par = {}
-    for x in model.getListOfParameters():
-        if x.isSetValue():
-            ss = x.getValue()
+    for xvar in model.getListOfParameters():
+        if xvar.isSetValue():
+            ssv = xvar.getValue()
         else:
-            ss = None
-        parameters[x.getId()] = [ss, x.getUnits()]
-        if x.getConstant() == False:
-            nonConstPar.add(x.getId())
+            ssv = None
+        parameters[xvar.getId()] = [ssv, xvar.getUnits()]
+        # if xvar.getConstant() == False:
+        if not xvar.getConstant():
+            nonConstPar.add(xvar.getId())
         else:
-            constant_par[x.getId()] = parameters[x.getId()]
+            constant_par[xvar.getId()] = parameters[xvar.getId()]
 
     AssignRules = {}
     RateRules = {}
-    AlgebrRules = []
-    for x in model.getListOfRules():
-        if x.getMath().isAvogadro():
-            ss = str(6.02214179e+23)
-        elif Mysbml.formulaToL3String(x.getMath()).find("avogadro") >= 0:
-            ss = replace_crucial_funct(Mysbml.formulaToL3String(
-                x.getMath()).replace("avogadro", "(6.02214179e+23)"))
+    algebr_rules = []
+    for xvar in model.getListOfRules():
+        if xvar.getMath().isAvogadro():
+            ssv = str(6.02214179e+23)
+        elif Mysbml.formulaToL3String(xvar.getMath()).find("avogadro") >= 0:
+            ssv = replace_crucial_funct(Mysbml.formulaToL3String(
+                xvar.getMath()).replace("avogadro", "(6.02214179e+23)"))
         else:
-            ss = replace_crucial_funct(Mysbml.formulaToString(x.getMath()))
-        if x.isAssignment():
-            ss = parSubstitution(ss, constant_par)
-            AssignRules[x.getVariable()] = ss
-        elif x.isRate():
-            RateRules[x.getVariable()] = ss
-        elif x.isAlgebraic():
-            AlgebrRules.append(ss)
+            ssv = replace_crucial_funct(Mysbml.formulaToString(xvar.getMath()))
+        if xvar.isAssignment():
+            ssv = parSubstitution(ssv, constant_par)
+            AssignRules[xvar.getVariable()] = ssv
+        elif xvar.isRate():
+            RateRules[xvar.getVariable()] = ssv
+        elif xvar.isAlgebraic():
+            algebr_rules.append(ssv)
 
     functions = {}
     functions_str = {}
     fftopofile.write("Function_Definitions:\n")
-    for x in model.getListOfFunctionDefinitions():
-        ss = replace_crucial_funct(Mysbml.formulaToString(x.getMath()))
-        ss = ss.replace("lambda(", "")[:-1]
-        ss = extractVarFunc(ss)
-        ss = " : ".join(ss)
-        functions[x.getId()] = eval("lambda " + ss)
-        functions_str[x.getId()] = "lambda " + ss
-        globals2.execFunctions.append(x.getId() + " = lambda " + ss)
-        exec(x.getId() + " = lambda " + ss, globals())
-        fftopofile.write(x.getId() + " = lambda " + ss + "\n")
-        OPERS_list2.add(x.getId())
+    for xvar in model.getListOfFunctionDefinitions():
+        ssv = replace_crucial_funct(Mysbml.formulaToString(xvar.getMath()))
+        ssv = ssv.replace("lambda(", "")[:-1]
+        ssv = extract_var_func(ssv)
+        ssv = " : ".join(ssv)
+        functions[xvar.getId()] = eval("lambda " + ssv)
+        functions_str[xvar.getId()] = "lambda " + ssv
+        globals2.execFunctions.append(xvar.getId() + " = lambda " + ssv)
+        exec(xvar.getId() + " = lambda " + ssv, globals())
+        fftopofile.write(xvar.getId() + " = lambda " + ssv + "\n")
+        OPERS_LIST2.add(xvar.getId())
 
     InitialAssign = {}
-    for x in model.getListOfInitialAssignments():
-        sp = x.getId()
-        if x.getMath().isAvogadro():
-            ss = str(6.02214179e+23)
-        elif Mysbml.formulaToL3String(x.getMath()).find("avogadro") >= 0:
-            ss = Mysbml.formulaToL3String(x.getMath()).replace(
+    for xvar in model.getListOfInitialAssignments():
+        sp_comp = xvar.getId()
+        if xvar.getMath().isAvogadro():
+            ssv = str(6.02214179e+23)
+        elif Mysbml.formulaToL3String(xvar.getMath()).find("avogadro") >= 0:
+            ssv = Mysbml.formulaToL3String(xvar.getMath()).replace(
                 "avogadro", "(6.02214179e+23)")
-            ss = replace_crucial_funct(ss.replace("lambda(", ""))
+            ssv = replace_crucial_funct(ssv.replace("lambda(", ""))
         else:
-            ss = replace_crucial_funct(Mysbml.formulaToString(
-                x.getMath()).replace("lambda(", ""))
-        if sp in species:
-            ss = str(compartments[species_comp[sp]][0]) + "*(" + ss + ")"
+            ssv = replace_crucial_funct(Mysbml.formulaToString(
+                xvar.getMath()).replace("lambda(", ""))
+        if sp_comp in species:
+            ssv = str(compartments[species_comp[sp_comp]][0]) \
+                + "*(" + ssv + ")"
         try:
-            ss = eval(parSubstitution(ss, parameters))
+            ssv = eval(parSubstitution(ssv, parameters))
         except BaseException:
-            ss = parSubstitution(ss, parameters)
-        InitialAssign[sp] = ss
+            ssv = parSubstitution(ssv, parameters)
+        InitialAssign[sp_comp] = ssv
 
-        if sp in constant_par:
-            constant_par[sp][0] = ss
-            parameters[sp][0] = ss
-        elif sp in nonConstPar:
-            parameters[sp][0] = ss
-        elif sp in compartments:
-            orig_size[sp] = ss
+        if sp_comp in constant_par:
+            constant_par[sp_comp][0] = ssv
+            parameters[sp_comp][0] = ssv
+        elif sp_comp in nonConstPar:
+            parameters[sp_comp][0] = ssv
+        elif sp_comp in compartments:
+            orig_size[sp_comp] = ssv
             if not molar:
-                compartments[sp][0] = ss
+                compartments[sp_comp][0] = ssv
             else:
-                compartments[sp][0] = 1
-        elif sp in constant_comp:
-            constant_comp[sp][0] = ss
-        elif sp in nonConstant_comp:
-            nonConstant_comp[sp][0] = ss
+                compartments[sp_comp][0] = 1
+        elif sp_comp in constant_comp:
+            constant_comp[sp_comp][0] = ssv
+        elif sp_comp in nonConstant_comp:
+            nonConstant_comp[sp_comp][0] = ssv
     # print(InitialAssign)
 
     Events = {}
@@ -395,207 +436,227 @@ def process_sbml(file, molar=False, variables=None):
     Delays = {}
     IniValTrig = {}
     Priorities = []
-    for x in model.getListOfEvents():
-        uVFTT = x.getUseValuesFromTriggerTime()
-        IniTV = x.getTrigger().getInitialValue()
-        PersT = x.getTrigger().getPersistent()
+    for xvar in model.getListOfEvents():
+        uVFTT = xvar.getUseValuesFromTriggerTime()
+        IniTV = xvar.getTrigger().getInitialValue()
+        PersT = xvar.getTrigger().getPersistent()
 
         Prior = ""
-        if x.isSetPriority():
-            ss = replace_crucial_funct(
-                Mysbml.formulaToString(x.getPriority().getMath()))
-            #ss = SpSubstitution(ss,SpInitialConc)
-            Prior = ss  # eval(ss)
+        if xvar.isSetPriority():
+            ssv = replace_crucial_funct(
+                Mysbml.formulaToString(xvar.getPriority().getMath()))
+            # ssv = SpSubstitution(ssv,SpInitialConc)
+            Prior = ssv  # eval(ssv)
             Priorities.append(Prior)
 
-        ss = replace_crucial_funct(parSubstitution(
-            Mysbml.formulaToString(x.getTrigger().getMath()), constant_par))
+        ssv = replace_crucial_funct(parSubstitution(
+            Mysbml.formulaToString(xvar.getTrigger().getMath()), constant_par))
         try:
-            for sp in species:
-                ss = Add2spacesSep(ss).replace(
-                    " " + sp + " ", sp + "/" + str(compartments[species_comp[sp]][0])).replace(" ", "")
+            for sp_comp in species:
+                ssv = Add2spacessep(ssv) \
+                    .replace(" " + sp_comp + " ", sp_comp + "/"
+                             + str(compartments[species_comp[sp_comp]][0])) \
+                    .replace(" ", "")
         except BaseException:
             pass
 
-        mods = extractSpecies(ss)
-        for tt in mods.split(","):
-            if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-            ) != "" and tt.find("delay") == -1:
-                time_var = tt
+        mods = extract_species(ssv)
+        for ttvar in mods.split(","):
+            if ttvar not in species and ttvar not in parameters and ttvar \
+                not in compartments and ttvar.strip() != "" \
+                    and ttvar.find("delay") == -1:
+                time_var = ttvar
                 break
 
-        Events[x.getId()] = ss
-        if not x.isSetDelay():
-            for y in x.getListOfEventAssignments():
-                IniValTrig[y.getVariable()] = IniTV
+        Events[xvar.getId()] = ssv
+        if not xvar.isSetDelay():
+            for yvar in xvar.getListOfEventAssignments():
+                IniValTrig[yvar.getVariable()] = IniTV
                 try:
-                    ss = str(eval(parSubstitution(
-                        Mysbml.formulaToString(y.getMath()), constant_par)))
+                    ssv = str(eval(parSubstitution(
+                        Mysbml.formulaToString(yvar.getMath()), constant_par)))
                 except BaseException:
-                    ss = parSubstitution(
-                        Mysbml.formulaToString(y.getMath()), constant_par)
-                    ss = parSubstitution(ss, constant_comp)
-                ss = replace_crucial_funct(ss)
-                mods = extractSpecies(ss)
-                for tt in mods.split(","):
-                    if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                    ) != "" and tt.find("delay") == -1:
-                        time_var = tt
+                    ssv = parSubstitution(
+                        Mysbml.formulaToString(yvar.getMath()), constant_par)
+                    ssv = parSubstitution(ssv, constant_comp)
+                ssv = replace_crucial_funct(ssv)
+                mods = extract_species(ssv)
+                for ttvar in mods.split(","):
+                    if ttvar not in species and ttvar not in parameters \
+                        and ttvar not in compartments and ttvar.strip() != "" \
+                            and ttvar.find("delay") == -1:
+                        time_var = ttvar
                         break
 
-                sp = y.getVariable()
-                keyS = "status_" + sp
+                sp_comp = yvar.getVariable()
+                keyS = "status_" + sp_comp
 
-                if sp in species_comp:
-                    ss = str(compartments[species_comp[sp]]
-                             [0]) + "*(" + ss + ")"
+                if sp_comp in species_comp:
+                    ssv = str(compartments[species_comp[sp_comp]]
+                              [0]) + "*(" + ssv + ")"
 
                 if Prior == "":
-                    estatus = " : True if " + Events[x.getId()] + " else False"
+                    estatus = " : True if " + Events[xvar.getId()] \
+                        + " else False"
                     if PersT:
-                        express = " : " + ss + " if " + \
-                            Events[x.getId()] + " and not " + keyS + \
-                            " else " + y.getVariable()
+                        express = " : " + ssv + " if " + \
+                            Events[xvar.getId()] + " and not " + keyS + \
+                            " else " + yvar.getVariable()
                     else:
-                        express = " : " + ss + " if " + \
-                            Events[x.getId()] + " and " + keyS + \
-                            " else " + y.getVariable()
+                        express = " : " + ssv + " if " + \
+                            Events[xvar.getId()] + " and " + keyS + \
+                            " else " + yvar.getVariable()
                 else:
                     keyS = keyS + "_" + str(Priorities.index(Prior))
                     if PersT:
                         estatus = " : (True if " + \
-                            Events[x.getId()] + " else False" + \
+                            Events[xvar.getId()] + " else False" + \
                             "," + Prior + ")"
-                        express = " : (" + ss + " if " + Events[x.getId()] + " and not " + \
-                            keyS + " else " + y.getVariable() + "," + Prior + ")"
+                        express = " : (" + ssv + " if " \
+                            + Events[xvar.getId()] \
+                            + " and not " + keyS + " else " \
+                            + yvar.getVariable() + "," + Prior + ")"
                     else:
                         estatus = " : (True if " + \
-                            Events[x.getId()] + " else False" + \
+                            Events[xvar.getId()] + " else False" + \
                             "," + Prior + ",1)"
-                        express = " : (" + ss + " if " + Events[x.getId()] + " and " + \
-                            keyS + " else " + y.getVariable() + "," + Prior + ",1)"
+                        express = " : (" + ssv + " if " \
+                            + Events[xvar.getId()] \
+                            + " and " + keyS + " else " + yvar.getVariable() \
+                            + "," + Prior + ",1)"
 
-                estatus = "lambda " + extractSpecies(estatus) + estatus
-                express = "lambda " + extractSpecies(express) + express
+                estatus = "lambda " + extract_species(estatus) + estatus
+                express = "lambda " + extract_species(express) + express
                 if keyS in EventAssign:
                     EventAssign[keyS].append(estatus)
                 else:
                     EventAssign[keyS] = [estatus]
-                if y.getVariable() in EventAssign:
-                    EventAssign[y.getVariable()].append(express)
+                if yvar.getVariable() in EventAssign:
+                    EventAssign[yvar.getVariable()].append(express)
                 else:
-                    EventAssign[y.getVariable()] = [express]
+                    EventAssign[yvar.getVariable()] = [express]
         else:
-            Delays[x.getId()] = replace_crucial_funct(parSubstitution(
-                Mysbml.formulaToString(x.getDelay().getMath()), constant_par))
+            Delays[xvar.getId()] = replace_crucial_funct(parSubstitution(
+                Mysbml.formulaToString(xvar.getDelay().getMath()),
+                constant_par))
             tdepDelay = False
-            mods = extractSpecies(Delays[x.getId()])
-            for tt in mods.split(","):
-                if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                ) != "" and tt.find("delay") == -1:
-                    time_var = tt
+            mods = extract_species(Delays[xvar.getId()])
+            for ttvar in mods.split(","):
+                if ttvar not in species and ttvar not in parameters and ttvar \
+                    not in compartments and ttvar.strip() != "" \
+                        and ttvar.find("delay") == -1:
+                    time_var = ttvar
                     tdepDelay = True
                     break
 
-            for y in x.getListOfEventAssignments():
-                IniValTrig[y.getVariable()] = IniTV
+            for yvar in xvar.getListOfEventAssignments():
+                IniValTrig[yvar.getVariable()] = IniTV
 
-                sp = y.getVariable()
-                keyT = "timer_" + sp
-                keyS = "status_" + sp
-                keyS2 = "status2_" + sp
-                keyF = "finish_" + sp
-                keyC = "dtime_" + sp
-                keyD = "delay_" + sp
+                sp_comp = yvar.getVariable()
+                keyT = "timer_" + sp_comp
+                keyS = "status_" + sp_comp
+                keyS2 = "status2_" + sp_comp
+                keyF = "finish_" + sp_comp
+                keyC = "dtime_" + sp_comp
+                keyD = "delay_" + sp_comp
                 TheMath = replace_crucial_funct(parSubstitution(
-                    Mysbml.formulaToString(y.getMath()), constant_par))
+                    Mysbml.formulaToString(yvar.getMath()), constant_par))
 
-                if sp in species_comp:
-                    TheMath = str(
-                        compartments[species_comp[sp]][0]) + "*(" + TheMath + ")"
+                if sp_comp in species_comp:
+                    TheMath = str(compartments[species_comp[sp_comp]][0]) \
+                        + "*(" + TheMath + ")"
 
-                mods = extractSpecies(TheMath)
-                for tt in mods.split(","):
-                    if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                    ) != "" and tt.find("delay") == -1:
-                        time_var = tt
+                mods = extract_species(TheMath)
+                for ttvar in mods.split(","):
+                    if ttvar not in species and ttvar not in parameters \
+                            and ttvar not in compartments \
+                            and ttvar.strip() != "" \
+                            and ttvar.find("delay") == -1:
+                        time_var = ttvar
                         tdepDelay = True
                         break
 
-                if tdepDelay == True:
+                # if tdepDelay == True:
+                if tdepDelay:
                     estatus2 = " : True if " + \
-                        Events[x.getId()] + " else False"
-                    estatus2 = "lambda " + extractSpecies(estatus2) + estatus2
-                    DelayVal = " : " + \
-                        Delays[x.getId()] + " if " + Events[x.getId()] + \
-                        " and " + keyF + " and not " + keyS2 + " else None"
-                    DelayVal = "lambda " + extractSpecies(DelayVal) + DelayVal
+                        Events[xvar.getId()] + " else False"
+                    estatus2 = "lambda " + extract_species(estatus2) + estatus2
+                    delay_val = " : " + \
+                        Delays[xvar.getId()] + " if " + Events[xvar.getId()] \
+                        + " and " + keyF + " and not " + keyS2 \
+                        + " else None"
+                    delay_val = "lambda " + extract_species(delay_val) \
+                        + delay_val
                     DelayCon = keyT + " >= " + keyD
                 else:
-                    DelayCon = keyT + " >= " + Delays[x.getId()]
+                    DelayCon = keyT + " >= " + Delays[xvar.getId()]
 
                 finishFr = " : 1 if " + DelayCon + " else 0 if " + \
-                    Events[x.getId()] + " else None"
-                finishFr = "lambda " + extractSpecies(finishFr) + finishFr
+                    Events[xvar.getId()] + " else None"
+                finishFr = "lambda " + extract_species(finishFr) + finishFr
 
                 estatus = " : True if " + DelayCon + " else False"
-                estatus = "lambda " + extractSpecies(estatus) + estatus
+                estatus = "lambda " + extract_species(estatus) + estatus
 
                 express1 = " : " + keyT + " if " + \
-                    Events[x.getId()] + " or not " + keyF + " else 0"
-                express1 = "lambda " + extractSpecies(express1) + express1
+                    Events[xvar.getId()] + " or not " + keyF + " else 0"
+                express1 = "lambda " + extract_species(express1) + express1
 
                 CurrentT = " : " + TheMath + " if " + \
-                    Events[x.getId()] + " and " + keyF + " else None"
-                CurrentT = "lambda " + extractSpecies(CurrentT) + CurrentT
+                    Events[xvar.getId()] + " and " + keyF + " else None"
+                CurrentT = "lambda " + extract_species(CurrentT) + CurrentT
 
                 if PersT:
                     keySCond = "not " + keyS
                     pass
                 else:
-                    estatus = " : True if " + Events[x.getId()] + " else False"
-                    estatus = "lambda " + extractSpecies(estatus) + estatus
+                    estatus = " : True if " + Events[xvar.getId()] \
+                        + " else False"
+                    estatus = "lambda " + extract_species(estatus) + estatus
                     keySCond = keyS
 
                 if uVFTT:
-                    express2 = " : " + keyC + " if " + DelayCon + " and " + keySCond + " else " + sp
+                    express2 = " : " + keyC + " if " + DelayCon + " and " \
+                        + keySCond + " else " + sp_comp
                 else:
                     express2 = " : " + TheMath + " if " + \
-                        DelayCon + " and " + keySCond + " else " + sp
+                        DelayCon + " and " + keySCond + " else " + sp_comp
 
-                express2 = "lambda " + extractSpecies(express2) + express2
+                express2 = "lambda " + extract_species(express2) + express2
 
-                if y.getVariable() in EventAssign:
+                if yvar.getVariable() in EventAssign:
                     EventAssign[keyT].append(express1)
-                    EventAssign[sp].append(express2)
+                    EventAssign[sp_comp].append(express2)
                     EventAssign[keyS].append(estatus)
                     EventAssign[keyF].append(finishFr)
                     EventAssign[keyC].append(CurrentT)
-                    if tdepDelay == True:
+                    # if tdepDelay == True:
+                    if tdepDelay:
                         EventAssign[keyS2].append(estatus2)
-                        EventAssign[keyD].append(DelayVal)
+                        EventAssign[keyD].append(delay_val)
                 else:
                     EventAssign[keyT] = [express1]
-                    EventAssign[sp] = [express2]
+                    EventAssign[sp_comp] = [express2]
                     EventAssign[keyS] = [estatus]
                     EventAssign[keyF] = [finishFr]
                     EventAssign[keyC] = [CurrentT]
-                    if tdepDelay == True:
-                        EventAssign[keyD] = [DelayVal]
+                    # if tdepDelay == True:
+                    if tdepDelay:
+                        EventAssign[keyD] = [delay_val]
                         EventAssign[keyS2] = [estatus2]
 
-    for x in AssignRules:
-        ss = AssignRules[x]
-        ss = parSubstitution(ss, parameters)
-        if x in compartments:
-            compartments[x][0] = eval(ss)
-        elif x in parameters:
+    for xvar in AssignRules:
+        ssv = AssignRules[xvar]
+        ssv = parSubstitution(ssv, parameters)
+        if xvar in compartments:
+            compartments[xvar][0] = eval(ssv)
+        elif xvar in parameters:
             try:
-                parameters[x][0] = eval(ss)
+                parameters[xvar][0] = eval(ssv)
             except BaseException:
                 pass
 
-    NONE_added = False
+    big_none_added = False
     fftopofile.write("\n")
     if len(orig_size) == 1:
         for cx in orig_size:
@@ -607,28 +668,28 @@ def process_sbml(file, molar=False, variables=None):
     else:
         fftopofile.write("#Reactions\n")
 
-    Rparams = {}
-    UseSpecies = set()
-    fastRxnExp = {}
-    fastIrrev = {}
-    UseSpeciesInRxn = set()
+    rbig_params = {}
+    use_species = set()
+    fast_rxn_exp = {}
+    fast_irrev = {}
+    use_species_inrxn = set()
     StoichVar = {}
     StoichPar = {}
     CFinReact = []
     CFinProdu = []
     CFkeys = []
 
-    for x in reactions:
-        Rparams = {}
+    for xvar in reactions:
+        rbig_params = {}
         SFactor = 1
         react = ""
-        row = []
-        if (reactions[x].isSetKineticLaw()):
-            for kx in reactions[x].getKineticLaw().getListOfParameters():
-                Rparams[kx.getId()] = kx.getValue()
+        # row = []
+        if reactions[xvar].isSetKineticLaw():
+            for kx in reactions[xvar].getKineticLaw().getListOfParameters():
+                rbig_params[kx.getId()] = kx.getValue()
 
         withCF = False
-        for rx in reactions[x].getListOfReactants():
+        for rx in reactions[xvar].getListOfReactants():
             key = rx.getSpecies()
             if key in sp_wCFactor:
                 CFkeys.append(sp_wCFactor[key])
@@ -640,28 +701,30 @@ def process_sbml(file, molar=False, variables=None):
                 sp_wCFactor[key] = parameters[GCFactor][0]
                 withCF = True
                 CFinReact.append(key)
-            UseSpecies.add(key)
-            UseSpeciesInRxn.add(key)
+            use_species.add(key)
+            use_species_inrxn.add(key)
             if rx.isSetStoichiometryMath():
                 ddvar = rx.getStoichiometryMath().getMath()
                 ddvar = replace_crucial_funct(Mysbml.formulaToString(ddvar))
                 ddvar = varSubstitution(
-                    ddvar, Rparams, parameters, constant_comp, RateRules)
+                    ddvar, rbig_params, parameters, constant_comp, RateRules)
                 ddvar = eval(ddvar)
                 react = react + str(ddvar) + " " + key + " + "
             elif rx.isSetId():
                 idrx = rx.getId()
                 if idrx in InitialAssign:
-                    ddvar = varSubstitution(
-                        InitialAssign[idrx], Rparams, parameters, constant_comp, RateRules)
+                    ddvar = varSubstitution(InitialAssign[idrx], rbig_params,
+                                            parameters, constant_comp,
+                                            RateRules)
                     ddvar = eval(ddvar)
                     react = react + str(ddvar) + " " + key + " + "
                 elif idrx in RateRules:
-                    ddvar = varSubstitution(
-                        RateRules[idrx], Rparams, parameters, constant_comp, RateRules)
+                    ddvar = varSubstitution(RateRules[idrx], rbig_params,
+                                            parameters, constant_comp,
+                                            RateRules)
                     ddvar = eval(ddvar)
                     kxid = Mysbml.formulaToString(
-                        reactions[x].getKineticLaw().getMath())
+                        reactions[xvar].getKineticLaw().getMath())
                     if kxid in nonConstPar:
                         StoichVar[kxid] = ddvar
                     else:
@@ -672,14 +735,14 @@ def process_sbml(file, molar=False, variables=None):
                 react = react + str(rx.getStoichiometry()) + " " + key + " + "
 
         if len(react) == 0:
-            NONE_added = True
+            big_none_added = True
             react = "0 NONE => "
         else:
             react = react[0:-2] + " => "
 
         produ = ""
         SPactor = 1
-        for rx in reactions[x].getListOfProducts():
+        for rx in reactions[xvar].getListOfProducts():
             key = rx.getSpecies()
             if key in sp_wCFactor:
                 CFkeys.append(sp_wCFactor[key])
@@ -691,28 +754,30 @@ def process_sbml(file, molar=False, variables=None):
                 sp_wCFactor[key] = parameters[GCFactor][0]
                 withCF = True
                 CFinProdu.append(key)
-            UseSpecies.add(key)
-            UseSpeciesInRxn.add(key)
+            use_species.add(key)
+            use_species_inrxn.add(key)
             if rx.isSetStoichiometryMath():
                 ddvar = rx.getStoichiometryMath().getMath()
                 ddvar = replace_crucial_funct(Mysbml.formulaToString(ddvar))
                 ddvar = varSubstitution(
-                    ddvar, Rparams, parameters, constant_comp, RateRules)
+                    ddvar, rbig_params, parameters, constant_comp, RateRules)
                 ddvar = eval(ddvar)
                 produ = produ + str(ddvar) + " " + key + " + "
             elif rx.isSetId():
                 idrx = rx.getId()
                 if idrx in InitialAssign:
-                    ddvar = varSubstitution(
-                        InitialAssign[idrx], Rparams, parameters, constant_comp, RateRules)
+                    ddvar = varSubstitution(InitialAssign[idrx], rbig_params,
+                                            parameters, constant_comp,
+                                            RateRules)
                     ddvar = eval(ddvar)
                     produ = produ + str(ddvar) + " " + key + " + "
                 elif idrx in RateRules:
-                    ddvar = varSubstitution(
-                        RateRules[idrx], Rparams, parameters, constant_comp, RateRules)
+                    ddvar = varSubstitution(RateRules[idrx], rbig_params,
+                                            parameters, constant_comp,
+                                            RateRules)
                     ddvar = eval(ddvar)
                     kxid = Mysbml.formulaToString(
-                        reactions[x].getKineticLaw().getMath())
+                        reactions[xvar].getKineticLaw().getMath())
                     if kxid in nonConstPar:
                         StoichVar[kxid] = ddvar
                     else:
@@ -720,19 +785,20 @@ def process_sbml(file, molar=False, variables=None):
                         SPactor = idrx
                     produ = produ + str(1) + " " + key + " + "
                 elif idrx in AssignRules:
-                    ddvar = varSubstitution(
-                        AssignRules[idrx], Rparams, parameters, constant_comp, RateRules)
+                    ddvar = varSubstitution(AssignRules[idrx], rbig_params,
+                                            parameters, constant_comp,
+                                            RateRules)
                     try:
                         ddvar = eval(ddvar)
                         kxid = Mysbml.formulaToString(
-                            reactions[x].getKineticLaw().getMath())
+                            reactions[xvar].getKineticLaw().getMath())
                         SPactor = idrx
                         if kxid in nonConstPar:
                             StoichVar[kxid] = ddvar
                         produ = produ + str(1) + " " + key + " + "
                     except BaseException:
                         kxid = Mysbml.formulaToString(
-                            reactions[x].getKineticLaw().getMath())
+                            reactions[xvar].getKineticLaw().getMath())
                         if kxid in nonConstPar:
                             StoichVar[kxid] = ddvar
                         else:
@@ -744,24 +810,25 @@ def process_sbml(file, molar=False, variables=None):
                 produ = produ + str(rx.getStoichiometry()) + " " + key + " + "
 
         if len(produ) == 0:
-            NONE_added = True
+            big_none_added = True
             produ = "0 NONE"
             react = react + produ
             react = react + ",1   :::::   "
-        elif withCF == True:
+        # elif withCF == True:
+        elif withCF:
             react = react + "0 NONE" + ",1   :::::   "
             produ = "0 NONE => " + produ[0:-2] + ",1   :::::   "
         else:
             react = react + produ
             react = react[0:-2] + ",1   :::::   "
 
-        kforts = reactions[x].getKineticLaw()
+        kforts = reactions[xvar].getKineticLaw()
         pforms = replace_crucial_funct(
             Mysbml.formulaToString(kforts.getMath()))
 
         try:
-            modk = extractFunction(
-                pforms, Rparams, constant_comp, functions, functions_str)
+            modk = extract_function(
+                pforms, rbig_params, constant_comp, functions, functions_str)
         except BaseException:
             modk = ""
 
@@ -771,8 +838,9 @@ def process_sbml(file, molar=False, variables=None):
             pass
 
         modk = varSubstitution(
-            modk, Rparams, constant_par, constant_comp, RateRules)
-        if reactions[x].getReversible() == True:
+            modk, rbig_params, constant_par, constant_comp, RateRules)
+        # if reactions[xvar].getReversible() == True:
+        if reactions[xvar].getReversible():
             if modk.find("+ -") > -1:
                 modk = modk.split("+ -")
             else:
@@ -782,134 +850,139 @@ def process_sbml(file, molar=False, variables=None):
                 else:
                     modk = modk.replace("-", "+-").split("+")
 
-            Factor = 1
-            mods = extractSpecies(modk[0])
+            factor = 1
+            mods = extract_species(modk[0])
             for key in mods.split(","):
                 if key in species:
                     if HasOnlySUnits[key]:
                         pass
                     else:
-                        exponentInFormula = get_exponentSp(key, modk[0])
+                        exponent_in_formula = get_exponent_sp(key, modk[0])
                         if species_comp[key] in constant_comp:
-                            Factor = Factor * \
+                            factor = factor * \
                                 (1 / compartments[species_comp[key]]
-                                 [0])**exponentInFormula
+                                 [0])**exponent_in_formula
                         else:
-                            Factor = Factor * \
+                            factor = factor * \
                                 (1 / newSymbol(species_comp[key])
-                                 )**exponentInFormula
+                                 )**exponent_in_formula
 
             if SFactor != 1:
-                Factor = "((" + str(Factor) + ")*(" + str(SFactor) + "))"
+                factor = "((" + str(factor) + ")*(" + str(SFactor) + "))"
 
-            Pactor = 1
-            mods = extractSpecies(modk[-1])
+            pactor = 1
+            mods = extract_species(modk[-1])
             for key in mods.split(","):
                 if key in species:
                     if HasOnlySUnits[key]:
                         pass
                     else:
-                        exponentInFormula = get_exponentSp(key, modk[-1])
+                        exponent_in_formula = get_exponent_sp(key, modk[-1])
                         if species_comp[key] in constant_comp:
-                            Pactor = Pactor * \
+                            pactor = pactor * \
                                 (1 / compartments[species_comp[key]]
-                                 [0])**exponentInFormula
+                                 [0])**exponent_in_formula
                         else:
-                            Pactor = Pactor * \
+                            pactor = pactor * \
                                 (1 / newSymbol(species_comp[key])
-                                 )**exponentInFormula
+                                 )**exponent_in_formula
 
             if SPactor != 1:
-                Pactor = "((" + str(Pactor) + ")*(" + str(SPactor) + "))"
+                pactor = "((" + str(pactor) + ")*(" + str(SPactor) + "))"
 
             if modk[0] == modk[-1]:
                 if SFactor != 1:
-                    modk = "(" + modk[0] + "*(" + str(Factor) + ")"
+                    modk = "(" + modk[0] + "*(" + str(factor) + ")"
                 elif SPactor != 1:
-                    modk = "(" + modk[0] + "*(" + str(Pactor) + ")"
+                    modk = "(" + modk[0] + "*(" + str(pactor) + ")"
                 else:
                     modk = modk[0]
-            elif reactions[x].getFast() == True:
+            # elif reactions[xvar].getFast() == True:
+            elif reactions[xvar].getFast():
                 if modk[0][0] == "-" or modk[0][1] == "-":
-                    modk = "1000*(" + modk[0] + "*(" + str(Pactor) + \
-                        ")+(" + str(Factor) + ")*" + modk[-1] + ")"
+                    modk = "1000*(" + modk[0] + "*(" + str(pactor) + \
+                        ")+(" + str(factor) + ")*" + modk[-1] + ")"
                 else:
-                    modk = "1000*(" + modk[0] + "*(" + str(Factor) + \
-                        ")+(" + str(Pactor) + ")*" + modk[-1] + ")"
-                sphere = extractSpecies(modk).split(",")
-                for ss in sphere:
-                    fastRxnExp[ss] = modk
+                    modk = "1000*(" + modk[0] + "*(" + str(factor) + \
+                        ")+(" + str(pactor) + ")*" + modk[-1] + ")"
+                sphere = extract_species(modk).split(",")
+                for ssv in sphere:
+                    fast_rxn_exp[ssv] = modk
             else:
                 if modk[0][0] == "-" or modk[0][1] == "-":
-                    modk = "(" + modk[0] + "*(" + str(Pactor) + \
-                        ")+(" + str(Factor) + ")*" + modk[-1] + ")"
+                    modk = "(" + modk[0] + "*(" + str(pactor) + \
+                        ")+(" + str(factor) + ")*" + modk[-1] + ")"
                 else:
-                    modk = "(" + modk[0] + "*(" + str(Factor) + \
-                        ")+(" + str(Pactor) + ")*" + modk[-1] + ")"
+                    modk = "(" + modk[0] + "*(" + str(factor) + \
+                        ")+(" + str(pactor) + ")*" + modk[-1] + ")"
 
             if modk.count("(") > modk.count(")"):
                 modk = modk + ")"
 
-            mods = extractSpecies(modk)
+            mods = extract_species(modk)
             modk = "lambda " + mods + " : " + modk
-            for tt in mods.split(","):
-                if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                ) != "" and tt.find("delay") == -1:
-                    time_var = tt
+            for ttvar in mods.split(","):
+                if ttvar not in species and ttvar not in parameters and ttvar \
+                    not in compartments and ttvar.strip() != "" \
+                        and ttvar.find("delay") == -1:
+                    time_var = ttvar
                     break
         else:
-            mods = extractSpecies(modk)
-            if reactions[x].getFast() == True:
+            mods = extract_species(modk)
+            # if reactions[xvar].getFast() == True:
+            if reactions[xvar].getFast():
                 sphere = mods.split(",")
-                for ss in sphere:
-                    fastIrrev[ss] = modk
+                for ssv in sphere:
+                    fast_irrev[ssv] = modk
 
-                for ss in reactions[x].getListOfProducts():
-                    s = ss.getSpecies()
+                for ssv in reactions[xvar].getListOfProducts():
+                    s = ssv.getSpecies()
                     vvar = 0
                     if species[s].isSetInitialConcentration():
                         vvar = species[s].getInitialConcentration()
                     elif species[s].isSetInitialAmount():
                         vvar = species[s].getInitialAmount()
                     modk2 = modk
-                    for sp in mods.split(","):
+                    for sp_comp in mods.split(","):
                         vv2 = 0
-                        if species[sp].isSetInitialConcentration():
-                            vv2 = species[sp].getInitialConcentration()
-                        elif species[sp].isSetInitialAmount():
-                            vv2 = species[sp].getInitialAmount()
-                        modk2 = modk2.replace(sp, str(vv2))
-                    fastIrrev[ss.getSpecies()] = modk2 + "+" + str(vvar) + \
+                        if species[sp_comp].isSetInitialConcentration():
+                            vv2 = species[sp_comp].getInitialConcentration()
+                        elif species[sp_comp].isSetInitialAmount():
+                            vv2 = species[sp_comp].getInitialAmount()
+                        modk2 = modk2.replace(sp_comp, str(vv2))
+                    fast_irrev[ssv.getSpecies()] = modk2 + "+" + str(vvar) + \
                         "-" + str(newSymbol(s))
 
-            Factor = 1
+            factor = 1
             for key in mods.split(","):
                 if key in species:
                     if HasOnlySUnits[key]:
                         pass
                     else:
-                        exponentInFormula = get_exponentSp(key, modk)
+                        exponent_in_formula = get_exponent_sp(key, modk)
                         if species_comp[key] in constant_comp:
-                            Factor = Factor * \
+                            factor = factor * \
                                 (1 / compartments[species_comp[key]]
-                                 [0])**exponentInFormula
+                                 [0])**exponent_in_formula
                         else:
-                            Factor = Factor * \
+                            factor = factor * \
                                 (1 / newSymbol(species_comp[key])
-                                 )**exponentInFormula
+                                 )**exponent_in_formula
 
             if SFactor != 1:
-                Factor = "((" + str(Factor) + ")*(" + str(SFactor) + "))"
+                factor = "((" + str(factor) + ")*(" + str(SFactor) + "))"
             if SPactor != 1:
-                Factor = "((" + str(Factor) + ")*(" + str(SPactor) + "))"
+                factor = "((" + str(factor) + ")*(" + str(SPactor) + "))"
 
-            modk = "lambda " + mods + " :" + str(Factor) + "*" + modk
-            for tt in mods.split(","):
-                if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                ) != "" and tt.find("delay") == -1:
-                    time_var = tt
+            modk = "lambda " + mods + " :" + str(factor) + "*" + modk
+            for ttvar in mods.split(","):
+                if ttvar not in species and ttvar not in parameters and ttvar \
+                    not in compartments and ttvar.strip() != "" \
+                        and ttvar.find("delay") == -1:
+                    time_var = ttvar
                     break
-        if withCF == True:
+        # if withCF == True:
+        if withCF:
             moda = modk.split(":")
             for key in CFinReact:
                 val = str(sp_wCFactor[key])
@@ -922,67 +995,70 @@ def process_sbml(file, molar=False, variables=None):
                 moda[1] = "(" + moda[1] + ")*(" + val + ")"
             produ = produ + moda[0] + ":" + moda[1]
             fftopofile.write(produ + "\n")
-            NONE_added = True
+            big_none_added = True
         else:
             react = react + modk
             fftopofile.write(react + "\n")
-        # print(fastRxnExp)
-        # print(fastIrrev)
+        # print(fast_rxn_exp)
+        # print(fast_irrev)
 
     for key in CFkeys:
         fftopofile.write(key + " => 0 NONE, 0" + "\n")
 
-    doneComp = set()
+    done_comp = set()
     for key in sp_wCFactor:
         comp = species_comp[key]
-        if comp not in doneComp and comp in constant_comp:
-            doneComp.add(comp)
+        if comp not in done_comp and comp in constant_comp:
+            done_comp.add(comp)
             fftopofile.write(comp + " => 0 NONE, 0" + "\n")
 
-    for y in range(len(AlgebrRules)):
-        ss = varSubstitution(
-            AlgebrRules[y], {}, constant_par, constant_comp, RateRules)
-        spss = extractSpecies(ss).split(",")
+    for yvar in range(len(algebr_rules)):
+        ssv = varSubstitution(
+            algebr_rules[yvar], {}, constant_par, constant_comp, RateRules)
+        spss = extract_species(ssv).split(",")
         try:
-            ss = eval("lambda " + ",".join(spss) + " : " + ss)
-            sf = [newSymbol(x) for x in spss]
-            ss = ss(*sf)
+            ssv = eval("lambda " + ",".join(spss) + " : " + ssv)
+            sf = [newSymbol(xvar) for xvar in spss]
+            ssv = ssv(*sf)
         except BaseException:
             pass
-        AlgebrRules[y] = "Eq(" + str(ss) + ",0)"
+        algebr_rules[yvar] = "Eq(" + str(ssv) + ",0)"
 
-    modifiersSp = {}
-    for x in reactions:
-        for rx in reactions[x].getListOfModifiers():
-            UseSpecies.add(rx.getSpecies())
-            modifiersSp[rx.getSpecies()] = newSymbol(rx.getSpecies())
+    modifierssp = {}
+    for xvar in reactions:
+        for rx in reactions[xvar].getListOfModifiers():
+            use_species.add(rx.getSpecies())
+            modifierssp[rx.getSpecies()] = newSymbol(rx.getSpecies())
             fftopofile.write("0 NONE => " + rx.getSpecies() + ", 0" + "\n")
-            NONE_added = True
+            big_none_added = True
 
-    AlgebrRules = sympify(AlgebrRules)
+    algebr_rules = sympify(algebr_rules)
 
-    for x in EventAssign:
-        if x not in species and x not in parameters and x not in compartments and x.find(
-                "status") == -1 and x.find("finish") == -1 and x.find("dtime") == -1 and x.find("delay") == -1:
-            UseSpecies.add(x)
-            fftopofile.write("0 NONE => " + x + ", 1\n")
-            NONE_added = True
+    for xvar in EventAssign:
+        if xvar not in species and xvar not in parameters and xvar \
+                not in compartments and xvar.find("status") == -1 \
+                and xvar.find("finish") == -1 and xvar.find("dtime") == -1 \
+                and xvar.find("delay") == -1:
+            use_species.add(xvar)
+            fftopofile.write("0 NONE => " + xvar + ", 1\n")
+            big_none_added = True
 
-    for x in RateRules:
-        if x in parameters or x in compartments or x in species:
-            UseSpecies.add(x)
-            modk = extractFunction(
-                RateRules[x], {}, compartments, functions, functions_str)
+    for xvar in RateRules:
+        if xvar in parameters or xvar in compartments or xvar in species:
+            use_species.add(xvar)
+            modk = extract_function(
+                RateRules[xvar], {}, compartments, functions, functions_str)
 
-            mods = extractSpecies(RateRules[x])
-            for tt in mods.split(","):
-                if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                ) != "" and tt.find("delay") == -1:
-                    time_var = tt
+            mods = extract_species(RateRules[xvar])
+            for ttvar in mods.split(","):
+                if ttvar not in species and ttvar not in parameters and ttvar \
+                    not in compartments and ttvar.strip() != "" \
+                        and ttvar.find("delay") == -1:
+                    time_var = ttvar
                     break
 
             if modk == "":
-                modk = RateRules[x]
+                modk = RateRules[xvar]
 
             reversible = False
             if modk.find("+ -") > -1:
@@ -1001,66 +1077,66 @@ def process_sbml(file, molar=False, variables=None):
             if reversible:
                 Pactors = []
                 for iv in range(len(modk)):
-                    Pactor = 1
-                    mods = extractSpecies(modk[iv])
+                    pactor = 1
+                    mods = extract_species(modk[iv])
                     for key in mods.split(","):
                         if key in species:
                             if HasOnlySUnits[key]:
                                 pass
                             else:
-                                exponentInFormula = get_exponentSp(
+                                exponent_in_formula = get_exponent_sp(
                                     key, modk[iv])
                                 if species_comp[key] in constant_comp:
-                                    Pactor = Pactor * \
+                                    pactor = pactor * \
                                         (1 / compartments[species_comp[key]]
-                                         [0])**exponentInFormula
+                                         [0])**exponent_in_formula
                                 else:
-                                    Pactor = Pactor * \
+                                    pactor = pactor * \
                                         (1 / newSymbol(species_comp[key])
-                                         )**exponentInFormula
-                    Pactors.append(Pactor)
+                                         )**exponent_in_formula
+                    Pactors.append(pactor)
 
             else:
-                Factor = 1
-                mods = extractSpecies(modk)
+                factor = 1
+                mods = extract_species(modk)
                 for key in mods.split(","):
                     if key in species:
                         if HasOnlySUnits[key]:
                             pass
                         else:
-                            exponentInFormula = get_exponentSp(key, modk)
+                            exponent_in_formula = get_exponent_sp(key, modk)
                             if species_comp[key] in constant_comp:
-                                Factor = Factor * \
+                                factor = factor * \
                                     (1 / compartments[species_comp[key]]
-                                     [0])**exponentInFormula
+                                     [0])**exponent_in_formula
                             else:
-                                Factor = Factor * \
+                                factor = factor * \
                                     (1 / newSymbol(species_comp[key])
-                                     )**exponentInFormula
+                                     )**exponent_in_formula
 
             try:
                 float(modk)
-                if x in species:
-                    if HasOnlySUnits[x]:
+                if xvar in species:
+                    if HasOnlySUnits[xvar]:
                         pass
                     else:
-                        comp = compartments[species_comp[x]][0]
+                        comp = compartments[species_comp[xvar]][0]
                         modk = str(
                             eval(
                                 modk +
                                 "*" +
                                 str(comp) +
                                 "*" +
-                                str(Factor)))
-                fftopofile.write("0 NONE" + " => " + x + ", " + modk + "\n")
+                                str(factor)))
+                fftopofile.write("0 NONE" + " => " + xvar + ", " + modk + "\n")
             except BaseException:
                 if not reversible:
-                    modk = modk.replace(x, "$" + x)
+                    modk = modk.replace(xvar, "$" + xvar)
                     modk = varSubstitution(
                         modk, {}, constant_par, constant_comp, RateRules)
-                    modk = "lambda " + extractSpecies(modk) + " : " + modk
-                    modk = modk.replace("$" + x, x)
-                    modk = modk + "*" + str(Factor)
+                    modk = "lambda " + extract_species(modk) + " : " + modk
+                    modk = modk.replace("$" + xvar, xvar)
+                    modk = modk + "*" + str(factor)
                 else:
                     modks = "("
                     for iv in range(len(modk) - 1):
@@ -1070,119 +1146,129 @@ def process_sbml(file, molar=False, variables=None):
                         modk[len(modk) - 1] + \
                         "*(" + str(Pactors[len(modk) - 1]) + ")" + ")"
                     modk = modks
-                    modk = modk.replace(x, "$" + x)
+                    modk = modk.replace(xvar, "$" + xvar)
                     modk = varSubstitution(
                         modk, {}, constant_par, constant_comp, RateRules)
-                    modk = "lambda " + extractSpecies(modk) + " : " + modk
-                    modk = modk.replace("$" + x, x)
+                    modk = "lambda " + extract_species(modk) + " : " + modk
+                    modk = modk.replace("$" + xvar, xvar)
 
-                if x in species:
-                    if HasOnlySUnits[x]:
+                if xvar in species:
+                    if HasOnlySUnits[xvar]:
                         pass
                     else:
-                        comp = compartments[species_comp[x]][0]
+                        comp = compartments[species_comp[xvar]][0]
                         modk = modk + "*" + str(comp)
-                    fftopofile.write("0 NONE" + " => " + x +
+                    fftopofile.write("0 NONE" + " => " + xvar +
                                      ",1   :::::   " + modk + "\n")
                 else:
-                    fftopofile.write("0 NONE" + " => " + x +
+                    fftopofile.write("0 NONE" + " => " + xvar +
                                      ",1   :::::   " + modk + "\n")
         else:
             pass
-            #modk = RateRules[x]
-            #fftopofile.write("0 NONE"+" => "+ x +", "+modk+"\n")
+            # modk = RateRules[xvar]
+            # fftopofile.write("0 NONE"+" => "+ xvar +", "+modk+"\n")
 
-        NONE_added = True
+        big_none_added = True
 
-    for x in AssignRules:
-        if x in species or x in parameters or x in compartments:
-            UseSpecies.add(x)
-            fftopofile.write("0 NONE" + " => " + x + ",0" + "\n")
-        NONE_added = True
-        ss = varSubstitution(
-            AssignRules[x], Rparams, parameters, compartments, RateRules)
-        sss = extractSpecies(ss)
-        for tt in sss.split(","):
-            if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-            ) != "" and tt.find("delay") == -1:
-                time_var = tt
+    for xvar in AssignRules:
+        if xvar in species or xvar in parameters or xvar in compartments:
+            use_species.add(xvar)
+            fftopofile.write("0 NONE" + " => " + xvar + ",0" + "\n")
+        big_none_added = True
+        ssv = varSubstitution(
+            AssignRules[xvar], rbig_params, parameters, compartments,
+            RateRules)
+        sss = extract_species(ssv)
+        for ttvar in sss.split(","):
+            if ttvar not in species and ttvar not in parameters and ttvar \
+                not in compartments and ttvar.strip() != "" \
+                    and ttvar.find("delay") == -1:
+                time_var = ttvar
                 break
 
     timevar = None
-    for x in InitialAssign:
-        ss = varSubstitution(
-            InitialAssign[x], Rparams, parameters, compartments, RateRules)
-        sss = extractSpecies(ss)
-        for tt in sss.split(","):
-            if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-            ) != "" and tt.find("delay") == -1:
-                time_var = tt
+    for xvar in InitialAssign:
+        ssv = varSubstitution(
+            InitialAssign[xvar], rbig_params, parameters, compartments,
+            RateRules)
+        sss = extract_species(ssv)
+        for ttvar in sss.split(","):
+            if ttvar not in species and ttvar not in parameters and ttvar \
+                not in compartments and ttvar.strip() != "" \
+                    and ttvar.find("delay") == -1:
+                time_var = ttvar
                 timevar = 0
                 break
 
-    for x in nonConstant_comp:
-        if x not in RateRules and x not in AssignRules and x not in AlgebrRules:
-            fftopofile.write("0 NONE" + " => " + x + ",0" + "\n")
-        NONE_added = True
+    for xvar in nonConstant_comp:
+        if xvar not in RateRules and xvar not in AssignRules and xvar \
+                not in algebr_rules:
+            fftopofile.write("0 NONE" + " => " + xvar + ",0" + "\n")
+        big_none_added = True
 
-    for x in nonConstPar:
-        if x not in RateRules and x not in AssignRules:
-            if x in StoichVar:
-                ss = StoichVar[x]
+    for xvar in nonConstPar:
+        if xvar not in RateRules and xvar not in AssignRules:
+            if xvar in StoichVar:
+                ssv = StoichVar[xvar]
                 try:
-                    float(ss)
+                    float(ssv)
                     fftopofile.write(
-                        "0 NONE" + " => " + x + "," + str(ss) + "\n")
+                        "0 NONE" + " => " + xvar + "," + str(ssv) + "\n")
                 except BaseException:
-                    ss = varSubstitution(
-                        ss, Rparams, constant_par, compartments, RateRules)
-                    fftopofile.write(
-                        "0 NONE" + " => " + x + ",1 ::::: lambda " + extractSpecies(ss) + " : " + ss + "\n")
+                    ssv = varSubstitution(
+                        ssv, rbig_params, constant_par, compartments,
+                        RateRules)
+                    fftopofile.write("0 NONE" + " => " + xvar
+                                     + ",1 ::::: lambda "
+                                     + extract_species(ssv) + " : " + ssv
+                                     + "\n")
             else:
-                fftopofile.write("0 NONE" + " => " + x + ",0" + "\n")
-        NONE_added = True
+                fftopofile.write("0 NONE" + " => " + xvar + ",0" + "\n")
+        big_none_added = True
 
-    for x in StoichPar:
-        ss = StoichPar[x]
-        if x not in RateRules and x not in AssignRules:
+    for xvar in StoichPar:
+        ssv = StoichPar[xvar]
+        if xvar not in RateRules and xvar not in AssignRules:
             try:
-                float(ss)
-                fftopofile.write("0 NONE" + " => " + x + "," + str(ss) + "\n")
+                float(ssv)
+                fftopofile.write("0 NONE" + " => " + xvar + ","
+                                 + str(ssv) + "\n")
             except BaseException:
-                ss = varSubstitution(
-                    ss, Rparams, constant_par, compartments, RateRules)
+                ssv = varSubstitution(
+                    ssv, rbig_params, constant_par, compartments, RateRules)
                 fftopofile.write(
-                    "0 NONE" + " => " + x + ",1 ::::: lambda " + extractSpecies(ss) + " : " + ss + "\n")
+                    "0 NONE" + " => " + xvar + ",1 ::::: lambda "
+                    + extract_species(ssv) + " : " + ssv + "\n")
 
     if len(reactions) == 0:
-        for x in species:
-            sp = species[x]
-            if x in AssignRules:
+        for xvar in species:
+            sp_comp = species[xvar]
+            if xvar in AssignRules:
                 pass
-            elif x in RateRules:
+            elif xvar in RateRules:
                 pass
             else:
-                UseSpecies.add(x)
-                modifiersSp[x] = newSymbol(x)
-                fftopofile.write(x + " => 0 NONE, 0.0\n")
+                use_species.add(xvar)
+                modifierssp[xvar] = newSymbol(xvar)
+                fftopofile.write(xvar + " => 0 NONE, 0.0\n")
 
-        for x in parameters:
-            if x in InitialAssign and x not in RateRules:
-                fftopofile.write(x + " => 0 NONE, 0.0\n")
+        for xvar in parameters:
+            if xvar in InitialAssign and xvar not in RateRules:
+                fftopofile.write(xvar + " => 0 NONE, 0.0\n")
 
         if len(nonConstPar) == 0:
-            for x in parameters:
-                fftopofile.write(x + " => 0 NONE, 0.0\n")
+            for xvar in parameters:
+                fftopofile.write(xvar + " => 0 NONE, 0.0\n")
         else:
-            for x in constant_par:
-                fftopofile.write(x + " => 0 NONE, 0.0\n")
+            for xvar in constant_par:
+                fftopofile.write(xvar + " => 0 NONE, 0.0\n")
 
-        NONE_added = True
+        big_none_added = True
 
-    for x in species:
-        if x not in UseSpecies:
-            fftopofile.write(x + " => 0 NONE, 0.0\n")
-            NONE_added = True
+    for xvar in species:
+        if xvar not in use_species:
+            fftopofile.write(xvar + " => 0 NONE, 0.0\n")
+            big_none_added = True
 
     if time_var is not None:
         if time_var in StoichPar:
@@ -1196,28 +1282,30 @@ def process_sbml(file, molar=False, variables=None):
         if variables:
             if key in variables:
                 fftopofile.write(key + " => 0 NONE, 0\n")
-                NONE_added = True
+                big_none_added = True
 
     fftopofile.write("\n@Concentrations\n")
 
-    for x in species:
-        sp = species[x]
-        if x in fastRxnExp and sp.getBoundaryCondition() == False:
-            ss = extractSpecies(fastRxnExp[x])
+    for xvar in species:
+        sp_comp = species[xvar]
+        # if xvar in fast_rxn_exp and sp_comp.getBoundaryCondition() == False:
+        if xvar in fast_rxn_exp and not sp_comp.getBoundaryCondition():
+            ssv = extract_species(fast_rxn_exp[xvar])
             spsum = ""
             sbsum = ""
             val = 0
             bal = 0
             syms = []
             noBoundary = True
-            for s in ss.split(","):
+            for s in ssv.split(","):
                 syms.append(newSymbol(s))
                 if species[s].isSetInitialConcentration():
                     vvar = species[s].getInitialConcentration()
                 elif species[s].isSetInitialAmount():
                     vvar = species[s].getInitialAmount()
 
-                if species[s].getBoundaryCondition() == False:
+                # if species[s].getBoundaryCondition() == False:
+                if not species[s].getBoundaryCondition():
                     val = val + vvar
                     spsum = spsum + s + "+"
                 else:
@@ -1227,239 +1315,282 @@ def process_sbml(file, molar=False, variables=None):
 
             if noBoundary:
                 spsum = spsum[0:-1]
-                eqst = sympify(["Eq(" + fastRxnExp[x] + ",0)",
+                eqst = sympify(["Eq(" + fast_rxn_exp[xvar] + ",0)",
                                 "Eq(" + spsum + "," + str(val) + ")"])
             else:
-                eqst = sympify(["Eq(" + fastRxnExp[x] + ",0)",
+                eqst = sympify(["Eq(" + fast_rxn_exp[xvar] + ",0)",
                                 "Eq(" + sbsum + "," + str(bal) + ")"])
             sol = solve(eqst, syms)
             if sol:
-                val1 = sol[newSymbol(x)]
+                val1 = sol[newSymbol(xvar)]
             else:
                 val1 = 0
-        elif x in fastIrrev and sp.getBoundaryCondition() == False:
-            eqst = sympify("Eq(" + fastIrrev[x] + ",0)")
-            ssz = extractSpecies(fastIrrev[x])
+        # elif xvar in fast_irrev and sp_comp.getBoundaryCondition() == False:
+        elif xvar in fast_irrev and not sp_comp.getBoundaryCondition():
+            eqst = sympify("Eq(" + fast_irrev[xvar] + ",0)")
+            ssz = extract_species(fast_irrev[xvar])
             sol = solve(eqst, ssz)
             if sol:
                 val1 = sol[0]
             else:
                 val1 = 0
-        elif sp.isSetInitialConcentration():
-            val1 = sp.getInitialConcentration()
-        elif sp.isSetInitialAmount():
-            val1 = sp.getInitialAmount()
+        elif sp_comp.isSetInitialConcentration():
+            val1 = sp_comp.getInitialConcentration()
+        elif sp_comp.isSetInitialAmount():
+            val1 = sp_comp.getInitialAmount()
         else:
             val1 = ""
 
-        if x in InitialAssign or x in SpInitialConc and x not in fastRxnExp and x not in fastIrrev:
+        if xvar in InitialAssign or xvar in SpInitialConc and xvar \
+                not in fast_rxn_exp and xvar not in fast_irrev:
             try:
-                ss = varSubstitution(
-                    InitialAssign[x], Rparams, parameters, compartments, RateRules)
+                ssv = varSubstitution(
+                    InitialAssign[xvar],
+                    rbig_params,
+                    parameters,
+                    compartments,
+                    RateRules)
                 for ini in SpInitialConc:
-                    ss = ss.replace(ini, str(SpInitialConc[ini]))
+                    ssv = ssv.replace(ini, str(SpInitialConc[ini]))
             except BaseException:
-                ss = str(SpInitialConc[x])
+                ssv = str(SpInitialConc[xvar])
             try:
-                val1 = eval(ss)
+                val1 = eval(ssv)
             except BaseException:
                 val1 = 0
-                val2 = ss
-        if x in AssignRules:
-            ss = varSubstitution(
-                AssignRules[x], Rparams, parameters, compartments, RateRules)
-            sss = extractSpecies(ss)
-            for tt in sss.split(","):
-                if tt not in species and tt not in parameters and tt not in compartments and tt.strip(
-                ) != "" and tt.find("delay") == -1:
-                    time_var = tt
+                val2 = ssv
+        if xvar in AssignRules:
+            ssv = varSubstitution(
+                AssignRules[xvar], rbig_params, parameters, compartments,
+                RateRules)
+            sss = extract_species(ssv)
+            for ttvar in sss.split(","):
+                if ttvar not in species and ttvar not in parameters and ttvar \
+                    not in compartments and ttvar.strip() != "" \
+                        and ttvar.find("delay") == -1:
+                    time_var = ttvar
                     break
             try:
-                val2 = eval(ss)
+                val2 = eval(ssv)
                 if float(val2):
                     if val1 == "":
                         val1 = val2
             except BaseException:
-                val2 = ss
+                val2 = ssv
                 if val1 == "":
                     val1 = 0
 
-        if x not in EventAssign:
+        if xvar not in EventAssign:
             cmod = ", "
-            if x in modifiersSp or x not in UseSpecies and x not in constant_species:
-                ssphere = newSymbol(x)
-                ddvar = solve(AlgebrRules, ssphere)
+            if xvar in modifierssp or xvar not in use_species and xvar \
+                    not in constant_species:
+                ssphere = newSymbol(xvar)
+                ddvar = solve(algebr_rules, ssphere)
                 if ddvar:
                     cmod = cmod + "lambda " + \
-                        extractSpecies(
-                            str(ddvar[ssphere])) + " : " + str(ddvar[ssphere])
+                        extract_species(str(ddvar[ssphere])) \
+                        + " : " + str(ddvar[ssphere])
             if cmod == ", ":
                 cmod = ""
-            if sp.getBoundaryCondition() == False and x not in AssignRules:
-                if species_comp[x] in nonConstant_comp and molar and x not in UseSpeciesInRxn:
-                    fftopofile.write(sp.getId() + " , " + str(val1) + cmod + ", lambda " +
-                                     species_comp[x] + " :" + str(val1) + "/" + species_comp[x] + "\n")
+            # if sp_comp.getBoundaryCondition() == False and xvar \
+            if not sp_comp.getBoundaryCondition() and xvar \
+                    not in AssignRules:
+                if species_comp[xvar] in nonConstant_comp and molar and xvar \
+                        not in use_species_inrxn:
+                    fftopofile.write(
+                        sp_comp.getId() + " , " + str(val1) + cmod
+                        + ", lambda " + species_comp[xvar] + " :"
+                        + str(val1) + "/" + species_comp[xvar] + "\n")
                 else:
                     # if str(val1) in val2:
-                    #fftopofile.write(sp.getId()+" , "+str(val1)+cmod+", lambda "+sss+":"+val2+"\n");
+                    # fftopofile.write(
+                    #     sp_comp.getId() + " , " + str(val1) + cmod
+                    #     + ", lambda " + sss + ":" + val2 + "\n");
                     # else:
                     fftopofile.write(
-                        sp.getId() + " , " + str(val1) + cmod + "\n")
-            elif x in AssignRules:
-                newFunct = extractFunction(
-                    str(val2), Rparams, compartments, functions, functions_str)
-                if newFunct == "":
-                    newFunct = val2
-                fftopofile.write(sp.getId() + " ," + str(val1) + ", lambda " +
-                                 extractSpecies(newFunct) + ": " + str(newFunct) + str(cmod) + "\n")
-            elif sp.getBoundaryCondition() == True and x in RateRules:
-                fftopofile.write(sp.getId() + " , " + str(val1) + cmod + "\n")
-            elif sp.getBoundaryCondition() == True and x not in RateRules and x not in AssignRules and cmod.strip() != "" and x not in EventAssign:
-                fftopofile.write(sp.getId() + " , " + str(val1) + cmod + "\n")
+                        sp_comp.getId() + " , " + str(val1) + cmod + "\n")
+            elif xvar in AssignRules:
+                new_funct = extract_function(
+                    str(val2), rbig_params, compartments, functions,
+                    functions_str)
+                if new_funct == "":
+                    new_funct = val2
+                fftopofile.write(sp_comp.getId() + " ," + str(val1) +
+                                 ", lambda " +
+                                 extract_species(new_funct) + ": " +
+                                 str(new_funct) + str(cmod) + "\n")
+            # elif sp_comp.getBoundaryCondition() == True \
+            #     and xvar in RateRules:
+            elif sp_comp.getBoundaryCondition() and xvar in RateRules:
+                fftopofile.write(sp_comp.getId() + " , " + str(val1)
+                                 + cmod + "\n")
+            # elif sp_comp.getBoundaryCondition() == True and xvar \
+            elif sp_comp.getBoundaryCondition() and xvar \
+                not in RateRules and xvar not in AssignRules \
+                    and cmod.strip() != "" and xvar not in EventAssign:
+                fftopofile.write(sp_comp.getId() + " , " + str(val1)
+                                 + cmod + "\n")
             else:
-                fftopofile.write(sp.getId() + " , " + str(val1) +
-                                 ", lambda " + sp.getId() + ": " + str(val1) + cmod + "\n")
+                fftopofile.write(sp_comp.getId() + " , " + str(val1) +
+                                 ", lambda " + sp_comp.getId() + ": "
+                                 + str(val1) + cmod + "\n")
         else:
-            for ig in range(len(EventAssign[x])):
+            for ig in range(len(EventAssign[xvar])):
                 cmod = ", "
-                cmod = cmod + EventAssign[x][ig]
-                if sp.getBoundaryCondition() == False:
+                cmod = cmod + EventAssign[xvar][ig]
+                # if sp_comp.getBoundaryCondition() == False:
+                if not sp_comp.getBoundaryCondition():
                     fftopofile.write(
-                        sp.getId() + " , " + str(val1) + cmod + "\n")
+                        sp_comp.getId() + " , " + str(val1) + cmod + "\n")
                 else:
-                    ss = cmod[1:].split(":")
-                    lamPa = ss[0].replace("lambda", "").strip()
-                    cond = ss[1].split("if")[1].split("and")[0].strip()
-                    conPa = ss[1].split("if")[0].strip()
-                    fftopofile.write(sp.getId() + " , " + str(val1) + ", lambda " +
-                                     lamPa + ": None if not " + cond + " else " + conPa + "\n")
+                    ssv = cmod[1:].split(":")
+                    lam_pa = ssv[0].replace("lambda", "").strip()
+                    cond = ssv[1].split("if")[1].split("and")[0].strip()
+                    con_pa = ssv[1].split("if")[0].strip()
+                    fftopofile.write(sp_comp.getId() + " , " + str(val1)
+                                     + ", lambda " + lam_pa + ": None if not "
+                                     + cond + " else " + con_pa + "\n")
 
     if time_var is not None and time_var not in StoichPar:
         fftopofile.write(time_var + ", 0, lambda " + time_var +
                          " : round(" + time_var + ",10)\n")
-        NONE_added = True
+        big_none_added = True
 
-    for x in RateRules:
-        if x in parameters and x not in EventAssign:
-            fftopofile.write(x + "," + str(parameters[x][0]) + "\n")
-            NONE_added = True
-        elif x in compartments:
-            fftopofile.write(x + " , " + str(compartments[x][0]) + "\n")
-            NONE_added = True
+    for xvar in RateRules:
+        if xvar in parameters and xvar not in EventAssign:
+            fftopofile.write(xvar + "," + str(parameters[xvar][0]) + "\n")
+            big_none_added = True
+        elif xvar in compartments:
+            fftopofile.write(xvar + " , " + str(compartments[xvar][0]) + "\n")
+            big_none_added = True
         else:
             pass
-            #fftopofile.write(x+" , 1\n")
-            #NONE_added = True
+            # fftopofile.write(xvar+" , 1\n")
+            # big_none_added = True
 
     writtenEvent = {}
-    for x in EventAssign:
-        if x not in species:
-            for ih in range(len(EventAssign[x])):
-                if x in parameters:
-                    ss = str(parameters[x][0])
-                elif x in nonConstant_comp:
-                    ss = str(nonConstant_comp[x][0])
+    for xvar in EventAssign:
+        if xvar not in species:
+            for ih in range(len(EventAssign[xvar])):
+                if xvar in parameters:
+                    ssv = str(parameters[xvar][0])
+                elif xvar in nonConstant_comp:
+                    ssv = str(nonConstant_comp[xvar][0])
                 else:
-                    if x.find("finish") > -1 or x.find("delay") > -1:
-                        ss = "1"
-                    elif x.find("status") > -1:
-                        if IniValTrig[x.split("_")[1]] == True:
-                            ss = "1"
-                        elif IniValTrig[x.split("_")[1]] == False:
-                            ss = "0"
+                    if xvar.find("finish") > -1 or xvar.find("delay") > -1:
+                        ssv = "1"
+                    elif xvar.find("status") > -1:
+                        # if IniValTrig[xvar.split("_")[1]] == True:
+                        if IniValTrig[xvar.split("_")[1]]:
+                            ssv = "1"
+                        # elif IniValTrig[xvar.split("_")[1]] == False:
+                        elif not IniValTrig[xvar.split("_")[1]]:
+                            ssv = "0"
                     else:
-                        ss = "0"
-                Eev = x + "," + ss + "," + EventAssign[x][ih] + "\n"
+                        ssv = "0"
+                Eev = xvar + "," + ssv + "," + EventAssign[xvar][ih] + "\n"
                 if Eev not in writtenEvent:
                     writtenEvent[Eev] = True
                     fftopofile.write(Eev)
 
-    for x in AssignRules:
-        if x not in species:
+    for xvar in AssignRules:
+        if xvar not in species:
             try:
-                float(AssignRules[x])
-                fftopofile.write(x + ", " + AssignRules[x] + "\n")
+                float(AssignRules[xvar])
+                fftopofile.write(xvar + ", " + AssignRules[xvar] + "\n")
             except BaseException:
-                ss = varSubstitution(
-                    AssignRules[x], Rparams, constant_par, compartments, RateRules)
-                if x in StoichPar:
-                    fftopofile.write(x + ", 1, lambda " +
-                                     extractSpecies(ss) + " : " + ss + "\n")
+                ssv = varSubstitution(AssignRules[xvar], rbig_params,
+                                      constant_par, compartments, RateRules)
+                if xvar in StoichPar:
+                    fftopofile.write(xvar + ", 1, lambda " +
+                                     extract_species(ssv) + " : " + ssv + "\n")
                 else:
-                    fftopofile.write(x + ", 0, lambda " +
-                                     extractSpecies(ss) + " : " + ss + "\n")
+                    fftopofile.write(xvar + ", 0, lambda " +
+                                     extract_species(ssv) + " : " + ssv + "\n")
 
-    for x in InitialAssign:
-        if x not in species and x not in RateRules:
+    for xvar in InitialAssign:
+        if xvar not in species and xvar not in RateRules:
             try:
-                float(AssignRules[x])
-                fftopofile.write(x + ", " + InitialAssign[x] + "\n")
+                float(AssignRules[xvar])
+                fftopofile.write(xvar + ", " + InitialAssign[xvar] + "\n")
             except BaseException:
-                ss = varSubstitution(
-                    InitialAssign[x], Rparams, parameters, compartments, RateRules)
+                ssv = varSubstitution(InitialAssign[xvar], rbig_params,
+                                      parameters, compartments, RateRules)
                 if not molar:
-                    fftopofile.write(x + ", 0, lambda " +
-                                     extractSpecies(ss) + " : " + ss + "\n")
+                    fftopofile.write(xvar + ", 0, lambda " +
+                                     extract_species(ssv) + " : " + ssv + "\n")
 
-    for x in nonConstPar:
-        if x not in RateRules and x not in AssignRules:  # and x not in InitialAssign:
-            ssphere = newSymbol(x)
-            ddvar = solve(AlgebrRules, ssphere)
-            ss = str(parameters[x][0] if parameters[x][0] is not None else 0)
+    for xvar in nonConstPar:
+        if xvar not in RateRules and xvar not in AssignRules:
+            # and xvar not in InitialAssign:
+            ssphere = newSymbol(xvar)
+            ddvar = solve(algebr_rules, ssphere)
+            ssv = str(parameters[xvar][0] if parameters[xvar][0]
+                      is not None else 0)
             try:
-                fftopofile.write(
-                    x + "," + ss + "," + "lambda " + extractSpecies(str(ddvar[ssphere])) + " : " + str(ddvar[ssphere]) + "\n")
+                fftopofile.write(xvar + "," + ssv + "," + "lambda " +
+                                 extract_species(str(ddvar[ssphere]))
+                                 + " : " + str(ddvar[ssphere]) + "\n")
             except BaseException:
                 try:
-                    float(ss)
-                    fftopofile.write(x + "," + ss + "\n")
+                    float(ssv)
+                    fftopofile.write(xvar + "," + ssv + "\n")
                 except BaseException:
                     pass
-        NONE_added = True
+        big_none_added = True
 
-    for x in nonConstant_comp:
-        if x in InitialAssign and x not in RateRules and x not in AssignRules:
+    for xvar in nonConstant_comp:
+        if xvar in InitialAssign and xvar not in RateRules and xvar \
+                not in AssignRules:
             fftopofile.write(
-                x + "," + str(eval(str(nonConstant_comp[x][0]))) + "\n" "\n")
-            NONE_added = True
-        elif x not in RateRules and x not in AssignRules and x not in EventAssign:
-            ssphere = newSymbol(x)
-            ddvar = solve(AlgebrRules, ssphere)
-            fftopofile.write(x + "," + str(eval(str(nonConstant_comp[x][0]))) + "," + "lambda " + extractSpecies(
-                str(ddvar[ssphere])) + " : " + str(ddvar[ssphere]) + "\n" "\n")
-            NONE_added = True
+                xvar + "," + str(eval(str(nonConstant_comp[xvar][0])))
+                + "\n" "\n")
+            big_none_added = True
+        elif xvar not in RateRules and xvar not in AssignRules \
+                and xvar not in EventAssign:
+            ssphere = newSymbol(xvar)
+            ddvar = solve(algebr_rules, ssphere)
+            fftopofile.write(xvar + ","
+                             + str(eval(str(nonConstant_comp[xvar][0])))
+                             + "," + "lambda " +
+                             extract_species(str(ddvar[ssphere]))
+                             + " : " + str(ddvar[ssphere]) + "\n" "\n")
+            big_none_added = True
 
     if len(reactions) == 0:
         if len(nonConstPar) == 0:
-            for x in parameters:
+            for xvar in parameters:
                 try:
-                    fftopofile.write(
-                        x + "," + str(parameters[x][0]) + ", lambda :" + str(eval(parameters[x][0])) + "\n")
+                    fftopofile.write(xvar + "," + str(parameters[xvar][0])
+                                     + ", lambda :"
+                                     + str(eval(parameters[xvar][0])) + "\n")
                 except BaseException:
-                    fftopofile.write(x + "," + "0" + ", lambda :" +
-                                     str(parameters[x][0]) + "\n")
+                    fftopofile.write(xvar + "," + "0" + ", lambda :" +
+                                     str(parameters[xvar][0]) + "\n")
         else:
-            for x in constant_par:
+            for xvar in constant_par:
                 try:
-                    fftopofile.write(
-                        x + "," + str(parameters[x][0]) + ", lambda :" + str(eval(parameters[x][0])) + "\n")
+                    fftopofile.write(xvar + "," + str(parameters[xvar][0])
+                                     + ", lambda :"
+                                     + str(eval(parameters[xvar][0])) + "\n")
                 except BaseException:
-                    fftopofile.write(x + "," + "0" + ", lambda :" +
-                                     str(parameters[x][0]) + "\n")
+                    fftopofile.write(xvar + "," + "0" + ", lambda :" +
+                                     str(parameters[xvar][0]) + "\n")
 
     for key in CFkeys:
         fftopofile.write(key + ", " + str(parameters[key][0]) + "\n")
 
     for key in StoichPar:
-        if key not in AssignRules and key not in InitialAssign and key not in RateRules:
-            ss = StoichPar[key]
+        if key not in AssignRules and key not in InitialAssign \
+                and key not in RateRules:
+            ssv = StoichPar[key]
             fftopofile.write(key + ", " + str(1) + "\n")
 
-    doneComp = set()
+    done_comp = set()
     for key in sp_wCFactor:
         comp = species_comp[key]
-        if comp not in doneComp and comp in constant_comp:
-            doneComp.add(comp)
+        if comp not in done_comp and comp in constant_comp:
+            done_comp.add(comp)
             fftopofile.write(comp + ", " + str(constant_comp[comp][0]) + "\n")
 
     for key in constant_comp:
@@ -1468,7 +1599,7 @@ def process_sbml(file, molar=False, variables=None):
                 fftopofile.write(
                     key + ", " + str(constant_comp[key][0]) + "\n")
 
-    if NONE_added:
+    if big_none_added:
         fftopofile.write("NONE , 1.0\n")
 
     fftopofile.close()
