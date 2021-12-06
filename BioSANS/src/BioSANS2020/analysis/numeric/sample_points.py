@@ -14,10 +14,15 @@ def sample_points(edata, nsamp=50000):
     their labels and returns interpolated points.
     Args:
         edata : two dimensional array of data & labels (data, label).
-                data[0] is time and data[1:] are trajectories
+                data is a 3D array where each row are the individual
+                trajectories. Each trajectory is a 2D numpy array where
+                the first column is time and the remaining columns are
+                the corresponding components.
         nsamp : number of points to sample from data
     Returns:
-        sdata : interpolated data points
+        sdata : interpolated data points with sdata[0] is time and the
+                remaining rows are interpolated data that corresponds to
+                the time in sdata[0]
         label_name : labels
     """
 
