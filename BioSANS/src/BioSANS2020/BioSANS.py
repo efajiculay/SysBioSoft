@@ -231,9 +231,9 @@ def load_data2(plot=False):
     if plot:
         plot_traj(data, slabels, items, globals2.plotted, mix_plot=True,
                   logx=False, logy=False, normalize=False)
-    print(data[0], "\n\n")
-    print(data[1], "\n\n")
-    print(data[2], "\n")
+    # print(data[0], "\n\n")
+    # print(data[1], "\n\n")
+    # print(data[2], "\n")
     current_data = (data, slabels)
     gui.messagebox.showinfo("showinfo", "Trajectory loaded succesfully")
     # print(time.time()-t_o)
