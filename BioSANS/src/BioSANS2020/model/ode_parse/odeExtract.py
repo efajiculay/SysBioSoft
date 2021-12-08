@@ -1,23 +1,24 @@
-from sympy import *
+from sympy import sympify, expand, Matrix
 import numpy as np
-from BioSANS2020.gui_functs.scrollable_text import *
+from BioSANS2020.gui_functs.scrollable_text import INSERT
+from BioSANS2020.gui_functs.scrollable_text import prepare_scroll_text
 
 
-done_parsing = set()
+DONE_PARSING = set()
 
 
-def process(x):
-    global done_parsing
-    xx = x.strip("*").strip().replace("*/", "/")
-    if xx[0] == "/":
-        xx = "1" + xx
-    if xx[-1] == "/":
-        xx = xx.strip("/")
-    val = sympify(xx.strip("*"))
-    if val in done_parsing:
+def process(xvar):
+    global DONE_PARSING
+    xxvar = xvar.strip("*").strip().replace("*/", "/")
+    if xxvar[0] == "/":
+        xxvar = "1" + xxvar
+    if xxvar[-1] == "/":
+        xxvar = xxvar.strip("/")
+    val = sympify(xxvar.strip("*"))
+    if val in DONE_PARSING:
         return None
     else:
-        done_parsing.add(val)
+        DONE_PARSING.add(val)
     return val
 
 
@@ -100,52 +101,53 @@ def get_prop_stoich(dxdt):
         propExt(expr, prop)
         dAdt.append(expr)
 
-    w = prop
-    V = [[0 for x in range(len(w))] for y in range(len(dAdt))]
+    w_var = prop
+    v_stoich = [[0 for xvar in range(len(w_var))] for y in range(len(dAdt))]
 
     for i in range(len(dAdt)):
-        for j in range(len(w)):
+        for j in range(len(w_var)):
             s = 0
-            for xx in termExt(dAdt[i]):
-                x = sympify(xx) / w[j]
+            for xxvar in termExt(dAdt[i]):
+                xvar = sympify(xxvar) / w_var[j]
                 try:
-                    s = s + float(x)
+                    s = s + float(xvar)
                 except BaseException:
                     pass
-            V[i][j] = s
+            v_stoich[i][j] = s
 
-    return Matrix(V), Matrix(w)
+    return Matrix(v_stoich), Matrix(w_var)
 
 
 def print_stoich_prop(dxdt):
-    global done_parsing
-    done_parsing = set()
+    global DONE_PARSING
+    DONE_PARSING = set()
     print()
-    V, w = get_prop_stoich(dxdt)
-    for t in V * w:
-        print(t)
+    v_stoich, w_var = get_prop_stoich(dxdt)
+    for tvar in v_stoich * w_var:
+        print(tvar)
     print()
 
-    for c in np.array(V):
+    for c in np.array(v_stoich):
         print([round(y, 4) for y in c])
     print()
 
-    for c in np.array(w):
+    for c in np.array(w_var):
         print(c)
 
 
-def transform_to_rxn(x, dxdt, xo, ks, items):
-    global done_parsing
+def transform_to_rxn(xvar, dxdt, xo, ks, items):
+    global DONE_PARSING
 
     if items:
         text = prepare_scroll_text(items)
-        def ffrint(x): return text.insert(INSERT, x + "\n")
+        def ffrint(xvar): return text.insert(INSERT, xvar + "\n")
     else:
-        def ffrint(x): return print(" ".join([str(y) for y in x]), end="")
+        def ffrint(xvar): return print(" ".join([str(y) for y in xvar]),
+                                       end="")
 
-    done_parsing = set()
-    V, w = get_prop_stoich(dxdt)
-    S = np.around(np.array(V).astype(float), 3)
+    DONE_PARSING = set()
+    v_stoich, w_var = get_prop_stoich(dxdt)
+    S = np.around(np.array(v_stoich).astype(float), 3)
     Rxn = []
     Ksn = set()
     ind = 0
@@ -156,31 +158,31 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
         for i in range(len(col)):
             if col[i] != 0:
                 if col[i] < 0:
-                    R = R + str(abs(col[i])) + " " + x[i] + " " + "+ "
+                    R = R + str(abs(col[i])) + " " + xvar[i] + " " + "+ "
                 else:
-                    P = P + str(abs(col[i])) + " " + x[i] + " " + "+ "
+                    P = P + str(abs(col[i])) + " " + xvar[i] + " " + "+ "
         if R.strip() == "":
             R = "0 NONE"
         if P.strip() == "":
             P = "0 NONE"
 
         inSp = []
-        for s in w[ind].free_symbols:
+        for s in w_var[ind].free_symbols:
             ss = str(s)
-            if ss in x:
+            if ss in xvar:
                 inSp.append(ss)
             else:
                 Ksn.add(ss)
         inSp = ",".join(inSp)
         Rxn.append(R.strip("+ ") + " => " + P.strip("+ ") +
-                   ", 1 ::::: lambda " + inSp + " : " + str(w[ind]))
+                   ", 1 ::::: lambda " + inSp + " : " + str(w_var[ind]))
         ind = ind + 1
 
     ffrint("Function_Definitions:")
     for k in Ksn:
         ffrint(k.strip() + " = type actual value") if k.strip(
         ) not in ks else ffrint(k.strip() + " = " + ks[k.strip()])
-    for c in x:
+    for c in xvar:
         ffrint(c.strip() + "_ini = type actual value") if c.strip(
         ) not in xo else ffrint(c.strip() + "_ini = " + xo[c.strip()])
 
@@ -191,7 +193,7 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
 
     ffrint("")
     ffrint("@CONCENTRATION")
-    for c in x:
+    for c in xvar:
         ffrint(c + " , " + c.strip() + "_ini")
     ffrint("NONE, 1")
     return text
@@ -200,34 +202,36 @@ def transform_to_rxn(x, dxdt, xo, ks, items):
 def odedxdt_to_topo(mfile, items):
     ddvar = open(mfile, "r")
     print()
-    x = []
+    xvar = []
     xo = {}
     ks = {}
     dxdt = []
     last = ""
-    for xx in ddvar:
-        if last == "ODE_DECLARATIONS" and xx.strip(
+    for xxvar in ddvar:
+        if last == "ODE_DECLARATIONS" and xxvar.strip(
         ) not in ["INI_CONCENTRATIONS:", "RATE_CONSTANTS:"]:
-            if xx.strip() != "":
-                row = xx.split("=")
-                x.append(row[0].strip())
+            if xxvar.strip() != "":
+                row = xxvar.split("=")
+                xvar.append(row[0].strip())
                 dxdt.append(row[1])
-        elif last == "INI_CONCENTRATIONS" and xx.strip() not in ["ODE_DECLARATIONS:", "RATE_CONSTANTS:"]:
-            if xx.strip() != "":
-                row = xx.split("=")
+        elif last == "INI_CONCENTRATIONS" and xxvar.strip() \
+                not in ["ODE_DECLARATIONS:", "RATE_CONSTANTS:"]:
+            if xxvar.strip() != "":
+                row = xxvar.split("=")
                 xo[row[0].strip()] = row[1].strip()
-        elif last == "RATE_CONSTANTS" and xx.strip() not in ["ODE_DECLARATIONS:", "INI_CONCENTRATIONS:"]:
-            if xx.strip() != "":
-                row = xx.split("=")
+        elif last == "RATE_CONSTANTS" and xxvar.strip() \
+                not in ["ODE_DECLARATIONS:", "INI_CONCENTRATIONS:"]:
+            if xxvar.strip() != "":
+                row = xxvar.split("=")
                 ks[row[0].strip()] = row[1].strip()
-        elif xx.strip() == "ODE_DECLARATIONS:":
+        elif xxvar.strip() == "ODE_DECLARATIONS:":
             last = "ODE_DECLARATIONS"
-        elif xx.strip() == "INI_CONCENTRATIONS:":
+        elif xxvar.strip() == "INI_CONCENTRATIONS:":
             last = "INI_CONCENTRATIONS"
-        elif xx.strip() == "RATE_CONSTANTS:":
+        elif xxvar.strip() == "RATE_CONSTANTS:":
             last = "RATE_CONSTANTS"
 
     # print_stoich_prop(dxdt)
-    return transform_to_rxn(x, dxdt, xo, ks, items)
+    return transform_to_rxn(xvar, dxdt, xo, ks, items)
 
 # odedxdt_to_topo("NewText.txt")

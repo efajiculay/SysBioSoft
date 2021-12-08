@@ -89,6 +89,10 @@ OPERS_LIST2 = {
 }
 
 
+def eval_exp(xvar):
+    return eval(xvar)
+
+
 def get_exponent_sp(key, modk):
     """This function extract the exponent of component or species key
     from a given propensity expression modk.
@@ -188,7 +192,7 @@ def extract_species(modk):
             float(xvar)
         except BaseException:
             try:
-                float(eval(xvar))
+                float(eval_exp(xvar))
             except BaseException:
                 sp_comp.add(xvar)
     return ",".join(sp_comp)
@@ -299,9 +303,9 @@ def extract_function(pforms, rbig_params, compartments, functions,
                     + ",".join([str(ssi) for ssi in ssv]) + " : " \
                     + pforms[ind2:]
                 try:
-                    modk = str(eval(modk)(*ssv))
+                    modk = str(eval_exp(modk)(*ssv))
                 except BaseException:
-                    modk = str(eval(modk[0:-1])(*ssv))
+                    modk = str(eval_exp(modk[0:-1])(*ssv))
             break
         else:
             pass
@@ -434,7 +438,15 @@ def funct_redefine_var(modk, ssv):
 
 
 def get_sbml_units(model, sbml_units):
-    """Returns units dictionary"""
+    """Returns units dictionary from sbml file. The model is defined by
+    the following python syntax;
+        model = libsbml.SBMLReader().readSBML(sbml_file).getModel()
+    Args:
+        model : model definition like shown above
+        sbml_units : a dictionary of sbml unit equivalence
+     Returns :
+        units_sbml : dictionary of sbml units associated to the file
+    """
     units_sbml = {}
     if model.getNumUnitDefinitions() > 0:
         for xvar in model.getListOfUnitDefinitions():
@@ -449,7 +461,22 @@ def get_sbml_units(model, sbml_units):
 
 
 def get_compartments_details(model, molar):
-    """Returns compartments dictionary"""
+    """Returns compartment dictionary from sbml file. The model is
+    defined by the following python syntax;
+        model = libsbml.SBMLReader().readSBML(sbml_file).getModel()
+    Args:
+        model : model definition like shown above
+        molar : True if conc. is in molar else False
+    Returns:
+        compartments : dictionary of all compartments with the following
+                       example format { 'c1' : [size, units]}
+        constant_comp : dictionary of constant compartments
+                        example format { 'c1' : [size, units]}
+        non_constant_comp : dictionary of non constant compartments
+                            example format { 'c1' : [size, units]}
+        orig_size : dictionary of original size of compartment
+                    example format { 'c1' : size}
+    """
     compartments = {}
     constant_comp = {}
     non_constant_comp = {}
@@ -473,7 +500,23 @@ def get_compartments_details(model, molar):
 
 
 def get_species_details(model):
-    """Returns species dictionary"""
+    """Returns species dictionary from sbml file. The model is
+    defined by the following python syntax;
+        model = libsbml.SBMLReader().readSBML(sbml_file).getModel()
+    Args:
+        model : model definition like shown above
+    Returns:
+        species : dictionary of all species with the following
+                       example format { id : species_label }
+        species_comp : dictionary of species compartments
+                       example format { species_label : compartment }
+        constant_species : dictionary of constant species
+                           example format { species_label : True }
+        has_only_sunits : dictionary of species with only substance as
+                          example format { id : True }
+        sp_wcfactor : dictionary of convertion factor
+                      example format { id : conversion factor }
+    """
     species = {}
     species_comp = {}
     constant_species = {}
@@ -494,7 +537,7 @@ def get_species_details(model):
 
 
 def get_initial_conc(species):
-    """Returns a dictionary of initial concentration"""
+    """Returns a dictionary of initial concentration from species"""
     sp_initial_conc = {}
     for xvar in species:
         sp_comp = species[xvar]
@@ -601,7 +644,7 @@ def process_sbml(file, molar=False, variables=None):
         ssv = ssv.replace("lambda(", "")[:-1]
         ssv = extract_var_func(ssv)
         ssv = " : ".join(ssv)
-        functions[xvar.getId()] = eval("lambda " + ssv)
+        functions[xvar.getId()] = eval_exp("lambda " + ssv)
         functions_str[xvar.getId()] = "lambda " + ssv
         globals2.execFunctions.append(xvar.getId() + " = lambda " + ssv)
         exec(xvar.getId() + " = lambda " + ssv, globals())
@@ -624,7 +667,7 @@ def process_sbml(file, molar=False, variables=None):
             ssv = str(compartments[species_comp[sp_comp]][0]) \
                 + "*(" + ssv + ")"
         try:
-            ssv = eval(par_substitution(ssv, parameters))
+            ssv = eval_exp(par_substitution(ssv, parameters))
         except BaseException:
             ssv = par_substitution(ssv, parameters)
         initial_assign[sp_comp] = ssv
@@ -661,7 +704,7 @@ def process_sbml(file, molar=False, variables=None):
             ssv = replace_crucial_funct(
                 Mysbml.formulaToString(xvar.getPriority().getMath()))
             # ssv = sp_substitution(ssv,sp_initial_conc)
-            prior_var = ssv  # eval(ssv)
+            prior_var = ssv  # eval_exp(ssv)
             priorities_var.append(prior_var)
 
         ssv = replace_crucial_funct(par_substitution(
@@ -688,7 +731,7 @@ def process_sbml(file, molar=False, variables=None):
             for yvar in xvar.getListOfEventAssignments():
                 ini_val_trig[yvar.getVariable()] = ini_tv
                 try:
-                    ssv = str(eval(par_substitution(
+                    ssv = str(eval_exp(par_substitution(
                         Mysbml.formulaToString(yvar.getMath()), constant_par)))
                 except BaseException:
                     ssv = par_substitution(
@@ -865,10 +908,10 @@ def process_sbml(file, molar=False, variables=None):
         ssv = assign_rules[xvar]
         ssv = par_substitution(ssv, parameters)
         if xvar in compartments:
-            compartments[xvar][0] = eval(ssv)
+            compartments[xvar][0] = eval_exp(ssv)
         elif xvar in parameters:
             try:
-                parameters[xvar][0] = eval(ssv)
+                parameters[xvar][0] = eval_exp(ssv)
             except BaseException:
                 pass
 
@@ -924,7 +967,7 @@ def process_sbml(file, molar=False, variables=None):
                 ddvar = replace_crucial_funct(Mysbml.formulaToString(ddvar))
                 ddvar = var_substitution(
                     ddvar, rbig_params, parameters, constant_comp, rate_rules)
-                ddvar = eval(ddvar)
+                ddvar = eval_exp(ddvar)
                 react = react + str(ddvar) + " " + key + " + "
             elif rrx.isSetId():
                 idrx = rrx.getId()
@@ -932,13 +975,13 @@ def process_sbml(file, molar=False, variables=None):
                     ddvar = var_substitution(initial_assign[idrx], rbig_params,
                                              parameters, constant_comp,
                                              rate_rules)
-                    ddvar = eval(ddvar)
+                    ddvar = eval_exp(ddvar)
                     react = react + str(ddvar) + " " + key + " + "
                 elif idrx in rate_rules:
                     ddvar = var_substitution(rate_rules[idrx], rbig_params,
                                              parameters, constant_comp,
                                              rate_rules)
-                    ddvar = eval(ddvar)
+                    ddvar = eval_exp(ddvar)
                     kxid = Mysbml.formulaToString(
                         reactions[xvar].getKineticLaw().getMath())
                     if kxid in non_const_par:
@@ -977,7 +1020,7 @@ def process_sbml(file, molar=False, variables=None):
                 ddvar = replace_crucial_funct(Mysbml.formulaToString(ddvar))
                 ddvar = var_substitution(
                     ddvar, rbig_params, parameters, constant_comp, rate_rules)
-                ddvar = eval(ddvar)
+                ddvar = eval_exp(ddvar)
                 produ = produ + str(ddvar) + " " + key + " + "
             elif rrx.isSetId():
                 idrx = rrx.getId()
@@ -985,13 +1028,13 @@ def process_sbml(file, molar=False, variables=None):
                     ddvar = var_substitution(initial_assign[idrx], rbig_params,
                                              parameters, constant_comp,
                                              rate_rules)
-                    ddvar = eval(ddvar)
+                    ddvar = eval_exp(ddvar)
                     produ = produ + str(ddvar) + " " + key + " + "
                 elif idrx in rate_rules:
                     ddvar = var_substitution(rate_rules[idrx], rbig_params,
                                              parameters, constant_comp,
                                              rate_rules)
-                    ddvar = eval(ddvar)
+                    ddvar = eval_exp(ddvar)
                     kxid = Mysbml.formulaToString(
                         reactions[xvar].getKineticLaw().getMath())
                     if kxid in non_const_par:
@@ -1005,7 +1048,7 @@ def process_sbml(file, molar=False, variables=None):
                                              parameters, constant_comp,
                                              rate_rules)
                     try:
-                        ddvar = eval(ddvar)
+                        ddvar = eval_exp(ddvar)
                         kxid = Mysbml.formulaToString(
                             reactions[xvar].getKineticLaw().getMath())
                         spactor_var = idrx
@@ -1233,7 +1276,7 @@ def process_sbml(file, molar=False, variables=None):
             algebr_rules[yvar], {}, constant_par, constant_comp, rate_rules)
         spss = extract_species(ssv).split(",")
         try:
-            ssv = eval("lambda " + ",".join(spss) + " : " + ssv)
+            ssv = eval_exp("lambda " + ",".join(spss) + " : " + ssv)
             ssi = [newSymbol(xvar) for xvar in spss]
             ssv = ssv(*ssi)
         except BaseException:
@@ -1338,7 +1381,7 @@ def process_sbml(file, molar=False, variables=None):
                     else:
                         comp = compartments[species_comp[xvar]][0]
                         modk = str(
-                            eval(
+                            eval_exp(
                                 modk +
                                 "*" +
                                 str(comp) +
@@ -1571,7 +1614,7 @@ def process_sbml(file, molar=False, variables=None):
             except BaseException:
                 ssv = str(sp_initial_conc[xvar])
             try:
-                val1 = eval(ssv)
+                val1 = eval_exp(ssv)
             except BaseException:
                 val1 = 0
                 val2 = ssv
@@ -1587,7 +1630,7 @@ def process_sbml(file, molar=False, variables=None):
                     time_var = ttvar
                     break
             try:
-                val2 = eval(ssv)
+                val2 = eval_exp(ssv)
                 if float(val2):
                     if val1 == "":
                         val1 = val2
@@ -1684,7 +1727,7 @@ def process_sbml(file, molar=False, variables=None):
             # fftopofile.write(xvar+" , 1\n")
             # big_none_added = True
 
-    writtenEvent = {}
+    written_event = {}
     for xvar in event_assign:
         if xvar not in species:
             for ihi in range(len(event_assign[xvar])):
@@ -1706,8 +1749,8 @@ def process_sbml(file, molar=False, variables=None):
                         ssv = "0"
                 eev_var = xvar + "," + ssv + "," + event_assign[xvar][ihi] \
                     + "\n"
-                if eev_var not in writtenEvent:
-                    writtenEvent[eev_var] = True
+                if eev_var not in written_event:
+                    written_event[eev_var] = True
                     fftopofile.write(eev_var)
 
     for xvar in assign_rules:
@@ -1760,7 +1803,7 @@ def process_sbml(file, molar=False, variables=None):
         if xvar in initial_assign and xvar not in rate_rules and xvar \
                 not in assign_rules:
             fftopofile.write(
-                xvar + "," + str(eval(str(non_constant_comp[xvar][0])))
+                xvar + "," + str(eval_exp(str(non_constant_comp[xvar][0])))
                 + "\n" "\n")
             big_none_added = True
         elif xvar not in rate_rules and xvar not in assign_rules \
@@ -1768,7 +1811,7 @@ def process_sbml(file, molar=False, variables=None):
             ssphere = newSymbol(xvar)
             ddvar = solve(algebr_rules, ssphere)
             fftopofile.write(xvar + ","
-                             + str(eval(str(non_constant_comp[xvar][0])))
+                             + str(eval_exp(str(non_constant_comp[xvar][0])))
                              + "," + "lambda " +
                              extract_species(str(ddvar[ssphere]))
                              + " : " + str(ddvar[ssphere]) + "\n" "\n")
@@ -1780,7 +1823,8 @@ def process_sbml(file, molar=False, variables=None):
                 try:
                     fftopofile.write(xvar + "," + str(parameters[xvar][0])
                                      + ", lambda :"
-                                     + str(eval(parameters[xvar][0])) + "\n")
+                                     + str(eval_exp(parameters[xvar][0]))
+                                     + "\n")
                 except BaseException:
                     fftopofile.write(xvar + "," + "0" + ", lambda :" +
                                      str(parameters[xvar][0]) + "\n")
@@ -1789,7 +1833,8 @@ def process_sbml(file, molar=False, variables=None):
                 try:
                     fftopofile.write(xvar + "," + str(parameters[xvar][0])
                                      + ", lambda :"
-                                     + str(eval(parameters[xvar][0])) + "\n")
+                                     + str(eval_exp(parameters[xvar][0]))
+                                     + "\n")
                 except BaseException:
                     fftopofile.write(xvar + "," + "0" + ", lambda :" +
                                      str(parameters[xvar][0]) + "\n")
