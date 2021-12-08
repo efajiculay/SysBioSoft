@@ -14,7 +14,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
     np.random.seed(int(rr * 100))
     tnew = []
     V2 = V**2
-    S = V.T
+    stch_var = V.T
     dto = t[-1] - t[-2]
     tchlen = len(globals2.tCheck)
 
@@ -110,7 +110,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
             K = np.random.poisson(D * dt)
             Allpos = True
             cc = {}
-            bb = np.sum(K * S[:, UpdateSp], 0)
+            bb = np.sum(K * stch_var[:, UpdateSp], 0)
             for x in range(len(Spc)):
                 holder = Z[-1][x] + bb[x]
                 if holder >= 0 or Spc[x] in globals2.modified:
@@ -187,7 +187,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                         K = np.round(np.random.poisson(D * dt)) * Kmul
                         Allpos = True
                         cc = {}
-                        bb = np.sum(K * S[:, UpdateSp], 0)
+                        bb = np.sum(K * stch_var[:, UpdateSp], 0)
                         for x in range(len(Spc)):
                             holder = C[x] + bb[x]
                             if holder >= 0 or Spc[x] in globals2.modified:
@@ -215,7 +215,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                         K = np.round(np.random.poisson(D * dt)) * Kmul
                         Allpos = True
                         cc = {}
-                        bb = np.sum(K * S[:, UpdateSp], 0)
+                        bb = np.sum(K * stch_var[:, UpdateSp], 0)
                         for x in range(len(Spc)):
                             holder = C[x] + bb[x]
                             if holder >= 0 or Spc[x] in globals2.modified:
@@ -292,7 +292,7 @@ def step_3to5(D, Lcri, dt1):
 def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[
 ], Spc=None, Spc2=None, concz=None, yconc=None, UpdateSp=None):
     get_globals(rfile)
-    S = V.T
+    stch_var = V.T
     Z = [[concz[z] for z in Spc]]
     tmax = t[-1]
 
@@ -330,7 +330,7 @@ def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x] + S[i][UpdateSp[x]]
+                        holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.modified:
                             concz[Spc[x]] = holder
                         else:

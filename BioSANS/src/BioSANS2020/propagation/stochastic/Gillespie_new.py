@@ -13,7 +13,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
     tmax = t[-1]
     np.random.seed(int(rr * 100))
     tnew = []
-    S = V.T
+    stch_var = V.T
     AllSp = [z for z in Sp]
     Spc = [z for z in Sp if z not in reserve_events_words]
     Spc2 = [z for z in Sp if z in reserve_events_words]
@@ -41,7 +41,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x] + S[i][UpdateSp[x]]
+                        holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.modified:
                             concz[Spc[x]] = holder
                         else:
@@ -89,7 +89,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x] + S[i][UpdateSp[x]]
+                        holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.modified:
                             concz[Spc[x]] = holder
                         else:

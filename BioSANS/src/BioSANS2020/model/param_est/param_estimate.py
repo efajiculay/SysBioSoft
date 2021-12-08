@@ -5,7 +5,7 @@
 import numpy as np
 from scipy.integrate import odeint
 from BioSANS2020.propagation.deterministic.ode_int import *
-from BioSANS2020.model.param_est.myMCEM import *
+from BioSANS2020.model.param_est.my_mcem import *
 from tkinter import filedialog
 from BioSANS2020.gui_functs.scrollable_text import *
 from scipy import optimize
@@ -125,7 +125,7 @@ def param_estimate(conc, t, Sp, Ks, Rr, Rp, V, items,
     if mode == "MCEM":
         f = 1
         k = 10
-        ks, er_min = run_MCEM(f, npar, f, k * f, positive_only=True, likelihood=custom_likelihood,
+        ks, er_min = run_mcem(f, npar, f, k * f, positive_only=True, likelihood=custom_likelihood,
                               arg=(data, conc, t, Sp, Ks, Rr, Rp, V, Cmiss, Kmiss, molar, rfile))
         er = ave_abs_dev(ks, (data, conc, t, Sp, Ks, Rr,
                               Rp, V, Cmiss, Kmiss, molar, rfile))
@@ -136,7 +136,7 @@ def param_estimate(conc, t, Sp, Ks, Rr, Rp, V, items,
         rands = [(x + 1) * np.random.uniform(0, 1) for x in range(200000)]
         ind = 0
         while er > 1.0e-6 and k <= 10000:
-            ks, er_min = run_MCEM(min(f, 10), npar, f, k * f, positive_only=True, likelihood=custom_likelihood,
+            ks, er_min = run_mcem(min(f, 10), npar, f, k * f, positive_only=True, likelihood=custom_likelihood,
                                   arg=(data, conc, t, Sp, Ks, Rr, Rp, V, Cmiss, Kmiss, molar, rfile), rr=rands[ind])
             er = ave_abs_dev(ks, (data, conc, t, Sp, Ks, Rr,
                                   Rp, V, Cmiss, Kmiss, molar, rfile))

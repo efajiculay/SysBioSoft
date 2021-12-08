@@ -26,29 +26,29 @@ def runge_kutta_forth(Sp, Ks, conc, Rr, Rp, V, t, delt, nSp, molar=False):
 
     yconc = {x: conc[x] for x in nSp}
 
-    dAdt = rk4_model(Sp, Ks, conc, Rr, Rp, V, t, molar)
-    newA1 = dAdt * delt
+    da_dt = rk4_model(Sp, Ks, conc, Rr, Rp, V, t, molar)
+    newA1 = da_dt * delt
     ind = 0
     for sp in Sp:
         yconc[sp] = conc[sp] + 0.5 * newA1[ind]
         ind = ind + 1
 
-    dAdt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + 0.5 * delt, molar)
-    newA2 = dAdt * delt
+    da_dt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + 0.5 * delt, molar)
+    newA2 = da_dt * delt
     ind = 0
     for sp in Sp:
         yconc[sp] = conc[sp] + 0.5 * newA2[ind]
         ind = ind + 1
 
-    dAdt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + 0.5 * delt, molar)
-    newA3 = dAdt * delt
+    da_dt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + 0.5 * delt, molar)
+    newA3 = da_dt * delt
     ind = 0
     for sp in Sp:
         yconc[sp] = conc[sp] + 0.5 * newA3[ind]
         ind = ind + 1
 
-    dAdt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + delt, molar)
-    newA4 = dAdt * delt
+    da_dt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + delt, molar)
+    newA4 = da_dt * delt
 
     NEW = (newA1 + 2.0 * newA2 + 2.0 * newA3 + newA4) / 6.0
 
@@ -221,7 +221,7 @@ def rungek4a_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10,
     slabels = [a for a in Sp]
     apply_rules(conc, yconc, [0], [conc[a] for a in Sp], slabels)
     y = [conc[a] for a in Sp]
-    S = [y]
+    stch_var = [y]
     if not implicit:
         tnow = t[0]
         tnew.append(tnow)
@@ -242,7 +242,7 @@ def rungek4a_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10,
                 delt = 5 * dt
                 apply_rules(conc, yconc)
                 tindex = tindex + 1
-            S.append([conc[a] for a in Sp])
+            stch_var.append([conc[a] for a in Sp])
             tnew.append(tnow)
     else:
         tnow = t[0]
@@ -263,7 +263,7 @@ def rungek4a_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10,
                     Sp, Ks, y_old, Rr, Rp, V, tnow, dt, nSp, molar)
                 delt = 5 * dt
                 apply_rules(conc, yconc)
-                S.append([conc[a] for a in Sp])
+                stch_var.append([conc[a] for a in Sp])
                 tnew.append(tnow)
                 tindex = tindex + 1
-    return [tnew, np.array(S)]
+    return [tnew, np.array(stch_var)]

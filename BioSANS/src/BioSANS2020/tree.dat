@@ -48,12 +48,12 @@ BIOSANS2020
 │   │   │   __init__.py
 │   │
 │   ├───ode_parse
-│   │   │   odeExtract.py
+│   │   │   ode_extract.py
 │   │   │   __init__.py
 │   │   │
 │   │
 │   ├───param_est
-│   │   │   myMCEM.py
+│   │   │   my_mcem.py
 │   │   │   param_estimate.py
 │   │   │   param_slider.py
 │   │   │   __init__.py

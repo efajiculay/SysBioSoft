@@ -59,7 +59,7 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
     elif mode == "fofCo":
         f = f.subs(equiKs)
 
-    S = Matrix(V)
+    stch_var = Matrix(V)
     # Cs might have change after call
     for x in Sp:
         Cs[x] = Symbol(x, real=True, negative=False)
@@ -67,9 +67,9 @@ def LNA_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None, molar=False, mode=None):
 
     Ss = []
     nz = []
-    for row in range(S.shape[0]):
-        if sum(abs(S[row, :])) != 0 and slabels[row][0] != "-":
-            Ss.append(list(S[row, :]))
+    for row in range(stch_var.shape[0]):
+        if sum(abs(stch_var[row, :])) != 0 and slabels[row][0] != "-":
+            Ss.append(list(stch_var[row, :]))
             nz.append(row)
     Ss = Matrix(Ss)
 

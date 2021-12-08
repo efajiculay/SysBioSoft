@@ -36,7 +36,7 @@ def Euler_int(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, LNAsolve=False,
     yconc = {x: sconc[x] for x in sconc}
     conc = {x: sconc[x] for x in sconc}
     apply_rules(conc, yconc)
-    S = [[conc[z] for z in Sp]]
+    stch_var = [[conc[z] for z in Sp]]
 
     if not implicit:
         tnow = t[0]
@@ -48,10 +48,10 @@ def Euler_int(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, LNAsolve=False,
             tnow = tnow + m[1]
             ind = 0
             for sp in Sp:
-                conc[sp] = S[-1][ind] + mm[ind]
+                conc[sp] = stch_var[-1][ind] + mm[ind]
                 ind = ind + 1
             apply_rules(conc, yconc)
-            S.append([conc[z] for z in Sp])
+            stch_var.append([conc[z] for z in Sp])
             tnew.append(tnow)
         if LNAsolve:
             return LNA_steady_state(t, Sp, Ks, conc, Rr, Rp, V, items=items)
@@ -80,7 +80,7 @@ def Euler_int(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, LNAsolve=False,
                 C = [conc[z] for z in Sp]
                 for sp in Sp:
                     conc[sp] = max(0, conc[sp])
-                S.append(C)
+                stch_var.append(C)
 
                 tnew.append(tnow)
                 tindex = tindex + 1
@@ -94,7 +94,7 @@ def Euler_int(t, Sp, Ks, sconc, Rr, Rp, V, delX=10, LNAsolve=False,
                 C = [conc[z] for z in Sp]
                 for sp in Sp:
                     conc[sp] = max(0, conc[sp])
-    return (tnew, np.array(S))
+    return (tnew, np.array(stch_var))
 
 
 def Euler2_model(Sp, Ks, conc, Rr, Rp, V, molar=False):
@@ -153,7 +153,7 @@ def Euler2_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10, LNAsolve=False,
     get_globals(rfile)
     tnew = []
     delt = t[-1] - t[-2]
-    S = [[conc[z] for z in Sp]]
+    stch_var = [[conc[z] for z in Sp]]
     eps = 1.0e-4
 
     if not implicit:
@@ -172,7 +172,7 @@ def Euler2_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10, LNAsolve=False,
                 delt = 5 * dt
                 tindex = tindex + 1
                 tnow = tnow + dt
-            S.append([conc[z] for z in Sp])
+            stch_var.append([conc[z] for z in Sp])
             tnew.append(tnow)
 
         if LNAsolve:
@@ -191,8 +191,8 @@ def Euler2_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10, LNAsolve=False,
                 dt = t[tindex] - tnow
                 conc, e = EulerWerEst(dt, Sp, Ks, conc_old, Rr, Rp, V, molar)
                 delt = 5 * dt
-                S.append([conc[z] for z in Sp])
+                stch_var.append([conc[z] for z in Sp])
                 tnow = tnow + dt
                 tnew.append(tnow)
                 tindex = tindex + 1
-    return (tnew, np.array(S))
+    return (tnew, np.array(stch_var))

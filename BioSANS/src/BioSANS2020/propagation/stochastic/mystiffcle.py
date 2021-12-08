@@ -40,7 +40,7 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
     yconc = {x: sconc[x] for x in sconc}
     conc = {x: sconc[x] for x in sconc}
     apply_rules(conc, yconc)
-    S = [[conc[z] for z in Sp]]
+    stch_var = [[conc[z] for z in Sp]]
 
     if not implicit:
         tnow = t[0]
@@ -51,10 +51,10 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
             tnow = tnow + m[1]
             ind = 0
             for sp in Sp:
-                conc[sp] = S[-1][ind] + mm[ind]
+                conc[sp] = stch_var[-1][ind] + mm[ind]
                 ind = ind + 1
             apply_rules(conc, yconc)
-            S.append([conc[z] for z in Sp])
+            stch_var.append([conc[z] for z in Sp])
             for sp in Sp:
                 conc[sp] = max(0, conc[sp])
             tnew.append(tnow)
@@ -82,7 +82,7 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
                 C = [conc[z] for z in Sp]
                 for sp in Sp:
                     conc[sp] = max(0, conc[sp])
-                S.append(C)
+                stch_var.append(C)
 
                 tnew.append(tnow)
                 tindex = tindex + 1
@@ -96,7 +96,7 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
                 C = [conc[z] for z in Sp]
                 for sp in Sp:
                     conc[sp] = max(0, conc[sp])
-    return (tnew, np.array(S))
+    return (tnew, np.array(stch_var))
 
 
 def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
@@ -107,11 +107,11 @@ def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
     yconc = {x: sconc[x] for x in sconc}
     conc = {x: sconc[x] for x in sconc}
     apply_rules(conc, yconc)
-    S = [[conc[z] for z in Sp]]
+    stch_var = [[conc[z] for z in Sp]]
     tnow = t[0]
     tnew = [tnow]
     dv = 0
-    C = S[-1]
+    C = stch_var[-1]
     while abs(tnow - t[-1]) > 1.0e-10:
         m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, 1, True))
         mm = m[0].reshape(1, len(m[0]))[0]
@@ -123,7 +123,7 @@ def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
         apply_rules(conc, yconc)
         C = [conc[z] for z in Sp]
         if dv == div - 1:
-            S.append(C)
+            stch_var.append(C)
             tnew.append(tnow)
             dv = 0
         else:
@@ -131,4 +131,4 @@ def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
         for sp in Sp:
             conc[sp] = max(0, conc[sp])
 
-    return (tnew, np.array(S))
+    return (tnew, np.array(stch_var))

@@ -51,12 +51,12 @@ def LNA_non_steady_state_old(
     dt = t[-1] - t[-2]
     tnew = [0]
 
-    for S in zoftime[1:]:
+    for stch_var in zoftime[1:]:
         ind = 0
         for sp in Sp:
-            conc[sp] = S[ind]
+            conc[sp] = stch_var[ind]
             ind = ind + 1
-        AA = lna_ss_jacobian(LNA_model_ss, S, Sp, V, Ks, Rr, Rp)
+        AA = lna_ss_jacobian(LNA_model_ss, stch_var, Sp, V, Ks, Rr, Rp)
         f = propensity_vec_molar(Ks, conc, Rr, Rp, True)
         BB = np.matmul(np.matmul(V, np.diag(f.flatten())), V.T)
 
@@ -92,14 +92,14 @@ def LNA_non_steady_state(conc, t, Sp, Ks, Rr, Rp, V,
     dt = t[-1] - t[-2]
     tnew = [0]
 
-    # for S in zoftime[1:]:
-    S = np.array(z)
+    # for stch_var in zoftime[1:]:
+    stch_var = np.array(z)
     while tnew[-1] < t[-1]:
         ind = 0
         for sp in Sp:
-            conc[sp] = S[ind]
+            conc[sp] = stch_var[ind]
             ind = ind + 1
-        AA = lna_ss_jacobian(LNA_model_ss, S, Sp, V, Ks, Rr, Rp)
+        AA = lna_ss_jacobian(LNA_model_ss, stch_var, Sp, V, Ks, Rr, Rp)
         f = propensity_vec_molar(Ks, conc, Rr, Rp, True)
         BB = np.matmul(np.matmul(V, np.diag(f.flatten())), V.T)
 
@@ -107,12 +107,12 @@ def LNA_non_steady_state(conc, t, Sp, Ks, Rr, Rp, V,
         B = np.nan_to_num(BB)
 
         fxCovr = LNA_cov_model(A, B, C)
-        fxConc = LNA_ode_model(S, t, Sp, Ks, Rr, Rp, V, molar)
+        fxConc = LNA_ode_model(stch_var, t, Sp, Ks, Rr, Rp, V, molar)
 
         h1 = np.abs(fxCovr) + 1.0e-30
         dt = max(min(delX * np.min(1 / h1), dt), 1.0e-4)
         tnew.append(tnew[-1] + dt)
-        S = S + fxConc * dt
+        stch_var = stch_var + fxConc * dt
         C = C + fxCovr * dt
         Cov.append([x for x in C.flatten()[half]])
 
@@ -134,13 +134,13 @@ def LNA_non_steady_state2(conc, t, Sp, Ks, Rr, Rp, V,
     for x in slabels:
         SiNew.append(x.replace("cov", "FF"))
 
-    for S in zoftime:
+    for stch_var in zoftime:
         row = []
         for i in range(lenSps):
             s = Sps[i]
             for j in range(i, lenSps):
                 p = Sps[j]
-                Sij = S[i] * S[j]
+                Sij = stch_var[i] * stch_var[j]
                 row.append(np.sqrt(Sij if Sij != 0 else 1))
         FFdiv.append(row)
 

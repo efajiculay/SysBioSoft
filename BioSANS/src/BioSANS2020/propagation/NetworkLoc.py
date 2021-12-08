@@ -67,7 +67,7 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
     elif mode == "fofCo":
         f = f.subs(equiKs)
 
-    S = Matrix(V)
+    stch_var = Matrix(V)
     # Cs might have change after call
     for x in Sp:
         Cs[x] = Symbol(x, real=True, negative=False)
@@ -75,9 +75,9 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
 
     Ss = []
     nz = []
-    for row in range(S.shape[0]):
-        if sum(abs(S[row, :])) != 0 and slabels[row][0] != "-":
-            Ss.append(list(S[row, :]))
+    for row in range(stch_var.shape[0]):
+        if sum(abs(stch_var[row, :])) != 0 and slabels[row][0] != "-":
+            Ss.append(list(stch_var[row, :]))
             nz.append(row)
     Ss = Matrix(Ss)
 
@@ -106,13 +106,13 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
         As = As.subs(equivals)
 
     try:
-        S = simplify(As.inv()).T
+        stch_var = simplify(As.inv()).T
         if numer:
-            S = S.subs(equivals)
-        for ih in range(S.shape[0]):
-            for ij in range(S.shape[1]):
+            stch_var = stch_var.subs(equivals)
+        for ih in range(stch_var.shape[0]):
+            for ij in range(stch_var.shape[1]):
                 try:
-                    ffprint([KNAMES[ih], "\t", js[ij], "\t", S[ih, ij], "\n"])
+                    ffprint([KNAMES[ih], "\t", js[ij], "\t", stch_var[ih, ij], "\n"])
                 except BaseException:
                     pass
             ffprint(["\n"])

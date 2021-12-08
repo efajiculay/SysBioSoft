@@ -13,7 +13,7 @@ def rem_rowcol_zero(a):
     return a[:, ~np.all(a == 0, axis=0)][~np.all(a == 0, axis=1)]
 
 
-def lna_ss_jacobian(model, z, S, V, Ks, Rr, Rp):
+def lna_ss_jacobian(model, z, stch_var, V, Ks, Rr, Rp):
     J = np.zeros((len(z), len(z)))
     div = 1
     new = 1000
@@ -24,9 +24,9 @@ def lna_ss_jacobian(model, z, S, V, Ks, Rr, Rp):
             h = abs(z[i] * 1.0e-8) / div
             h2 = 2 * h
             z[i] = z[i] - h
-            Ini = model(z, S, Ks, Rr, Rp, V)
+            Ini = model(z, stch_var, Ks, Rr, Rp, V)
             z[i] = z[i] + 2 * h
-            Out = model(z, S, Ks, Rr, Rp, V)
+            Out = model(z, stch_var, Ks, Rr, Rp, V)
             z[i] = z[i] - h
             for j in range(len(Out)):
                 J[j, i] = (Out[j] - Ini[j]) / h2
@@ -37,11 +37,11 @@ def lna_ss_jacobian(model, z, S, V, Ks, Rr, Rp):
     return np.array(J)
 
 
-def LNA_model_ss(S, Sp, Ks, Rr, Rp, V):
+def LNA_model_ss(stch_var, Sp, Ks, Rr, Rp, V):
     conc = {}
     ind = 0
     for sp in Sp:
-        conc[sp] = S[ind]
+        conc[sp] = stch_var[ind]
         ind = ind + 1
     D = propensity_vec_molar(Ks, conc, Rr, Rp, True)
     fx = np.matmul(V, D)
@@ -50,15 +50,15 @@ def LNA_model_ss(S, Sp, Ks, Rr, Rp, V):
 
 def LNA_steady_state(t, Sp, Ks, conc, Rr, Rp, V, items=None):
     ind = 0
-    S = []
+    stch_var = []
     for sp in Sp:
-        S.append(conc[sp])
-    S = fsolve(LNA_model_ss, tuple(S), xtol=1.0e-10, args=(Sp, Ks, Rr, Rp, V))
+        stch_var.append(conc[sp])
+    stch_var = fsolve(LNA_model_ss, tuple(stch_var), xtol=1.0e-10, args=(Sp, Ks, Rr, Rp, V))
     ind = 0
     for sp in Sp:
-        conc[sp] = S[ind]
+        conc[sp] = stch_var[ind]
         ind = ind + 1
-    AA = lna_ss_jacobian(LNA_model_ss, S, Sp, V, Ks, Rr, Rp)
+    AA = lna_ss_jacobian(LNA_model_ss, stch_var, Sp, V, Ks, Rr, Rp)
     f = propensity_vec_molar(Ks, conc, Rr, Rp, True)
     BB = np.matmul(np.matmul(V, np.diag(f.flatten())), V.T)
 
@@ -77,7 +77,7 @@ def LNA_steady_state(t, Sp, Ks, conc, Rr, Rp, V, items=None):
     ind = 0
     for sp in Sp:
         if sp[0] != "-":
-            fprint([sp, " = ", S[ind], "\n"])
+            fprint([sp, " = ", stch_var[ind], "\n"])
             ind = ind + 1
 
     fprint(["\nCovariance\n\n"])
@@ -108,9 +108,9 @@ def LNA_steady_state(t, Sp, Ks, conc, Rr, Rp, V, items=None):
     fprint(["\nFano Factor\n\n"])
     ind = 0
     for sp in Sp:
-        val = CC[ind, ind] / S[ind]
+        val = CC[ind, ind] / stch_var[ind]
         if str(val) not in {"None", "nan", "0.0"} and sp[0] != "-":
             fprint([" ".join(["Fano Factor for", sp]).ljust(50), "=", val, "\n"])
         ind = ind + 1
 
-    return [CC, S]
+    return [CC, stch_var]

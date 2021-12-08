@@ -14,7 +14,7 @@ def Tau_leaping(t, Sp, Ks, conc, Rr, Rp, V, rr,
     np.random.seed(int(rr * 100))
     tnew = []
     V2 = V**2
-    S = V.T
+    stch_var = V.T
 
     AllSp = [z for z in Sp]
     Spc = [z for z in Sp if z not in reserve_events_words]
@@ -72,7 +72,7 @@ def Tau_leaping(t, Sp, Ks, conc, Rr, Rp, V, rr,
             K = np.round(np.random.poisson(D * dt))
             Allpos = True
             cc = {}
-            bb = np.sum(K * S[:, UpdateSp], 0)
+            bb = np.sum(K * stch_var[:, UpdateSp], 0)
             for x in range(len(Spc)):
                 holder = Z[-1][x] + bb[x]
                 if holder >= 0 or Spc[x] in globals2.modified:
@@ -110,7 +110,7 @@ def Tau_leaping(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 K = np.round(np.random.poisson(D * dt))
                 Allpos = True
                 cc = {}
-                bb = np.sum(K * S[:, UpdateSp], 0)
+                bb = np.sum(K * stch_var[:, UpdateSp], 0)
                 for x in range(len(Spc)):
                     holder = Z[-1][x] + bb[x]
                     if holder >= 0 or Spc[x] in globals2.modified:
@@ -133,7 +133,7 @@ def Tau_leaping(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 K = np.round(np.random.poisson(D * dt))
                 Allpos = True
                 cc = {}
-                bb = np.sum(K * S[:, UpdateSp], 0)
+                bb = np.sum(K * stch_var[:, UpdateSp], 0)
                 for x in range(len(Spc)):
                     holder = Z[-1][x] + bb[x]
                     if holder >= 0 or Spc[x] in globals2.modified:

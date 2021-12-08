@@ -39,7 +39,7 @@ from BioSANS2020.prepcodes.process import *
 from BioSANS2020.analysis.plotting.plot_traj import *
 from BioSANS2020.analysis.numeric.transform_data import *
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
-from BioSANS2020.model.ode_parse import odeExtract
+from BioSANS2020.model.ode_parse import ode_extract
 
 import BioSANS2020.model.topology_view as topology_view
 from BioSANS2020.model.new_file import *
@@ -146,7 +146,7 @@ def create_file(items, Ftype):
 
 def extractODE(items):
     global file_name
-    file_name['last_open'] = odeExtract.odedxdt_to_topo(
+    file_name['last_open'] = ode_extract.odedxdt_to_topo(
         file_name["topology"], items)
     file_name["topology"] = file_name["topology"] + ".top"
 

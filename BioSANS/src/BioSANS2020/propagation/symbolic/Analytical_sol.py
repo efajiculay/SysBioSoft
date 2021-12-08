@@ -148,7 +148,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
         f = Matrix(propensity_vec_molar(KCs, Cs, Rr, Rp, True)) if not_semi else Matrix(
             propensity_vec_molar(Ks, Cs, Rr, Rp, True))
 
-    S = Matrix(V)
+    stch_var = Matrix(V)
     # Cs might have change after call
     for x in Sp:
         Cs[x] = Function(x, negative=False, real=True)(t)
@@ -157,9 +157,9 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
 
     Ss = []
     nz = []
-    for row in range(S.shape[0]):
-        if sum(abs(S[row, :])) != 0 and slabels[row][0] != "-":
-            Ss.append(list(S[row, :]))
+    for row in range(stch_var.shape[0]):
+        if sum(abs(stch_var[row, :])) != 0 and slabels[row][0] != "-":
+            Ss.append(list(stch_var[row, :]))
             nz.append(row)
     Ss = Matrix(Ss)
 
