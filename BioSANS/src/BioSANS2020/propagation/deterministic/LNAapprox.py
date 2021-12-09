@@ -53,7 +53,16 @@ def LNA_steady_state(t, Sp, Ks, conc, Rr, Rp, V, items=None):
     stch_var = []
     for sp in Sp:
         stch_var.append(conc[sp])
-    stch_var = fsolve(LNA_model_ss, tuple(stch_var), xtol=1.0e-10, args=(Sp, Ks, Rr, Rp, V))
+    stch_var = fsolve(
+        LNA_model_ss,
+        tuple(stch_var),
+        xtol=1.0e-10,
+        args=(
+            Sp,
+            Ks,
+            Rr,
+            Rp,
+            V))
     ind = 0
     for sp in Sp:
         conc[sp] = stch_var[ind]

@@ -297,22 +297,22 @@ def process_hub(
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(
-                    concn, t, Sp, Ksn, Rr, Rp, V, items=items, molar=True, TrueDataFil=expDataFile, rfile=rfile)
+                    concn, t, Sp, Ksn, Rr, Rp, V, items=items, molar=True, true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est2":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(
-                    concn, t, Sp, Ksn, Rr, Rp, V, items=items, TrueDataFil=expDataFile, rfile=rfile)
+                    concn, t, Sp, Ksn, Rr, Rp, V, items=items, true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est3":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=True, mode="DEvol", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=True, mode="DEvol", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est4":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=False, mode="DEvol", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=False, mode="DEvol", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est5":
                 setP = [logx, logy, normalize, items]
                 z = ParamODE_int(concn, t, Sp, Ksn, Rr,
@@ -324,32 +324,32 @@ def process_hub(
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=True, mode="NeldMead", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=True, mode="NeldMead", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est7":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=False, mode="NeldMead", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=False, mode="NeldMead", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est8":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=True, mode="Powell", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=True, mode="Powell", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est9":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=False, mode="Powell", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=False, mode="Powell", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est10":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=True, mode="L-BFGS-B", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=True, mode="L-BFGS-B", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est11":
                 plot_show = False
                 save = False
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
-                                         molar=False, mode="L-BFGS-B", TrueDataFil=expDataFile, rfile=rfile)
+                                         molar=False, mode="L-BFGS-B", true_data_fil=expDataFile, rfile=rfile)
             elif method == "Analyt":
                 plot_show = False
                 save = False

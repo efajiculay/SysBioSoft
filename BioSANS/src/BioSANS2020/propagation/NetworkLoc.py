@@ -112,7 +112,8 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
         for ih in range(stch_var.shape[0]):
             for ij in range(stch_var.shape[1]):
                 try:
-                    ffprint([KNAMES[ih], "\t", js[ij], "\t", stch_var[ih, ij], "\n"])
+                    ffprint([KNAMES[ih], "\t", js[ij],
+                             "\t", stch_var[ih, ij], "\n"])
                 except BaseException:
                     pass
             ffprint(["\n"])

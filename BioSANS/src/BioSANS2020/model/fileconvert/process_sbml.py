@@ -431,7 +431,7 @@ def funct_redefine_var(modk, ssv):
     for yvar in OPERS_LIST:
         modk = modk.replace(yvar, " " + yvar + " ")
     modk = " " + modk + " "
-    for ss1 in range(len(ssv)):
+    for ss1, _ in enumerate(ssv):
         # substitution of sympy variables which is defined from the file
         modk = modk.replace(" " + spset[ss1] + " ", str(ssv[ss1]))
     return modk.split(":")[1]
@@ -1335,7 +1335,7 @@ def process_sbml(file, molar=False, variables=None):
 
             if reversible:
                 pactors_var = []
-                for ivi in range(len(modk)):
+                for ivi, _ in enumerate(modk):
                     pactor = 1
                     mods = extract_species(modk[ivi])
                     for key in mods.split(","):
