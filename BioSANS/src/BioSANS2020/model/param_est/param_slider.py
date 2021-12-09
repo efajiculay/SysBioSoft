@@ -1,15 +1,16 @@
-#import sys
-#import os
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 from scipy.integrate import odeint
-from BioSANS2020.propagation.propensity import *
-from BioSANS2020.propagation.recalculate_globals import *
-from BioSANS2020.myglobal import mglobals as globals2
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button, RadioButtons, TextBox
 from tkinter import filedialog
 
+from BioSANS2020.propagation.propensity import propensity_vec
+from BioSANS2020.propagation.propensity import propensity_vec_molar
+from BioSANS2020.propagation.recalculate_globals import get_globals
+from BioSANS2020.myglobal import mglobals as globals2
 
 def load_data():
     try:
@@ -31,7 +32,7 @@ def load_data():
         return None
 
 
-def ParamODE_model(z, t, Sp, Ks, Rr, Rp, V, molar=False):
+def param_ode_model(z, t, Sp, Ks, Rr, Rp, V, molar=False):
     Spc = [s for s in Sp]
     conc = {Spc[x]: z[x] for x in range(len(Spc))}
     if not molar:
@@ -68,7 +69,7 @@ def update(val, Ks, KKglobals, fig, slabels, l, Sp, Rr, Rp, V, molar, t, z):
             cc = cc + 1
             Ks[ih][1] = KKglobals[cc].val
             cc = cc + 1
-    res = odeint(ParamODE_model, z, t, args=(Sp, Ks, Rr, Rp, V, molar))
+    res = odeint(param_ode_model, z, t, args=(Sp, Ks, Rr, Rp, V, molar))
     for ih in range(len(z)):
         l[ih].set_ydata(res[:, ih])
         l[ih].set_label(slabels[ih])
@@ -126,14 +127,16 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
         else:
             scount = scount + 2
 
-    res = odeint(ParamODE_model, z, t, args=(Sp, Ks, Rr, Rp, V, molar))
+    res = odeint(param_ode_model, z, t, args=(Sp, Ks, Rr, Rp, V, molar))
     fig, axf = plt.subplots(figsize=(12, 4))
     plt.subplots_adjust(left=0.1, right=0.70)
     if data2:
         plt.ylim(0, np.max(data) * 1.05)
-    if setP[0] == True:
+    # if setP[0] == True:
+    if setP[0]:
         plt.xscale("log")
-    if setP[1] == True:
+    # if setP[1] == True:
+    if setP[1]:
         plt.yscale("log")
 
     if data2:
@@ -158,8 +161,9 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
             sd = Slider(sk, 'kf' + str(ih + 1), strt1, ends1,
                         valinit=Ks[ih][0], valstep=Ks[ih][0] / 100)
             KKglobals.append(sd)
-            CKglobals.append(TextBox(plt.axes(
-                [0.93, 0.93 - 0.05 * cc, 0.08, 0.04]), 'range', initial=str(strt1) + ', ' + str(ends1)))
+            CKglobals.append(
+                TextBox(plt.axes([0.93, 0.93 - 0.05 * cc, 0.08, 0.04]),
+                        'range', initial=str(strt1) + ', ' + str(ends1)))
             cc = cc + 1
         else:
             sk = plt.axes([0.73, 0.93 - 0.05 * cc, 0.1, 0.04],
@@ -167,8 +171,9 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
             sd = Slider(sk, 'kf' + str(ih + 1), strt1, ends1,
                         valinit=Ks[ih][0], valstep=Ks[ih][0] / 100)
             KKglobals.append(sd)
-            CKglobals.append(TextBox(plt.axes(
-                [0.93, 0.93 - 0.05 * cc, 0.08, 0.04]), 'range', initial=str(strt1) + ', ' + str(ends1)))
+            CKglobals.append(
+                TextBox(plt.axes([0.93, 0.93 - 0.05 * cc, 0.08, 0.04]),
+                        'range', initial=str(strt1) + ', ' + str(ends1)))
             cc = cc + 1
 
             strt2 = round(abs(Ks[ih][1] * 0.10), 2)
@@ -179,8 +184,9 @@ def ParamODE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, rfile="", setP=[]):
             sd = Slider(sk, 'kb' + str(ih + 1), strt2, ends2,
                         valinit=Ks[ih][1], valstep=Ks[ih][1] / 100)
             KKglobals.append(sd)
-            CKglobals.append(TextBox(plt.axes(
-                [0.93, 0.93 - 0.05 * cc, 0.08, 0.04]), 'range', initial=str(strt2) + ', ' + str(ends2)))
+            CKglobals.append(
+                TextBox(plt.axes([0.93, 0.93 - 0.05 * cc, 0.08, 0.04]),
+                        'range', initial=str(strt2) + ', ' + str(ends2)))
             cc = cc + 1
 
     for ih in range(len(CKglobals)):
