@@ -81,7 +81,7 @@ def load_data(file=None):
             cols = [float(xvar) for xvar in row.split("\t")]
 
             # if time decreases, it is a signal of new trajectory.
-            if end_time > cols[0] and len(ddvar) > 0:
+            if end_time > cols[0] and ddvar:
                 data.append(np.array(ddvar))
                 ddvar = []
             ddvar.append(cols)

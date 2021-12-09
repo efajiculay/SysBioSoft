@@ -314,9 +314,9 @@ def process_hub(
                 tnew, z = param_estimate(concn, t, Sp, Ksn, Rr, Rp, V, items=items,
                                          molar=False, mode="DEvol", true_data_fil=expDataFile, rfile=rfile)
             elif method == "k_est5":
-                setP = [logx, logy, normalize, items]
-                z = ParamODE_int(concn, t, Sp, Ksn, Rr,
-                                 Rp, V, True, rfile, setP)
+                set_p = [logx, logy, normalize, items]
+                z = param_ode_int(concn, t, Sp, Ksn, Rr,
+                                 Rp, V, True, rfile, set_p)
                 plot_show = False
                 save = False
                 tnew = t
