@@ -54,7 +54,7 @@ def process_command(command):
     global cwd, trj
     rowc = command.strip().split()
     miter = 1
-    tn = 100
+    tend = 100
     Vol = 1.0
     tsc = 1.5
     tlen = 100
@@ -112,8 +112,8 @@ def process_command(command):
             except BaseException:
                 pass
 
-        if 'tn' in optsv:
-            tn = float(optsv['tn'])
+        if 'tend' in optsv:
+            tend = float(optsv['tend'])
         if 'tlen' in optsv:
             tlen = int(optsv['tlen'])
         if 'Vol' in optsv:
@@ -150,10 +150,10 @@ def process_command(command):
         process(
             rfile=fFile,
             miter=miter,
-            inMolar=fileUnit,
-            Vm=Vol,
-            tn=tn,
-            delX=tsc,
+            in_molar=fileUnit,
+            v_volms=Vol,
+            tend=tend,
+            del_coef=tsc,
             normalize=norm,
             logx=logx,
             logy=logy,
@@ -163,11 +163,11 @@ def process_command(command):
             save=True,
             out_fname=Fname,
             plot_show=plot,
-            Cinput={},
+            c_input={},
             vary="",
             mult_proc=mult_proc,
             items=None,
-            expDataFile=EdataFile
+            exp_data_file=EdataFile
         )
         # except:
         #print("temp.txt file not found")

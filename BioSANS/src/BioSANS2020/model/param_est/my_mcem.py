@@ -272,7 +272,7 @@ def run_mcem(chains, n_pars, maxiter=5, inner_loop=5 * 1000,
     thr = 1.0e-10
     results = [
         pool.apply_async(
-            exptn_maxtn, args=(proc_global.lst, rands[ih], maxiter * (ih + 1),
+            exptn_maxtn, args=(proc_global.LST, rands[ih], maxiter * (ih + 1),
                                inner_loop * (ih + 1), n_pars, positive_only,
                                likelihood, arg, thr)
         ) for ih in range(chains)

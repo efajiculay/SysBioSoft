@@ -34,7 +34,7 @@ BIOSANS2020
 │   │   __init__.py
 │
 ├───math_functs
-│   │   sbmlMath.py
+│   │   sbml_math.py
 │   │   __init__.py
 │
 ├───model

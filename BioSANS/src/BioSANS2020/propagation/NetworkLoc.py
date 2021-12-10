@@ -13,7 +13,7 @@ def subs2(Z, cval):
     return Z
 
 
-def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
+def NetLoc_symbolic(Sp, ks_dict, conc, r_dict, p_dict, V, items=None,
                     molar=False, mode=None, numer=False):
 
     if items:
@@ -37,28 +37,28 @@ def NetLoc_symbolic(Sp, Ks, conc, Rr, Rp, V, items=None,
         equiCo.append((Cso[x], conc[x]))
 
     KCs = []
-    for i in range(len(Ks)):
+    for i in range(len(ks_dict)):
         row = []
-        if len(Ks[i]) == 1:
+        if len(ks_dict[i]) == 1:
             key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
-            equivals.append((row[0], Ks[i][0]))
-            equiKs.append((row[0], Ks[i][0]))
+            equivals.append((row[0], ks_dict[i][0]))
+            equiKs.append((row[0], ks_dict[i][0]))
         else:
             key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
-            equivals.append((row[0], Ks[i][0]))
-            equiKs.append((row[0], Ks[i][0]))
+            equivals.append((row[0], ks_dict[i][0]))
+            equiKs.append((row[0], ks_dict[i][0]))
             key = 'kb' + str(i + 1)
             row.append(Symbol(key, real=True, negative=False))
-            equivals.append((row[1], Ks[i][1]))
-            equiKs.append((row[1], Ks[i][1]))
+            equivals.append((row[1], ks_dict[i][1]))
+            equiKs.append((row[1], ks_dict[i][1]))
         KCs.append(row)
 
     if not molar:
-        f = Matrix(propensity_vec(KCs, Cs, Rr, Rp))
+        f = Matrix(propensity_vec(KCs, Cs, r_dict, p_dict))
     else:
-        f = Matrix(propensity_vec_molar(KCs, Cs, Rr, Rp))
+        f = Matrix(propensity_vec_molar(KCs, Cs, r_dict, p_dict))
 
     if mode == "Numeric":
         f = f.subs(equivals)

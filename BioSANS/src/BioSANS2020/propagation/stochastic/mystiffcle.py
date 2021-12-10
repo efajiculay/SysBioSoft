@@ -8,8 +8,8 @@ from BioSANS2020.propagation.recalculate_globals import *
 from BioSANS2020.myglobal import mglobals as globals2
 
 
-def cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX, reg=False):
-    D = propensity_vec(Ks, conc, Rr, Rp)
+def cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef, reg=False):
+    D = propensity_vec(ks_dict, conc, r_dict, p_dict)
     G = np.sqrt(D)
     nlen = np.random.randn(len(D)).reshape(len(D), 1)
     fx = np.matmul(V, D)
@@ -17,7 +17,7 @@ def cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX, reg=False):
     if not reg:
         h1 = np.abs(D) + 1.0e-30  # np.abs(fx)+1.0e-30
         h2 = np.abs(G) + 1.0e-30  # np.abs(gx)+1.0e-30
-        dt = min(delX * min(np.min(1 / h1), np.min(1 / h2)), dt)
+        dt = min(del_coef * min(np.min(1 / h1), np.min(1 / h2)), dt)
     sqdt = np.sqrt(dt)
 
     ind = 0
@@ -31,7 +31,7 @@ def cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX, reg=False):
     return [fd.reshape(len(Sp)), dt]
 
 
-def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
+def cle_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=10,
                   rr=1, implicit=False, rfile=""):
     get_globals(rfile)
     np.random.seed(int(rr * 100))
@@ -46,7 +46,7 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
         tnow = t[0]
         tnew.append(tnow)
         while tnow < t[-1]:
-            m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX))
+            m = np.nan_to_num(cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef))
             mm = m[0].reshape(1, len(m[0]))[0]
             tnow = tnow + m[1]
             ind = 0
@@ -64,13 +64,13 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
         tindex = 1
         C = [conc[z] for z in Sp]
         while tnew[-1] < t[-1]:
-            m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, delX))
+            m = np.nan_to_num(cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef))
             tnow = tnow + m[1]
             if tnow > t[tindex]:
                 tnow = tnow - m[1]
                 dt2 = t[tindex] - tnow
                 m = np.nan_to_num(
-                    cle_model(Sp, Ks, conc, Rr, Rp, V, dt2, delX, True))
+                    cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt2, del_coef, True))
                 mm = m[0].reshape(1, len(m[0]))[0]
                 tnow = tnow + m[1]
 
@@ -99,10 +99,10 @@ def cle_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=10,
     return (tnew, np.array(stch_var))
 
 
-def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
+def cle2_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=1, rr=1, rfile=""):
     get_globals(rfile)
     np.random.seed(int(rr * 100))
-    div = max(1, int(1 / delX))
+    div = max(1, int(1 / del_coef))
     dt = (t[-1] - t[-2]) / div
     yconc = {x: sconc[x] for x in sconc}
     conc = {x: sconc[x] for x in sconc}
@@ -113,7 +113,7 @@ def cle2_calculate(t, Sp, Ks, sconc, Rr, Rp, V, delX=1, rr=1, rfile=""):
     dv = 0
     C = stch_var[-1]
     while abs(tnow - t[-1]) > 1.0e-10:
-        m = np.nan_to_num(cle_model(Sp, Ks, conc, Rr, Rp, V, dt, 1, True))
+        m = np.nan_to_num(cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, 1, True))
         mm = m[0].reshape(1, len(m[0]))[0]
         tnow = tnow + m[1]
         ind = 0

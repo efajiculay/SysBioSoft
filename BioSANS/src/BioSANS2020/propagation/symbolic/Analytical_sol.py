@@ -17,47 +17,47 @@ def solve_with_timeout(Fe, js):
     return sol
 
 
-def get_sets(Rr, Rp):
+def get_sets(r_dict, p_dict):
     tosum = set()
     sets = [tosum]
     used = set()
-    for ih in range(len(Rr)):
+    for ih in range(len(r_dict)):
         used2 = set()
-        if len(Rr[ih]) == 1:
+        if len(r_dict[ih]) == 1:
             for s in sets:
-                key = list(Rr[ih].keys())[0]
-                if key not in used and Rr[ih][key] != 0:
+                key = list(r_dict[ih].keys())[0]
+                if key not in used and r_dict[ih][key] != 0:
                     s.add(key)
                     used2.add(key)
         else:
             for j in range(len(sets)):
                 s = sets[j]
                 sets.append(s.copy())
-                key = list(Rr[ih].keys())[0]
-                if key not in used and Rr[ih][key] != 0:
+                key = list(r_dict[ih].keys())[0]
+                if key not in used and r_dict[ih][key] != 0:
                     s.add(key)
                     used2.add(key)
-                key = list(Rr[ih].keys())[1]
-                if key not in used and Rr[ih][key] != 0:
+                key = list(r_dict[ih].keys())[1]
+                if key not in used and r_dict[ih][key] != 0:
                     sets[-1].add(key)
                     used2.add(key)
 
-        if len(Rp[ih]) == 1:
+        if len(p_dict[ih]) == 1:
             for s in sets:
-                key = list(Rp[ih].keys())[0]
-                if key not in used and Rp[ih][key] != 0:
+                key = list(p_dict[ih].keys())[0]
+                if key not in used and p_dict[ih][key] != 0:
                     s.add(key)
                     used2.add(key)
         else:
             for j in range(len(sets)):
                 s = sets[j]
                 sets.append(s.copy())
-                key = list(Rp[ih].keys())[0]
-                if key not in used and Rp[ih][key] != 0:
+                key = list(p_dict[ih].keys())[0]
+                if key not in used and p_dict[ih][key] != 0:
                     s.add(key)
                     used2.add(key)
-                key = list(Rp[ih].keys())[1]
-                if key not in used and Rp[ih][key] != 0:
+                key = list(p_dict[ih].keys())[1]
+                if key not in used and p_dict[ih][key] != 0:
                     sets[-1].add(key)
                     used2.add(key)
         for zs in used2:
@@ -65,8 +65,8 @@ def get_sets(Rr, Rp):
     return sets
 
 
-def grab_steady_state(Rr, Rp, Cs, Cso, dA_dt, js):
-    sets = get_sets(Rr, Rp)
+def grab_steady_state(r_dict, p_dict, Cs, Cso, dA_dt, js):
+    sets = get_sets(r_dict, p_dict)
     Fez = [dA_dt]
     for s in sets:
         Fez.append(sum([Cs[x] - Cso[x] for x in s]))
@@ -85,7 +85,7 @@ def CstoCsR(fx, Cs, CsR, not_semi):
         return fx
 
 
-def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
+def Analyt_soln(Sp, ks_dict, conc, r_dict, p_dict, V, items=None,
                 rfile="", not_semi=True, mode=None):
     get_globals(rfile)
     MyEquations = {}
@@ -125,28 +125,28 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
         equivals.append((Cso[x], conc[x]))
 
     KCs = []
-    for i in range(len(Ks)):
+    for i in range(len(ks_dict)):
         row = []
-        if len(Ks[i]) == 1:
+        if len(ks_dict[i]) == 1:
             key = 'kf' + str(i + 1)
             row.append(Symbol(key, negative=False, real=True))
-            equivals.append((row[0], Ks[i][0]))
+            equivals.append((row[0], ks_dict[i][0]))
         else:
             key = 'kf' + str(i + 1)
             row.append(Symbol(key, negative=False, real=True))
-            equivals.append((row[0], Ks[i][0]))
+            equivals.append((row[0], ks_dict[i][0]))
             key = 'kb' + str(i + 1)
             row.append(Symbol(key, negative=False, real=True))
-            equivals.append((row[1], Ks[i][1]))
+            equivals.append((row[1], ks_dict[i][1]))
         KCs.append(row)
 
     if mode == "ftks":
-        f = Matrix(propensity_vec_molar(KCs, Cs, Rr, Rp, True))
+        f = Matrix(propensity_vec_molar(KCs, Cs, r_dict, p_dict, True))
     elif mode == "ftxo":
-        f = Matrix(propensity_vec_molar(Ks, Cs, Rr, Rp, True))
+        f = Matrix(propensity_vec_molar(ks_dict, Cs, r_dict, p_dict, True))
     else:
-        f = Matrix(propensity_vec_molar(KCs, Cs, Rr, Rp, True)) if not_semi else Matrix(
-            propensity_vec_molar(Ks, Cs, Rr, Rp, True))
+        f = Matrix(propensity_vec_molar(KCs, Cs, r_dict, p_dict, True)) if not_semi else Matrix(
+            propensity_vec_molar(ks_dict, Cs, r_dict, p_dict, True))
 
     stch_var = Matrix(V)
     # Cs might have change after call
@@ -196,7 +196,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
         LHSj = Matrix(LHSj.flatten()).jacobian(js)
         # print(LHSj)
         if LHSj != zeros(LHSj.shape[0], LHSj.shape[1]):
-            sets = get_sets(Rr, Rp)
+            sets = get_sets(r_dict, p_dict)
             Fe2 = []
             for s in sets:
                 Fe2.append(
@@ -240,7 +240,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
             if sum(abs(RHS)) == 0:
                 # print("llll",1)
                 try:
-                    xs = grab_steady_state(Rr, Rp, Cs, Cso, dA_dt, js)
+                    xs = grab_steady_state(r_dict, p_dict, Cs, Cso, dA_dt, js)
                     try:
                         expD = func_timeout(200, exp, args=(LHS * t,))
                         x_sol = xs + expD * (xo - xs)
@@ -329,7 +329,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
                 flen = 2 * len(notF)
                 cc = 0
 
-                sets = get_sets(Rr, Rp)
+                sets = get_sets(r_dict, p_dict)
                 Fez = []
                 # print(slabels,V)
                 for s in sets:
@@ -386,7 +386,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
                             if varSp not in MyEquations:
                                 MyEquations[varSp] = answer
                             used3[varSp] = True
-                    elif len(spr) == 2 and terms == 1 and (len(Rr) == 1 or len(Rp) == 1) and not_semi:
+                    elif len(spr) == 2 and terms == 1 and (len(r_dict) == 1 or len(p_dict) == 1) and not_semi:
                         subt = Eq(
                             spr[0] - spr[1], jso[js.index(spr[0])] - jso[js.index(spr[1])])
                         if spr[0] != spc[0]:
@@ -517,7 +517,7 @@ def Analyt_soln(Sp, Ks, conc, Rr, Rp, V, items=None,
                 flen = 2 * len(notF)
                 cc = 0
 
-                sets = get_sets(Rr, Rp)
+                sets = get_sets(r_dict, p_dict)
                 Fez = []
                 # print(slabels,V)
 

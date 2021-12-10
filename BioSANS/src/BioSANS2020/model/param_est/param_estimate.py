@@ -120,7 +120,7 @@ def custom_likelihood(ks_par, args=None):
     # print(conc)
     z_val = ODE_int(conc, tvar, sp_comp, ks_dict, r_dict,
                     p_dict, v_stoich, molar, rfile)
-    spc1 = np.array([spi for spi in sp_comp])
+    spc1 = np.array(list(sp_comp.keys()))  # [spi for spi in sp_comp]
     # print(z_val[0,np.isin(spc1,c_miss)])
     spc1 = ~np.isin(spc1, c_miss)
     spc2 = np.array(slabels)
@@ -157,7 +157,7 @@ def ave_abs_dev(ks_par, args=None):
         ind = ind + 1
     z_val = ODE_int(conc, tvar, sp_comp, ks_dict, r_dict,
                     p_dict, v_stoich, molar, rfile)
-    spc1 = np.array([spi for spi in sp_comp])
+    spc1 = np.array(list(sp_comp.keys()))  # [spi for spi in sp_comp]
     spc1 = ~np.isin(spc1, c_miss)
     spc2 = np.array(slabels)
     spc2 = ~np.isin(spc2, c_miss)
@@ -322,7 +322,7 @@ def param_estimate(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
 
     data2 = load_data(true_data_fil)
     slabels = data2[1]
-    spc = [spi for spi in sp_comp]
+    spc = list(sp_comp.keys())  # [spi for spi in sp_comp]
     z_val = [conc[a] for a in sp_comp]
     c_miss = []
     for i, _ in enumerate(z_val):

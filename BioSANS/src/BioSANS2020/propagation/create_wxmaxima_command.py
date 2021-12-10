@@ -9,7 +9,7 @@ from BioSANS2020.propagation.recalculate_globals import *
 #from BioSANS2020.myglobal import mglobals as globals2
 
 
-def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
+def for_wxmaxima(Sp, ks_dict, conc, r_dict, p_dict, V, items=None, rfile=""):
     get_globals(rfile)
     if items:
         text = prepare_scroll_text(items)
@@ -27,9 +27,9 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
         Cso[x] = Symbol(x + "o", real=True, negative=False)
 
     KCs = []
-    for i in range(len(Ks)):
+    for i in range(len(ks_dict)):
         row = []
-        if len(Ks[i]) == 1:
+        if len(ks_dict[i]) == 1:
             key = 'kf' + str(i + 1)
             row.append(Symbol(key, real=True, positive=True))
         else:
@@ -39,7 +39,7 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
             row.append(Symbol(key, real=True, positive=True))
         KCs.append(row)
 
-    f = Matrix(propensity_vec_molar(KCs, Cs, Rr, Rp, True))
+    f = Matrix(propensity_vec_molar(KCs, Cs, r_dict, p_dict, True))
     stch_var = Matrix(V)
     # Cs might have change after call
     for x in Sp:
@@ -81,7 +81,7 @@ def for_wxmaxima(Sp, Ks, conc, Rr, Rp, V, items=None, rfile=""):
     for x in Sp:
         Cso[x] = conc[x]
 
-    f = Matrix(propensity_vec_molar(Ks, Cs, Rr, Rp, True))
+    f = Matrix(propensity_vec_molar(ks_dict, Cs, r_dict, p_dict, True))
     stch_var = Matrix(V)
     # Cs might have change after call
     for x in Sp:

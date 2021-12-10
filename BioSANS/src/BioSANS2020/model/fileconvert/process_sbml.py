@@ -39,33 +39,8 @@ from sympy import solve, sympify
 import libsbml as Mysbml
 
 from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.math_functs.sbmlMath import acos, arccos, acosh, \
-    arccosh, acot, arccot, acoth, arccoth, acsc, arccsc, acsch, \
-    arccsch, arcsec, asech, arcsech, asin, asinh, arcsinh, arcsin, \
-    atan, arctan, atanh, arctanh, ceil, ceiling, cos, cosh, cot, \
-    coth, csc, csch, factorial, exp, floor, ln, log, log10, \
-    piecewise, pow, power, root, sec, sech, sqr, sqrt, sin, sinh, \
-    tan, tanh, And, Not, Or, xor, eq, geq, gt, leq, lt, neq, \
-    plus, times, minus, divide, multiply
+from BioSANS2020.math_functs.sbml_math import SBML_FUNCT_DICT
 
-
-SBML_FUNCT_DICT = {
-    "acos": acos, "arccos": arccos, "acosh": acosh, "arccosh": arccosh,
-    "acot": acot, "arccot": arccot, "acoth": acoth, "arccoth": arccoth,
-    "acsc": acsc, "arccsc": arccsc, "acsch": acsch, "arccsch": arccsch,
-    "arcsec": arcsec, "asech": asech, "arcsech": arcsech, "asin": asin,
-    "asinh": asinh, "arcsinh": arcsinh, "arcsin": arcsin, "atan": atan,
-    "arctan": arctan, "atanh": atanh, "arctanh": arctanh, "ceil": ceil,
-    "ceiling": ceiling, "cos": cos, "cosh": cosh, "cot": cot,
-    "coth": coth, "csc": csc, "csch": csch, "factorial": factorial,
-    "exp": exp, "floor": floor, "ln": ln, "log": log, "log10": log10,
-    "piecewise": piecewise, "pow": pow, "power": power, "root": root,
-    "sec": sec, "sech": sech, "sqr": sqr, "sqrt": sqrt, "sin": sin,
-    "sinh": sinh, "tan": tan, "tanh": tanh, "And": And, "Not": Not,
-    "Or": Or, "xor": xor, "eq": eq, "geq": geq, "gt": gt, "leq": leq,
-    "lt": lt, "neq": neq, "plus": plus, "times": times, "minus": minus,
-    "divide": divide, "multiply": multiply
-}
 
 # "abs" : abs,
 # "true" : true, "false" : false, "True" : True, "False" : False,
@@ -90,7 +65,7 @@ OPERS_LIST2 = {
 
 
 def eval_exp(xvar):
-    return eval(xvar)
+    return eval(xvar, globals(), SBML_FUNCT_DICT)
 
 
 def get_exponent_sp(key, modk):
@@ -646,8 +621,8 @@ def process_sbml(file, molar=False, variables=None):
         ssv = " : ".join(ssv)
         functions[xvar.getId()] = eval_exp("lambda " + ssv)
         functions_str[xvar.getId()] = "lambda " + ssv
-        globals2.execFunctions.append(xvar.getId() + " = lambda " + ssv)
-        exec(xvar.getId() + " = lambda " + ssv, globals())
+        globals2.EXEC_FUNCTIONS.append(xvar.getId() + " = lambda " + ssv)
+        exec(xvar.getId() + " = lambda " + ssv, globals(), SBML_FUNCT_DICT)
         fftopofile.write(xvar.getId() + " = lambda " + ssv + "\n")
         OPERS_LIST2.add(xvar.getId())
 

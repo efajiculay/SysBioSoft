@@ -8,46 +8,46 @@ import sdeint
 from BioSANS2020.myglobal import mglobals as globals2
 
 
-def sde_fx(z, t, Sp, Ks, Rr, Rp, V, molar=False):
+def sde_fx(z, t, Sp, ks_dict, r_dict, p_dict, V, molar=False):
     Spc = [s for s in Sp]
     conc = {Spc[x]: z[x] for x in range(len(Spc))}
     if not molar:
-        D = propensity_vec(Ks, conc, Rr, Rp)
+        D = propensity_vec(ks_dict, conc, r_dict, p_dict)
     else:
-        D = propensity_vec_molar(Ks, conc, Rr, Rp)
+        D = propensity_vec_molar(ks_dict, conc, r_dict, p_dict)
 
     dxdt = np.matmul(V, D)
-    for x in globals2.conBoundary:
+    for x in globals2.CON_BOUNDARY:
         ind = Spc.index(x)
         dxdt[ind] = 0
     return dxdt.T[0]
 
 
-def sde_gx(z, t, Sp, Ks, Rr, Rp, V, molar=False):
+def sde_gx(z, t, Sp, ks_dict, r_dict, p_dict, V, molar=False):
     Spc = [s for s in Sp]
     conc = {Spc[x]: z[x] for x in range(len(Spc))}
     if not molar:
-        D = propensity_vec(Ks, conc, Rr, Rp)
+        D = propensity_vec(ks_dict, conc, r_dict, p_dict)
     else:
-        D = propensity_vec_molar(Ks, conc, Rr, Rp)
+        D = propensity_vec_molar(ks_dict, conc, r_dict, p_dict)
     G = np.sqrt(D)
     #nlen = np.random.randn(len(D)).reshape(len(D),1)
     dxdt = np.matmul(V, G)
-    for x in globals2.conBoundary:
+    for x in globals2.CON_BOUNDARY:
         ind = Spc.index(x)
         dxdt[ind] = 0
     return dxdt
 
 
-def SDE_int(conc, t, Sp, Ks, Rr, Rp, V, molar=False, ito=True):
+def SDE_int(conc, t, Sp, ks_dict, r_dict, p_dict, V, molar=False, ito=True):
     z = [conc[a] for a in Sp]
     if ito:
         return sdeint.itoint(
-            lambda z, t: sde_fx(z, t, Sp, Ks, Rr, Rp, V, molar),
-            lambda z, t: sde_gx(z, t, Sp, Ks, Rr, Rp, V, molar), z, t
+            lambda z, t: sde_fx(z, t, Sp, ks_dict, r_dict, p_dict, V, molar),
+            lambda z, t: sde_gx(z, t, Sp, ks_dict, r_dict, p_dict, V, molar), z, t
         )
     else:
         return sdeint.stratint(
-            lambda z, t: sde_fx(z, t, Sp, Ks, Rr, Rp, V, molar),
-            lambda z, t: sde_gx(z, t, Sp, Ks, Rr, Rp, V, molar), z, t
+            lambda z, t: sde_fx(z, t, Sp, ks_dict, r_dict, p_dict, V, molar),
+            lambda z, t: sde_gx(z, t, Sp, ks_dict, r_dict, p_dict, V, molar), z, t
         )

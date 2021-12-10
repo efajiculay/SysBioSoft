@@ -4,16 +4,16 @@
 
 import numpy as np
 from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.math_functs.sbmlMath import *
+# from BioSANS2020.math_functs.sbml_math import SBML_FUNCT_DICT
 
 
-def propensity_vec(Ks, conc, Rr, Rp, odeint=False):  # this is for microscopic
+def propensity_vec(ks_dict, conc, r_dict, p_dict, odeint=False):  # this is for microscopic
     D = []
-    Rxn = len(Ks)
+    Rxn = len(ks_dict)
 
     if odeint:
-        for x in globals2.modified:
-            spvar, pfunc = globals2.modified[x][0]
+        for x in globals2.MODIFIED:
+            spvar, pfunc = globals2.MODIFIED[x][0]
             try:
                 sprv = []
                 for c in range(len(spvar)):
@@ -24,8 +24,8 @@ def propensity_vec(Ks, conc, Rr, Rp, odeint=False):  # this is for microscopic
 
     for r in range(Rxn):
         key = "Prop_" + str(r)
-        if key in globals2.PropModified:
-            rowProp = globals2.PropModified[key]
+        if key in globals2.PROP_MODIFIED:
+            rowProp = globals2.PROP_MODIFIED[key]
             for row in rowProp:
                 try:
                     spvar, pfunc = row
@@ -36,34 +36,34 @@ def propensity_vec(Ks, conc, Rr, Rp, odeint=False):  # this is for microscopic
                 except BaseException:
                     D.append(pfunc())
         else:
-            if len(Rr[r]) == 1:
-                for x in Rr[r]:
-                    if Rr[r][x] == 1:
-                        D.append(Ks[r][0] * conc[x])
-                    elif Rr[r][x] == 2:
+            if len(r_dict[r]) == 1:
+                for x in r_dict[r]:
+                    if r_dict[r][x] == 1:
+                        D.append(ks_dict[r][0] * conc[x])
+                    elif r_dict[r][x] == 2:
                         D.append(
-                            Ks[r][0] * max(conc[x] * (conc[x] - 1), 0) / 2)
-                    elif Rr[r][x] == 0:
-                        D.append(Ks[r][0])
-            elif len(Rr[r]) == 2:
-                p = Ks[r][0]
-                for x in Rr[r]:
+                            ks_dict[r][0] * max(conc[x] * (conc[x] - 1), 0) / 2)
+                    elif r_dict[r][x] == 0:
+                        D.append(ks_dict[r][0])
+            elif len(r_dict[r]) == 2:
+                p = ks_dict[r][0]
+                for x in r_dict[r]:
                     p = p * conc[x]
                 D.append(p)
-            if len(Ks[r]) == 2:
-                if len(Rp[r]) == 1:
-                    for x in Rp[r]:
-                        if Rp[r][x] == 1:
-                            D.append(Ks[r][1] * conc[x])
-                        elif Rp[r][x] == 2:
+            if len(ks_dict[r]) == 2:
+                if len(p_dict[r]) == 1:
+                    for x in p_dict[r]:
+                        if p_dict[r][x] == 1:
+                            D.append(ks_dict[r][1] * conc[x])
+                        elif p_dict[r][x] == 2:
                             D.append(
-                                Ks[r][1] * max(conc[x] * (conc[x] - 1), 0) / 2)
-                        elif Rp[r][x] == 0:
-                            D.append(Ks[r][1])
-                elif len(Rp[r]) == 2:
-                    p = Ks[r][1]
-                    for x in Rp[r]:
-                        if Rp[r][x] == 1:
+                                ks_dict[r][1] * max(conc[x] * (conc[x] - 1), 0) / 2)
+                        elif p_dict[r][x] == 0:
+                            D.append(ks_dict[r][1])
+                elif len(p_dict[r]) == 2:
+                    p = ks_dict[r][1]
+                    for x in p_dict[r]:
+                        if p_dict[r][x] == 1:
                             p = p * conc[x]
                         else:
                             p = p * max(conc[x] * (conc[x] - 1), 0) / 2
@@ -74,13 +74,13 @@ def propensity_vec(Ks, conc, Rr, Rp, odeint=False):  # this is for microscopic
         return np.array(D).reshape(len(D), 1)
 
 
-def propensity_vec_molar(Ks, conc, Rr, Rp, odeint=False):  # this is for macroscopic
+def propensity_vec_molar(ks_dict, conc, r_dict, p_dict, odeint=False):  # this is for macroscopic
     D = []
-    Rxn = len(Ks)
+    Rxn = len(ks_dict)
 
     if odeint:
-        for x in globals2.modified:
-            spvar, pfunc = globals2.modified[x][0]
+        for x in globals2.MODIFIED:
+            spvar, pfunc = globals2.MODIFIED[x][0]
             try:
                 sprv = []
                 for c in range(len(spvar)):
@@ -92,8 +92,8 @@ def propensity_vec_molar(Ks, conc, Rr, Rp, odeint=False):  # this is for macrosc
 
     for r in range(Rxn):
         key = "Prop_" + str(r)
-        if key in globals2.PropModified:
-            rowProp = globals2.PropModified[key]
+        if key in globals2.PROP_MODIFIED:
+            rowProp = globals2.PROP_MODIFIED[key]
             for row in rowProp:
                 try:
                     spvar, pfunc = row
@@ -104,29 +104,29 @@ def propensity_vec_molar(Ks, conc, Rr, Rp, odeint=False):  # this is for macrosc
                 except BaseException:
                     D.append(pfunc())
         else:
-            if len(Rr[r]) == 1:
-                for x in Rr[r]:
+            if len(r_dict[r]) == 1:
+                for x in r_dict[r]:
                     if x not in conc:
                         conc[x] = 1
-                    D.append(Ks[r][0] * conc[x]**Rr[r][x])
-            elif len(Rr[r]) == 2:
-                p = Ks[r][0]
-                for x in Rr[r]:
+                    D.append(ks_dict[r][0] * conc[x]**r_dict[r][x])
+            elif len(r_dict[r]) == 2:
+                p = ks_dict[r][0]
+                for x in r_dict[r]:
                     if x not in conc:
                         conc[x] = 1
-                    p = p * conc[x]**Rr[r][x]
+                    p = p * conc[x]**r_dict[r][x]
                 D.append(p)
 
-            if len(Ks[r]) == 2:
-                if len(Rp[r]) == 1:
-                    for x in Rp[r]:
-                        D.append(Ks[r][1] * conc[x]**Rp[r][x])
-                elif len(Rp[r]) == 2:
-                    p = Ks[r][1]
-                    for x in Rp[r]:
+            if len(ks_dict[r]) == 2:
+                if len(p_dict[r]) == 1:
+                    for x in p_dict[r]:
+                        D.append(ks_dict[r][1] * conc[x]**p_dict[r][x])
+                elif len(p_dict[r]) == 2:
+                    p = ks_dict[r][1]
+                    for x in p_dict[r]:
                         if x not in conc:
                             conc[x] = 1
-                        p = p * conc[x]**Rp[r][x]
+                        p = p * conc[x]**p_dict[r][x]
                     D.append(p)
 
     try:

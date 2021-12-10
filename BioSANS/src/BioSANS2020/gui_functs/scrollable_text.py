@@ -103,7 +103,7 @@ def prepare_scroll_text(items):
     hscroll.config(command=text.xview)
 
     fframe = canvas.create_window(
-        0, 450 * globals2.plot_i, anchor='nw', window=frame)
+        0, 450 * globals2.PLOT_I, anchor='nw', window=frame)
     bttn = Button(frame, text=" X ", fg='red', highlightcolor='blue',
                   bg='white', height=1, relief='raised',
                   command=lambda: delete_this(fframe, canvas))
@@ -113,7 +113,7 @@ def prepare_scroll_text(items):
     #                  xscrollcommand=scroll_x.set)
     canvas.configure(yscrollcommand=scroll_y.set)
     canvas.configure(scrollregion=canvas.bbox("all"))
-    globals2.plot_i = globals2.plot_i + 1
+    globals2.PLOT_I = globals2.PLOT_I + 1
     canvas_update_widgets(None, canvas)
 
     text.bind("<Button-2>", lambda e: save_file(e, text))

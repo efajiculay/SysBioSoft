@@ -7,8 +7,8 @@ from BioSANS2020.propagation.propensity import *
 from BioSANS2020.propagation.recalculate_globals import *
 
 
-def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
-                delX, implicit=False, rfile=""):
+def Sim_TauLeap(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr,
+                del_coef, implicit=False, rfile=""):
     get_globals(rfile)
     tmax = t[-1]
     np.random.seed(int(rr * 100))
@@ -33,16 +33,16 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
         maxrlen = 0
         rlen = 0
         for key in keys:
-            if Spc[i] in Rr[key]:
-                maxrlen = max(maxrlen, len(Rr[key]))
-            elif Spc[i] in Rp[key]:
-                maxrlen = max(maxrlen, len(Rp[key]))
+            if Spc[i] in r_dict[key]:
+                maxrlen = max(maxrlen, len(r_dict[key]))
+            elif Spc[i] in p_dict[key]:
+                maxrlen = max(maxrlen, len(p_dict[key]))
         if maxrlen == 1:
             for key in keys:
-                if Spc[i] in Rr[key]:
-                    rlen = max(rlen, Rr[key][Spc[i]])
-                elif Spc[i] in Rp[key]:
-                    rlen = max(rlen, Rp[key][Spc[i]])
+                if Spc[i] in r_dict[key]:
+                    rlen = max(rlen, r_dict[key][Spc[i]])
+                elif Spc[i] in p_dict[key]:
+                    rlen = max(rlen, p_dict[key][Spc[i]])
             if rlen == 1:
                 gi.append(lambda x: 1)
             else:
@@ -59,7 +59,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
         while tc < tmax:
             for x in range(len(Spc)):
                 concz[Spc[x]] = Z[-1][x]
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             alp = np.sum(D)
             r1 = np.random.uniform()
             while r1 == 0:
@@ -69,7 +69,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
             uuj = np.matmul(V, D)
             sig = np.matmul(V2, D)
             exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
-                              for j in range(len(Spc))]) * 0.03 * delX
+                              for j in range(len(Spc))]) * 0.03 * del_coef
             exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
             dt2 = min(np.min(exigi1 / np.abs(uuj)),
                       np.min(exigi1 * exigi1 / np.abs(sig)))
@@ -81,7 +81,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
             bb = np.sum(K * stch_var[:, UpdateSp], 0)
             for x in range(len(Spc)):
                 holder = Z[-1][x] + bb[x]
-                if holder >= 0 or Spc[x] in globals2.modified:
+                if holder >= 0 or Spc[x] in globals2.MODIFIED:
                     cc[Spc[x]] = holder
                 else:
                     Allpos = False
@@ -100,7 +100,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
         tindex = 1
         Zc = [Z[-1]]
         while tc < tmax:
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             D[D < 0] = 0
             alp = np.sum(D)
             r1 = np.random.uniform()
@@ -111,7 +111,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
             uuj = np.matmul(V, D)
             sig = np.matmul(V2, D)
             exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
-                              for j in range(len(Spc))]) * 0.03 * delX
+                              for j in range(len(Spc))]) * 0.03 * del_coef
             exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
             dt2 = min(np.min(exigi1 / np.abs(uuj)),
                       np.min(exigi1 * exigi1 / np.abs(sig)))
@@ -125,7 +125,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 bb = np.sum(K * stch_var[:, UpdateSp], 0)
                 for x in range(len(Spc)):
                     holder = Z[-1][x] + bb[x]
-                    if holder >= 0 or Spc[x] in globals2.modified:
+                    if holder >= 0 or Spc[x] in globals2.MODIFIED:
                         cc[Spc[x]] = holder
                     else:
                         Allpos = False
@@ -148,7 +148,7 @@ def Sim_TauLeap(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 bb = np.sum(K * stch_var[:, UpdateSp], 0)
                 for x in range(len(Spc)):
                     holder = Z[-1][x] + bb[x]
-                    if holder >= 0 or Spc[x] in globals2.modified:
+                    if holder >= 0 or Spc[x] in globals2.MODIFIED:
                         cc[Spc[x]] = holder
                     else:
                         Allpos = False

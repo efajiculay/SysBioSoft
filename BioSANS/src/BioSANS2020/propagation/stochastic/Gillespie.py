@@ -8,7 +8,7 @@ from BioSANS2020.propagation.recalculate_globals import *
 from BioSANS2020.myglobal import mglobals as globals2
 
 
-def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
+def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile=""):
     get_globals(rfile)
     tmax = t[-1]
     np.random.seed(int(rr * 100))
@@ -27,7 +27,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
     tnew.append(tc)
     if not implicit:
         while tc < tmax:
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             alp = np.sum(D)
             r1 = np.random.uniform()
             while r1 == 0:
@@ -42,7 +42,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                     Allpos = True
                     for x in range(len(Spc)):
                         holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
-                        if holder >= 0 or Spc[x] in globals2.modified:
+                        if holder >= 0 or Spc[x] in globals2.MODIFIED:
                             concz[Spc[x]] = holder
                         else:
                             Allpos = True
@@ -64,7 +64,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
         index = 0
         tchlen = len(globals2.tCheck)
         while tc < tmax:
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             alp = np.sum(D)
             r1 = np.random.uniform()
             while r1 == 0:
@@ -89,7 +89,7 @@ def Gillespie(t, Sp, Ks, conc, Rr, Rp, V, rr, implicit=False, rfile=""):
                     Allpos = True
                     for x in range(len(Spc)):
                         holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
-                        if holder >= 0 or Spc[x] in globals2.modified:
+                        if holder >= 0 or Spc[x] in globals2.MODIFIED:
                             concz[Spc[x]] = holder
                         else:
                             Allpos = False

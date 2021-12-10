@@ -3,14 +3,14 @@
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.math_functs.sbmlMath import *
+from BioSANS2020.math_functs.sbml_math import SBML_FUNCT_DICT
 import re
-#from sympy import *
+# from sympy import *
 import numpy as np
 import random as rm
 
-reserve_events_words = {"t", "time", "status",
-                        "status2", "timer", "finish", "delay", "dtime"}
+reserve_events_words = {
+    "t", "time", "status", "status2", "timer", "finish", "delay", "dtime"}
 
 INF = np.inf
 NaN = np.nan
@@ -18,6 +18,8 @@ inf = INF
 nan = NaN
 pi = np.pi
 
+def eval2(to_eval):
+    return eval(to_eval, SBML_FUNCT_DICT)
 
 def rateOf(x):
     global concP, RateSp, orasP, SiP
@@ -51,9 +53,9 @@ def delay(x, y):
                     delt = orasP[-1] - orasP[-2]
                 else:
                     delt = 0
-                if actualSp in globals2.modified:
-                    for yh in range(len(globals2.modified[actualSp])):
-                        spvar, pfunc = globals2.modified[actualSp][yh]
+                if actualSp in globals2.MODIFIED:
+                    for yh in range(len(globals2.MODIFIED[actualSp])):
+                        spvar, pfunc = globals2.MODIFIED[actualSp][yh]
                         spvar = [c.strip() for c in spvar]
                         if "t" in spvar or "time" in spvar:
                             try:
@@ -78,9 +80,9 @@ def apply_rules(conc, yconc, oras=[], spconc=[], slabels=[]):
     concP2 = conc
     SiP = slabels
     tuples_pfunct = []
-    for x in globals2.modified:
-        for y in range(len(globals2.modified[x])):
-            spvar, pfunc = globals2.modified[x][y]
+    for x in globals2.MODIFIED:
+        for y in range(len(globals2.MODIFIED[x])):
+            spvar, pfunc = globals2.MODIFIED[x][y]
             actualSp = spvar[0].strip()
             RateSp = spvar[-1].strip()
             try:
@@ -162,14 +164,14 @@ def apply_rules(conc, yconc, oras=[], spconc=[], slabels=[]):
                     tup[0] = suby[1]
                     tup[2] = suby[0]
 
-    for x in globals2.modified:
+    for x in globals2.MODIFIED:
         conc[x] = yconc[x]
 
 
 def get_globals(rfile):
 
-    globals2.modified = {}
-    globals2.PropModified = {}
+    globals2.MODIFIED = {}
+    globals2.PROP_MODIFIED = {}
     setattr(globals2, 'tCheck', [])
 
     try:
@@ -179,7 +181,7 @@ def get_globals(rfile):
             for row in file:
                 if last == "Function_Definitions":
                     if row.strip() != "" and row[0] != "#":
-                        exec(row.strip(), globals())
+                        exec(row.strip(), SBML_FUNCT_DICT)
                     elif row[0] == "#":
                         last = "#"
                 elif last == "#":
@@ -199,7 +201,7 @@ def get_globals(rfile):
                                         rr = float(str(res[0]).split(
                                             ",")[1].replace(")", ""))
                                     except BaseException:
-                                        rr = eval(str(res[0]).split(
+                                        rr = eval2(str(res[0]).split(
                                             ",")[1].replace(")", ""))
                                     globals2.tCheck.append(rr)
                             except BaseException:
@@ -240,19 +242,19 @@ def get_globals(rfile):
                                 gcc = cc.split(":")[1]
                                 cc = "lambda " + ",".join(cc2) + ":" + gcc
 
-                            if cvar[0].strip() not in globals2.modified:
-                                globals2.modified[cvar[0].strip()] = [
-                                    [cc2, eval(cc)]]
+                            if cvar[0].strip() not in globals2.MODIFIED:
+                                globals2.MODIFIED[cvar[0].strip()] = [
+                                    [cc2, eval2(cc)]]
                             else:
-                                globals2.modified[cvar[0].strip()].append(
-                                    [cc2, eval(cc)])
+                                globals2.MODIFIED[cvar[0].strip()].append(
+                                    [cc2, eval2(cc)])
                 elif row[0] == "#":
                     last = "#"
                     gg = row.split(",")[1:]
                     try:
                         for x in gg:
                             xx = x.split("=")
-                            globals2.settings[xx[0].strip()] = xx[1].strip()
+                            globals2.SETTINGS[xx[0].strip()] = xx[1].strip()
                     except BaseException:
                         pass
                 elif row[0] == "@":
@@ -272,13 +274,13 @@ def get_globals(rfile):
                         "lambda", "").split(",")
                     cc3 = krow[1].split(":")[0].replace(
                         "lambda", "").split(",")
-                    globals2.PropModified["Prop_" +
-                                          str(ih)] = [(cc2, eval(krow[0])), (cc3, eval(krow[1]))]
+                    globals2.PROP_MODIFIED["Prop_" +
+                                          str(ih)] = [(cc2, eval2(krow[0])), (cc3, eval2(krow[1]))]
                 else:
                     cc2 = krow[0].split(":")[0].replace(
                         "lambda", "").split(",")
-                    globals2.PropModified["Prop_" +
-                                          str(ih)] = [(cc2, eval(krow[0]))]
+                    globals2.PROP_MODIFIED["Prop_" +
+                                          str(ih)] = [(cc2, eval2(krow[0]))]
 
         globals2.tCheck.sort()
     except BaseException:

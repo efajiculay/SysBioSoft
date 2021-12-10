@@ -1,6 +1,6 @@
 """
 
-                  This module in the sbmlMath module
+                  This module in the sbml_math module
 
 This contains function needed to interpret SBML files.
 
@@ -402,3 +402,21 @@ def multiply(*xvar):
 
 
 exponentiale = exp(1)
+
+SBML_FUNCT_DICT = {
+    "acos": acos, "arccos": arccos, "acosh": acosh, "arccosh": arccosh,
+    "acot": acot, "arccot": arccot, "acoth": acoth, "arccoth": arccoth,
+    "acsc": acsc, "arccsc": arccsc, "acsch": acsch, "arccsch": arccsch,
+    "arcsec": arcsec, "asech": asech, "arcsech": arcsech, "asin": asin,
+    "asinh": asinh, "arcsinh": arcsinh, "arcsin": arcsin, "atan": atan,
+    "arctan": arctan, "atanh": atanh, "arctanh": arctanh, "ceil": ceil,
+    "ceiling": ceiling, "cos": cos, "cosh": cosh, "cot": cot,
+    "coth": coth, "csc": csc, "csch": csch, "factorial": factorial,
+    "exp": exp, "floor": floor, "ln": ln, "log": log, "log10": log10,
+    "piecewise": piecewise, "pow": pow, "power": power, "root": root,
+    "sec": sec, "sech": sech, "sqr": sqr, "sqrt": sqrt, "sin": sin,
+    "sinh": sinh, "tan": tan, "tanh": tanh, "And": And, "Not": Not,
+    "Or": Or, "xor": xor, "eq": eq, "geq": geq, "gt": gt, "leq": leq,
+    "lt": lt, "neq": neq, "plus": plus, "times": times, "minus": minus,
+    "divide": divide, "multiply": multiply, "exponentiale":exponentiale
+}

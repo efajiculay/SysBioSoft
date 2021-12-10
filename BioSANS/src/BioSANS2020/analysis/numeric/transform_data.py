@@ -87,7 +87,7 @@ def calc_cross_corr(edata, items):
                 line = plt.plot(xvar, vvv[jnd, knd])
                 fig = plt.gcf()
                 plt.tight_layout()
-                globals2.plotted.append([plt.gca(), fig, [line]])
+                globals2.PLOTTED.append([plt.gca(), fig, [line]])
                 draw_figure(items, fig)
                 # plt.close()
 
@@ -206,7 +206,7 @@ def calc_covariance(edata, items, points=100):
             text.insert(INSERT, slabels[ind].ljust(50) + " = "
                         + str(fano_f[ind]) + "\n")
 
-    globals2.plot_i = globals2.plot_i + 1
+    globals2.PLOT_I = globals2.PLOT_I + 1
 
 
 def fano_factor(edata, items, points=100):
@@ -244,7 +244,7 @@ def fano_factor(edata, items, points=100):
             text.insert(INSERT, slabels[ind].ljust(50) + " = "
                         + str(fano_f[ind]) + "\n")
 
-    globals2.plot_i = globals2.plot_i + 1
+    globals2.PLOT_I = globals2.PLOT_I + 1
 
 
 def prob_density_calc(edata, items):
@@ -276,7 +276,7 @@ def prob_density_calc(edata, items):
         plt.legend([slabels[jnd]])
         plt.tight_layout()
         fig = plt.gcf()
-        globals2.plotted.append([plt.gca(), fig, [line]])
+        globals2.PLOTTED.append([plt.gca(), fig, [line]])
         draw_figure(items, fig)
         # plt.close()
 
@@ -320,7 +320,7 @@ def prob_density_calc2(edata, items):
         fig = plt.gcf()
         fig.colorbar(cntr)
         plt.tight_layout()
-        globals2.plotted.append([plt.gca(), fig, [cntr]])
+        globals2.PLOTTED.append([plt.gca(), fig, [cntr]])
         draw_figure(items, fig)
         # plt.close()
 
@@ -372,7 +372,7 @@ def prob_density_calc3(edata, items, bins=50):
             axf.set_ylabel("conc(" + slabels[ind] + ")")
             axf.set_zlabel("freq")
             axf.view_init(elev=40, azim=-120)
-            globals2.plotted.append([axf, fig, lines])
+            globals2.PLOTTED.append([axf, fig, lines])
             draw_figure(items, fig)
             # plt.close()
 
@@ -412,6 +412,6 @@ def ave_traj_calc(edata, items):
         plt.legend()
         fig = plt.gcf()
         plt.tight_layout()
-        globals2.plotted.append([plt.gca(), fig, lines])
+        globals2.PLOTTED.append([plt.gca(), fig, lines])
         draw_figure(items, fig)
         # plt.close()

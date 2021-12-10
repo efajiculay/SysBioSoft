@@ -8,46 +8,46 @@ from BioSANS2020.propagation.recalculate_globals import *
 from BioSANS2020.myglobal import mglobals as globals2
 
 
-def rk4_model(Sp, Ks, conc, Rr, Rp, V, t, molar=False):
+def rk4_model(Sp, ks_dict, conc, r_dict, p_dict, V, t, molar=False):
     if not molar:
-        D = propensity_vec(Ks, conc, Rr, Rp)
+        D = propensity_vec(ks_dict, conc, r_dict, p_dict)
     else:
-        D = propensity_vec_molar(Ks, conc, Rr, Rp)
+        D = propensity_vec_molar(ks_dict, conc, r_dict, p_dict)
     dxdt = np.matmul(V, D).reshape(len(Sp))
-    if globals2.conBoundary:
+    if globals2.CON_BOUNDARY:
         Spc = [sp for sp in Sp]
-        for x in globals2.conBoundary:
+        for x in globals2.CON_BOUNDARY:
             ind = Spc.index(x)
             dxdt[ind] = 0
     return dxdt
 
 
-def runge_kutta_forth(Sp, Ks, conc, Rr, Rp, V, t, delt, nSp, molar=False):
+def runge_kutta_forth(Sp, ks_dict, conc, r_dict, p_dict, V, t, delt, nSp, molar=False):
 
     yconc = {x: conc[x] for x in nSp}
 
-    da_dt = rk4_model(Sp, Ks, conc, Rr, Rp, V, t, molar)
+    da_dt = rk4_model(Sp, ks_dict, conc, r_dict, p_dict, V, t, molar)
     newA1 = da_dt * delt
     ind = 0
     for sp in Sp:
         yconc[sp] = conc[sp] + 0.5 * newA1[ind]
         ind = ind + 1
 
-    da_dt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + 0.5 * delt, molar)
+    da_dt = rk4_model(Sp, ks_dict, yconc, r_dict, p_dict, V, t + 0.5 * delt, molar)
     newA2 = da_dt * delt
     ind = 0
     for sp in Sp:
         yconc[sp] = conc[sp] + 0.5 * newA2[ind]
         ind = ind + 1
 
-    da_dt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + 0.5 * delt, molar)
+    da_dt = rk4_model(Sp, ks_dict, yconc, r_dict, p_dict, V, t + 0.5 * delt, molar)
     newA3 = da_dt * delt
     ind = 0
     for sp in Sp:
         yconc[sp] = conc[sp] + 0.5 * newA3[ind]
         ind = ind + 1
 
-    da_dt = rk4_model(Sp, Ks, yconc, Rr, Rp, V, t + delt, molar)
+    da_dt = rk4_model(Sp, ks_dict, yconc, r_dict, p_dict, V, t + delt, molar)
     newA4 = da_dt * delt
 
     NEW = (newA1 + 2.0 * newA2 + 2.0 * newA3 + newA4) / 6.0
@@ -61,9 +61,9 @@ def runge_kutta_forth(Sp, Ks, conc, Rr, Rp, V, t, delt, nSp, molar=False):
     return [newA, t + delt]
 
 
-def rungek4_int(conc, time, Sp, Ks, Rr, Rp, V, molar=False, delx=1, rfile=""):
+def rungek4_int(conc, time, Sp, ks_dict, r_dict, p_dict, V, molar=False, delx=1, rfile=""):
     get_globals(rfile)
-    tn = time[-1]
+    tend = time[-1]
     div = max(1, int(1 / delx))
     delt = (time[-1] - time[-2]) / div
     yconc = {x: conc[x] for x in conc}
@@ -78,10 +78,10 @@ def rungek4_int(conc, time, Sp, Ks, Rr, Rp, V, molar=False, delx=1, rfile=""):
     Tc2 = [t]
     Z2 = [z]
 
-    while abs(t - tn) > 1.0e-10:
+    while abs(t - tend) > 1.0e-10:
         conc, t = runge_kutta_forth(
-            Sp, Ks, conc, Rr, Rp, V, t, delt, nSp, molar)
-        # conc, yerr = rkck(delt,Sp,Ks,conc,Rr,Rp,V,t,nSp,molar) #higher order runge-kutta
+            Sp, ks_dict, conc, r_dict, p_dict, V, t, delt, nSp, molar)
+        # conc, yerr = rkck(delt,Sp,ks_dict,conc,r_dict,p_dict,V,t,nSp,molar) #higher order runge-kutta
         # t = t + delt                                           #higher order
         # runge-kutta
         apply_rules(conc, yconc, Tc2, Z2, slabels)
@@ -97,7 +97,7 @@ def rungek4_int(conc, time, Sp, Ks, Rr, Rp, V, molar=False, delx=1, rfile=""):
     return [Tc, Z]
 
 
-def rkck(h, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
+def rkck(h, Sp, ks_dict, conc, r_dict, p_dict, V, t, nSp, molar):
 
     A2 = 0.2
     A3 = 0.3
@@ -135,27 +135,27 @@ def rkck(h, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
     DC5 = -277.0 / 14336.0
     DC6 = C6 - 0.25
 
-    dydx = rk4_model(Sp, Ks, conc, Rr, Rp, V, t, molar)
+    dydx = rk4_model(Sp, ks_dict, conc, r_dict, p_dict, V, t, molar)
 
     ytemp = {x: conc[x] for x in nSp}
     ind = 0
     for sp in Sp:
         ytemp[sp] = conc[sp] + B21 * h * dydx[ind]
         ind = ind + 1
-    ak2 = rk4_model(Sp, Ks, ytemp, Rr, Rp, V, t + A2 * h, molar)
+    ak2 = rk4_model(Sp, ks_dict, ytemp, r_dict, p_dict, V, t + A2 * h, molar)
 
     ind = 0
     for sp in Sp:
         ytemp[sp] = conc[sp] + h * (B31 * dydx[ind] + B32 * ak2[ind])
         ind = ind + 1
-    ak3 = rk4_model(Sp, Ks, ytemp, Rr, Rp, V, t + A3 * h, molar)
+    ak3 = rk4_model(Sp, ks_dict, ytemp, r_dict, p_dict, V, t + A3 * h, molar)
 
     ind = 0
     for sp in Sp:
         ytemp[sp] = conc[sp] + h * \
             (B41 * dydx[ind] + B42 * ak2[ind] + B43 * ak3[ind])
         ind = ind + 1
-    ak4 = rk4_model(Sp, Ks, ytemp, Rr, Rp, V, t + A4 * h, molar)
+    ak4 = rk4_model(Sp, ks_dict, ytemp, r_dict, p_dict, V, t + A4 * h, molar)
 
     ind = 0
     for sp in Sp:
@@ -163,14 +163,14 @@ def rkck(h, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
             (B51 * dydx[ind] + B52 * ak2[ind] +
              B53 * ak3[ind] + B54 * ak4[ind])
         ind = ind + 1
-    ak5 = rk4_model(Sp, Ks, ytemp, Rr, Rp, V, t + A5 * h, molar)
+    ak5 = rk4_model(Sp, ks_dict, ytemp, r_dict, p_dict, V, t + A5 * h, molar)
 
     ind = 0
     for sp in Sp:
         ytemp[sp] = conc[sp] + h * (B61 * dydx[ind] + B62 *
                                     ak2[ind] + B63 * ak3[ind] + B64 * ak4[ind] + B65 * ak5[ind])
         ind = ind + 1
-    ak6 = rk4_model(Sp, Ks, ytemp, Rr, Rp, V, t + A6 * h, molar)
+    ak6 = rk4_model(Sp, ks_dict, ytemp, r_dict, p_dict, V, t + A6 * h, molar)
 
     yout = ytemp
     yerr = []
@@ -185,7 +185,7 @@ def rkck(h, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
     return [yout, yerr]
 
 
-def rkqs(htry, eps, yscal, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
+def rkqs(htry, eps, yscal, Sp, ks_dict, conc, r_dict, p_dict, V, t, nSp, molar):
     SAFETY = 0.9
     PGROW = -0.2
     PSHRNK = -0.25
@@ -193,7 +193,7 @@ def rkqs(htry, eps, yscal, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
     errmax = 1000
     h = htry
     while errmax > 1:
-        ytemp, yerr = rkck(h, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar)
+        ytemp, yerr = rkck(h, Sp, ks_dict, conc, r_dict, p_dict, V, t, nSp, molar)
         errmax = max(0, np.max(np.array(yerr) / np.array(yscal))) / eps
         if errmax > 1:
             h = SAFETY * h * (errmax**PSHRNK)
@@ -210,7 +210,7 @@ def rkqs(htry, eps, yscal, Sp, Ks, conc, Rr, Rp, V, t, nSp, molar):
     return [conc, hdid, hnext, yerr]
 
 
-def rungek4a_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10,
+def rungek4a_int(t, Sp, ks_dict, conc, r_dict, p_dict, V, yscal=10,
                  molar=False, implicit=False, rfile=""):
     get_globals(rfile)
     tnew = []
@@ -231,14 +231,14 @@ def rungek4a_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10,
 
             y_old = conc
             conc, dt, delt, e = rkqs(
-                delt, eps, yscal, Sp, Ks, conc, Rr, Rp, V, tnow, nSp, molar)
+                delt, eps, yscal, Sp, ks_dict, conc, r_dict, p_dict, V, tnow, nSp, molar)
             tnow = tnow + dt
             apply_rules(conc, yconc)
             if tnow > t[tindex]:
                 tnow = tnow - dt
                 dt = t[tindex] - tnow
                 conc, tnow = runge_kutta_forth(
-                    Sp, Ks, y_old, Rr, Rp, V, tnow, dt, nSp, molar)
+                    Sp, ks_dict, y_old, r_dict, p_dict, V, tnow, dt, nSp, molar)
                 delt = 5 * dt
                 apply_rules(conc, yconc)
                 tindex = tindex + 1
@@ -253,14 +253,14 @@ def rungek4a_int(t, Sp, Ks, conc, Rr, Rp, V, yscal=10,
 
             y_old = conc
             conc, dt, delt, e = rkqs(
-                delt, eps, yscal, Sp, Ks, conc, Rr, Rp, V, tnow, nSp, molar)
+                delt, eps, yscal, Sp, ks_dict, conc, r_dict, p_dict, V, tnow, nSp, molar)
             tnow = tnow + dt
             apply_rules(conc, yconc)
             if tnow > t[tindex]:
                 tnow = tnow - dt
                 dt = t[tindex] - tnow
                 conc, tnow = runge_kutta_forth(
-                    Sp, Ks, y_old, Rr, Rp, V, tnow, dt, nSp, molar)
+                    Sp, ks_dict, y_old, r_dict, p_dict, V, tnow, dt, nSp, molar)
                 delt = 5 * dt
                 apply_rules(conc, yconc)
                 stch_var.append([conc[a] for a in Sp])

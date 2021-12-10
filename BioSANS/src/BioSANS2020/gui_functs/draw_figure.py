@@ -75,26 +75,26 @@ def draw_figure(items, figure, loc=(0, 0)):
         toolbar = NavigationToolbar2TkAgg(figure_canvas, frame)
         toolbar.update()
         figure_canvas._tkcanvas.pack(side="top")
-        globals2.IntVars.append(IntVar(value=-1))
-        # C1 = Checkbutton(canva, text = "", variable = globals2.IntVars[-1],
-        #                  onvalue = globals2.plot_i, offvalue = -1,
+        globals2.INT_VARS.append(IntVar(value=-1))
+        # C1 = Checkbutton(canva, text = "", variable = globals2.INT_VARS[-1],
+        #                  onvalue = globals2.PLOT_I, offvalue = -1,
         #                  height=2, width = 2,bg="#ccffcc")
         # C1.place(x=1000,y=200)
         wind1 = canva.create_window(2, 2, anchor='nw', window=frame)
         # wind2 = canva.create_window(1020, 216, anchor='ne', window=C1,
         #                             tags="gg")
         fframe = canvas.create_window(
-            0, 450 * globals2.plot_i, anchor='nw', window=canva)
+            0, 450 * globals2.PLOT_I, anchor='nw', window=canva)
         buttn = Button(frame, text=" X ", fg='red', highlightcolor='blue',
                        bg='white', height=1, relief='raised',
                        command=lambda: delete_this(fframe, canvas))
         buttn.place(rely=0.0, relx=1.0, x=-15, y=0, anchor="ne")
 
-        globals2.Container.append([canvas, wind1])
+        globals2.CONTAINER.append([canvas, wind1])
         # canvas.move(wind1,100,100)
         canvas.configure(yscrollcommand=scroll_y.set,
                          xscrollcommand=scroll_x.set)
         canvas.configure(scrollregion=canvas.bbox("all"))
-        globals2.plot_i = globals2.plot_i + 1
+        globals2.PLOT_I = globals2.PLOT_I + 1
         canvas_update_widgets(None, canvas)
         print(loc)

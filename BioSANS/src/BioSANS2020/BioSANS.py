@@ -33,9 +33,9 @@ except BaseException:
     Temporary_folder = "BioSANS_temporary_folder"
 
 from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.myglobal import proc_global as proc_global
+from BioSANS2020.myglobal import proc_global
 from BioSANS2020.gui_functs.prepare_canvas import *
-from BioSANS2020.prepcodes.process import *
+from BioSANS2020.prepcodes.process import process
 from BioSANS2020.analysis.plotting.plot_traj import *
 from BioSANS2020.analysis.numeric.transform_data import *
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
@@ -44,9 +44,9 @@ from BioSANS2020.model.ode_parse import ode_extract
 import BioSANS2020.model.topology_view as topology_view
 from BioSANS2020.model.new_file import *
 
-globals2.init()
+globals2.init(globals2)
 if __name__ == '__main__':
-    proc_global.init()
+    proc_global.init(proc_global)
 
 top = gui.Tk()
 top.title("BioSANS 1.0")
@@ -91,7 +91,7 @@ def load_data(items):
     file = filedialog.askopenfilename(title="Select file")
     file_name["topology"] = file
     file_name["current_folder"] = file
-    globals2.toConvert = file
+    globals2.TO_CONVERT = file
     if os.path.isfile(file):
         file_name['last_open'] = topology_view.view_topo(file, items)
 
@@ -164,14 +164,14 @@ def save_file():
     file_name["current_folder"] = file.name
     if file is None:
         return
-    file.write(file_name['last_open'].get("0.0", END))
+    file.write(file_name['last_open'].get("0.0", "end"))
     file.close()
 
 
 def runpy_file():
     global file_name, PIPE
     with open(file_name["topology"], "w") as ffvar:
-        ffvar.write(file_name['last_open'].get("0.0", END))
+        ffvar.write(file_name['last_open'].get("0.0", "end"))
         ffvar.write("\ninput('Press enter to exit:')")
     if platform == "win32":
         Popen([sys.executable, file_name["topology"]],
@@ -229,7 +229,7 @@ def load_data2(plot=False):
             ddvar.append(cols)
         data.append(np.array(ddvar))
     if plot:
-        plot_traj(data, slabels, items, globals2.plotted, mix_plot=True,
+        plot_traj(data, slabels, items, globals2.PLOTTED, mix_plot=True,
                   logx=False, logy=False, normalize=False)
     # print(data[0], "\n\n")
     # print(data[1], "\n\n")
@@ -282,7 +282,7 @@ def load_image(wdata=False):
     img.image = render
 
     fframe = canvas.create_window(
-        0, 426 * globals2.plot_i, anchor='nw', window=img)
+        0, 426 * globals2.PLOT_I, anchor='nw', window=img)
     B = Button(img, text=" X ", fg='red', highlightcolor='blue', bg='white',
                height=1, relief='raised', command=lambda: delete_this(fframe, canvas))
     B.place(rely=0.0, relx=1.0, x=-15, y=0, anchor="ne")
@@ -290,7 +290,7 @@ def load_image(wdata=False):
     canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
     canvas.configure(scrollregion=canvas.bbox("all"))
     canvas.bind("<Configure>", lambda e: canvas_update_widgets(e, canvas))
-    globals2.plot_i = globals2.plot_i + 1
+    globals2.PLOT_I = globals2.PLOT_I + 1
 
     if wdata:
         file = str(file).replace("jpg", "dat").replace("png", "dat")
@@ -477,7 +477,7 @@ def plot_trajD(current_data, items):
         E[-1].insert(gui.END, "0:-1")
 
         B1 = ttk.Button(par, text="PLOT", command=lambda: plot_traj2(
-            data, slabels, items, globals2.plotted, logx=False, logy=False, normalize=False,
+            data, slabels, items, globals2.PLOTTED, logx=False, logy=False, normalize=False,
             xlabel=optselVar[0].get(), ylabel=optselVar[1].get(), zlabel=optselVar[2].get(), trange=E[-1].get()))
         B1.grid(row=5, column=0, sticky=gui.W, pady=2)
     except BaseException:
@@ -531,7 +531,7 @@ def plot_trajD2(current_data, items):
 
         B1 = ttk.Button(pard, text="PLOT",
                         command=lambda:
-                        plot_traj(data, slabels, items, globals2.plotted, mix_plot=True, logx=False,
+                        plot_traj(data, slabels, items, globals2.PLOTTED, mix_plot=True, logx=False,
                                   logy=False, normalize=False, si_ticked=getChecked(L1, L, slabels))
                         )
         B1.pack(side="bottom", fill="x")
@@ -543,7 +543,7 @@ def plot_trajD2(current_data, items):
 def paramSet(method):
     global file_name, items
     with open(file_name["topology"], "w") as ffvar:
-        ffvar.write(file_name['last_open'].get("0.0", END))
+        ffvar.write(file_name['last_open'].get("0.0", "end"))
 
     path = Path(file_name["topology"])
     ss = str(file_name["topology"]).split("/")
@@ -558,7 +558,7 @@ def paramSet(method):
         "Number of iteration :",
         "File Units? :",
         "Volume (L) :",
-        "end time (tn) :",
+        "end time (tend) :",
         "tau-scaler",
         "Normalized",
         "logx",
@@ -662,7 +662,7 @@ if __name__ == "__main__":
     menubut1.menu.add_command(label="Run SSL", command=lambda: run_SSL())
     ConvMenu = gui.Menu(frame, tearoff=1)
     ConvMenu.add_command(label="SBML to Topo", command=lambda: sbml_to_topo2(
-        globals2.toConvert, items), background="white", foreground="Blue")
+        globals2.TO_CONVERT, items), background="white", foreground="Blue")
     ConvMenu.add_command(label="ODE to Topo", command=lambda: extractODE(
         items), background="white", foreground="Blue")
     TopSbml = gui.Menu(frame, tearoff=1)

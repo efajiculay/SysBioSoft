@@ -7,8 +7,8 @@ from BioSANS2020.propagation.propensity import *
 from BioSANS2020.propagation.recalculate_globals import *
 
 
-def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
-                 delX=1, implicit=False, rfile=""):
+def Tau_leaping2(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr,
+                 del_coef=1, implicit=False, rfile=""):
     get_globals(rfile)
     tmax = t[-1]
     np.random.seed(int(rr * 100))
@@ -40,16 +40,16 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
         maxrlen = 0
         rlen = 0
         for key in keys:
-            if Spc[i] in Rr[key]:
-                maxrlen = max(maxrlen, len(Rr[key]))
-            elif Spc[i] in Rp[key]:
-                maxrlen = max(maxrlen, len(Rp[key]))
+            if Spc[i] in r_dict[key]:
+                maxrlen = max(maxrlen, len(r_dict[key]))
+            elif Spc[i] in p_dict[key]:
+                maxrlen = max(maxrlen, len(p_dict[key]))
         if maxrlen == 1:
             for key in keys:
-                if Spc[i] in Rr[key]:
-                    rlen = max(rlen, Rr[key][Spc[i]])
-                elif Spc[i] in Rp[key]:
-                    rlen = max(rlen, Rp[key][Spc[i]])
+                if Spc[i] in r_dict[key]:
+                    rlen = max(rlen, r_dict[key][Spc[i]])
+                elif Spc[i] in p_dict[key]:
+                    rlen = max(rlen, p_dict[key][Spc[i]])
             if rlen == 1:
                 gi.append(lambda x: 1)
             else:
@@ -64,7 +64,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
 
     if not implicit:
         while tc < tmax:
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             if len(Vcri[1]) > 0:
                 Lcri = set()
                 Lncr = set()
@@ -88,7 +88,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 uuj = np.matmul(V, D)
                 sig = np.matmul(V2, D)
                 exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
-                                  for j in range(len(Spc))]) * 0.03 * delX
+                                  for j in range(len(Spc))]) * 0.03 * del_coef
                 exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
                 dt = min(np.min(exigi1 / np.abs(uuj)),
                          np.min(exigi1 * exigi1 / np.abs(sig)))
@@ -102,7 +102,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 uuj = np.matmul(V[:, Lncr], D[Lncr])
                 sig = np.matmul(V2[:, Lncr], D[Lncr])
                 exigi = np.array([Z[-1][j] * (1 / gi[j](Z[-1][j]))
-                                  for j in range(len(Spc))]) * 0.03 * delX
+                                  for j in range(len(Spc))]) * 0.03 * del_coef
                 exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
                 dt = min(np.min(exigi1 / np.abs(uuj)),
                          np.min(exigi1 * exigi1 / np.abs(sig)), dtc)
@@ -113,7 +113,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
             bb = np.sum(K * stch_var[:, UpdateSp], 0)
             for x in range(len(Spc)):
                 holder = Z[-1][x] + bb[x]
-                if holder >= 0 or Spc[x] in globals2.modified:
+                if holder >= 0 or Spc[x] in globals2.MODIFIED:
                     cc[Spc[x]] = holder
                 else:
                     Allpos = False
@@ -132,7 +132,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
         index = 0
         C = [concz[z] for z in Spc]
         while t[tindex] < tmax:
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             # step 1
             if len(Vcri[1]) > 0:
                 Lcri = set()
@@ -160,7 +160,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 uuj = np.matmul(V[:, Lncr], D[Lncr])
                 sig = np.matmul(V2[:, Lncr], D[Lncr])
                 exigi = np.array([C[j] * (1 / gi[j](C[j]))
-                                  for j in range(len(Spc))]) * epsilon * delX
+                                  for j in range(len(Spc))]) * epsilon * del_coef
                 exigi1 = np.maximum(exigi, np.full(len(Spc), 1))
                 dt1 = min(np.min(exigi1 / np.abs(uuj)),
                           np.min(exigi1 * exigi1 / np.abs(sig)))
@@ -171,7 +171,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                 dt = min(dto, dt)
                 if doSSA:
                     tc, tindex, index, break_now, Allpos, C = SSA_support(
-                        t, Sp, Ks, Rr, Rp, V, rfile, tindex, index, tc, Z, Spc, Spc2, concz, yconc, UpdateSp)
+                        t, Sp, ks_dict, r_dict, p_dict, V, rfile, tindex, index, tc, Z, Spc, Spc2, concz, yconc, UpdateSp)
                     if break_now:
                         break
                 else:
@@ -190,7 +190,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                         bb = np.sum(K * stch_var[:, UpdateSp], 0)
                         for x in range(len(Spc)):
                             holder = C[x] + bb[x]
-                            if holder >= 0 or Spc[x] in globals2.modified:
+                            if holder >= 0 or Spc[x] in globals2.MODIFIED:
                                 cc[Spc[x]] = holder
                             else:
                                 Allpos = False
@@ -218,7 +218,7 @@ def Tau_leaping2(t, Sp, Ks, conc, Rr, Rp, V, rr,
                         bb = np.sum(K * stch_var[:, UpdateSp], 0)
                         for x in range(len(Spc)):
                             holder = C[x] + bb[x]
-                            if holder >= 0 or Spc[x] in globals2.modified:
+                            if holder >= 0 or Spc[x] in globals2.MODIFIED:
                                 cc[Spc[x]] = holder
                             else:
                                 Allpos = False
@@ -289,7 +289,7 @@ def step_3to5(D, Lcri, dt1):
     return [Kmul, dt, doSSA, alpo]
 
 
-def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[
+def SSA_support(t, Sp, ks_dict, r_dict, p_dict, V, rfile="", tindex=0, index=0, tc=0, Zc=[
 ], Spc=None, Spc2=None, concz=None, yconc=None, UpdateSp=None):
     get_globals(rfile)
     stch_var = V.T
@@ -301,7 +301,7 @@ def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[
     Allpos = True
     for ssa in range(100):
         if tc < tmax:
-            D = propensity_vec(Ks, concz, Rr, Rp)
+            D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             alp = np.sum(D)
             r1 = np.random.uniform()
             while r1 == 0:
@@ -331,7 +331,7 @@ def SSA_support(t, Sp, Ks, Rr, Rp, V, rfile="", tindex=0, index=0, tc=0, Zc=[
                     Allpos = True
                     for x in range(len(Spc)):
                         holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
-                        if holder >= 0 or Spc[x] in globals2.modified:
+                        if holder >= 0 or Spc[x] in globals2.MODIFIED:
                             concz[Spc[x]] = holder
                         else:
                             Allpos = False

@@ -1,22 +1,20 @@
-#import sys
-#import os
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
-#!/usr/bin/env python
-# coding: utf-8
-
-#import warnings
-import re
+# import warnings
+from tkinter import messagebox as message_upon_error
+# import re
 # warnings.filterwarnings('ignore')
 
-import numpy as np
 import time
-from BioSANS2020.prepcodes.processes_hub import *
-#from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.myglobal import proc_global as proc_global
-from BioSANS2020.math_functs.sbmlMath import *
+import numpy as np
 
-from tkinter import messagebox as message_upon_error
+from BioSANS2020.prepcodes.processes_hub import process_hub
+# from BioSANS2020.myglobal import mglobals as globals2
+# from BioSANS2020.myglobal import proc_global
+from BioSANS2020.math_functs.sbml_math import SBML_FUNCT_DICT
+
 
 INF = np.inf
 NaN = np.nan
@@ -24,28 +22,32 @@ inf = INF
 nan = NaN
 
 
-def tofloat(val):
+def eval_dict(to_eval, loc_dict):
+    return eval(to_eval, loc_dict, SBML_FUNCT_DICT)
+
+
+def tofloat(val, loc_dict):
     try:
-        return float(eval(val))
+        return float(eval_dict(val, loc_dict))
     except BaseException:
         return float(val)
 
 
-def isNumber(x):
+def is_number(xvar):
     try:
-        tofloat(x)
+        float(xvar)
         return True
-    except BaseException:
+    except ValueError:
         return False
 
 
 def process(
         rfile="Reactions",
         miter=1,
-        inMolar=True,
-        Vm=1.0e-20,
-        tn=1,
-        delX=10,
+        in_molar=True,
+        v_volms=1.0e-20,
+        tend=1,
+        del_coef=10,
         normalize=False,
         logx=False,
         logy=False,
@@ -61,32 +63,33 @@ def process(
         mult_proc=False,
         implicit=False,
         items=None,
-        expDataFile=None,
-        Cinput={}
+        exp_data_file=None,
+        c_input={}
 ):
 
     A = 6.022e+23
 
-    #globals2.modified = {}
-    #globals2.PropModified = {}
+    # globals2.MODIFIED = {}
+    # globals2.PROP_MODIFIED = {}
 
-    # for func in globals2.execFunctions:
-    # exec(func,globals())
+    # for func in globals2.EXEC_FUNCTIONS:
+    # exec(func, globals(), SBML_FUNCT_DICT)
 
-    if inMolar == "molar":
-        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1", "CLE",
-                      "CLE2", "Tau-leaping", "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
-            AV = A * Vm
+    if in_molar == "molar":
+        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1",
+                      "Euler2-1", "CLE", "CLE2", "Tau-leaping",
+                      "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
+            AV = A * v_volms
             fa = 2
         elif method in ["ODE-3", "rk4-3", "rk4-3a", "Euler-3", "Euler2-3"]:
-            AV = Vm
+            AV = v_volms
             fa = 1
         else:
             AV = 1
             fa = 1
-    elif inMolar == "molecules":
+    elif in_molar == "molecules":
         if method in ["ODE-2", "rk4-2", "rk4-2a", "Euler-2", "Euler2-2"]:
-            AV = 1 / A * Vm
+            AV = 1 / A * v_volms
             fa = 1 / 2
         elif method in ["ODE-3", "rk4-3", "rk4-3a", "Euler-3", "Euler2-3"]:
             AV = 1 / A
@@ -94,13 +97,14 @@ def process(
         else:
             AV = 1
             fa = 1
-    elif inMolar == "moles":
-        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1", "CLE",
-                      "CLE2", "Tau-leaping", "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
+    elif in_molar == "moles":
+        if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1",
+                      "CLE", "CLE2", "Tau-leaping", "Tau-leaping2",
+                      "Sim-TauLeap", "Gillespie_"]:
             AV = A
             fa = 2
         if method in ["ODE-2", "rk4-2", "rk4-2a", "Euler-2", "Euler2-2"]:
-            AV = 1 / Vm
+            AV = 1 / v_volms
             fa = 1
         else:
             AV = 1
@@ -113,7 +117,7 @@ def process(
         for row in file:
             if last == "Function_Definitions":
                 if row.strip() != "" and row[0] != "#":
-                    exec(row.strip(), globals())
+                    exec(row.strip(), locals(), SBML_FUNCT_DICT)
                 elif row[0] == "#":
                     last = "#"
             elif last == "#":
@@ -124,18 +128,19 @@ def process(
             elif last == "@":
                 if row.strip() != "" and row[0] != "@":
                     cvar = row.split(",")
-                    conc[cvar[0].strip()] = tofloat(cvar[1])
+                    conc[cvar[0].strip()] = tofloat(cvar[1], locals())
                     # if len(cvar)>=3:
-                    #cc = ",".join(cvar[2:])
-                    #cc2 = cc.split(":")[0].replace("lambda","").split(",")
-                    #globals2.modified[cvar[0].strip()] = [cc2,eval(cc)]
+                    # cc = ",".join(cvar[2:])
+                    # cc2 = cc.split(":")[0].replace("lambda","") \
+                    #     .split(",")
+                    # globals2.MODIFIED[cvar[0].strip()] = [cc2,eval_dict(cc)]
             elif row[0] == "#":
                 last = "#"
-                #gg = row.split(",")[1:]
+                # gg = row.split(",")[1:]
                 # try:
-                # for x in gg:
-                #xx = x.split("=")
-                #globals2.settings[xx[0].strip()] = xx[1].strip()
+                # for xvar in gg:
+                # xx = xvar.split("=")
+                # globals2.SETTINGS[xx[0].strip()] = xx[1].strip()
                 # except:
                 # pass
             elif row[0] == "@":
@@ -145,30 +150,34 @@ def process(
 
         file.close()
 
-    Ks = {}
-    Rr = {}
-    Rp = {}
+    ks_dict = {}
+    r_dict = {}
+    p_dict = {}
     Sp = {}
     Rxn = len(rows)
     for ih in range(Rxn):
-        Rr[ih] = {}
-        Rp[ih] = {}
+        r_dict[ih] = {}
+        p_dict[ih] = {}
         col_row = rows[ih].split(":::::")
         row = col_row[0].strip().split(",")
         # if len(col_row)>1:
-        #krow = col_row[1].strip().split(":::")
+        # krow = col_row[1].strip().split(":::")
         # if len(krow)==2:
-        #cc2 = krow[0].split(":")[0].replace("lambda","").split(",")
-        #cc3 = krow[1].split(":")[0].replace("lambda","").split(",")
-        #globals2.PropModified["Prop_"+str(ih)] = [(cc2,eval(krow[0])),(cc3,eval(krow[1]))]
+        # cc2 = krow[0].split(":")[0].replace("lambda","").split(",")
+        # cc3 = krow[1].split(":")[0].replace("lambda","").split(",")
+        # globals2.PROP_MODIFIED["Prop_"+str(ih)] = [
+        #     (cc2,eval_dict(krow[0])),(cc3,eval_dict(krow[1]))]
         # else:
-        #cc2 = krow[0].split(":")[0].replace("lambda","").split(",")
-        #globals2.PropModified["Prop_"+str(ih)] = [(cc2,eval(krow[0]))]
+        # cc2 = krow[0].split(":")[0].replace("lambda","").split(",")
+        # globals2.PROP_MODIFIED["Prop_"+str(ih)] = \
+        #     [(cc2,eval_dict(krow[0]))]
 
         if len(row) == 3:
-            Ks[ih] = [tofloat(row[1]), tofloat(row[2])]
+            ks_dict[ih] = [
+                tofloat(row[1], locals()),
+                tofloat(row[2], locals())]
         else:
-            Ks[ih] = [tofloat(row[1])]
+            ks_dict[ih] = [tofloat(row[1], locals())]
         var = row[0].split("<=>")
         if len(var) == 1:
             var = row[0].split("=>")
@@ -177,45 +186,46 @@ def process(
         s = sp.strip().split()
         if len(s) > 1:
             last = 1
-            for x in s:
-                if not isNumber(x) and x != "+":
-                    Rr[ih][x] = last
+            for xvar in s:
+                if not is_number(xvar) and xvar != "+":
+                    r_dict[ih][xvar] = last
                     last = 1
-                    if x in Sp:
-                        Sp[x].add(ih)
+                    if xvar in Sp:
+                        Sp[xvar].add(ih)
                     else:
-                        Sp[x] = {ih}
-                elif isNumber(x):
-                    last = tofloat(x)
+                        Sp[xvar] = {ih}
+                elif is_number(xvar):
+                    last = tofloat(xvar, locals())
         else:
-            x = s[0]
-            Rr[ih][x] = 1
-            if x in Sp:
-                Sp[x].add(ih)
+            xvar = s[0]
+            r_dict[ih][xvar] = 1
+            if xvar in Sp:
+                Sp[xvar].add(ih)
             else:
-                Sp[x] = {ih}
+                Sp[xvar] = {ih}
 
         sp = var[1]
         s = sp.strip().split()
         if len(s) > 1:
             last = 1
-            for x in s:
-                if (not isNumber(x) or x.lower() == "e") and x != "+":
-                    Rp[ih][x] = last
+            for xvar in s:
+                if (not is_number(xvar) or xvar.lower() == "e") \
+                        and xvar != "+":
+                    p_dict[ih][xvar] = last
                     last = 1
-                    if x in Sp:
-                        Sp[x].add(ih)
+                    if xvar in Sp:
+                        Sp[xvar].add(ih)
                     else:
-                        Sp[x] = {ih}
-                elif isNumber(x):
-                    last = tofloat(x)
+                        Sp[xvar] = {ih}
+                elif is_number(xvar):
+                    last = tofloat(xvar, locals())
         else:
-            x = s[0]
-            Rp[ih][x] = 1
-            if x in Sp:
-                Sp[x].add(ih)
+            xvar = s[0]
+            p_dict[ih][xvar] = 1
+            if xvar in Sp:
+                Sp[xvar].add(ih)
             else:
-                Sp[x] = {ih}
+                Sp[xvar] = {ih}
     # print(Sp)
 
     V = []
@@ -223,10 +233,10 @@ def process(
     for sp in Sp:
         row = []
         for r in range(Rxn):
-            prod = Rp[r][sp] if sp in Rp[r] else 0
-            rect = Rr[r][sp] if sp in Rr[r] else 0
+            prod = p_dict[r][sp] if sp in p_dict[r] else 0
+            rect = r_dict[r][sp] if sp in r_dict[r] else 0
             row.append(prod - rect)
-            if len(Ks[r]) == 2:
+            if len(ks_dict[r]) == 2:
                 row.append(-row[-1])
         V.append(row)
 
@@ -237,68 +247,73 @@ def process(
     try:
         for r in range(Rxn):
             Ksn[r] = [0] * 2
-            if len(Rr[r]) == 1:
-                for x in Rr[r]:
-                    if Rr[r][x] == 0:
-                        Ksn[r][0] = Ks[r][0] * AV
-                    elif Rr[r][x] == 1:
-                        Ksn[r][0] = Ks[r][0]
-                    elif Rr[r][x] == 2:
-                        Ksn[r][0] = fa * Ks[r][0] / AV
+            if len(r_dict[r]) == 1:
+                for xvar in r_dict[r]:
+                    if r_dict[r][xvar] == 0:
+                        Ksn[r][0] = ks_dict[r][0] * AV
+                    elif r_dict[r][xvar] == 1:
+                        Ksn[r][0] = ks_dict[r][0]
+                    elif r_dict[r][xvar] == 2:
+                        Ksn[r][0] = fa * ks_dict[r][0] / AV
                     else:
-                        Ksn[r][0] = Ks[r][0]
-                    concn[x] = conc[x] * AV
+                        Ksn[r][0] = ks_dict[r][0]
+                    concn[xvar] = conc[xvar] * AV
 
-            elif len(Rr[r]) == 2:
-                Ksn[r][0] = Ks[r][0] / AV
-                for x in Rr[r]:
-                    concn[x] = conc[x] * AV
+            elif len(r_dict[r]) == 2:
+                Ksn[r][0] = ks_dict[r][0] / AV
+                for xvar in r_dict[r]:
+                    concn[xvar] = conc[xvar] * AV
 
-            if len(Rp[r]) == 1:
-                for x in Rp[r]:
-                    if Rp[r][x] == 0:
-                        if len(Ks[r]) == 2:
-                            Ksn[r][1] = Ks[r][1] * AV
+            if len(p_dict[r]) == 1:
+                for xvar in p_dict[r]:
+                    if p_dict[r][xvar] == 0:
+                        if len(ks_dict[r]) == 2:
+                            Ksn[r][1] = ks_dict[r][1] * AV
                         else:
                             Ksn[r] = [Ksn[r][0]]
-                    elif Rp[r][x] == 1:
-                        if len(Ks[r]) == 2:
-                            Ksn[r][1] = Ks[r][1]
+                    elif p_dict[r][xvar] == 1:
+                        if len(ks_dict[r]) == 2:
+                            Ksn[r][1] = ks_dict[r][1]
                         else:
                             Ksn[r] = [Ksn[r][0]]
-                    elif Rp[r][x] == 2:
-                        if len(Ks[r]) == 2:
-                            Ksn[r][1] = fa * Ks[r][1] / AV
+                    elif p_dict[r][xvar] == 2:
+                        if len(ks_dict[r]) == 2:
+                            Ksn[r][1] = fa * ks_dict[r][1] / AV
                         else:
                             Ksn[r] = [Ksn[r][0]]
                     else:
-                        if len(Ks[r]) == 2:
-                            Ksn[r][1] = Ks[r][1]
+                        if len(ks_dict[r]) == 2:
+                            Ksn[r][1] = ks_dict[r][1]
                         else:
                             Ksn[r] = [Ksn[r][0]]
-                    concn[x] = conc[x] * AV
-            elif len(Rp[r]) == 2:
-                if len(Ks[r]) == 2:
-                    Ksn[r][1] = Ks[r][1] / AV
+                    concn[xvar] = conc[xvar] * AV
+            elif len(p_dict[r]) == 2:
+                if len(ks_dict[r]) == 2:
+                    Ksn[r][1] = ks_dict[r][1] / AV
                 else:
                     Ksn[r] = [Ksn[r][0]]
-                for x in Rp[r]:
-                    concn[x] = conc[x] * AV
+                for xvar in p_dict[r]:
+                    concn[xvar] = conc[xvar] * AV
 
-        for x in conc:
-            if x not in concn:
-                concn[x] = conc[x]
+        for xvar in conc:
+            if xvar not in concn:
+                concn[xvar] = conc[xvar]
 
-        # for x in Cinput:
-            #concn[x] = Cinput[x]
+        # for xvar in c_input:
+            # concn[xvar] = c_input[xvar]
 
         t_o = time.time()
-        t = np.linspace(0, tn, int(tlen + 1))
-        data = process_hub(t, Sp, Ksn, concn, Rr, Rp, V, Vm, miter, logx, logy, delX, normalize, method, mix_plot,
-                           save, out_fname, plot_show, time_unit, vary, mult_proc, items, vary2, implicit, rfile, expDataFile)
-        #print(time.time()-t_o,"Process time")
+        t = np.linspace(0, tend, int(tlen + 1))
+        data = process_hub(
+            t, Sp, Ksn, concn, r_dict, p_dict, V, v_volms, miter,
+            logx, logy, del_coef, normalize, method, mix_plot,
+            save, out_fname, plot_show, time_unit, vary,
+            mult_proc, items, vary2, implicit, rfile, exp_data_file)
+        # print(time.time()-t_o,"Process time")
 
         return data
     except Exception as e:
         message_upon_error.showinfo(
-            "showinfo", "Check your topology files for missing species in reaction and concentration tag : " + str(e))
+            "showinfo",
+            "Check your topology files for missing species \
+                in reaction and concentration tag : " + str(e))
