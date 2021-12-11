@@ -1,3 +1,23 @@
+"""
+
+                        This is the process module
+
+This module reads BioSANS topology file, grab the components or species,
+rate  constants, stoichiometric  matrix,  propensity   vector, algebraic
+rules, conditional statements, and othe types of definitions into a dic-
+tionary.  This module  calls the process_hub  module that distribute the
+tasks to other modules.
+
+The functions in this module are as follows;
+
+1. eval_dict
+2. tofloat
+3. is_number
+4. process
+
+
+"""
+
 # import sys
 # import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
@@ -7,7 +27,7 @@ from tkinter import messagebox as message_upon_error
 # import re
 # warnings.filterwarnings('ignore')
 
-import time
+# import time
 import numpy as np
 
 from BioSANS2020.prepcodes.processes_hub import process_hub
@@ -15,11 +35,6 @@ from BioSANS2020.prepcodes.processes_hub import process_hub
 # from BioSANS2020.myglobal import proc_global
 from BioSANS2020.math_functs.sbml_math import SBML_FUNCT_DICT
 
-
-INF = np.inf
-NaN = np.nan
-inf = INF
-nan = NaN
 
 
 def eval_dict(to_eval, loc_dict):
@@ -67,48 +82,52 @@ def process(
         c_input={}
 ):
 
-    A = 6.022e+23
+    avogadros_num = 6.022e+23
 
     # globals2.MODIFIED = {}
     # globals2.PROP_MODIFIED = {}
 
     # for func in globals2.EXEC_FUNCTIONS:
-    # exec(func, globals(), SBML_FUNCT_DICT)
+    #     exec(func, globals(), SBML_FUNCT_DICT)
 
     if in_molar == "molar":
         if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1",
                       "Euler2-1", "CLE", "CLE2", "Tau-leaping",
                       "Tau-leaping2", "Sim-TauLeap", "Gillespie_"]:
-            AV = A * v_volms
-            fa = 2
-        elif method in ["ODE-3", "rk4-3", "rk4-3a", "Euler-3", "Euler2-3"]:
-            AV = v_volms
-            fa = 1
+            avgdrs_times_vol = avogadros_num * v_volms
+            factor_stch = 2
+        elif method in ["ODE-3", "rk4-3", "rk4-3a",
+                        "Euler-3", "Euler2-3"]:
+            avgdrs_times_vol = v_volms
+            factor_stch = 1
         else:
-            AV = 1
-            fa = 1
+            avgdrs_times_vol = 1
+            factor_stch = 1
     elif in_molar == "molecules":
-        if method in ["ODE-2", "rk4-2", "rk4-2a", "Euler-2", "Euler2-2"]:
-            AV = 1 / A * v_volms
-            fa = 1 / 2
-        elif method in ["ODE-3", "rk4-3", "rk4-3a", "Euler-3", "Euler2-3"]:
-            AV = 1 / A
-            fa = 1 / 2
+        if method in ["ODE-2", "rk4-2", "rk4-2a",
+                      "Euler-2", "Euler2-2"]:
+            avgdrs_times_vol = 1 / avogadros_num * v_volms
+            factor_stch = 1 / 2
+        elif method in ["ODE-3", "rk4-3", "rk4-3a",
+                        "Euler-3", "Euler2-3"]:
+            avgdrs_times_vol = 1 / avogadros_num
+            factor_stch = 1 / 2
         else:
-            AV = 1
-            fa = 1
+            avgdrs_times_vol = 1
+            factor_stch = 1
     elif in_molar == "moles":
         if method in ["ODE-1", "rk4-1", "rk4-1a", "Euler-1", "Euler2-1",
                       "CLE", "CLE2", "Tau-leaping", "Tau-leaping2",
                       "Sim-TauLeap", "Gillespie_"]:
-            AV = A
-            fa = 2
-        if method in ["ODE-2", "rk4-2", "rk4-2a", "Euler-2", "Euler2-2"]:
-            AV = 1 / v_volms
-            fa = 1
+            avgdrs_times_vol = avogadros_num
+            factor_stch = 2
+        if method in ["ODE-2", "rk4-2", "rk4-2a",
+                      "Euler-2", "Euler2-2"]:
+            avgdrs_times_vol = 1 / v_volms
+            factor_stch = 1
         else:
-            AV = 1
-            fa = 1
+            avgdrs_times_vol = 1
+            factor_stch = 1
     with open(rfile, "r") as file:
         rows = []
         conc = {}
@@ -133,7 +152,8 @@ def process(
                     # cc = ",".join(cvar[2:])
                     # cc2 = cc.split(":")[0].replace("lambda","") \
                     #     .split(",")
-                    # globals2.MODIFIED[cvar[0].strip()] = [cc2,eval_dict(cc)]
+                    # globals2.MODIFIED[cvar[0].strip()] = \
+                    #     [cc2,eval_dict(cc)]
             elif row[0] == "#":
                 last = "#"
                 # gg = row.split(",")[1:]
@@ -153,147 +173,151 @@ def process(
     ks_dict = {}
     r_dict = {}
     p_dict = {}
-    Sp = {}
-    Rxn = len(rows)
-    for ih in range(Rxn):
-        r_dict[ih] = {}
-        p_dict[ih] = {}
-        col_row = rows[ih].split(":::::")
+    sp_comp = {}
+    rxn_rows = len(rows)
+    for ih_ind in range(rxn_rows):
+        r_dict[ih_ind] = {}
+        p_dict[ih_ind] = {}
+        col_row = rows[ih_ind].split(":::::")
         row = col_row[0].strip().split(",")
         # if len(col_row)>1:
         # krow = col_row[1].strip().split(":::")
         # if len(krow)==2:
         # cc2 = krow[0].split(":")[0].replace("lambda","").split(",")
         # cc3 = krow[1].split(":")[0].replace("lambda","").split(",")
-        # globals2.PROP_MODIFIED["Prop_"+str(ih)] = [
+        # globals2.PROP_MODIFIED["Prop_"+str(ih_ind)] = [
         #     (cc2,eval_dict(krow[0])),(cc3,eval_dict(krow[1]))]
         # else:
         # cc2 = krow[0].split(":")[0].replace("lambda","").split(",")
-        # globals2.PROP_MODIFIED["Prop_"+str(ih)] = \
+        # globals2.PROP_MODIFIED["Prop_"+str(ih_ind)] = \
         #     [(cc2,eval_dict(krow[0]))]
 
         if len(row) == 3:
-            ks_dict[ih] = [
+            ks_dict[ih_ind] = [
                 tofloat(row[1], locals()),
                 tofloat(row[2], locals())]
         else:
-            ks_dict[ih] = [tofloat(row[1], locals())]
-        var = row[0].split("<=>")
-        if len(var) == 1:
-            var = row[0].split("=>")
+            ks_dict[ih_ind] = [tofloat(row[1], locals())]
+        col_var = row[0].split("<=>")
+        if len(col_var) == 1:
+            col_var = row[0].split("=>")
 
-        sp = var[0]
-        s = sp.strip().split()
-        if len(s) > 1:
+        sp_c = col_var[0]
+        svar = sp_c.strip().split()
+        if len(svar) > 1:
             last = 1
-            for xvar in s:
+            for xvar in svar:
                 if not is_number(xvar) and xvar != "+":
-                    r_dict[ih][xvar] = last
+                    r_dict[ih_ind][xvar] = last
                     last = 1
-                    if xvar in Sp:
-                        Sp[xvar].add(ih)
+                    if xvar in sp_comp:
+                        sp_comp[xvar].add(ih_ind)
                     else:
-                        Sp[xvar] = {ih}
+                        sp_comp[xvar] = {ih_ind}
                 elif is_number(xvar):
                     last = tofloat(xvar, locals())
         else:
-            xvar = s[0]
-            r_dict[ih][xvar] = 1
-            if xvar in Sp:
-                Sp[xvar].add(ih)
+            xvar = svar[0]
+            r_dict[ih_ind][xvar] = 1
+            if xvar in sp_comp:
+                sp_comp[xvar].add(ih_ind)
             else:
-                Sp[xvar] = {ih}
+                sp_comp[xvar] = {ih_ind}
 
-        sp = var[1]
-        s = sp.strip().split()
-        if len(s) > 1:
+        sp_c = col_var[1]
+        svar = sp_c.strip().split()
+        if len(svar) > 1:
             last = 1
-            for xvar in s:
+            for xvar in svar:
                 if (not is_number(xvar) or xvar.lower() == "e") \
                         and xvar != "+":
-                    p_dict[ih][xvar] = last
+                    p_dict[ih_ind][xvar] = last
                     last = 1
-                    if xvar in Sp:
-                        Sp[xvar].add(ih)
+                    if xvar in sp_comp:
+                        sp_comp[xvar].add(ih_ind)
                     else:
-                        Sp[xvar] = {ih}
+                        sp_comp[xvar] = {ih_ind}
                 elif is_number(xvar):
                     last = tofloat(xvar, locals())
         else:
-            xvar = s[0]
-            p_dict[ih][xvar] = 1
-            if xvar in Sp:
-                Sp[xvar].add(ih)
+            xvar = svar[0]
+            p_dict[ih_ind][xvar] = 1
+            if xvar in sp_comp:
+                sp_comp[xvar].add(ih_ind)
             else:
-                Sp[xvar] = {ih}
-    # print(Sp)
+                sp_comp[xvar] = {ih_ind}
+    # print(sp_comp)
 
-    V = []
+    stoch_var = []
 
-    for sp in Sp:
+    for sp_c in sp_comp:
         row = []
-        for r in range(Rxn):
-            prod = p_dict[r][sp] if sp in p_dict[r] else 0
-            rect = r_dict[r][sp] if sp in r_dict[r] else 0
+        for r_ind in range(rxn_rows):
+            prod = p_dict[r_ind][sp_c] if sp_c in p_dict[r_ind] else 0
+            rect = r_dict[r_ind][sp_c] if sp_c in r_dict[r_ind] else 0
             row.append(prod - rect)
-            if len(ks_dict[r]) == 2:
+            if len(ks_dict[r_ind]) == 2:
                 row.append(-row[-1])
-        V.append(row)
+        stoch_var.append(row)
 
-    V = np.array(V)
+    stoch_var = np.array(stoch_var)
 
-    Ksn = {}
+    ksn_dict = {}
     concn = {}
     try:
-        for r in range(Rxn):
-            Ksn[r] = [0] * 2
-            if len(r_dict[r]) == 1:
-                for xvar in r_dict[r]:
-                    if r_dict[r][xvar] == 0:
-                        Ksn[r][0] = ks_dict[r][0] * AV
-                    elif r_dict[r][xvar] == 1:
-                        Ksn[r][0] = ks_dict[r][0]
-                    elif r_dict[r][xvar] == 2:
-                        Ksn[r][0] = fa * ks_dict[r][0] / AV
+        for r_ind in range(rxn_rows):
+            ksn_dict[r_ind] = [0] * 2
+            if len(r_dict[r_ind]) == 1:
+                for xvar in r_dict[r_ind]:
+                    if r_dict[r_ind][xvar] == 0:
+                        ksn_dict[r_ind][0] = ks_dict[r_ind][0] \
+                            * avgdrs_times_vol
+                    elif r_dict[r_ind][xvar] == 1:
+                        ksn_dict[r_ind][0] = ks_dict[r_ind][0]
+                    elif r_dict[r_ind][xvar] == 2:
+                        ksn_dict[r_ind][0] = factor_stch * ks_dict[r_ind][0] \
+                            / avgdrs_times_vol
                     else:
-                        Ksn[r][0] = ks_dict[r][0]
-                    concn[xvar] = conc[xvar] * AV
+                        ksn_dict[r_ind][0] = ks_dict[r_ind][0]
+                    concn[xvar] = conc[xvar] * avgdrs_times_vol
 
-            elif len(r_dict[r]) == 2:
-                Ksn[r][0] = ks_dict[r][0] / AV
-                for xvar in r_dict[r]:
-                    concn[xvar] = conc[xvar] * AV
+            elif len(r_dict[r_ind]) == 2:
+                ksn_dict[r_ind][0] = ks_dict[r_ind][0] / avgdrs_times_vol
+                for xvar in r_dict[r_ind]:
+                    concn[xvar] = conc[xvar] * avgdrs_times_vol
 
-            if len(p_dict[r]) == 1:
-                for xvar in p_dict[r]:
-                    if p_dict[r][xvar] == 0:
-                        if len(ks_dict[r]) == 2:
-                            Ksn[r][1] = ks_dict[r][1] * AV
+            if len(p_dict[r_ind]) == 1:
+                for xvar in p_dict[r_ind]:
+                    if p_dict[r_ind][xvar] == 0:
+                        if len(ks_dict[r_ind]) == 2:
+                            ksn_dict[r_ind][1] = ks_dict[r_ind][1] \
+                                * avgdrs_times_vol
                         else:
-                            Ksn[r] = [Ksn[r][0]]
-                    elif p_dict[r][xvar] == 1:
-                        if len(ks_dict[r]) == 2:
-                            Ksn[r][1] = ks_dict[r][1]
+                            ksn_dict[r_ind] = [ksn_dict[r_ind][0]]
+                    elif p_dict[r_ind][xvar] == 1:
+                        if len(ks_dict[r_ind]) == 2:
+                            ksn_dict[r_ind][1] = ks_dict[r_ind][1]
                         else:
-                            Ksn[r] = [Ksn[r][0]]
-                    elif p_dict[r][xvar] == 2:
-                        if len(ks_dict[r]) == 2:
-                            Ksn[r][1] = fa * ks_dict[r][1] / AV
+                            ksn_dict[r_ind] = [ksn_dict[r_ind][0]]
+                    elif p_dict[r_ind][xvar] == 2:
+                        if len(ks_dict[r_ind]) == 2:
+                            ksn_dict[r_ind][1] = factor_stch \
+                                * ks_dict[r_ind][1] / avgdrs_times_vol
                         else:
-                            Ksn[r] = [Ksn[r][0]]
+                            ksn_dict[r_ind] = [ksn_dict[r_ind][0]]
                     else:
-                        if len(ks_dict[r]) == 2:
-                            Ksn[r][1] = ks_dict[r][1]
+                        if len(ks_dict[r_ind]) == 2:
+                            ksn_dict[r_ind][1] = ks_dict[r_ind][1]
                         else:
-                            Ksn[r] = [Ksn[r][0]]
-                    concn[xvar] = conc[xvar] * AV
-            elif len(p_dict[r]) == 2:
-                if len(ks_dict[r]) == 2:
-                    Ksn[r][1] = ks_dict[r][1] / AV
+                            ksn_dict[r_ind] = [ksn_dict[r_ind][0]]
+                    concn[xvar] = conc[xvar] * avgdrs_times_vol
+            elif len(p_dict[r_ind]) == 2:
+                if len(ks_dict[r_ind]) == 2:
+                    ksn_dict[r_ind][1] = ks_dict[r_ind][1] / avgdrs_times_vol
                 else:
-                    Ksn[r] = [Ksn[r][0]]
-                for xvar in p_dict[r]:
-                    concn[xvar] = conc[xvar] * AV
+                    ksn_dict[r_ind] = [ksn_dict[r_ind][0]]
+                for xvar in p_dict[r_ind]:
+                    concn[xvar] = conc[xvar] * avgdrs_times_vol
 
         for xvar in conc:
             if xvar not in concn:
@@ -302,18 +326,18 @@ def process(
         # for xvar in c_input:
             # concn[xvar] = c_input[xvar]
 
-        t_o = time.time()
-        t = np.linspace(0, tend, int(tlen + 1))
+        # t_o = time.time()
+        tvar = np.linspace(0, tend, int(tlen + 1))
         data = process_hub(
-            t, Sp, Ksn, concn, r_dict, p_dict, V, v_volms, miter,
-            logx, logy, del_coef, normalize, method, mix_plot,
-            save, out_fname, plot_show, time_unit, vary,
+            tvar, sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
+            v_volms, miter, logx, logy, del_coef, normalize, method,
+            mix_plot, save, out_fname, plot_show, time_unit, vary,
             mult_proc, items, vary2, implicit, rfile, exp_data_file)
         # print(time.time()-t_o,"Process time")
 
         return data
-    except Exception as e:
+    except Exception as error:
         message_upon_error.showinfo(
             "showinfo",
             "Check your topology files for missing species \
-                in reaction and concentration tag : " + str(e))
+                in reaction and concentration tag : " + str(error))
