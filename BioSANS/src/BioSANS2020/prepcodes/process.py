@@ -8,7 +8,7 @@ rules, conditional statements, and othe types of definitions into a dic-
 tionary.  This module  calls the process_hub  module that distribute the
 tasks to other modules.
 
-The functions in this module are as follows;
+The functions in this module are as follows; #
 
 1. eval_dict
 2. tofloat
