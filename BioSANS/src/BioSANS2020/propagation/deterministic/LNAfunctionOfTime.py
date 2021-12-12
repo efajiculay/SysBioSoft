@@ -3,8 +3,9 @@
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 from scipy.integrate import odeint
-from BioSANS2020.propagation.propensity import *
-from BioSANS2020.propagation.recalculate_globals import *
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
+from BioSANS2020.propagation.recalculate_globals import get_globals
 from BioSANS2020.propagation.deterministic.LNAapprox import lna_ss_jacobian, LNA_model_ss
 from BioSANS2020.myglobal import mglobals as globals2
 import numpy as np

@@ -219,7 +219,8 @@ def process(
         implicit (bool, optional): True means report in time intervals
             similar to the input time intervals even if actual step is
             more or less. Defaults to False.
-        items ([type], optional): [description]. Defaults to None.
+        items (tuple, optional): (canvas, scroll_x, scroll_y).
+            Defaults to None.
         exp_data_file ([type], optional): Experimental data file contai-
             ning True or accepted trajectories. Defaults to None.
         c_input (dict, optional): [description]. Defaults to {}.

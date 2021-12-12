@@ -3,7 +3,8 @@
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 import numpy as np
-from BioSANS2020.propagation.propensity import *
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
 from scipy import linalg as LA
 from scipy.optimize import fsolve
 from BioSANS2020.gui_functs.scrollable_text import *

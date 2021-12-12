@@ -27,8 +27,8 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, TextBox  # , RadioButtons
 
-from BioSANS2020.propagation.propensity import propensity_vec
-from BioSANS2020.propagation.propensity import propensity_vec_molar
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
 from BioSANS2020.propagation.recalculate_globals import get_globals
 from BioSANS2020.myglobal import mglobals as globals2
 

@@ -3,8 +3,9 @@
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 import numpy as np
-from BioSANS2020.propagation.propensity import *
-from BioSANS2020.propagation.recalculate_globals import *
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
+from BioSANS2020.propagation.recalculate_globals import get_globals
 
 
 def Tau_leaping2(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr,

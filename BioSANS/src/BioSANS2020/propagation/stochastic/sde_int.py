@@ -3,7 +3,8 @@
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 from scipy.integrate import odeint
-from BioSANS2020.propagation.propensity import *
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
 import sdeint
 from BioSANS2020.myglobal import mglobals as globals2
 
