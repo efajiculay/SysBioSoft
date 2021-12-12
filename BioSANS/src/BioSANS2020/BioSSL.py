@@ -150,7 +150,7 @@ def process_command(command):
         process(
             rfile=fFile,
             miter=miter,
-            in_molar=fileUnit,
+            conc_unit=fileUnit,
             v_volms=Vol,
             tend=tend,
             del_coef=tsc,
