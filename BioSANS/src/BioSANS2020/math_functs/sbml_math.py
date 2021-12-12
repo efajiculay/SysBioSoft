@@ -15,8 +15,8 @@ import numpy as np
 
 # def abs(xvar):
 # return sympy.fabs(xvar)
-# https://www.cpp.edu/~manasab/106t-r.pdf - need to use to create
-# non-built in numpy trigonometric functions
+# need to use trigonometric relationship to create non-built in numpy 
+# trigonometric functions
 
 NUMBER_TYPE = (float, int)
 
