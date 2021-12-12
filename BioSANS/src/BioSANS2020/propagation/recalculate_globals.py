@@ -12,11 +12,11 @@ import random as rm
 reserve_events_words = {
     "t", "time", "status", "status2", "timer", "finish", "delay", "dtime"}
 
-INF = np.inf
-NaN = np.nan
-inf = INF
-nan = NaN
-pi = np.pi
+# INF = np.inf
+# NaN = np.nan
+# inf = INF
+# nan = NaN
+# pi = np.pi
 
 def eval2(to_eval):
     return eval(to_eval, SBML_FUNCT_DICT)
