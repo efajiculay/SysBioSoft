@@ -33,7 +33,7 @@ def plot_traj(data, slabels, items, plotted, mix_plot=True, logx=False,
                are the labels. The first column is time and the next few
                columns are the trajectories.
         slabels : labels of the trajectories in data
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         plotted : an array where the figures plotted are pushed i.e.
                   plotted.append([plt.gca(), fig, lines]). This is used
                   for managing the plots in the GUI.
@@ -115,7 +115,7 @@ def plot_traj2(data, slabels, items, plotted, logx=False, logy=False,
                are the labels. The first column is time and the next few
                columns are the trajectories.
         slabels : labels of the trajectories in data
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         plotted : an array where the figures plotted are pushed i.e.
                   plotted.append([plt.gca(), fig, lines]). This is used
                   for managing the plots in the GUI.

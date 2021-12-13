@@ -78,7 +78,7 @@ def prepare_scroll_text(items):
     frame as a child of the canvas or items[0]. Scroll capabilities are
     added and a Text area is created as a child of the frame.
     Args:
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     Returns:
         text : the text area object where text can be inserted
     """

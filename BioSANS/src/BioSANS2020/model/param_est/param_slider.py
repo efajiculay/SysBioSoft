@@ -108,7 +108,7 @@ def param_ode_model(z_var, _, sp_comp, ks_dict, r_dict, p_dict,
             For example;
 
                 #REACTIONS
-                A => B, -kf1
+                A => B, -kf1    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -119,7 +119,7 @@ def param_ode_model(z_var, _, sp_comp, ks_dict, r_dict, p_dict,
                 B appears in first and second reaction with index 0, 1
                 C appears in second reaction with index 1
         ks_dict (dict): dictionary of rate constant that appears in each
-            reactions. For the above reaction, the value of ks_dict is
+            reactions.
 
             For example;
 
@@ -209,7 +209,7 @@ def update(ks_dict, kk_list, fig, slabels, lvar, sp_comp,
 
     Args:
         ks_dict (dict): dictionary of rate constant that appears in each
-            reactions. For the above reaction, the value of ks_dict is
+            reactions.
 
             For example;
 
@@ -233,7 +233,7 @@ def update(ks_dict, kk_list, fig, slabels, lvar, sp_comp,
             For example;
 
                 #REACTIONS
-                A => B, -kf1
+                A => B, -kf1    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -304,7 +304,7 @@ def param_ode_int(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
             For example;
 
                 #REACTIONS
-                A => B, -kf1
+                A => B, -kf1    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -314,8 +314,8 @@ def param_ode_int(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
                 A appears in first reaction with index 0
                 B appears in first and second reaction with index 0, 1
                 C appears in second reaction with index 1
-         ks_dict (dict): dictionary of rate constant that appears in each
-            reactions. For the above reaction, the value of ks_dict is
+        ks_dict (dict): dictionary of rate constant that appears in each
+            reactions.
 
             For example;
 

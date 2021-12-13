@@ -37,9 +37,9 @@ from BioSANS2020.propagation.stochastic.Tau_leaping import Tau_leaping
 from BioSANS2020.propagation.stochastic.Tau_leaping2 import Tau_leaping2
 from BioSANS2020.propagation.stochastic.mytauleap import Sim_TauLeap
 from BioSANS2020.propagation.stochastic.sde_int import SDE_int
-from BioSANS2020.propagation.deterministic.Euler import euler_int, \
+from BioSANS2020.propagation.deterministic.euler_mod import euler_int, \
     euler2_int
-# from BioSANS2020.propagation.deterministic.LNAapprox import *
+# from BioSANS2020.propagation.deterministic.lna_approx import *
 from BioSANS2020.propagation.deterministic.ode_int import ODE_int
 from BioSANS2020.propagation.deterministic.LNAfunctionOfTime import \
     LNA_non_steady_state, LNA_non_steady_state2
@@ -78,7 +78,7 @@ def process_hub(
             For example;
 
                 #REACTIONS
-                A => B, -kf1
+                A => B, -kf1    # negative means to be estimated    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -88,8 +88,8 @@ def process_hub(
                 A appears in first reaction with index 0
                 B appears in first and second reaction with index 0, 1
                 C appears in second reaction with index 1
-        ksn_dict (dict): dictionary of rate constant that appears in each
-            reactions. For the above reaction, the value of ks_dict is
+        ksn_dict (dict): dictionary of rate constant that appear in each
+            reactions.
 
             For example;
 
@@ -123,7 +123,7 @@ def process_hub(
             }
         stoch_var (numpy.ndarray): stoichiometric matrix. For example
 
-            v_stoich = np.array([
+            stoch_var = np.array([
                 [   -1,           0   ]            # species A
                 [    1,          -1   ]            # species B
                 [    0,           1   ]            # species C
@@ -453,7 +453,7 @@ def process_hub(
                 save = False
                 tnew, zvar = euler_int(
                     time_var, sp_comp, ksn_dict, concn, r_dict, p_dict,
-                    stoch_var, del_coef, LNAsolve=True, items=items,
+                    stoch_var, del_coef, lna_solve=True, items=items,
                     rfile=rfile)
                 tnew, zvar = euler2_int(
                     time_var, sp_comp, ksn_dict, concn, r_dict, p_dict,

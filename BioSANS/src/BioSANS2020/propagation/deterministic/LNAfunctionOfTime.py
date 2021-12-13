@@ -6,7 +6,7 @@ from scipy.integrate import odeint
 from BioSANS2020.propagation.propensity import propensity_vec, \
     propensity_vec_molar
 from BioSANS2020.propagation.recalculate_globals import get_globals
-from BioSANS2020.propagation.deterministic.LNAapprox import lna_ss_jacobian, LNA_model_ss
+from BioSANS2020.propagation.deterministic.lna_approx import lna_ss_jacobian, lna_model_ss
 from BioSANS2020.myglobal import mglobals as globals2
 import numpy as np
 
@@ -57,7 +57,7 @@ def LNA_non_steady_state_old(
         for sp in Sp:
             conc[sp] = stch_var[ind]
             ind = ind + 1
-        AA = lna_ss_jacobian(LNA_model_ss, stch_var, Sp, V, ks_dict, r_dict, p_dict)
+        AA = lna_ss_jacobian(lna_model_ss, stch_var, Sp, V, ks_dict, r_dict, p_dict)
         f = propensity_vec_molar(ks_dict, conc, r_dict, p_dict, True)
         BB = np.matmul(np.matmul(V, np.diag(f.flatten())), V.T)
 
@@ -100,7 +100,7 @@ def LNA_non_steady_state(conc, t, Sp, ks_dict, r_dict, p_dict, V,
         for sp in Sp:
             conc[sp] = stch_var[ind]
             ind = ind + 1
-        AA = lna_ss_jacobian(LNA_model_ss, stch_var, Sp, V, ks_dict, r_dict, p_dict)
+        AA = lna_ss_jacobian(lna_model_ss, stch_var, Sp, V, ks_dict, r_dict, p_dict)
         f = propensity_vec_molar(ks_dict, conc, r_dict, p_dict, True)
         BB = np.matmul(np.matmul(V, np.diag(f.flatten())), V.T)
 

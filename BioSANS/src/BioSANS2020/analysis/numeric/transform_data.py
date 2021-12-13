@@ -50,7 +50,7 @@ def calc_cross_corr(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     if len(edata[0]) != 3:
         ndata, slabels = sample_points(edata)
@@ -148,7 +148,7 @@ def calc_covariance(edata, items, points=100):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         points : last number of points considered in covariance
                  calculation from -points to the end of array
                  or equivalent to [-points:] slice.
@@ -218,7 +218,7 @@ def fano_factor(edata, items, points=100):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         points : last number of points considered in fano-factor
          calculation from -points to the end of array ([-points:] slice)
     """
@@ -256,7 +256,7 @@ def prob_density_calc(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     data, slabels = edata
     data_length = len(data)
@@ -290,7 +290,7 @@ def prob_density_calc2(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     data, slabels = edata
     data_length = len(data)
@@ -334,7 +334,7 @@ def prob_density_calc3(edata, items, bins=50):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         bins : number of bins an entire trajectory will be discretized
     """
     if len(edata[0]) != 3:
@@ -386,7 +386,7 @@ def ave_traj_calc(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     if len(edata[0]) != 3:
         ndata, slabels = sample_points(edata)

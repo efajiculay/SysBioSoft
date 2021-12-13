@@ -254,7 +254,7 @@ def param_estimate(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
             For example;
 
                 #REACTIONS
-                A => B, -kf1
+                A => B, -kf1    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -266,7 +266,7 @@ def param_estimate(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
                 C appears in second reaction with index 1
 
         ks_dict (dict): dictionary of rate constant that appears in each
-            reactions. For the above reaction, the value of ks_dict is
+            reactions.
 
             For example;
 

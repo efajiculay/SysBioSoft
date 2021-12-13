@@ -61,7 +61,7 @@ def draw_figure(items, figure, loc=(0, 0)):
     object to the canvas, adding a frame to the newly created canvas and
     putting the figure to FigureCanvasTkAgg with frame as the parent.
     Args:
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         figure: the figure to be drawn in canvas i.e. plt.gcf() figure
     """
     if items:

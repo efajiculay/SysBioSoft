@@ -62,7 +62,7 @@ def topo_to_sbml(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms,
                   r_prods = {0: {'B': 1}, 1: {'C': 2}}
         vbig : not used but pertains to stoichiometric matrix
         v_volms : volume of compartment
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         molar : True if conc. is in molar otherwise False
         rfile : path of the topology file + name of topology file
     """

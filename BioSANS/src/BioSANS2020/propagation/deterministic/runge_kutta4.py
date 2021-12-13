@@ -5,7 +5,8 @@
 import numpy as np
 from BioSANS2020.propagation.propensity import propensity_vec, \
     propensity_vec_molar
-from BioSANS2020.propagation.recalculate_globals import get_globals
+from BioSANS2020.propagation.recalculate_globals import get_globals, \
+    apply_rules
 from BioSANS2020.myglobal import mglobals as globals2
 
 
