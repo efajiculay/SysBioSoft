@@ -41,8 +41,8 @@ from BioSANS2020.propagation.deterministic.euler_mod import euler_int, \
     euler2_int
 # from BioSANS2020.propagation.deterministic.lna_approx import *
 from BioSANS2020.propagation.deterministic.ode_int import ODE_int
-from BioSANS2020.propagation.deterministic.LNAfunctionOfTime import \
-    LNA_non_steady_state, LNA_non_steady_state2
+from BioSANS2020.propagation.deterministic.lna_function_of_time import \
+    lna_non_steady_state, lna_non_steady_state2
 from BioSANS2020.propagation.deterministic.runge_kutta4 \
     import rungek4_int, rungek4a_int
 from BioSANS2020.propagation.symbolic.LNAapprox2 import LNA_symbolic
@@ -460,11 +460,11 @@ def process_hub(
                     stoch_var, del_coef, False, None, implicit, True,
                     rfile)
             elif method == "LNA(t)":
-                zvar, si_new, tnew = LNA_non_steady_state(
+                zvar, si_new, tnew = lna_non_steady_state(
                     concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
                     stoch_var, molar=True, rfile=rfile, del_coef=del_coef)
             elif method == "LNA2(t)":
-                zvar, si_new, tnew = LNA_non_steady_state2(
+                zvar, si_new, tnew = lna_non_steady_state2(
                     concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
                     stoch_var, molar=True, rfile=rfile, del_coef=del_coef)
             elif method == "LNA-vs":

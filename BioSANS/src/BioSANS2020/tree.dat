@@ -78,7 +78,7 @@ BIOSANS2020
 │   ├───deterministic
 │   │   │   Euler.py
 │   │   │   lna_approx.py
-│   │   │   LNAfunctionOfTime.py
+│   │   │   lna_function_of_time.py
 │   │   │   ode_int.py
 │   │   │   runge_kutta4.py
 │   │   │   __init__.py
