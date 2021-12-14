@@ -6,14 +6,14 @@ import tkinter as gui
 from tkinter import ttk
 from tkinter import filedialog
 from pathlib import Path
+import time
+import webbrowser
 from PIL import Image as Image2, ImageTk
 import numpy as np
-import time
 import threading
 from queue import Queue
 from math import ceil as Myceil
 from sys import platform
-import webbrowser
 
 if platform == "win32":
     from subprocess import Popen, CREATE_NEW_CONSOLE
@@ -34,11 +34,15 @@ except BaseException:
 
 from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.myglobal import proc_global
-from BioSANS2020.gui_functs.prepare_canvas import *
+from BioSANS2020.gui_functs.prepare_canvas import prepare_frame_for_plot
 from BioSANS2020.prepcodes.process import process
-from BioSANS2020.analysis.plotting.plot_traj import *
-from BioSANS2020.analysis.numeric.transform_data import *
-from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
+from BioSANS2020.analysis.plotting.plot_traj \
+    import plot_traj, plot_traj2
+from BioSANS2020.analysis.numeric.transform_data import calc_cross_corr, \
+    calc_covariance2, calc_covariance, fano_factor,  prob_density_calc, \
+    prob_density_calc2, prob_density_calc3, ave_traj_calc
+from BioSANS2020.model.fileconvert.process_sbml \
+    import process_sbml as sbml_to_topo
 from BioSANS2020.model.ode_parse import ode_extract
 
 import BioSANS2020.model.topology_view as topology_view
@@ -122,26 +126,27 @@ def create_file(items, Ftype):
     file_name['last_open'] = new_file(items)
     file_name["topology"] = Temporary_folder + "/temp.txt"
     if Ftype == 1:
-        file_name['last_open'].insert(INSERT, "FUNCTION_DEFINITIONS:\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
+        file_name['last_open'].insert('insert', "FUNCTION_DEFINITIONS:\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
         file_name['last_open'].insert(
-            INSERT, "#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "@CONCENTRATION\n")
+            'insert', "#REACTIONS, Volume = 1, tend = 100, steps = 100, \
+            FileUnit = molar\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "@CONCENTRATION\n")
     elif Ftype == 2:
-        file_name['last_open'].insert(INSERT, "ODE_DECLARATIONS:\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "INI_CONCENTRATIONS:\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "\n")
-        file_name['last_open'].insert(INSERT, "RATE_CONSTANTS:\n")
+        file_name['last_open'].insert('insert', "ODE_DECLARATIONS:\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "INI_CONCENTRATIONS:\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "\n")
+        file_name['last_open'].insert('insert', "RATE_CONSTANTS:\n")
 
 
 def extractODE(items):
