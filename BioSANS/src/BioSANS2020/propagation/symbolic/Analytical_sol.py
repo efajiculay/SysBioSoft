@@ -1,7 +1,8 @@
-#import sys
-#import os
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
+import numpy as np
 from BioSANS2020.gui_functs.scrollable_text import *
 from BioSANS2020.propagation.propensity import propensity_vec, \
     propensity_vec_molar

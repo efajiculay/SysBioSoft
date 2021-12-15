@@ -3,7 +3,7 @@ import os
 
 from datetime import datetime
 import tkinter as gui
-# from tkinter import ttk, Button, filedialog
+from tkinter import ttk  # , Button, filedialog
 from pathlib import Path
 import time
 import webbrowser
@@ -481,7 +481,7 @@ def plot_trajD(current_data, items):
         [E[i].grid(row=i, column=1, sticky=gui.W, pady=2) for i in range(4)]
         E[-1].insert(gui.END, "0:-1")
 
-        B1 = gui.ttk.Button(par, text="PLOT", command=lambda: plot_traj2(
+        B1 = ttk.Button(par, text="PLOT", command=lambda: plot_traj2(
             data, slabels, items, globals2.PLOTTED, logx=False, logy=False, normalize=False,
             xlabel=optselVar[0].get(), ylabel=optselVar[1].get(), zlabel=optselVar[2].get(), trange=E[-1].get()))
         B1.grid(row=5, column=0, sticky=gui.W, pady=2)
@@ -534,7 +534,7 @@ def plot_trajD2(current_data, items):
                          xscrollcommand=scroll_x.set)
         canvas.configure(scrollregion=canvas.bbox("all"))
 
-        B1 = gui.ttk.Button(pard, text="PLOT",
+        B1 = ttk.Button(pard, text="PLOT",
                         command=lambda:
                         plot_traj(data, slabels, items, globals2.PLOTTED, mix_plot=True, logx=False,
                                   logy=False, normalize=False, si_ticked=getChecked(L1, L, slabels))
@@ -625,7 +625,7 @@ def paramSet(method):
         E[5].delete(0, gui.END)
         E[5].insert(gui.END, str(10))
 
-    B1 = gui.ttk.Button(par, text="RUN",
+    B1 = ttk.Button(par, text="RUN",
                     command=lambda: mrun_propagation(par, E, defs))
     B1.grid(row=oplen, column=0, sticky=gui.W, pady=2)
     if method in ["k_est1", "k_est2", "k_est3", "k_est4", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "LNA2", "LNA3", "LNA-vs",
@@ -722,6 +722,15 @@ if __name__ == "__main__":
         "Analyt2"), background="white", foreground="Blue")
     menubut2.menu.add_cascade(label="Analytical soln.", menu=AnalMenu)
 
+    ODEMenu = gui.Menu(frame, tearoff=1)
+    ODEMenu.add_command(label="Molecules(micro)", command=lambda: paramSet(
+        "ODE-1"), background="white", foreground="Blue")
+    ODEMenu.add_command(label="Molar(macro)", command=lambda: paramSet(
+        "ODE-2"), background="white", foreground="Blue")
+    ODEMenu.add_command(label="Mole(macro)", command=lambda: paramSet(
+        "ODE-3"), background="white", foreground="Blue")
+    menubut2.menu.add_cascade(label="ODE int", menu=ODEMenu)
+
     Rungek4 = gui.Menu(frame, tearoff=1)
     Rungek4.add_command(label="Molecules(micro)", command=lambda: paramSet(
         "rk4-1"), background="white", foreground="Blue")
@@ -757,15 +766,6 @@ if __name__ == "__main__":
     EulrTau2.add_command(label="Mole(macro)", command=lambda: paramSet(
         "Euler2-3"), background="white", foreground="Blue")
     menubut2.menu.add_cascade(label="Euler (tau-adaptive-2)", menu=EulrTau2)
-
-    ODEMenu = gui.Menu(frame, tearoff=1)
-    ODEMenu.add_command(label="Molecules(micro)", command=lambda: paramSet(
-        "ODE-1"), background="white", foreground="Blue")
-    ODEMenu.add_command(label="Molar(macro)", command=lambda: paramSet(
-        "ODE-2"), background="white", foreground="Blue")
-    ODEMenu.add_command(label="Mole(macro)", command=lambda: paramSet(
-        "ODE-3"), background="white", foreground="Blue")
-    menubut2.menu.add_cascade(label="ODE int", menu=ODEMenu)
 
     #Itoints = gui.Menu(frame,tearoff = 1 )
     #Itoints.add_command ( label="Molecules",command=lambda: paramSet("Itoint-1"),background="white",foreground="Blue" )

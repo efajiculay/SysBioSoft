@@ -4,6 +4,7 @@
 
 This module uses the odeint integrator in python to propagate ODE trajec
 tory.
+
 """
 
 
@@ -12,10 +13,12 @@ tory.
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 from numpy import matmul as np_matmul
+from numpy import array as np_array
 from scipy.integrate import odeint
 from BioSANS2020.propagation.propensity import propensity_vec, \
     propensity_vec_molar
-from BioSANS2020.propagation.recalculate_globals import get_globals
+from BioSANS2020.propagation.recalculate_globals import get_globals, \
+    apply_rules
 from BioSANS2020.myglobal import mglobals as globals2
 
 
@@ -149,9 +152,9 @@ def ode_int(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
         stoch_var (numpy.ndarray): stoichiometric matrix. For example
 
             stoch_var = np.array([
-                [   -1,           0   ]            # species A
-                [    1,          -1   ]            # species B
-                [    0,           1   ]            # species C
+                [   -1,           0    ]            # species A
+                [    1,          -1    ]            # species B
+                [    0,           1    ]            # species C
                   #1st rxn    2nd rxn
             ])
         molar (bool, optional): If True, the units for any amount is in
@@ -162,6 +165,35 @@ def ode_int(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
         np.ndarray: trajectories
     """
     get_globals(rfile)
-    zlist = [conc[a] for a in sp_comp]
-    return odeint(ode_model, zlist, tvar,
-                  args=(sp_comp, ks_dict, r_dict, p_dict, stch_var, molar))
+
+    if not globals2.PROP_MODIFIED and not globals2.MODIFIED:
+        zlist = [conc[a] for a in sp_comp]
+        return odeint(ode_model, zlist, tvar,
+                    args=(sp_comp, ks_dict, r_dict, p_dict, stch_var, molar))
+
+    # print()
+    # for x in globals2.PROP_MODIFIED:
+        # print(x, globals2.PROP_MODIFIED[x],111)
+
+    # for x in globals2.MODIFIED:
+        # print(x, globals2.MODIFIED[x],222)
+
+    yconc = {xvar: conc[xvar] for xvar in conc}
+    sconc = {xvar: conc[xvar] for xvar in conc}
+    apply_rules(sconc, yconc)
+    straj_list = [[sconc[z] for z in sp_comp]]
+
+    t_index = 0
+    while t_index < len(tvar)-1:
+        zrow = odeint(
+            ode_model, straj_list[-1], [tvar[t_index], tvar[t_index+1]],
+            args=(sp_comp, ks_dict, r_dict, p_dict, stch_var, molar))
+
+        ind = 0
+        for spi in sp_comp:
+            sconc[spi] = zrow[-1][ind] 
+            ind = ind + 1
+        apply_rules(sconc, yconc)
+        straj_list.append([sconc[z] for z in sp_comp])
+        t_index = t_index + 1
+    return np_array(straj_list)

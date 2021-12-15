@@ -70,7 +70,7 @@ BIOSANS2020
 │
 ├───propagation
 │   │   create_wxmaxima_command.py
-│   │   NetworkLoc.py
+│   │   law_of_localization.py
 │   │   propensity.py
 │   │   recalculate_globals.py
 │   │   __init__.py

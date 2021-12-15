@@ -28,7 +28,7 @@ import matplotlib._color_data as mcd
 
 # from BioSANS2020.propagation.propensity import propensity_vec, \
 #     propensity_vec_molar
-from BioSANS2020.propagation.NetworkLoc import NetLoc_symbolic
+from BioSANS2020.propagation.law_of_localization import law_loc_symbolic
 from BioSANS2020.propagation.create_wxmaxima_command import for_wxmaxima
 from BioSANS2020.propagation.stochastic.mystiffcle import \
     cle_calculate, cle2_calculate
@@ -502,13 +502,13 @@ def process_hub(
             elif method == "NetLoc1":
                 plot_show = False
                 save = False
-                tnew, zvar = NetLoc_symbolic(
+                tnew, zvar = law_loc_symbolic(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True)
             elif method == "NetLoc2":
                 plot_show = False
                 save = False
-                tnew, zvar = NetLoc_symbolic(
+                tnew, zvar = law_loc_symbolic(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True, numer=True)
             elif method == "ODE-1":
@@ -531,27 +531,13 @@ def process_hub(
                 tnew = time_var
             elif method == "Stratint-1":
                 zvar = SDE_int(
-                    concn,
-                    time_var,
-                    sp_comp,
-                    ksn_dict,
-                    r_dict,
-                    p_dict,
-                    stoch_var,
-                    True,
-                    False)
+                    concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
+                    stoch_var, True, False)
                 tnew = time_var
             elif method in ["Stratint-2", "Stratint-3"]:
                 zvar = SDE_int(
-                    concn,
-                    time_var,
-                    sp_comp,
-                    ksn_dict,
-                    r_dict,
-                    p_dict,
-                    stoch_var,
-                    False,
-                    False)
+                    concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
+                    stoch_var, False, False)
                 tnew = time_var
             elif method == "rk4-1":
                 tnew, zvar = rungek4_int(
