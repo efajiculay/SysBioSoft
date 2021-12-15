@@ -417,7 +417,7 @@ def Analyt_soln(Sp, ks_dict, conc, r_dict, p_dict, V, items=None,
                         ffprint(["\n", x[0], "\n\n"])
 
                     ffprint(
-                        ["\n", "The following expression may be wrong , please compare with ODE_int result :", "\n\n"])
+                        ["\n", "The following expression may be wrong , please compare with ode_int result :", "\n\n"])
                     cc = 0
                     while len(notF) > 0 and cc < flen:
                         x = notF.pop(0)
@@ -577,7 +577,7 @@ def Analyt_soln(Sp, ks_dict, conc, r_dict, p_dict, V, items=None,
                         ffprint(["\n", x[0], "\n\n"])
 
                     ffprint(
-                        ["\n", "The following expression may be wrong , please compare with ODE_int result :", "\n\n"])
+                        ["\n", "The following expression may be wrong , please compare with ode_int result :", "\n\n"])
                     cc = 0
                     while len(notF) > 0 and cc < flen:
                         x = notF.pop(0)

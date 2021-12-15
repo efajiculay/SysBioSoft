@@ -3,17 +3,33 @@ import os
 
 from datetime import datetime
 import tkinter as gui
-from tkinter import ttk
-from tkinter import filedialog
+# from tkinter import ttk, Button, filedialog
 from pathlib import Path
 import time
 import webbrowser
 from PIL import Image as Image2, ImageTk
 import numpy as np
 import threading
-from queue import Queue
+# from queue import Queue
 from math import ceil as Myceil
 from sys import platform
+
+
+from BioSANS2020.myglobal import mglobals as globals2
+from BioSANS2020.myglobal import proc_global
+from BioSANS2020.gui_functs.prepare_canvas import prepare_frame_for_plot
+from BioSANS2020.prepcodes.process import process
+from BioSANS2020.analysis.plotting.plot_traj \
+    import plot_traj, plot_traj2
+from BioSANS2020.analysis.numeric.transform_data import calc_cross_corr, \
+    calc_covariance2, calc_covariance, fano_factor,  prob_density_calc, \
+    prob_density_calc2, prob_density_calc3, ave_traj_calc
+from BioSANS2020.model.fileconvert.process_sbml \
+    import process_sbml as sbml_to_topo
+from BioSANS2020.model.ode_parse import ode_extract
+
+import BioSANS2020.model.topology_view as topology_view
+from BioSANS2020.model.new_file import *
 
 if platform == "win32":
     from subprocess import Popen, CREATE_NEW_CONSOLE
@@ -31,22 +47,6 @@ try:
         "\\", "/") + "/BioSANS_temporary_folder"
 except BaseException:
     Temporary_folder = "BioSANS_temporary_folder"
-
-from BioSANS2020.myglobal import mglobals as globals2
-from BioSANS2020.myglobal import proc_global
-from BioSANS2020.gui_functs.prepare_canvas import prepare_frame_for_plot
-from BioSANS2020.prepcodes.process import process
-from BioSANS2020.analysis.plotting.plot_traj \
-    import plot_traj, plot_traj2
-from BioSANS2020.analysis.numeric.transform_data import calc_cross_corr, \
-    calc_covariance2, calc_covariance, fano_factor,  prob_density_calc, \
-    prob_density_calc2, prob_density_calc3, ave_traj_calc
-from BioSANS2020.model.fileconvert.process_sbml \
-    import process_sbml as sbml_to_topo
-from BioSANS2020.model.ode_parse import ode_extract
-
-import BioSANS2020.model.topology_view as topology_view
-from BioSANS2020.model.new_file import *
 
 globals2.init(globals2)
 if __name__ == '__main__':
@@ -92,7 +92,7 @@ file_name = {"topology": Temporary_folder, "current_folder": None}
 
 def load_data(items):
     global file_name
-    file = filedialog.askopenfilename(title="Select file")
+    file = gui.filedialog.askopenfilename(title="Select file")
     file_name["topology"] = file
     file_name["current_folder"] = file
     globals2.TO_CONVERT = file
@@ -164,7 +164,7 @@ def sbml_to_topo2(tocon, items):
 
 def save_file():
     global file_name
-    file = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+    file = gui.filedialog.asksaveasfile(mode='w', defaultextension=".txt")
     file_name["topology"] = file.name
     file_name["current_folder"] = file.name
     if file is None:
@@ -218,7 +218,7 @@ def run_SSL():
 def load_data2(plot=False):
     t_o = time.time()
     global file_name, current_data
-    file = filedialog.askopenfilename(title="Select file")
+    file = gui.filedialog.askopenfilename(title="Select file")
     file_name["trajectory"] = file
     file_name["current_folder"] = file
     with open(file_name["trajectory"], "r") as f:
@@ -279,7 +279,7 @@ def load_image(wdata=False):
     t_o = time.time()
     global items, current_data
     canvas, scroll_x, scroll_y = items
-    file = filedialog.askopenfilename(title="Select file")
+    file = gui.filedialog.askopenfilename(title="Select file")
     file_name["current_folder"] = file
     load = Image2.open(file)
     render = ImageTk.PhotoImage(load)
@@ -288,7 +288,7 @@ def load_image(wdata=False):
 
     fframe = canvas.create_window(
         0, 426 * globals2.PLOT_I, anchor='nw', window=img)
-    B = Button(img, text=" X ", fg='red', highlightcolor='blue', bg='white',
+    B = gui.Button(img, text=" X ", fg='red', highlightcolor='blue', bg='white',
                height=1, relief='raised', command=lambda: delete_this(fframe, canvas))
     B.place(rely=0.0, relx=1.0, x=-15, y=0, anchor="ne")
 
@@ -481,7 +481,7 @@ def plot_trajD(current_data, items):
         [E[i].grid(row=i, column=1, sticky=gui.W, pady=2) for i in range(4)]
         E[-1].insert(gui.END, "0:-1")
 
-        B1 = ttk.Button(par, text="PLOT", command=lambda: plot_traj2(
+        B1 = gui.ttk.Button(par, text="PLOT", command=lambda: plot_traj2(
             data, slabels, items, globals2.PLOTTED, logx=False, logy=False, normalize=False,
             xlabel=optselVar[0].get(), ylabel=optselVar[1].get(), zlabel=optselVar[2].get(), trange=E[-1].get()))
         B1.grid(row=5, column=0, sticky=gui.W, pady=2)
@@ -534,7 +534,7 @@ def plot_trajD2(current_data, items):
                          xscrollcommand=scroll_x.set)
         canvas.configure(scrollregion=canvas.bbox("all"))
 
-        B1 = ttk.Button(pard, text="PLOT",
+        B1 = gui.ttk.Button(pard, text="PLOT",
                         command=lambda:
                         plot_traj(data, slabels, items, globals2.PLOTTED, mix_plot=True, logx=False,
                                   logy=False, normalize=False, si_ticked=getChecked(L1, L, slabels))
@@ -625,7 +625,7 @@ def paramSet(method):
         E[5].delete(0, gui.END)
         E[5].insert(gui.END, str(10))
 
-    B1 = ttk.Button(par, text="RUN",
+    B1 = gui.ttk.Button(par, text="RUN",
                     command=lambda: mrun_propagation(par, E, defs))
     B1.grid(row=oplen, column=0, sticky=gui.W, pady=2)
     if method in ["k_est1", "k_est2", "k_est3", "k_est4", "k_est6", "k_est7", "k_est8", "k_est9", "k_est10", "k_est11", "LNA2", "LNA3", "LNA-vs",

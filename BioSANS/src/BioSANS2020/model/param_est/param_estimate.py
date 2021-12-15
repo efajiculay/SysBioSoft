@@ -22,7 +22,7 @@ import numpy as np
 # from scipy.integrate import odeint
 from scipy import optimize
 
-from BioSANS2020.propagation.deterministic.ode_int import ODE_int
+from BioSANS2020.propagation.deterministic.ode_int import ode_int
 from BioSANS2020.model.param_est.my_mcem import run_mcem
 from BioSANS2020.gui_functs.scrollable_text import prepare_scroll_text
 from BioSANS2020.gui_functs.scrollable_text import INSERT
@@ -118,7 +118,7 @@ def custom_likelihood(ks_par, args=None):
         conc[spi] = ks_par[ind]
         ind = ind + 1
     # print(conc)
-    z_val = ODE_int(conc, tvar, sp_comp, ks_dict, r_dict,
+    z_val = ode_int(conc, tvar, sp_comp, ks_dict, r_dict,
                     p_dict, v_stoich, molar, rfile)
     spc1 = np.array(list(sp_comp.keys()))  # [spi for spi in sp_comp]
     # print(z_val[0,np.isin(spc1,c_miss)])
@@ -155,7 +155,7 @@ def ave_abs_dev(ks_par, args=None):
     for spi in c_miss:
         conc[spi] = ks_par[ind]
         ind = ind + 1
-    z_val = ODE_int(conc, tvar, sp_comp, ks_dict, r_dict,
+    z_val = ode_int(conc, tvar, sp_comp, ks_dict, r_dict,
                     p_dict, v_stoich, molar, rfile)
     spc1 = np.array(list(sp_comp.keys()))  # [spi for spi in sp_comp]
     spc1 = ~np.isin(spc1, c_miss)

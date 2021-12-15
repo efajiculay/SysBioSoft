@@ -40,7 +40,7 @@ from BioSANS2020.propagation.stochastic.sde_int import SDE_int
 from BioSANS2020.propagation.deterministic.euler_mod import euler_int, \
     euler2_int
 # from BioSANS2020.propagation.deterministic.lna_approx import *
-from BioSANS2020.propagation.deterministic.ode_int import ODE_int
+from BioSANS2020.propagation.deterministic.ode_int import ode_int
 from BioSANS2020.propagation.deterministic.lna_function_of_time import \
     lna_non_steady_state, lna_non_steady_state2
 from BioSANS2020.propagation.deterministic.runge_kutta4 \
@@ -68,7 +68,9 @@ def process_hub(
         items=None, vary2="", implicit=False, rfile="",
         exp_data_file=None
 ):
-    """[summary]
+    """This function  redirect all information from the process to other
+    modules and expect the return from those  module for plotting or for
+    saving into a file.
 
     Args:
         time_var (list): list of time points in the simulation
@@ -78,7 +80,7 @@ def process_hub(
             For example;
 
                 #REACTIONS
-                A => B, -kf1    # negative means to be estimated    # negative means to be estimated
+                A => B, -kf1    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -510,12 +512,12 @@ def process_hub(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True, numer=True)
             elif method == "ODE-1":
-                zvar = ODE_int(
+                zvar = ode_int(
                     concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
                     stoch_var, False, rfile)
                 tnew = time_var
             elif method in ["ODE-2", "ODE-3"]:
-                zvar = ODE_int(
+                zvar = ode_int(
                     concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
                     stoch_var, True, rfile)
                 tnew = time_var

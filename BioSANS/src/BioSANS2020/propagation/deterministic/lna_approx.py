@@ -203,7 +203,7 @@ def lna_steady_state(t_var, sp_comp, ks_dict, conc, r_dict, p_dict,
 
     Args:
         t_var (list): time stamp
-       sp_comp (dict): dictionary of appearance or position of species
+        sp_comp (dict): dictionary of appearance or position of species
             or component in the reaction tag of BioSANS topology file.
 
             For example;
