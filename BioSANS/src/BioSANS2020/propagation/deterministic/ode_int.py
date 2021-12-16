@@ -79,7 +79,8 @@ def ode_model(zlist, tvar, sp_comp, ks_dict, r_dict, p_dict,
     Returns:
         np.ndarray: dx/dt where x are the components and t is time
     """
-    spc = [s for s in sp_comp]
+
+    spc = list(sp_comp.keys())  # [s for s in sp_comp]
     conc = {spc[xvar]: zlist[xvar] for xvar in range(len(spc))}
     if not molar:
         prop_flux = propensity_vec(ks_dict, conc, r_dict, p_dict, True)
@@ -89,7 +90,7 @@ def ode_model(zlist, tvar, sp_comp, ks_dict, r_dict, p_dict,
     dxdt = np_matmul(stch_var, prop_flux).reshape(len(zlist))
     for xvar in globals2.CON_BOUNDARY:
         ind = spc.index(xvar)
-        dxdt[ind] = 0
+        dxdt[ind] = 0*tvar
 
     return dxdt
 
@@ -169,7 +170,7 @@ def ode_int(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
     if not globals2.PROP_MODIFIED and not globals2.MODIFIED:
         zlist = [conc[a] for a in sp_comp]
         return odeint(ode_model, zlist, tvar,
-                    args=(sp_comp, ks_dict, r_dict, p_dict, stch_var, molar))
+                      args=(sp_comp, ks_dict, r_dict, p_dict, stch_var, molar))
 
     # print()
     # for x in globals2.PROP_MODIFIED:
@@ -184,14 +185,14 @@ def ode_int(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
     straj_list = [[sconc[z] for z in sp_comp]]
 
     t_index = 0
-    while t_index < len(tvar)-1:
+    while t_index < len(tvar) - 1:
         zrow = odeint(
-            ode_model, straj_list[-1], [tvar[t_index], tvar[t_index+1]],
+            ode_model, straj_list[-1], [tvar[t_index], tvar[t_index + 1]],
             args=(sp_comp, ks_dict, r_dict, p_dict, stch_var, molar))
 
         ind = 0
         for spi in sp_comp:
-            sconc[spi] = zrow[-1][ind] 
+            sconc[spi] = zrow[-1][ind]
             ind = ind + 1
         apply_rules(sconc, yconc)
         straj_list.append([sconc[z] for z in sp_comp])

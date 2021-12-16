@@ -1,3 +1,12 @@
+"""
+
+                     This is the propensity module
+
+This module prepares the propensity vector or fluxes vector
+
+
+"""
+
 # import sys
 # import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
@@ -8,132 +17,159 @@ from BioSANS2020.myglobal import mglobals as globals2
 
 
 def propensity_vec(ks_dict, conc, r_dict, p_dict, odeint=False):
+    """Returns propensity vector using microscopic equations
+
+    Args:
+        ks_dict (dict): check details in process module
+        conc (dict): check details in process module
+        r_dict (dict): check details in process module
+        p_dict (dict): check details in process module
+        odeint (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        np.ndarray: propensity vector
+    """
     # this is for microscopic
     prop_flux = []
     rxn = len(ks_dict)
 
     if odeint:
-        for x in globals2.MODIFIED:
-            spvar, pfunc = globals2.MODIFIED[x][0]
+        for xvar in globals2.MODIFIED:
+            spvar, pfunc = globals2.MODIFIED[xvar][0]
             try:
                 sprv = []
-                for c in range(len(spvar)):
-                    sprv.append(conc[spvar[c].strip()])
-                conc[x] = pfunc(*sprv)
-            except BaseException:
-                conc[x] = pfunc()
+                for cvar, _ in enumerate(spvar):
+                    sprv.append(conc[spvar[cvar].strip()])
+                conc[xvar] = pfunc(*sprv)
+            except:  # BaseException:
+                conc[xvar] = pfunc()
 
-    for r in range(rxn):
-        key = "Prop_" + str(r)
+    for rvar in range(rxn):
+        key = "Prop_" + str(rvar)
         if key in globals2.PROP_MODIFIED:
-            rowProp = globals2.PROP_MODIFIED[key]
-            for row in rowProp:
+            row_prop = globals2.PROP_MODIFIED[key]
+            for row in row_prop:
                 try:
                     spvar, pfunc = row
                     sprv = []
-                    for c in range(len(spvar)):
-                        sprv.append(conc[spvar[c].strip()])
+                    for cvar, _ in enumerate(spvar):
+                        sprv.append(conc[spvar[cvar].strip()])
                     prop_flux.append(pfunc(*sprv))
-                except BaseException:
+                except:  # BaseException:
                     prop_flux.append(pfunc())
         else:
-            if len(r_dict[r]) == 1:
-                for x in r_dict[r]:
-                    if r_dict[r][x] == 1:
-                        prop_flux.append(ks_dict[r][0] * conc[x])
-                    elif r_dict[r][x] == 2:
+            if len(r_dict[rvar]) == 1:
+                for xvar in r_dict[rvar]:
+                    if r_dict[rvar][xvar] == 1:
+                        prop_flux.append(ks_dict[rvar][0] * conc[xvar])
+                    elif r_dict[rvar][xvar] == 2:
                         prop_flux.append(
-                            ks_dict[r][0]
-                            * max(conc[x] * (conc[x] - 1), 0) / 2)
-                    elif r_dict[r][x] == 0:
-                        prop_flux.append(ks_dict[r][0])
-            elif len(r_dict[r]) == 2:
-                p = ks_dict[r][0]
-                for x in r_dict[r]:
-                    p = p * conc[x]
-                prop_flux.append(p)
-            if len(ks_dict[r]) == 2:
-                if len(p_dict[r]) == 1:
-                    for x in p_dict[r]:
-                        if p_dict[r][x] == 1:
-                            prop_flux.append(ks_dict[r][1] * conc[x])
-                        elif p_dict[r][x] == 2:
+                            ks_dict[rvar][0]
+                            * max(conc[xvar] * (conc[xvar] - 1), 0) / 2)
+                    elif r_dict[rvar][xvar] == 0:
+                        prop_flux.append(ks_dict[rvar][0])
+            elif len(r_dict[rvar]) == 2:
+                pvar = ks_dict[rvar][0]
+                for xvar in r_dict[rvar]:
+                    pvar = pvar * conc[xvar]
+                prop_flux.append(pvar)
+            if len(ks_dict[rvar]) == 2:
+                if len(p_dict[rvar]) == 1:
+                    for xvar in p_dict[rvar]:
+                        if p_dict[rvar][xvar] == 1:
+                            prop_flux.append(ks_dict[rvar][1] * conc[xvar])
+                        elif p_dict[rvar][xvar] == 2:
                             prop_flux.append(
-                                ks_dict[r][1]
-                                * max(conc[x] * (conc[x] - 1), 0) / 2)
-                        elif p_dict[r][x] == 0:
-                            prop_flux.append(ks_dict[r][1])
-                elif len(p_dict[r]) == 2:
-                    p = ks_dict[r][1]
-                    for x in p_dict[r]:
-                        if p_dict[r][x] == 1:
-                            p = p * conc[x]
+                                ks_dict[rvar][1]
+                                * max(conc[xvar] * (conc[xvar] - 1), 0) / 2)
+                        elif p_dict[rvar][xvar] == 0:
+                            prop_flux.append(ks_dict[rvar][1])
+                elif len(p_dict[rvar]) == 2:
+                    pvar = ks_dict[rvar][1]
+                    for xvar in p_dict[rvar]:
+                        if p_dict[rvar][xvar] == 1:
+                            pvar = pvar * conc[xvar]
                         else:
-                            p = p * max(conc[x] * (conc[x] - 1), 0) / 2
-                    prop_flux.append(p)
+                            pvar = pvar * max(conc[xvar]
+                                              * (conc[xvar] - 1), 0) / 2
+                    prop_flux.append(pvar)
     try:
         return np.array(prop_flux).reshape(len(prop_flux), 1).astype(float)
-    except BaseException:
+    except ValueError:  # BaseException:
         return np.array(prop_flux).reshape(len(prop_flux), 1)
 
 
 def propensity_vec_molar(ks_dict, conc, r_dict, p_dict, odeint=False):
+    """Returns propensity vector using macroscopic equations
+
+    Args:
+        ks_dict (dict): check details in process module
+        conc (dict): check details in process module
+        r_dict (dict): check details in process module
+        p_dict (dict): check details in process module
+        odeint (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        np.ndarray: propensity vector
+    """
     # this is for macroscopic
     prop_flux = []
     rxn = len(ks_dict)
 
     if odeint:
-        for x in globals2.MODIFIED:
-            spvar, pfunc = globals2.MODIFIED[x][0]
+        for xvar in globals2.MODIFIED:
+            spvar, pfunc = globals2.MODIFIED[xvar][0]
             try:
                 sprv = []
-                for c in range(len(spvar)):
-                    sprv.append(conc[spvar[c].strip()])
-                conc[x] = pfunc(*sprv)
-            except BaseException:
+                for cvar, _ in enumerate(spvar):
+                    sprv.append(conc[spvar[cvar].strip()])
+                conc[xvar] = pfunc(*sprv)
+            except:  # BaseException:
                 suby = pfunc()
-                conc[x] = suby
+                conc[xvar] = suby
 
-    for r in range(rxn):
-        key = "Prop_" + str(r)
+    for rvar in range(rxn):
+        key = "Prop_" + str(rvar)
         if key in globals2.PROP_MODIFIED:
-            rowProp = globals2.PROP_MODIFIED[key]
-            for row in rowProp:
+            row_prop = globals2.PROP_MODIFIED[key]
+            for row in row_prop:
                 try:
                     spvar, pfunc = row
                     sprv = []
-                    for c in range(len(spvar)):
-                        sprv.append(conc[spvar[c].strip()])
+                    for cvar, _ in enumerate(spvar):
+                        sprv.append(conc[spvar[cvar].strip()])
                     prop_flux.append(pfunc(*sprv))
-                except BaseException:
+                except:  # BaseException:
                     prop_flux.append(pfunc())
         else:
-            if len(r_dict[r]) == 1:
-                for x in r_dict[r]:
-                    if x not in conc:
-                        conc[x] = 1
-                    prop_flux.append(ks_dict[r][0] * conc[x]**r_dict[r][x])
-            elif len(r_dict[r]) == 2:
-                p = ks_dict[r][0]
-                for x in r_dict[r]:
-                    if x not in conc:
-                        conc[x] = 1
-                    p = p * conc[x]**r_dict[r][x]
-                prop_flux.append(p)
+            if len(r_dict[rvar]) == 1:
+                for xvar in r_dict[rvar]:
+                    if xvar not in conc:
+                        conc[xvar] = 1
+                    prop_flux.append(ks_dict[rvar][0]
+                                     * conc[xvar]**r_dict[rvar][xvar])
+            elif len(r_dict[rvar]) == 2:
+                pvar = ks_dict[rvar][0]
+                for xvar in r_dict[rvar]:
+                    if xvar not in conc:
+                        conc[xvar] = 1
+                    pvar = pvar * conc[xvar]**r_dict[rvar][xvar]
+                prop_flux.append(pvar)
 
-            if len(ks_dict[r]) == 2:
-                if len(p_dict[r]) == 1:
-                    for x in p_dict[r]:
-                        prop_flux.append(ks_dict[r][1] * conc[x]**p_dict[r][x])
-                elif len(p_dict[r]) == 2:
-                    p = ks_dict[r][1]
-                    for x in p_dict[r]:
-                        if x not in conc:
-                            conc[x] = 1
-                        p = p * conc[x]**p_dict[r][x]
-                    prop_flux.append(p)
+            if len(ks_dict[rvar]) == 2:
+                if len(p_dict[rvar]) == 1:
+                    for xvar in p_dict[rvar]:
+                        prop_flux.append(ks_dict[rvar][1]
+                                         * conc[xvar]**p_dict[rvar][xvar])
+                elif len(p_dict[rvar]) == 2:
+                    pvar = ks_dict[rvar][1]
+                    for xvar in p_dict[rvar]:
+                        if xvar not in conc:
+                            conc[xvar] = 1
+                        pvar = pvar * conc[xvar]**p_dict[rvar][xvar]
+                    prop_flux.append(pvar)
 
     try:
         return np.array(prop_flux).reshape(len(prop_flux), 1).astype(float)
-    except BaseException:
+    except ValueError:  # BaseException:
         return np.array(prop_flux).reshape(len(prop_flux), 1)

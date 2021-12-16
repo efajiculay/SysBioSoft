@@ -202,7 +202,7 @@ def lna_non_steady_state(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
             half.append(len_sps * i + j)
 
     cvar = np.zeros((len(zlist), len(zlist)))
-    cov_var = [[xvar for xvar in cvar.flatten()[half]]]
+    cov_var = [list(cvar.flatten()[half])]
     dtime = t_var[-1] - t_var[-2]
     tnew = [0]
 
@@ -231,7 +231,7 @@ def lna_non_steady_state(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
         tnew.append(tnew[-1] + dtime)
         s_traj = s_traj + fx_conc * dtime
         cvar = cvar + fx_covr * dtime
-        cov_var.append([xvar for xvar in cvar.flatten()[half]])
+        cov_var.append(list(cvar.flatten()[half]))
 
     return [np.array(cov_var), si_new, tnew]
 
@@ -309,7 +309,7 @@ def lna_non_steady_state2(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
                                           stch_var, molar))
 
     si_new = []
-    sps = [svar for svar in sp_comp]
+    sps = list(sp_comp.keys())  # [svar for svar in sp_comp]
     len_sps = len(sps)
     ff_div = []
 
@@ -362,8 +362,8 @@ def lna_non_steady_state2(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
 #         aa_jac = lna_ss_jacobian(
 #             lna_model_ss, s_traj, sp_comp, stch_var, ks_dict, r_dict, p_dict)
 #         prop_flux = propensity_vec_molar(ks_dict, conc, r_dict, p_dict, True)
-#         bb_diff = np.matmul(np.matmul(stch_var, np.diag(prop_flux.flatten())),
-#                             stch_var.T)
+#         bb_diff = np.matmul(np.matmul(stch_var, np.diag(prop_flux.flatten()))
+#                             ,stch_var.T)
 #
 #         a_jac = np.nan_to_num(aa_jac)
 #         b_diff = np.nan_to_num(bb_diff)

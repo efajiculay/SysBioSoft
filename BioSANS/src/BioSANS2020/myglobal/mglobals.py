@@ -22,6 +22,7 @@ TO_CONVERT = ""
 SETTINGS = {}
 EXEC_FUNCTIONS = []
 DELAY_LIST = {}
+TCHECK = []
 
 
 def init(self):
@@ -38,3 +39,4 @@ def init(self):
     self.SETTINGS = {}
     self.EXEC_FUNCTIONS = []
     self.DELAY_LIST = {}
+    self.TCHECK = []

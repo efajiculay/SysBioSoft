@@ -107,10 +107,10 @@ def rk4_model(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
         prop_flux = propensity_vec_molar(ks_dict, conc, r_dict, p_dict)
     dxdt = np.matmul(stch_var, prop_flux).reshape(len(sp_comp))
     if globals2.CON_BOUNDARY:
-        spc = [spi for spi in sp_comp]
+        spc = list(sp_comp.keys())  # [spi for spi in sp_comp]
         for xvar in globals2.CON_BOUNDARY:
             ind = spc.index(xvar)
-            dxdt[ind] = 0
+            dxdt[ind] = 0*tvar[0]  # useless multiplication
     return dxdt
 
 
@@ -301,7 +301,7 @@ def rungek4_int(conc, time, sp_comp, ks_dict, r_dict, p_dict, stch_var,
     div = max(1, int(1 / delx))
     delt = (time[-1] - time[-2]) / div
     yconc = {xvar: conc[xvar] for xvar in conc}
-    slabels = [a for a in sp_comp]
+    slabels = list(sp_comp.keys())  # [a for a in sp_comp]
     apply_rules(conc, yconc, [0], [conc[a] for a in sp_comp], slabels)
     zvar = [conc[a] for a in sp_comp]
     zlist = [zvar]
@@ -541,7 +541,7 @@ def rungek4a_int(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
     eps = 1.0e-8
     n_sp = [xvar for xvar in conc if xvar not in sp_comp]
     yconc = {xvar: conc[xvar] for xvar in sp_comp}
-    slabels = [a for a in sp_comp]
+    slabels = list(sp_comp.keys())  # [a for a in sp_comp]
     apply_rules(conc, yconc, [0], [conc[a] for a in sp_comp], slabels)
     yvar = [conc[a] for a in sp_comp]
     s_list = [yvar]

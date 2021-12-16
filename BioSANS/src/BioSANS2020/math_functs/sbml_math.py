@@ -15,7 +15,7 @@ import numpy as np
 
 # def abs(xvar):
 # return sympy.fabs(xvar)
-# need to use trigonometric relationship to create non-built in numpy 
+# need to use trigonometric relationship to create non-built in numpy
 # trigonometric functions
 
 NUMBER_TYPE = (float, int)
@@ -191,7 +191,7 @@ def cosh(xvar):
 def cot(xvar):
     """returns sympy.cot(xvar).evalf()"""
     if isinstance(xvar, NUMBER_TYPE):
-        return 1/np.tan(xvar)
+        return 1 / np.tan(xvar)
     return sympy.cot(xvar).evalf()
 
 
@@ -203,7 +203,7 @@ def coth(xvar):
 def csc(xvar):
     """returns sympy.csc(xvar).evalf()"""
     if isinstance(xvar, NUMBER_TYPE):
-        return 1/np.sin(xvar)
+        return 1 / np.sin(xvar)
     return sympy.csc(xvar).evalf()
 
 
@@ -286,10 +286,11 @@ def root(nvar, xvar):
     """sympy.root(xvar, nvar).evalf()"""
     return sympy.root(xvar, nvar).evalf()
 
+
 def sec(xvar):
     """returns sympy.sec(xvar).evalf()"""
     if isinstance(xvar, NUMBER_TYPE):
-        return 1/np.cos(xvar)
+        return 1 / np.cos(xvar)
     return sympy.sec(xvar).evalf()
 
 
@@ -486,6 +487,6 @@ SBML_FUNCT_DICT = {
     "sinh": sinh, "tan": tan, "tanh": tanh, "And": And, "Not": Not,
     "Or": Or, "xor": xor, "eq": eq, "geq": geq, "gt": gt, "leq": leq,
     "lt": lt, "neq": neq, "plus": plus, "times": times, "minus": minus,
-    "divide": divide, "multiply": multiply, "exponentiale":exp(1),
-    "INF":np.inf, "NAN":np.nan, "inf":np.inf, "nan":np.nan
+    "divide": divide, "multiply": multiply, "exponentiale": exp(1),
+    "INF": np.inf, "NAN": np.nan, "inf": np.inf, "nan": np.nan
 }

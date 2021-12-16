@@ -17,7 +17,7 @@ def Tau_leaping2(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr,
     V2 = V**2
     stch_var = V.T
     dto = t[-1] - t[-2]
-    tchlen = len(globals2.tCheck)
+    tchlen = len(globals2.TCHECK)
 
     AllSp = [z for z in Sp]
     Spc = [z for z in Sp if z not in reserve_events_words]
@@ -178,8 +178,8 @@ def Tau_leaping2(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr,
                 else:
                     Gupdate = False
                     if index != tchlen:
-                        if tc + dt > globals2.tCheck[index]:
-                            dt = globals2.tCheck[index] - tc
+                        if tc + dt > globals2.TCHECK[index]:
+                            dt = globals2.TCHECK[index] - tc
                             index = index + 1
                             Gupdate = True
 
@@ -298,7 +298,7 @@ def SSA_support(t, Sp, ks_dict, r_dict, p_dict, V, rfile="", tindex=0, index=0, 
     tmax = t[-1]
 
     break_now = False
-    tchlen = len(globals2.tCheck)
+    tchlen = len(globals2.TCHECK)
     Allpos = True
     for ssa in range(100):
         if tc < tmax:
@@ -312,8 +312,8 @@ def SSA_support(t, Sp, ks_dict, r_dict, p_dict, V, rfile="", tindex=0, index=0, 
 
             #Gupdate = False
             if index != tchlen:
-                if tc + dt >= globals2.tCheck[index]:
-                    dt = globals2.tCheck[index] - tc
+                if tc + dt >= globals2.TCHECK[index]:
+                    dt = globals2.TCHECK[index] - tc
                     index = index + 1
                     #Gupdate = True
 

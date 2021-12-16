@@ -1,29 +1,30 @@
-#import sys
-#import os
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 import numpy as np
-from BioSANS2020.propagation.propensity import propensity_vec, \
-    propensity_vec_molar
-from BioSANS2020.propagation.recalculate_globals import get_globals
+from BioSANS2020.propagation.propensity import propensity_vec
+from BioSANS2020.propagation.recalculate_globals \
+    import get_globals, apply_rules, reserve_events_words
 from BioSANS2020.myglobal import mglobals as globals2
 
 
-def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile=""):
+def Gillespie(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
+              rand_seed, implicit=False, rfile=""):
     get_globals(rfile)
-    tmax = t[-1]
-    np.random.seed(int(rr * 100))
+    tmax = tvar[-1]
+    np.random.seed(int(rand_seed * 100))
     tnew = []
-    stch_var = V.T
-    AllSp = [z for z in Sp]
-    Spc = [z for z in Sp if z not in reserve_events_words]
-    Spc2 = [z for z in Sp if z in reserve_events_words]
+    stch_var = stch_var.T
+    AllSp = [z for z in sp_comp]
+    Spc = [z for z in sp_comp if z not in reserve_events_words]
+    Spc2 = [z for z in sp_comp if z in reserve_events_words]
     concz = {x: conc[x] for x in conc}
     yconc = {x: conc[x] for x in conc}
     apply_rules(concz, yconc)
     UpdateSp = [AllSp.index(z) for z in Spc]
 
-    Z = [[concz[z] for z in Spc]]
+    zlist = [[concz[z] for z in Spc]]
     tc = 0
     tnew.append(tc)
     if not implicit:
@@ -42,7 +43,7 @@ def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
+                        holder = zlist[-1][x] + stch_var[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.MODIFIED:
                             concz[Spc[x]] = holder
                         else:
@@ -52,18 +53,18 @@ def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile
                         for x in range(len(Spc2)):
                             concz[Spc2[x]] = concz[Spc2[x]] + dt
                         apply_rules(concz, yconc)
-                        Z.append([concz[x] for x in Spc])
+                        zlist.append([concz[x] for x in Spc])
                         tc = tc + dt
                         tnew.append(tc)
                     else:
                         for x in range(len(Spc)):
-                            concz[Spc[x]] = Z[-1][x]
+                            concz[Spc[x]] = zlist[-1][x]
                     break
     else:
         Zc = []
         tindex = 0
         index = 0
-        tchlen = len(globals2.tCheck)
+        tchlen = len(globals2.TCHECK)
         while tc < tmax:
             D = propensity_vec(ks_dict, concz, r_dict, p_dict)
             alp = np.sum(D)
@@ -74,14 +75,14 @@ def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile
             dt = (1 / alp) * (np.log(1 / r1))
 
             if index != tchlen:
-                if tc + dt >= globals2.tCheck[index]:
-                    dt = globals2.tCheck[index] - tc
+                if tc + dt >= globals2.TCHECK[index]:
+                    dt = globals2.TCHECK[index] - tc
                     index = index + 1
 
             if np.isnan(dt) or np.isinf(dt):
-                Zc.append(Z[-1])
-                while t[tindex] != tmax:
-                    Zc.append(Z[-1])
+                Zc.append(zlist[-1])
+                while tvar[tindex] != tmax:
+                    Zc.append(zlist[-1])
                     tindex = tindex + 1
                 break
             r2 = np.random.uniform()
@@ -89,7 +90,7 @@ def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile
                 if r2 <= P[i]:
                     Allpos = True
                     for x in range(len(Spc)):
-                        holder = Z[-1][x] + stch_var[i][UpdateSp[x]]
+                        holder = zlist[-1][x] + stch_var[i][UpdateSp[x]]
                         if holder >= 0 or Spc[x] in globals2.MODIFIED:
                             concz[Spc[x]] = holder
                         else:
@@ -108,23 +109,23 @@ def Gillespie(t, Sp, ks_dict, conc, r_dict, p_dict, V, rr, implicit=False, rfile
                             pass
 
                         apply_rules(concz, yconc)
-                        Z.append([concz[x] for x in Spc])
+                        zlist.append([concz[x] for x in Spc])
                         #tc = tc + dt
                         try:
-                            if tc == t[tindex]:
-                                Zc.append(Z[-1])
+                            if tc == tvar[tindex]:
+                                Zc.append(zlist[-1])
                                 tindex = tindex + 1
                             else:
-                                while tc > t[tindex]:
-                                    Zc.append(Z[-2])
+                                while tc > tvar[tindex]:
+                                    Zc.append(zlist[-2])
                                     tindex = tindex + 1
                         except BaseException:
                             pass
                         tnew.append(tc)
                     else:
                         for x in range(len(Spc)):
-                            concz[Spc[x]] = Z[-1][x]
+                            concz[Spc[x]] = zlist[-1][x]
                     break
-        tnew = t
-        Z = Zc
-    return (tnew, np.array(Z))
+        tnew = tvar
+        zlist = Zc
+    return (tnew, np.array(zlist))

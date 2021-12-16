@@ -58,7 +58,6 @@ from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.gui_functs.draw_figure import draw_figure
 
 
-
 def process_hub(
         time_var, sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
         v_volms=1, miter=1, logx=False, logy=False, del_coef=10,
@@ -240,7 +239,7 @@ def process_hub(
     stch_temp = []
     nzvar = []
     si_new = []
-    slabels = [xvar for xvar in sp_comp]
+    slabels = list(sp_comp.keys())  # [xvar for xvar in sp_comp]
     for row in range(stoch_var.shape[0]):
         if np.sum(np.abs(stoch_var[row, :])) != 0 and slabels[row][0] != "-":
             stch_temp.append(list(stoch_var[row, :]))
@@ -248,7 +247,7 @@ def process_hub(
     stoch_var = np.array(stch_temp)
     sp_comp = {slabels[zvar]: sp_comp[slabels[zvar]] for zvar in nzvar}
 
-    slabels = [slabels for slabels in sp_comp]
+    slabels = list(sp_comp.keys())
     data = []
     # if len(vary) > 0:
     if vary:
@@ -274,7 +273,8 @@ def process_hub(
         # if len(vary2) > 0:
         if vary2:
             for j in range(miter):
-                ksns_list.append({xvar: ksn_dict[xvar][:] for xvar in ksn_dict})
+                ksns_list.append({xvar: ksn_dict[xvar][:]
+                                  for xvar in ksn_dict})
                 if isinstance(r_index1, int):
                     ksns_list[-1][r_index1][r_index2] = kval[j]
                 else:
@@ -283,113 +283,113 @@ def process_hub(
         else:
             ksns_list = [ksn_dict for xvar in range(miter)]
 
-#		if __name__ == '__main__':
-        if True:  # always true, just use above  command on some OS
-            rands = [xvar * np.random.rand() for xvar in range(miter)]
-            if method == "Tau-leaping":
-                results = [
-                    pool.apply_async(
-                        Tau_leaping,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, rands[ih], del_coef,
-                            implicit, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method == "Tau-leaping2":
-                results = [
-                    pool.apply_async(
-                        Tau_leaping2,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, rands[ih], del_coef,
-                            implicit, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method == "Sim-TauLeap":
-                results = [
-                    pool.apply_async(
-                        Sim_TauLeap,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, rands[ih], del_coef,
-                            implicit, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method == "CLE":
-                results = [
-                    pool.apply_async(
-                        cle_calculate,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, del_coef, rands[ih],
-                            implicit, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method == "CLE2":
-                results = [
-                    pool.apply_async(
-                        cle2_calculate,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, del_coef, rands[ih],
-                            rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method == "Euler-1":
-                results = [
-                    pool.apply_async(
-                        euler_int,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, del_coef, False,
-                            None, implicit, False, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method in ["Euler-2", "Euler-3"]:
-                results = [
-                    pool.apply_async(
-                        euler_int,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, del_coef, False,
-                            None, implicit, True, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            elif method == "LNA":
-                save = False
-                plot_show = False
-                results = [
-                    pool.apply_async(
-                        euler_int,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, del_coef, True,
-                            items, False, rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + [slabels] for result in results]
-            elif method == "Gillespie_":
-                results = [
-                    pool.apply_async(
-                        Gillespie,
-                        args=(
-                            time_var, sp_comp, ksns_list[ih], concn_list[ih],
-                            r_dict, p_dict, stoch_var, rands[ih], implicit,
-                            rfile)
-                    ) for ih in range(miter)
-                ]
-                data = [result.get() + (slabels,) for result in results]
-            else:
-                print("Multiprocessing not supported for \
-                    your method of choice")
+            # if __name__ == '__main__':
+        # if True:  # always true, just use above  command on some OS
+        rands = [xvar * np.random.rand() for xvar in range(miter)]
+        if method == "Tau-leaping":
+            results = [
+                pool.apply_async(
+                    Tau_leaping,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, rands[ih], del_coef,
+                        implicit, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method == "Tau-leaping2":
+            results = [
+                pool.apply_async(
+                    Tau_leaping2,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, rands[ih], del_coef,
+                        implicit, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method == "Sim-TauLeap":
+            results = [
+                pool.apply_async(
+                    Sim_TauLeap,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, rands[ih], del_coef,
+                        implicit, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method == "CLE":
+            results = [
+                pool.apply_async(
+                    cle_calculate,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, del_coef, rands[ih],
+                        implicit, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method == "CLE2":
+            results = [
+                pool.apply_async(
+                    cle2_calculate,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, del_coef, rands[ih],
+                        rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method == "Euler-1":
+            results = [
+                pool.apply_async(
+                    euler_int,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, del_coef, False,
+                        None, implicit, False, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method in ["Euler-2", "Euler-3"]:
+            results = [
+                pool.apply_async(
+                    euler_int,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, del_coef, False,
+                        None, implicit, True, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        elif method == "LNA":
+            save = False
+            plot_show = False
+            results = [
+                pool.apply_async(
+                    euler_int,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, del_coef, True,
+                        items, False, rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + [slabels] for result in results]
+        elif method == "Gillespie_":
+            results = [
+                pool.apply_async(
+                    Gillespie,
+                    args=(
+                        time_var, sp_comp, ksns_list[ih], concn_list[ih],
+                        r_dict, p_dict, stoch_var, rands[ih], implicit,
+                        rfile)
+                ) for ih in range(miter)
+            ]
+            data = [result.get() + (slabels,) for result in results]
+        else:
+            print("Multiprocessing not supported for \
+                your method of choice")
         pool.close()
     else:
         rands = [xvar * np.random.rand() for xvar in range(miter)]
@@ -691,7 +691,7 @@ def process_hub(
         if key not in reserve_events_words:
             nzvar.append(row)
     sp_comp = {slabels[zvar]: sp_comp[slabels[zvar]] for zvar in nzvar}
-    slabels = [slabels for slabels in sp_comp]
+    slabels = list(sp_comp.keys())
 
     # if len(si_new) > 0:
     if si_new:
@@ -730,10 +730,10 @@ def process_hub(
         if sp_len <= 10:
             col = ['C' + str(i) for i in range(10)]
         elif sp_len > 10 and sp_len <= 40:
-            col = [xvar for xvar in get_cmap("tab20").colors] + \
-                [xvar for xvar in get_cmap("tab20b").colors]
+            col = list(get_cmap("tab20").colors) \
+                + list(get_cmap("tab20b").colors)
         else:
-            col = [name for name in mcd.CSS4_COLORS]
+            col = list(mcd.CSS4_COLORS)
         if mix_plot:
             plt.figure(figsize=(9.68, 3.95))
             plt.xlabel(time_unit)

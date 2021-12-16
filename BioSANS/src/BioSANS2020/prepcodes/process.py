@@ -63,7 +63,7 @@ def tofloat(val, loc_dict):
     """
     try:
         return float(val)
-    except ValueError:
+    except:
         return float(eval_dict(val, loc_dict))
 
 
@@ -79,7 +79,7 @@ def is_number(xvar):
     try:
         float(xvar)
         return True
-    except ValueError:
+    except:
         return False
 
 
@@ -106,7 +106,7 @@ def process(
         implicit=False,
         items=None,
         exp_data_file=None,
-        c_input={}
+        c_input=None
 ):
     """[summary]
 
@@ -486,6 +486,7 @@ def process(
 
         return data
     except Exception as error:
+        print(c_input)
         message_upon_error.showinfo(
             "showinfo",
             "Check your topology files for missing species \
