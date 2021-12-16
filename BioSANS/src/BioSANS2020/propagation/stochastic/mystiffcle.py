@@ -3,18 +3,18 @@
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
 import numpy as np
-from BioSANS2020.propagation.propensity import propensity_vec, \
-    propensity_vec_molar
-from BioSANS2020.propagation.recalculate_globals import get_globals
-from BioSANS2020.myglobal import mglobals as globals2
+from BioSANS2020.propagation.propensity import propensity_vec
+from BioSANS2020.propagation.recalculate_globals \
+    import get_globals, apply_rules, reserve_events_words
+# from BioSANS2020.myglobal import mglobals as globals2
 
 
-def cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef, reg=False):
+def cle_model(Sp, ks_dict, conc, r_dict, p_dict, stch_var, dt, del_coef, reg=False):
     D = propensity_vec(ks_dict, conc, r_dict, p_dict)
     G = np.sqrt(D)
     nlen = np.random.randn(len(D)).reshape(len(D), 1)
-    fx = np.matmul(V, D)
-    gx = np.matmul(V, G * nlen)
+    fx = np.matmul(stch_var, D)
+    gx = np.matmul(stch_var, G * nlen)
     if not reg:
         h1 = np.abs(D) + 1.0e-30  # np.abs(fx)+1.0e-30
         h2 = np.abs(G) + 1.0e-30  # np.abs(gx)+1.0e-30
@@ -32,7 +32,7 @@ def cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef, reg=False):
     return [fd.reshape(len(Sp)), dt]
 
 
-def cle_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=10,
+def cle_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, stch_var, del_coef=10,
                   rr=1, implicit=False, rfile=""):
     get_globals(rfile)
     np.random.seed(int(rr * 100))
@@ -47,7 +47,9 @@ def cle_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=10,
         tnow = t[0]
         tnew.append(tnow)
         while tnow < t[-1]:
-            m = np.nan_to_num(cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef))
+            m = np.nan_to_num(
+                cle_model(Sp, ks_dict, conc, r_dict, p_dict,
+                stch_var, dt, del_coef))
             mm = m[0].reshape(1, len(m[0]))[0]
             tnow = tnow + m[1]
             ind = 0
@@ -65,13 +67,16 @@ def cle_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=10,
         tindex = 1
         C = [conc[z] for z in Sp]
         while tnew[-1] < t[-1]:
-            m = np.nan_to_num(cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, del_coef))
+            m = np.nan_to_num(
+                cle_model(Sp, ks_dict, conc, r_dict, p_dict,
+                stch_var, dt, del_coef))
             tnow = tnow + m[1]
             if tnow > t[tindex]:
                 tnow = tnow - m[1]
                 dt2 = t[tindex] - tnow
                 m = np.nan_to_num(
-                    cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt2, del_coef, True))
+                    cle_model(Sp, ks_dict, conc, r_dict, p_dict,
+                    stch_var, dt2, del_coef, True))
                 mm = m[0].reshape(1, len(m[0]))[0]
                 tnow = tnow + m[1]
 
@@ -100,7 +105,8 @@ def cle_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=10,
     return (tnew, np.array(stch_var))
 
 
-def cle2_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=1, rr=1, rfile=""):
+def cle2_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict,
+                   stch_var, del_coef=1, rr=1, rfile=""):
     get_globals(rfile)
     np.random.seed(int(rr * 100))
     div = max(1, int(1 / del_coef))
@@ -114,7 +120,8 @@ def cle2_calculate(t, Sp, ks_dict, sconc, r_dict, p_dict, V, del_coef=1, rr=1, r
     dv = 0
     C = stch_var[-1]
     while abs(tnow - t[-1]) > 1.0e-10:
-        m = np.nan_to_num(cle_model(Sp, ks_dict, conc, r_dict, p_dict, V, dt, 1, True))
+        m = np.nan_to_num(
+            cle_model(Sp, ks_dict, conc, r_dict, p_dict, stch_var, dt, 1, True))
         mm = m[0].reshape(1, len(m[0]))[0]
         tnow = tnow + m[1]
         ind = 0

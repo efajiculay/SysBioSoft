@@ -32,7 +32,7 @@ from BioSANS2020.propagation.law_of_localization import law_loc_symbolic
 from BioSANS2020.propagation.create_wxmaxima_command import for_wxmaxima
 from BioSANS2020.propagation.stochastic.mystiffcle import \
     cle_calculate, cle2_calculate
-from BioSANS2020.propagation.stochastic.Gillespie import Gillespie
+from BioSANS2020.propagation.stochastic.gillespie_ssa import gillespie_ssa
 from BioSANS2020.propagation.stochastic.Tau_leaping import Tau_leaping
 from BioSANS2020.propagation.stochastic.Tau_leaping2 import Tau_leaping2
 from BioSANS2020.propagation.stochastic.mytauleap import Sim_TauLeap
@@ -379,7 +379,7 @@ def process_hub(
         elif method == "Gillespie_":
             results = [
                 pool.apply_async(
-                    Gillespie,
+                    gillespie_ssa,
                     args=(
                         time_var, sp_comp, ksns_list[ih], concn_list[ih],
                         r_dict, p_dict, stoch_var, rands[ih], implicit,
@@ -415,7 +415,7 @@ def process_hub(
                     time_var, sp_comp, ksn_dict, concn, r_dict, p_dict,
                     stoch_var, del_coef, r_seed, rfile)
             elif method == "Gillespie_":
-                tnew, zvar = Gillespie(
+                tnew, zvar = gillespie_ssa(
                     time_var, sp_comp, ksn_dict, concn, r_dict,
                     p_dict, stoch_var, r_seed, implicit, rfile)
             elif method == "Tau-leaping":

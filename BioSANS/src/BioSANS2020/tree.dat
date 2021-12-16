@@ -84,7 +84,7 @@ BIOSANS2020
 │   │   │   __init__.py
 │   │
 │   ├───stochastic
-│   │   │   Gillespie.py
+│   │   │   gillespie_ssa.py
 │   │   │   Gillespie_new.py
 │   │   │   mystiffcle.py
 │   │   │   mytauleap.py

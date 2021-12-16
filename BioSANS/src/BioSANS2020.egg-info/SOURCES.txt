@@ -57,7 +57,7 @@ src/BioSANS2020/propagation/deterministic/LNAfunctionOfTime.py
 src/BioSANS2020/propagation/deterministic/__init__.py
 src/BioSANS2020/propagation/deterministic/ode_int.py
 src/BioSANS2020/propagation/deterministic/runge_kutta4.py
-src/BioSANS2020/propagation/stochastic/Gillespie.py
+src/BioSANS2020/propagation/stochastic/gillespie_ssa.py
 src/BioSANS2020/propagation/stochastic/Gillespie_new.py
 src/BioSANS2020/propagation/stochastic/Tau_leaping.py
 src/BioSANS2020/propagation/stochastic/Tau_leaping2.py

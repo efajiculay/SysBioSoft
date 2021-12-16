@@ -105,7 +105,7 @@ BIOSANS2020
 │   │   └───__pycache__
 │   │
 │   ├───stochastic
-│   │   │   Gillespie.py
+│   │   │   gillespie_ssa.py
 │   │   │   Gillespie_new.py
 │   │   │   mystiffcle.py
 │   │   │   mytauleap.py
