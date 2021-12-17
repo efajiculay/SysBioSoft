@@ -1,11 +1,11 @@
-#import sys
-#import os
+# import sys
+# import os
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
-from BioSANS2020.gui_functs.scrollable_text import *
-from BioSANS2020.propagation.propensity import propensity_vec, \
-    propensity_vec_molar
-from sympy import *
+from BioSANS2020.gui_functs.scrollable_text import prepare_scroll_text
+from BioSANS2020.propagation.propensity \
+    import propensity_vec, propensity_vec_molar
+from sympy import simplify, Matrix, solve, Add, integrate, Function, dsolve, Symbol, exp, Eq, zeros
 
 
 def subs2(Z, cval):

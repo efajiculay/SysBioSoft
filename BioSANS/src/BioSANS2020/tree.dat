@@ -89,11 +89,11 @@ BIOSANS2020
 │   │   │   mystiffcle.py
 │   │   │   mytauleap.py
 │   │   │   sde_int.py
-│   │   │   Tau_leaping.py
-│   │   │   Tau_leaping2.py
+│   │   │   tau_leaping.py
+│   │   │   tau_leaping2.py
 │   │   │   __init__.py
 │   │
 │   ├───symbolic
-│   │   │   Analytical_sol.py
+│   │   │   analytical_sol.py
 │   │   │   LNAapprox2.py
 │   │   │   __init__.py

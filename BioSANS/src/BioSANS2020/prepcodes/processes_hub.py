@@ -33,10 +33,10 @@ from BioSANS2020.propagation.create_wxmaxima_command import for_wxmaxima
 from BioSANS2020.propagation.stochastic.mystiffcle import \
     cle_calculate, cle2_calculate
 from BioSANS2020.propagation.stochastic.gillespie_ssa import gillespie_ssa
-from BioSANS2020.propagation.stochastic.Tau_leaping import Tau_leaping
-from BioSANS2020.propagation.stochastic.Tau_leaping2 import Tau_leaping2
-from BioSANS2020.propagation.stochastic.mytauleap import Sim_TauLeap
-from BioSANS2020.propagation.stochastic.sde_int import SDE_int
+from BioSANS2020.propagation.stochastic.tau_leaping import tau_leaping
+from BioSANS2020.propagation.stochastic.tau_leaping2 import tau_leaping2
+from BioSANS2020.propagation.stochastic.mytauleap import sim_tauLeap
+# from BioSANS2020.propagation.stochastic.sde_int import SDE_int
 from BioSANS2020.propagation.deterministic.euler_mod import euler_int, \
     euler2_int
 # from BioSANS2020.propagation.deterministic.lna_approx import *
@@ -46,7 +46,7 @@ from BioSANS2020.propagation.deterministic.lna_function_of_time import \
 from BioSANS2020.propagation.deterministic.runge_kutta4 \
     import rungek4_int, rungek4a_int
 from BioSANS2020.propagation.symbolic.LNAapprox2 import LNA_symbolic
-from BioSANS2020.propagation.symbolic.Analytical_sol import Analyt_soln
+from BioSANS2020.propagation.symbolic.analytical_sol import analyt_soln
 from BioSANS2020.model.param_est.param_estimate import param_estimate
 
 from BioSANS2020.model.fileconvert.convtopotosbml import topo_to_sbml
@@ -289,7 +289,7 @@ def process_hub(
         if method == "Tau-leaping":
             results = [
                 pool.apply_async(
-                    Tau_leaping,
+                    tau_leaping,
                     args=(
                         time_var, sp_comp, ksns_list[ih], concn_list[ih],
                         r_dict, p_dict, stoch_var, rands[ih], del_coef,
@@ -300,7 +300,7 @@ def process_hub(
         elif method == "Tau-leaping2":
             results = [
                 pool.apply_async(
-                    Tau_leaping2,
+                    tau_leaping2,
                     args=(
                         time_var, sp_comp, ksns_list[ih], concn_list[ih],
                         r_dict, p_dict, stoch_var, rands[ih], del_coef,
@@ -311,7 +311,7 @@ def process_hub(
         elif method == "Sim-TauLeap":
             results = [
                 pool.apply_async(
-                    Sim_TauLeap,
+                    sim_tauLeap,
                     args=(
                         time_var, sp_comp, ksns_list[ih], concn_list[ih],
                         r_dict, p_dict, stoch_var, rands[ih], del_coef,
@@ -419,15 +419,15 @@ def process_hub(
                     time_var, sp_comp, ksn_dict, concn, r_dict,
                     p_dict, stoch_var, r_seed, implicit, rfile)
             elif method == "Tau-leaping":
-                tnew, zvar = Tau_leaping(
+                tnew, zvar = tau_leaping(
                     time_var, sp_comp, ksn_dict, concn, r_dict, p_dict,
                     stoch_var, r_seed, del_coef, implicit, rfile)
             elif method == "Tau-leaping2":
-                tnew, zvar = Tau_leaping2(
+                tnew, zvar = tau_leaping2(
                     time_var, sp_comp, ksn_dict, concn, r_dict, p_dict,
                     stoch_var, r_seed, del_coef, implicit, rfile)
             elif method == "Sim-TauLeap":
-                tnew, zvar = Sim_TauLeap(
+                tnew, zvar = sim_tauLeap(
                     time_var, sp_comp, ksn_dict, concn, r_dict, p_dict,
                     stoch_var, r_seed, del_coef, implicit, rfile)
             elif method == "Euler-1":
@@ -521,24 +521,24 @@ def process_hub(
                     concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
                     stoch_var, True, rfile)
                 tnew = time_var
-            elif method == "Itoint-1":
-                zvar = SDE_int(concn, time_var, sp_comp, ksn_dict,
-                               r_dict, p_dict, stoch_var)
-                tnew = time_var
-            elif method in ["Itoint-2", "Itoint-3"]:
-                zvar = SDE_int(concn, time_var, sp_comp, ksn_dict, r_dict,
-                               p_dict, stoch_var, False)
-                tnew = time_var
-            elif method == "Stratint-1":
-                zvar = SDE_int(
-                    concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
-                    stoch_var, True, False)
-                tnew = time_var
-            elif method in ["Stratint-2", "Stratint-3"]:
-                zvar = SDE_int(
-                    concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
-                    stoch_var, False, False)
-                tnew = time_var
+            # elif method == "Itoint-1":
+                # zvar = SDE_int(concn, time_var, sp_comp, ksn_dict,
+                               # r_dict, p_dict, stoch_var)
+                # tnew = time_var
+            # elif method in ["Itoint-2", "Itoint-3"]:
+                # zvar = SDE_int(concn, time_var, sp_comp, ksn_dict, r_dict,
+                               # p_dict, stoch_var, False)
+                # tnew = time_var
+            # elif method == "Stratint-1":
+                # zvar = SDE_int(
+                    # concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
+                    # stoch_var, True, False)
+                # tnew = time_var
+            # elif method in ["Stratint-2", "Stratint-3"]:
+                # zvar = SDE_int(
+                    # concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
+                    # stoch_var, False, False)
+                # tnew = time_var
             elif method == "rk4-1":
                 tnew, zvar = rungek4_int(
                     concn, time_var, sp_comp, ksn_dict, r_dict, p_dict,
@@ -636,25 +636,25 @@ def process_hub(
             elif method == "Analyt":
                 plot_show = False
                 save = False
-                zvar = Analyt_soln(
+                zvar = analyt_soln(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, rfile=rfile)
             elif method == "Analyt-ftx":
                 plot_show = False
                 save = False
-                zvar = Analyt_soln(
+                zvar = analyt_soln(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, rfile=rfile, mode="ftxo")
             elif method == "SAnalyt":
                 plot_show = False
                 save = False
-                zvar = Analyt_soln(
+                zvar = analyt_soln(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, rfile=rfile, not_semi=False)
             elif method == "SAnalyt-ftk":
                 plot_show = False
                 save = False
-                zvar = Analyt_soln(
+                zvar = analyt_soln(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, rfile=rfile, not_semi=False, mode="ftks")
             elif method == "Analyt2":

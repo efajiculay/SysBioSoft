@@ -82,7 +82,7 @@ def gillespie_ssa(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                 [    0,           1   ]            # species C
                   #1st rxn    2nd rxn
             ])
-        rand_seed (float): random  seed  value picked  at random for each
+        rand_seed (float): random  seed value picked  at random for each
             trajectory. They have been sampled from the calling program.
         implicit (bool, optional): True means report in time intervals
             similar to the input time intervals even if actual step is
@@ -92,14 +92,14 @@ def gillespie_ssa(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
             to be estimated. Defaults to None.
 
     Returns:
-        [type]: [description]
+        tuple: (time, trajectories)
     """
     get_globals(rfile)
     tmax = tvar[-1]
     np.random.seed(int(rand_seed * 100))
     tnew = []
     stch_var = stch_var.T
-    all_sp = [z for z in sp_comp]
+    all_sp = list(sp_comp.keys())  # [z for z in sp_comp]
     spc = [z for z in sp_comp if z not in reserve_events_words]
     spc2 = [z for z in sp_comp if z in reserve_events_words]
     concz = {xvar: conc[xvar] for xvar in conc}
