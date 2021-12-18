@@ -157,7 +157,7 @@ def tau_leaping2(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
     if not implicit:
         while t_c < tmax:
             prop_flux = propensity_vec(ks_dict, concz, r_dict, p_dict)
-            if len(vcri[1]) > 0:
+            if len(vcri[1]): # > 0:
                 lcri = set()
                 lncr = set()
                 for xvar in range(len(vncr)):
@@ -176,7 +176,7 @@ def tau_leaping2(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
             if len(lcri) == len(stch_var[0]):
                 alp = np.sum(prop_flux)
                 d_t = (1 / alp) * (np.log(1 / np.random.uniform()))
-            elif len(lcri) == 0:
+            elif not lcri:  # len(lcri) == 0:
                 alp = np.sum(prop_flux)
                 uuj = np.matmul(stch_var, prop_flux)
                 sig = np.matmul(stch_var2, prop_flux)
@@ -227,7 +227,7 @@ def tau_leaping2(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
         while tvar[tindex] < tmax:
             prop_flux = propensity_vec(ks_dict, concz, r_dict, p_dict)
             # step 1
-            if len(vcri[1]) > 0:
+            if len(vcri[1]):  # > 0:
                 lcri = set()
                 lncr = set()
                 for xvar in range(len(vncr)):
@@ -247,7 +247,7 @@ def tau_leaping2(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
             epsilon = 0.03
             lcri = np.array(list(lcri))
             lncr = np.array(list(lncr))
-            if len(lncr) == 0:  # No non critical reactions
+            if not lncr:  # len(lncr) == 0:  # No non critical reactions
                 dt1 = 1.0e+10
             else:
                 alp = np.sum(prop_flux[lncr])
@@ -362,7 +362,7 @@ def step_3to5(prop_flux, lcri, dt1):
         do_ssa = True
     else:
         # step 4
-        if len(lcri) > 0:
+        if lcri:  # > 0:
             alpc = np.sum(prop_flux[lcri])
             dt2 = (1 / alpc) * (np.log(1 / r_1))
         else:
@@ -372,11 +372,11 @@ def step_3to5(prop_flux, lcri, dt1):
         # step 5
         if dt1 < dt2:
             d_t = dt1
-            if len(lcri) > 0:
+            if lcri:  # > 0:
                 kmul[lcri] = 0
         else:
             d_t = dt2
-            if len(lcri) > 0:
+            if lcri:  # > 0:
                 kmul[lcri] = 0
                 pvar = np.cumsum([d / alpc for d in prop_flux[lcri]])
                 r_2 = np.random.uniform()

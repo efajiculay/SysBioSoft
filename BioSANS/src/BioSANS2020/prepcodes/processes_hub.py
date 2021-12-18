@@ -45,7 +45,7 @@ from BioSANS2020.propagation.deterministic.lna_function_of_time import \
     lna_non_steady_state, lna_non_steady_state2
 from BioSANS2020.propagation.deterministic.runge_kutta4 \
     import rungek4_int, rungek4a_int
-from BioSANS2020.propagation.symbolic.LNAapprox2 import LNA_symbolic
+from BioSANS2020.propagation.symbolic.lna_approx2 import lna_symbolic2
 from BioSANS2020.propagation.symbolic.analytical_sol import analyt_soln
 from BioSANS2020.model.param_est.param_estimate import param_estimate
 
@@ -472,31 +472,31 @@ def process_hub(
             elif method == "LNA-vs":
                 plot_show = False
                 save = False
-                tnew, zvar = LNA_symbolic(
+                tnew, zvar = lna_symbolic2(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True, mode="Numeric")
             elif method == "LNA-ks":
                 plot_show = False
                 save = False
-                tnew, zvar = LNA_symbolic(
+                tnew, zvar = lna_symbolic2(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True, mode="fofks")
             elif method == "LNA-xo":
                 plot_show = False
                 save = False
-                tnew, zvar = LNA_symbolic(
+                tnew, zvar = lna_symbolic2(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True, mode="fofCo")
             elif method == "LNA2":
                 plot_show = False
                 save = False
-                tnew, zvar = LNA_symbolic(
+                tnew, zvar = lna_symbolic2(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items)
             elif method == "LNA3":
                 plot_show = False
                 save = False
-                tnew, zvar = LNA_symbolic(
+                tnew, zvar = lna_symbolic2(
                     sp_comp, ksn_dict, concn, r_dict, p_dict, stoch_var,
                     items=items, molar=True)
             elif method == "NetLoc1":

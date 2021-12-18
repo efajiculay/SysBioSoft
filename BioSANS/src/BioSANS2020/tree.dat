@@ -95,5 +95,5 @@ BIOSANS2020
 │   │
 │   ├───symbolic
 │   │   │   analytical_sol.py
-│   │   │   LNAapprox2.py
+│   │   │   lna_approx2.py
 │   │   │   __init__.py

@@ -66,5 +66,5 @@ src/BioSANS2020/propagation/stochastic/mystiffcle.py
 src/BioSANS2020/propagation/stochastic/mytauleap.py
 src/BioSANS2020/propagation/stochastic/sde_int.py
 src/BioSANS2020/propagation/symbolic/Analytical_sol.py
-src/BioSANS2020/propagation/symbolic/LNAapprox2.py
+src/BioSANS2020/propagation/symbolic/lna_approx2.py
 src/BioSANS2020/propagation/symbolic/__init__.py
