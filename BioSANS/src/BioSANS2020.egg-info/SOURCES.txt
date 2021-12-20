@@ -65,4 +65,5 @@ src/BioSANS2020/propagation/stochastic/tau_leaping.py
 src/BioSANS2020/propagation/stochastic/tau_leaping2.py
 src/BioSANS2020/propagation/symbolic/Analytical_sol.py
 src/BioSANS2020/propagation/symbolic/__init__.py
+src/BioSANS2020/propagation/symbolic/analytical_sol.py
 src/BioSANS2020/propagation/symbolic/lna_approx2.py

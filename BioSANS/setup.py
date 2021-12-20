@@ -34,7 +34,6 @@ setuptools.setup(
 		"python-libsbml",
 		"scipy",
 		"func_timeout",
-		"sdeint",
 		"sympy",
 		"applescript"
 	],
