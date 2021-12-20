@@ -1,0 +1,41 @@
+:py:mod:`BioSANS2020.model.topology_view`
+=========================================
+
+.. py:module:: BioSANS2020.model.topology_view
+
+.. autoapi-nested-parse::
+
+                                   This is the topology_view module
+
+           This module helps to load topology files into a text area for
+   displaying in BioSANS.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.topology_view.view_topo
+
+
+
+.. py:function:: view_topo(topo, items)
+
+   This function open topology files and display the topology into a
+   text area for further simulation or for editing.
+
+   Args:
+       topo (string): topology file name
+       items (tuple): (canvas, scroll_x, scroll_y)
+
+   Returns:
+       tkinter.Text: text area where topology is displayed. A user can
+           type and modify the topology
+
+

@@ -1,0 +1,161 @@
+:py:mod:`BioSANS2020.analysis.numeric.transform_data`
+=====================================================
+
+.. py:module:: BioSANS2020.analysis.numeric.transform_data
+
+.. autoapi-nested-parse::
+
+                          This is the transform_data module
+
+   This module process numeric trajectories and either prints the result or
+   display the output into a text area embedded in a canvas or plots it
+
+   The following is the list of function for this module:
+
+   1. normalize
+   2. calc_cross_corr
+   3. calc_covariance2
+   4. calc_covariance
+   5. fano_factor
+   6. prob_density_calc
+   7. prob_density_calc2
+   8. prob_density_calc3
+   9. ave_traj_calc
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.analysis.numeric.transform_data.normalize
+   BioSANS2020.analysis.numeric.transform_data.calc_cross_corr
+   BioSANS2020.analysis.numeric.transform_data.calc_covariance2
+   BioSANS2020.analysis.numeric.transform_data.calc_covariance
+   BioSANS2020.analysis.numeric.transform_data.fano_factor
+   BioSANS2020.analysis.numeric.transform_data.prob_density_calc
+   BioSANS2020.analysis.numeric.transform_data.prob_density_calc2
+   BioSANS2020.analysis.numeric.transform_data.prob_density_calc3
+   BioSANS2020.analysis.numeric.transform_data.ave_traj_calc
+
+
+
+.. py:function:: normalize(vect)
+
+   returns the normalized form of the input vector v 
+
+
+.. py:function:: calc_cross_corr(edata, items)
+
+   This function calculates the cross correlation of edata[0] and
+   returns a plot of the correlation as a function of lags.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+
+
+.. py:function:: calc_covariance2(edata)
+
+   This function calculates the covariance of edata[0] and prints
+   the result in a terminal window.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+
+
+.. py:function:: calc_covariance(edata, items, points=100)
+
+   This function calculates the covariance of edata[0] and prints
+   the result in a text area embedded in a canvas.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+       points : last number of points considered in covariance
+                calculation from -points to the end of array
+                or equivalent to [-points:] slice.
+
+
+.. py:function:: fano_factor(edata, items, points=100)
+
+   This function calculates the fano-factor of edata[0] and prints
+   the result in a text area embedded in a canvas.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+       points : last number of points considered in fano-factor
+        calculation from -points to the end of array ([-points:] slice)
+
+
+.. py:function:: prob_density_calc(edata, items)
+
+   This function calculates the probability density of edata[0] and
+   returns a plot of the probability density.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+
+
+.. py:function:: prob_density_calc2(edata, items)
+
+   This function calculates the probability density of edata[0] and
+   returns a plot of the probability density with time.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+
+
+.. py:function:: prob_density_calc3(edata, items, bins=50)
+
+   This function calculates the probability density of edata[0] per
+   bins and returns a plot of the probability density (time slice).
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+       bins : number of bins an entire trajectory will be discretized
+
+
+.. py:function:: ave_traj_calc(edata, items)
+
+   This function calculates the average trajectory of edata[0] and
+   returns a plot of the average trajectory as a function of time.
+   Args:
+       edata : two dimensional array of data & labels (data, label).
+               data is a 3D array where each row are the individual
+               trajectories. Each trajectory is a 2D numpy array where
+               the first column is time and the remaining columns are
+               the corresponding components.
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+
+

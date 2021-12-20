@@ -1,0 +1,77 @@
+:py:mod:`BioSANS2020.analysis.plotting.plot_traj`
+=================================================
+
+.. py:module:: BioSANS2020.analysis.plotting.plot_traj
+
+.. autoapi-nested-parse::
+
+                          This is the plot_traj module
+
+   This module process numeric trajectories and plots them
+
+   The following is the list of function for this module:
+
+   1. plot_traj
+   2. plot_traj2
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.analysis.plotting.plot_traj.plot_traj
+   BioSANS2020.analysis.plotting.plot_traj.plot_traj2
+
+
+
+.. py:function:: plot_traj(data, slabels, items, plotted, mix_plot=True, logx=False, logy=False, normalize=False, si_ticked=None)
+
+   This function plots time series trajectories.
+   Args:
+       data : three dimensional data. The outermost index represents
+              the trajectories. Each row of trajectory contains a 2 x 2
+              numpy array where the rows is the time and the columns
+              are the labels. The first column is time and the next few
+              columns are the trajectories.
+       slabels : labels of the trajectories in data
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+       plotted : an array where the figures plotted are pushed i.e.
+                 plotted.append([plt.gca(), fig, lines]). This is used
+                 for managing the plots in the GUI.
+       mix_plot : if true, the all data will be plotted together in one
+                  plot otherwise in seperate plots
+       logx : if true, uses logscale in x-axis
+       logy : if true, uses logscale in y-axis
+       normalize : normalized the data based on max(data)
+       si_ticked : list of indexes in slabels to be shown in plot
+
+
+.. py:function:: plot_traj2(data, slabels, items, plotted, logx=False, logy=False, normalize=False, xlabel='conc', ylabel='conc', zlabel='conc', trange=None)
+
+   This function plots time series trajectories or phase portriat.
+   Args:
+       data : three dimensional data. The outermost index represents
+              the trajectories. Each row of trajectory contains a 2 x 2
+              numpy array where the rows is the time and the columns
+              are the labels. The first column is time and the next few
+              columns are the trajectories.
+       slabels : labels of the trajectories in data
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+       plotted : an array where the figures plotted are pushed i.e.
+                 plotted.append([plt.gca(), fig, lines]). This is used
+                 for managing the plots in the GUI.
+       logx : if true, uses logscale in x-axis
+       logy : if true, uses logscale in y-axis
+       normalize : normalized the data based on max(data)
+       xlabel : label of x-axis
+       ylabel : label of y-axis
+       zlabel : label of y-axis
+       trange : slice indexes of the trajectory i.e. -1000:-1
+
+

@@ -1,0 +1,244 @@
+:py:mod:`BioSANS2020.propagation.deterministic.lna_function_of_time`
+====================================================================
+
+.. py:module:: BioSANS2020.propagation.deterministic.lna_function_of_time
+
+.. autoapi-nested-parse::
+
+                This module is the lna_function_of_time module
+
+        This module performs numerical propagation of linear noise approxi-
+   mation or LNA by exploiting the following relationship.
+
+                      dC/dt = AC + CA.T + BB
+
+   where A is defined as d(S*f)/dx where S is the stoichiometric  matrix, f
+   are the propensities or fluxes, and x are the components or species. The
+   flux is a function of species x and rate constant k. BB is the diffusion
+   matrix equivalent to S*diag(f)*S.T where diag(f) is a square matrix with
+   zero non-diagonal elements and f[i] in each diagonal elements. C is the
+   covariance matrix and t is time.
+
+   The following are the list of function for this module.
+
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.propagation.deterministic.lna_function_of_time.lna_ode_model
+   BioSANS2020.propagation.deterministic.lna_function_of_time.lna_cov_model
+   BioSANS2020.propagation.deterministic.lna_function_of_time.lna_non_steady_state
+   BioSANS2020.propagation.deterministic.lna_function_of_time.lna_non_steady_state2
+
+
+
+.. py:function:: lna_ode_model(zlist, t_var, sp_comp, ks_dict, r_dict, p_dict, stch_var, molar=False)
+
+   This  function returns the derivative of components with respect
+   to time at a particular state of the system based on the inputs.
+
+   Args:
+       zlist (list): list of components or species amounts
+       sp_comp (dict): dictionary of appearance or position of species
+           or component in the reaction tag of BioSANS topology file.
+
+           For example;
+
+               #REACTIONS
+               A => B, -kf1    # negative means to be estimated
+               B => C, kf2
+
+           The value of sp_comp is
+
+               sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+               A appears in first reaction with index 0
+               B appears in first and second reaction with index 0, 1
+               C appears in second reaction with index 1
+       ks_dict (dict): dictionary of rate constant that appear in each
+           reactions.
+
+           For example;
+
+               #REACTIONS
+               A => B , 0.3        # first reaction
+               B <=> C, 0.1, 0.2   # second reaction
+
+           The value of ks_dict is
+
+               ks_dict = {
+                   0 : [0.3],      # first reaction
+                   1 : [0.1, 0.2]  # second reaction
+               }
+       r_dict (dict): dictionary of reactant stoichiometry. For example
+
+           r_dict = {
+               0: {'A': 1},  # first reaction, coefficient of A is 1
+               1: {'B': 1}   # second reaction, coefficient of B is 1
+           }
+       p_dict (dict): dictionary of product stoichiometry. For example
+
+           p_dict = {
+               0: {'B': 1},  # first reaction, coefficient of B is 1
+               1: {'C': 1}   # second reaction, coefficient of C is 1
+           }
+       stch_var (np.ndarray): stoichiometric matrix
+       molar (boolean) : if yes, uses macroscopic propensities else
+           uses microscopic propensities
+   Returns:
+       np.ndarray: derivative of species with respect to time.d(S*f)/dt
+
+
+.. py:function:: lna_cov_model(a_jac, b_diff, cov)
+
+   Returns the evaluated dC/dt at a particular instant based on the
+   current state of a_jac, b_diff, cov
+
+   Args:
+       a_jac (np.ndarray):  d(S*f)/dx or jacobian of ODE with respect
+           to components or species
+       b_diff (np.ndarray): diffusuin matrix
+       cov (np.ndarray): covariance matrix
+
+   Returns:
+       [type]: [description]
+
+
+.. py:function:: lna_non_steady_state(conc, t_var, sp_comp, ks_dict, r_dict, p_dict, stch_var, molar=True, rfile='', del_coef=10)
+
+   This function returns covariance trajectoy based on LNA
+
+   Args:
+       conc (dict): dictionary of initial concentration.
+
+           For example;
+
+               {'A': 100.0, 'B': -1.0, 'C': 0.0}
+               negative means unknown or for estimation
+       t_var (list): time stamp of trajectories
+       sp_comp (dict): dictionary of appearance or position of species
+           or component in the reaction tag of BioSANS topology file.
+
+           For example;
+
+               #REACTIONS
+               A => B, -kf1    # negative means to be estimated
+               B => C, kf2
+
+           The value of sp_comp is
+
+               sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+               A appears in first reaction with index 0
+               B appears in first and second reaction with index 0, 1
+               C appears in second reaction with index 1
+       ks_dict (dict): dictionary of rate constant that appear in each
+           reactions.
+
+           For example;
+
+               #REACTIONS
+               A => B , 0.3        # first reaction
+               B <=> C, 0.1, 0.2   # second reaction
+
+           The value of ks_dict is
+
+               ks_dict = {
+                   0 : [0.3],      # first reaction
+                   1 : [0.1, 0.2]  # second reaction
+               }
+       r_dict (dict): dictionary of reactant stoichiometry. For example
+
+           r_dict = {
+               0: {'A': 1},  # first reaction, coefficient of A is 1
+               1: {'B': 1}   # second reaction, coefficient of B is 1
+           }
+       p_dict (dict): dictionary of product stoichiometry. For example
+
+           p_dict = {
+               0: {'B': 1},  # first reaction, coefficient of B is 1
+               1: {'C': 1}   # second reaction, coefficient of C is 1
+           }
+       stch_var (np.ndarray): stoichiometric matrix
+       molar : True if conc. is in molar otherwise False
+       rfile (str): file name of BioSANS topology file.
+       del_coef (float, optional): factor for modifying time steps used
+           in the integration/propagation of ODE. Defaults to 10.
+
+   Returns:
+       list: [covariance, labels, time]
+
+
+.. py:function:: lna_non_steady_state2(conc, t_var, sp_comp, ks_dict, r_dict, p_dict, stch_var, molar=True, rfile='', del_coef=10)
+
+   This function returns Fan-factor trajectoy based on LNA
+
+   Args:
+       conc (dict): dictionary of initial concentration.
+
+           For example;
+
+               {'A': 100.0, 'B': -1.0, 'C': 0.0}
+               negative means unknown or for estimation
+       t_var (list): time stamp of trajectories
+       sp_comp (dict): dictionary of appearance or position of species
+           or component in the reaction tag of BioSANS topology file.
+
+           For example;
+
+               #REACTIONS
+               A => B, -kf1    # negative means to be estimated
+               B => C, kf2
+
+           The value of sp_comp is
+
+               sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+               A appears in first reaction with index 0
+               B appears in first and second reaction with index 0, 1
+               C appears in second reaction with index 1
+       ks_dict (dict): dictionary of rate constant that appear in each
+           reactions.
+
+           For example;
+
+               #REACTIONS
+               A => B , 0.3        # first reaction
+               B <=> C, 0.1, 0.2   # second reaction
+
+           The value of ks_dict is
+
+               ks_dict = {
+                   0 : [0.3],      # first reaction
+                   1 : [0.1, 0.2]  # second reaction
+               }
+       r_dict (dict): dictionary of reactant stoichiometry. For example
+
+           r_dict = {
+               0: {'A': 1},  # first reaction, coefficient of A is 1
+               1: {'B': 1}   # second reaction, coefficient of B is 1
+           }
+       p_dict (dict): dictionary of product stoichiometry. For example
+
+           p_dict = {
+               0: {'B': 1},  # first reaction, coefficient of B is 1
+               1: {'C': 1}   # second reaction, coefficient of C is 1
+           }
+       stch_var (np.ndarray): stoichiometric matrix
+       molar : True if conc. is in molar otherwise False
+       rfile (str): file name of BioSANS topology file.
+       del_coef (float, optional): factor for modifying time steps used
+           in the integration/propagation of ODE. Defaults to 10.
+
+   Returns:
+       list: [fanp_factor, labels, time]
+
+

@@ -1,0 +1,311 @@
+:py:mod:`BioSANS2020.model.fileconvert.process_sbml`
+====================================================
+
+.. py:module:: BioSANS2020.model.fileconvert.process_sbml
+
+.. autoapi-nested-parse::
+
+                           The process_sbml module
+
+   This module contains functions that facilitates the conversion of sbml
+   file format into BioSANS topology format. Currently, this module highly
+   relies on string manipulations, sympify, eval, and exec python functions
+
+   The following are the list of function in this module
+
+   1. get_exponent_sp
+   2. replace_crucial_funct
+   3. extract_species
+   4. extract_par_num
+   5. extract_var_func
+   6. extract_function
+   7. par_substitution
+   8. add2_spaces_sep
+   9. sp_substitution
+   10. var_substitution
+   11. funct_redefine_var
+   12. get_sbml_units
+   13. get_compartment_details
+   14. get_species_details
+   15. get_initial_conc
+   16. get_param_DETAILS
+   17. get_rule_details
+   18. process_sbml
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.fileconvert.process_sbml.eval_exp
+   BioSANS2020.model.fileconvert.process_sbml.get_exponent_sp
+   BioSANS2020.model.fileconvert.process_sbml.replace_crucial_funct
+   BioSANS2020.model.fileconvert.process_sbml.extract_species
+   BioSANS2020.model.fileconvert.process_sbml.extract_par_num
+   BioSANS2020.model.fileconvert.process_sbml.extract_var_func
+   BioSANS2020.model.fileconvert.process_sbml.extract_function
+   BioSANS2020.model.fileconvert.process_sbml.par_substitution
+   BioSANS2020.model.fileconvert.process_sbml.add2_spaces_sep
+   BioSANS2020.model.fileconvert.process_sbml.sp_substitution
+   BioSANS2020.model.fileconvert.process_sbml.var_substitution
+   BioSANS2020.model.fileconvert.process_sbml.funct_redefine_var
+   BioSANS2020.model.fileconvert.process_sbml.get_sbml_units
+   BioSANS2020.model.fileconvert.process_sbml.get_compartments_details
+   BioSANS2020.model.fileconvert.process_sbml.get_species_details
+   BioSANS2020.model.fileconvert.process_sbml.get_initial_conc
+   BioSANS2020.model.fileconvert.process_sbml.get_param_details
+   BioSANS2020.model.fileconvert.process_sbml.get_rule_details
+   BioSANS2020.model.fileconvert.process_sbml.process_sbml
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.fileconvert.process_sbml.OPERS_LIST
+   BioSANS2020.model.fileconvert.process_sbml.OPERS_LIST2
+
+
+.. py:data:: OPERS_LIST
+   
+
+   
+
+.. py:data:: OPERS_LIST2
+   
+
+   
+
+.. py:function:: eval_exp(xvar)
+
+
+.. py:function:: get_exponent_sp(key, modk)
+
+   This function extract the exponent of component or species key
+   from a given propensity expression modk.
+   Args:
+       key : species/component string
+       modk : propensity expression converted to string
+              example "2*0.5*A*B"
+   Returns:
+       exponent_in_formula : the power of species key
+   Example:
+       modk = (1.0)*(1.0)*S1
+       key = S1
+       exponent_in_formula = 1
+
+
+.. py:function:: replace_crucial_funct(trep)
+
+   this function converts some problematic operator/logical/function
+   and etc. to its equivalent in SBML.
+   Args:
+       trep : result of SBML formulaToString(xvar.getMath())
+              xvar is an object in SBML getListOfFunctionDefinitions()
+
+
+.. py:function:: extract_species(modk)
+
+   This function extracts the components or species from a given ex-
+   pression and returns a comma concatenated string of them.
+   Args:
+       modk : propensity expression converted to string
+              example "2*0.5*A*B"
+   Returns:
+       ",".join(sp_comp) : a string of comma concatenated components
+                           example "A,B"
+
+
+.. py:function:: extract_par_num(modk)
+
+   This function is currently not used but it can extract the
+   numeric values from a given expression
+   Example:
+       print(extract_par_num("(5.0)*(6.0)*S1+S2**3")) will give
+       {'5.0', '6.0', '3'}
+
+
+.. py:function:: extract_var_func(ssv)
+
+   This function extract the variables from an expression and gives
+   a 2D list containing a comma concatenated string of variable and a
+   string of the expression.
+   Args:
+       ssv : comma concatenated string of variables and expression.
+             example :  "x,y,x*y"
+   Returns:
+       ["comma concatenated variables","expression"] :
+             example : ['x,y', 'x*y']
+
+
+.. py:function:: extract_function(pforms, rbig_params, compartments, functions, functions_str)
+
+   This function converts a user defined function or function call
+   in the SBML file to actual expression.
+   Args:
+       pforms : from formulaToString(xvar.getMath()) where xvar can be
+               an object from getListOfRules() in libsbml.
+               example : compartment*multiply(k1,S1)
+       rbig_params : dictionary of parameter name : parameter value
+                     from kinetic rate law expression in sbml
+       compartments : dictionary of compartments name : [size, units]
+       functions : dictionary of function name : function definition
+       functions_str : the string equivalent of functions above
+                       example : {'multiply': 'lambda x,y : x*y'}
+   Returns:
+       modk : expanded form of pforms where every function definition
+              is evaluated
+              example : compartment*1*(S1*k1)
+
+
+.. py:function:: par_substitution(modk, parameters, index=0)
+
+   This function substitute parameters to modk expression by first
+   padding the operators to ensure parameters can be distinguished from
+   the expression.
+   Args:
+       modk : math expression string
+       parameters : dictionary of parameters name : [value, unit]
+       index : 0 or 1. 0 will give value and 1 will give unit
+   Returns:
+       modk : expression where parameters are now numeric
+
+
+.. py:function:: add2_spaces_sep(modk)
+
+   This function adds paddings on both sides of the operators and
+   return the expression modk with the operators padded.
+   Args:
+       modk : string math expression
+   Returns:
+       modk : string math expression with the operators padded
+
+
+.. py:function:: sp_substitution(modk, parameters)
+
+   This is a redundant function to par_substitution. This function
+   substitute parameters to modk expression by first padding the
+   operators to ensure parameters can be distinguished fromthe
+   expression.
+   Args:
+       modk : math expression string
+       parameters : dictionary of parameters name : [value, unit]
+                    Intended for constant parameters
+   Returns:
+       modk : expression where parameters are now numeric
+
+
+.. py:function:: var_substitution(modk, rbig_params, parameters, compartments, rate_rules)
+
+   This function substitute variables to modk expression by first
+   padding the operators to ensure variables can be distinguished from
+   the expression.
+   Args:
+       modk : math expression string
+       rbig_params : dictionary of parameter name : parameter value
+                     from kinetic rate law expression in sbml
+       parameters : dictionary of parameters name : [value, unit]
+       compartments : dictionary of compartments name : [size, units]
+       rate_rules : dictionary of variable : variable modifier function
+   Returns:
+       modk : expression where variables are substituted
+
+
+.. py:function:: funct_redefine_var(modk, ssv)
+
+   This function transform the variables in a lambda function to the
+   actual variables needed.
+   Args:
+       modk : string math lambda expression with abstract variables
+       ssv : sympy symbols
+   Returns:
+       string definition expression with actual varaibles
+
+
+.. py:function:: get_sbml_units(model, sbml_units)
+
+   Returns units dictionary from sbml file. The model is defined by
+   the following python syntax;
+       model = libsbml.SBMLReader().readSBML(sbml_file).getModel()
+   Args:
+       model : model definition like shown above
+       sbml_units : a dictionary of sbml unit equivalence
+    Returns :
+       units_sbml : dictionary of sbml units associated to the file
+
+
+.. py:function:: get_compartments_details(model, molar)
+
+   Returns compartment dictionary from sbml file. The model is
+   defined by the following python syntax;
+       model = libsbml.SBMLReader().readSBML(sbml_file).getModel()
+   Args:
+       model : model definition like shown above
+       molar : True if conc. is in molar else False
+   Returns:
+       compartments : dictionary of all compartments with the following
+                      example format { 'c1' : [size, units]}
+       constant_comp : dictionary of constant compartments
+                       example format { 'c1' : [size, units]}
+       non_constant_comp : dictionary of non constant compartments
+                           example format { 'c1' : [size, units]}
+       orig_size : dictionary of original size of compartment
+                   example format { 'c1' : size}
+
+
+.. py:function:: get_species_details(model)
+
+   Returns species dictionary from sbml file. The model is
+   defined by the following python syntax;
+       model = libsbml.SBMLReader().readSBML(sbml_file).getModel()
+   Args:
+       model : model definition like shown above
+   Returns:
+       species : dictionary of all species with the following
+                      example format { id : species_label }
+       species_comp : dictionary of species compartments
+                      example format { species_label : compartment }
+       constant_species : dictionary of constant species
+                          example format { species_label : True }
+       has_only_sunits : dictionary of species with only substance as
+                         example format { id : True }
+       sp_wcfactor : dictionary of convertion factor
+                     example format { id : conversion factor }
+
+
+.. py:function:: get_initial_conc(species)
+
+   Returns a dictionary of initial concentration from species
+
+
+.. py:function:: get_param_details(model)
+
+   Returns a dictionary of parameter name : [value, unit]
+
+
+.. py:function:: get_rule_details(model, constant_par)
+
+   This function returns the assignment rules, rate rules, and
+   algebraic rules from sbml model given the disctionary of constant
+   parameters. The constants are already substituted in the return
+
+
+.. py:function:: process_sbml(file, molar=False, variables=None)
+
+   This function read the sbml file and extracts the necessary most
+   of the details to construct the corresponding topology file of the
+   system described by the SBML tags.
+   Args:
+       file : this is the sbml file
+       molar : True or False, tells if the systems unit molar or not
+       variables : None or constant compartment to show in plot
+
+

@@ -43,12 +43,12 @@ giving you legal permission to copy, distribute and/or modify it.
 
   For the developers' and authors' protection, the GPL clearly explains
 that there is no warranty for this free software.  For both users' and
-authors' sake, the GPL requires that MODIFIED versions be marked as
+authors' sake, the GPL requires that modified versions be marked as
 changed, so that their problems will not be attributed erroneously to
 authors of previous versions.
 
   Some devices are designed to deny users access to install or run
-MODIFIED versions of the software inside them, although the manufacturer
+modified versions of the software inside them, although the manufacturer
 can do so.  This is fundamentally incompatible with the aim of
 protecting users' freedom to change the software.  The systematic
 pattern of such abuse occurs in the area of products for individuals to
@@ -83,7 +83,7 @@ License.  Each licensee is addressed as "you".  "Licensees" and
 
   To "modify" a work means to copy from or adapt all or part of the work
 in a fashion requiring copyright permission, other than the making of an
-exact copy.  The resulting work is called a "MODIFIED version" of the
+exact copy.  The resulting work is called a "modified version" of the
 earlier work or a work "based on" the earlier work.
 
   A "covered work" means either the unmodified Program or a work based
@@ -211,7 +211,7 @@ and you may offer support or warranty protection for a fee.
 produce it from the Program, in the form of source code under the
 terms of section 4, provided that you also meet all of these conditions:
 
-    a) The work must carry prominent notices stating that you MODIFIED
+    a) The work must carry prominent notices stating that you modified
     it, and giving a relevant date.
 
     b) The work must carry prominent notices stating that it is
@@ -309,9 +309,9 @@ the only significant mode of use of the product.
 
   "Installation Information" for a User Product means any methods,
 procedures, authorization keys, or other information required to install
-and execute MODIFIED versions of a covered work in that User Product from
-a MODIFIED version of its Corresponding Source.  The information must
-suffice to ensure that the continued functioning of the MODIFIED object
+and execute modified versions of a covered work in that User Product from
+a modified version of its Corresponding Source.  The information must
+suffice to ensure that the continued functioning of the modified object
 code is in no case prevented or interfered with solely because
 modification has been made.
 
@@ -323,13 +323,13 @@ fixed term (regardless of how the transaction is characterized), the
 Corresponding Source conveyed under this section must be accompanied
 by the Installation Information.  But this requirement does not apply
 if neither you nor any third party retains the ability to install
-MODIFIED object code on the User Product (for example, the work has
+modified object code on the User Product (for example, the work has
 been installed in ROM).
 
   The requirement to provide Installation Information does not include a
 requirement to continue to provide support service, warranty, or updates
-for a work that has been MODIFIED or installed by the recipient, or for
-the User Product in which it has been MODIFIED or installed.  Access to a
+for a work that has been modified or installed by the recipient, or for
+the User Product in which it has been modified or installed.  Access to a
 network may be denied when the modification itself materially and
 adversely affects the operation of the network or violates the rules and
 protocols for communication across the network.
@@ -370,7 +370,7 @@ that material) supplement the terms of this License with terms:
     Notices displayed by works containing it; or
 
     c) Prohibiting misrepresentation of the origin of that material, or
-    requiring that MODIFIED versions of such material be marked in
+    requiring that modified versions of such material be marked in
     reasonable ways as different from the original version; or
 
     d) Limiting the use for publicity purposes of names of licensors or
@@ -380,7 +380,7 @@ that material) supplement the terms of this License with terms:
     trade names, trademarks, or service marks; or
 
     f) Requiring indemnification of licensors and authors of that
-    material by anyone who conveys the material (or MODIFIED versions of
+    material by anyone who conveys the material (or modified versions of
     it) with contractual assumptions of liability to the recipient, for
     any liability that these contractual assumptions directly impose on
     those licensors and authors.

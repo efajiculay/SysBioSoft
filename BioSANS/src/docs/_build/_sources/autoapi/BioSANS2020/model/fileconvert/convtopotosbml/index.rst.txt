@@ -1,0 +1,71 @@
+:py:mod:`BioSANS2020.model.fileconvert.convtopotosbml`
+======================================================
+
+.. py:module:: BioSANS2020.model.fileconvert.convtopotosbml
+
+.. autoapi-nested-parse::
+
+                This module is the convtopotosbml module
+
+   The sole purpose of this module is to faciliate conversion of topology
+   files into SBML files. Currently, this module still have a lot of
+   problems and the converted file may not run properly.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.fileconvert.convtopotosbml.topo_to_sbml
+
+
+
+.. py:function:: topo_to_sbml(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms, items=None, molar=False, rfile=None)
+
+   This function helps in the conversion of topology file to SBML.
+   Consider a file containing the following reaction topology;
+
+       #REACTIONS
+       A <=> B, 0.5, 0.3
+       3 B => 2 C, 0.04
+
+       @CONCENTRATION
+       A, 100
+       B, 90
+       C, 80
+
+   Args:
+       sp_comp : dictionary of components where the key is the
+                 component and the value is a set of integers that tell
+                 the rank or order of that reaction as it appears in
+                 the file. For the above topology
+                 sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+       ks_vals : dictioary of parameters where the key is the line in
+                 the file and the value is the list of parameter found
+                 i.e. for the above topology;
+                 ks_vals = {0: [0.5, 0.3], 1: [0.04]}
+       conc : dictionary of initial concentration i.e.
+              conc = {'A': 100.0, 'B': 90.0, 'C': 80}
+       r_react : dictionary where the key is the line in the file and
+                 the value is a dictionary of reactants where the key
+                 is the component and the value is its stoichiometric
+                 coefficient in that line i.e. for the above topology;
+                 r_react = {0: {'A': 1}, 1: {'B': 3}}
+       r_prods : dictionary where the key is the line in the file and
+                 the value is a dictionary of products where the key
+                 is the component and the value is its stoichiometric
+                 coefficient in that line i.e. for the above topology;
+                 r_prods = {0: {'B': 1}, 1: {'C': 2}}
+       vbig : not used but pertains to stoichiometric matrix
+       v_volms : volume of compartment
+       items : 3 item list of [canvas, scroll_x, scroll_y]
+       molar : True if conc. is in molar otherwise False
+       rfile : path of the topology file + name of topology file
+
+

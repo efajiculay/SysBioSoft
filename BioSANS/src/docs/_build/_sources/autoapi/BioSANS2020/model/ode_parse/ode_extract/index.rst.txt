@@ -1,0 +1,230 @@
+:py:mod:`BioSANS2020.model.ode_parse.ode_extract`
+=================================================
+
+.. py:module:: BioSANS2020.model.ode_parse.ode_extract
+
+.. autoapi-nested-parse::
+
+                        This is the ode_extract module
+
+   This module grabs stoichiometric matrix, propensity vector, and chemical
+   reaction from a list of strings containing python expression
+
+   List of functions:
+
+   1. process
+   2. prop_extr
+   3. term_ext
+   4. get_prop_stoich
+   5. print_stoich_prop
+   6. grab_rxn_ksn
+   7. transform_to_rxn
+   8. odedxdt_to_topo
+
+   For a given set of chemical species and corresponding ODE expression,
+   this script can be used as follows;
+
+   1.      Declare the list of ODE and variables or grab the list from a file.
+
+       x = ["m","P"]
+       dx_dt = ["km - m*rm","kp*m - P*rp"]
+
+   2.      Use "transform_to_rxn" command to get reactions that match the ODE.
+
+       transform_to_rxn(x, dx_dt)
+
+   The result of this command is as follows;
+
+       0 NONE => 1.0 m, 1 ::::: lambda   : km
+       1.0 m => 0 NONE, 1 ::::: lambda m : m*rm
+       1.0 P => 0 NONE, 1 ::::: lambda P : P*rp
+       0 NONE => 1.0 P, 1 ::::: lambda m : kp*m
+
+   The first line corresponds to the formation of mRNA m with a rate
+   constant of km. The second line is degradation of m with degradation
+   constant rm. The third line is degradation of protein with degradation
+   constant rp. The last line is the formation of P with rate constant kp.
+   The lambda expression after the delimiter ':::::' tells us the
+   propensity for each reaction which is provided after ':'. The 0 NONE
+   means there is no defined reactant and or degradation product for this
+   reaction.
+
+   3.      Use "print_stoich_prop" to print stoichiometric matrix and
+       propensity vector.
+
+           print_stoich_prop(dx_dt)
+
+       The result is as follows;
+
+       1.0*km - 1.0*m*rm
+       -1.0*P*rp + 1.0*kp*m
+
+       [1.00000000000000, -1.00000000000000, 0, 0]
+       [0, 0, -1.00000000000000, 1.00000000000000]
+
+       [km]
+       [m*rm]
+       [P*rp]
+       [kp*m]
+
+   The first two line here is the declared ODE. After the space, is the
+   stoichiometric matrix. The rows corresponds to the species declared in
+   step 1 i.e. first row in the matrix corresponds to x[0] or m and the
+   second row corresponds to x[1] or P. The columns correspond to the terms
+   in the propensity as listed after the stoichiometric matrix.
+
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.ode_parse.ode_extract.process
+   BioSANS2020.model.ode_parse.ode_extract.prop_extr
+   BioSANS2020.model.ode_parse.ode_extract.term_ext
+   BioSANS2020.model.ode_parse.ode_extract.get_prop_stoich
+   BioSANS2020.model.ode_parse.ode_extract.print_stoich_prop
+   BioSANS2020.model.ode_parse.ode_extract.grab_rxn_ksn
+   BioSANS2020.model.ode_parse.ode_extract.transform_to_rxn
+   BioSANS2020.model.ode_parse.ode_extract.odedxdt_to_topo
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.ode_parse.ode_extract.DONE_PARSING
+
+
+.. py:data:: DONE_PARSING
+   
+
+   
+
+.. py:function:: process(xvar)
+
+   This function formats the expression xvar into a form that can be
+   easily processed by stripping and replacing invalid operators.
+   Args:
+       xvar : mathematical expresson i.e. 'A*B*ka/(C**2 + 1)'
+   Returns:
+       val : same as xvar but with invalid operator removed
+
+
+.. py:function:: prop_extr(expr, prop)
+
+   This function extracts the propensity terms from the expression
+   expr which is a string of python mathematical expression. Propensity
+   terms are the terms that can be separated by + or - without the
+   numerical coefficient or stoichiometric multiplier.
+   Args:
+       expr : mathematical expresson i.e. 'A*B*ka/(C**2 + 1)'
+       prop : propensity list to append extracted propensity term
+
+
+.. py:function:: term_ext(expr)
+
+   This function extracts the terms from the expression expr which
+   is a string of python mathematical expression. The terms are part of
+   expr which can be separated by + or - with the numerical coefficient
+   or stoichiometric multiplier.
+   Args:
+       expr : mathematical expresson i.e. 'A*B*ka/(C**2 + 1)'
+   Returns:
+       term : the list of extracted terms
+
+
+.. py:function:: get_prop_stoich(dxdt)
+
+   This function extracts the propensity vector and stoichiometric
+   matrix from the list of ordinary differential equation.
+   Args:
+       dxdt : list of strings of mathematical expression
+   Returns :
+       v_stoich : stoichiometric matrix (sympy Matrix)
+       w_var : propensity vector ( sympy type Matrix )
+
+
+.. py:function:: print_stoich_prop(dxdt)
+
+   This function extracts the propensity vector and stoichiometric
+   matrix from the list of ordinary differential equation and prints
+   the output in the console.
+   Args:
+       dxdt : list of strings of mathematical expression
+
+
+.. py:function:: grab_rxn_ksn(stch_var, xvar, w_var)
+
+   This function transform the stoichiometric matrix, species or
+   components, and propensity vector into a list of reactions and list
+   of rate constants.
+   Args:
+       stch_var : stoichiometric matrix or 2D Matrix of coefficient
+       xvar     : list of components or species
+       w_var    : propensity vector or 1D Matrix of fluxes
+   Returns:
+       rxn_var  : list of reaction similar to BioSANS reactions format
+       ksn_var  : set of rate constant symbols if not numeric
+
+
+.. py:function:: transform_to_rxn(xvar, dxdt, x_ini=None, k_rc=None, items=None)
+
+   This function transform the list of components and list of ODE
+   into BioSANS topology file format.
+   Args:
+       xvar     : list of components or species (variable in ODE)
+                  example ["m","P"]
+       dxdt     : list of differential equations (python string)
+                  example ["km - m*rm","kp*m - P*rp"]
+       x_ini    : dictionary of initial conecentration or value
+                  example {"m" : 10, "p" : 0}
+       k_rc     : dictionary of rate constant symbols abd values
+                  example {"km" : 0.1, "rm" : 0.2}
+       items    : list containing [canvas, scroll_x, scroll_y]
+   Returns:
+       text     : text area where the outputs are written
+
+
+.. py:function:: odedxdt_to_topo(mfile, items)
+
+   This function reads BioSANS ODE file format and converts it to
+   BioSANS topology file format. The ODE file contains ODE expression,
+   initial concentration, and rate constants separated by tags. There
+   are three tags that is currently supported : ODE_DECLARATIONS,
+   INI_CONCENTRATIONS, and RATE_CONSTANTS. Provided below is an example
+   of the content of a typical ODE file.
+
+       ODE_DECLARATIONS:
+       A = -ka*A*B/(1+C**2) + kf1/(1+B**2)
+       B = -ka*A*B/(1+C**2)
+       C = -kc*C + kf2
+       D = ka*A*B/(1+C**2) - kf2
+
+       INI_CONCENTRATIONS:
+       A = 100
+       B = 200
+       C = 150
+       D = 0
+
+       RATE_CONSTANTS:
+       ka = 0.02
+       kf1 = 0.2
+       kc = 0.03
+       kf2 = 0.01
+
+   Args:
+       mfile    : file containing list of ODE expression
+       items    : list containing [canvas, scroll_x, scroll_y]
+   Returns:
+       text     : text area where the outputs are written
+
+

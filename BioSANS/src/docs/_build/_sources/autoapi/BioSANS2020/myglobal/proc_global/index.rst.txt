@@ -1,0 +1,51 @@
+:py:mod:`BioSANS2020.myglobal.proc_global`
+==========================================
+
+.. py:module:: BioSANS2020.myglobal.proc_global
+
+.. autoapi-nested-parse::
+
+                    This module is the proc_global module
+
+   The  main  purpose of this module is  to observed module wide processes.
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.myglobal.proc_global.init
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.myglobal.proc_global.MANAGER
+   BioSANS2020.myglobal.proc_global.LST
+
+
+.. py:data:: MANAGER
+   
+
+   
+
+.. py:data:: LST
+   
+
+   
+
+.. py:function:: init(self)
+
+   Initiate process related global variables
+       
+
+

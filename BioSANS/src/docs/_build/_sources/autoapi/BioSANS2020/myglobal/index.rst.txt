@@ -1,0 +1,16 @@
+:py:mod:`BioSANS2020.myglobal`
+==============================
+
+.. py:module:: BioSANS2020.myglobal
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   mglobals/index.rst
+   proc_global/index.rst
+
+

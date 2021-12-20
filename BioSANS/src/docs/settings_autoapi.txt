@@ -1,0 +1,11 @@
+
+
+mkdir docs
+cd docs
+sphinx-quickstart
+
+# added in conf
+extensions = ['autoapi.extension']
+autoapi_dirs = ['../../BioSANS2020']
+
+sphinx-build -b html . _build

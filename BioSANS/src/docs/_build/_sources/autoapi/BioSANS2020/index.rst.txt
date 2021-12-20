@@ -1,0 +1,34 @@
+:py:mod:`BioSANS2020`
+=====================
+
+.. py:module:: BioSANS2020
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   analysis/index.rst
+   cli_functs/index.rst
+   gui_functs/index.rst
+   math_functs/index.rst
+   model/index.rst
+   myglobal/index.rst
+   prepcodes/index.rst
+   propagation/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   BioSANS/index.rst
+   BioSSL/index.rst
+   RunBioSANS/index.rst
+   __main__/index.rst
+
+

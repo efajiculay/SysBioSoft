@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>BioSANS2020.propagation.symbolic.analytical_sol &#8212; biosans.doc 0.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-BioSANS2020.propagation.symbolic.analytical_sol">
+<span id="biosans2020-propagation-symbolic-analytical-sol"></span><h1><a class="reference internal" href="#module-BioSANS2020.propagation.symbolic.analytical_sol" title="BioSANS2020.propagation.symbolic.analytical_sol"><code class="xref py py-mod docutils literal notranslate"><span class="pre">BioSANS2020.propagation.symbolic.analytical_sol</span></code></a><a class="headerlink" href="#module-BioSANS2020.propagation.symbolic.analytical_sol" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>This module is the analytical_sol module</p>
+</div></blockquote>
+<p>This module handles analytical expression derivation</p>
+<p>The following are the functions in this module</p>
+<ol class="arabic simple">
+<li><p>solve_with_timeout</p></li>
+<li><p>get_sets</p></li>
+<li><p>grab_steady_state</p></li>
+<li><p>cs_to_csr</p></li>
+<li><p>analyt_soln</p></li>
+</ol>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.propagation.symbolic.analytical_sol.solve_with_timeout" title="BioSANS2020.propagation.symbolic.analytical_sol.solve_with_timeout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_with_timeout</span></code></a>(f_e, j_s)</p></td>
+<td><p>resturn solution to the system of equation in f_e with variables</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.propagation.symbolic.analytical_sol.get_sets" title="BioSANS2020.propagation.symbolic.analytical_sol.get_sets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sets</span></code></a>(r_dict, p_dict)</p></td>
+<td><p>[summary]</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.propagation.symbolic.analytical_sol.grab_steady_state" title="BioSANS2020.propagation.symbolic.analytical_sol.grab_steady_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grab_steady_state</span></code></a>(r_dict, p_dict, c_s, c_so, da_dt, j_s)</p></td>
+<td><p>This function return steady state amounts of components</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.propagation.symbolic.analytical_sol.cs_to_csr" title="BioSANS2020.propagation.symbolic.analytical_sol.cs_to_csr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cs_to_csr</span></code></a>(f_x, c_s, cs_r, not_semi)</p></td>
+<td><p>[summary]</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.propagation.symbolic.analytical_sol.analyt_soln" title="BioSANS2020.propagation.symbolic.analytical_sol.analyt_soln"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analyt_soln</span></code></a>(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None, rfile='', not_semi=True, mode=None)</p></td>
+<td><p>This function finds an analytical solution to a system of ODE.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.propagation.symbolic.analytical_sol.solve_with_timeout">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.propagation.symbolic.analytical_sol.</span></span><span class="sig-name descname"><span class="pre">solve_with_timeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.propagation.symbolic.analytical_sol.solve_with_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>resturn solution to the system of equation in f_e with variables
+symbos in the list j_s</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>f_e (list): equations
+j_s (list): Symbols</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: sometimes list but normally {variable : value}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.propagation.symbolic.analytical_sol.get_sets">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.propagation.symbolic.analytical_sol.</span></span><span class="sig-name descname"><span class="pre">get_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.propagation.symbolic.analytical_sol.get_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>r_dict (dict): dictionary of reactants
+p_dict (dict): dictionary of products</p>
+</dd>
+<dt>Returns:</dt><dd><p>set: sets to sum that will be used as constraints</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.propagation.symbolic.analytical_sol.grab_steady_state">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.propagation.symbolic.analytical_sol.</span></span><span class="sig-name descname"><span class="pre">grab_steady_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_so</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">da_dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.propagation.symbolic.analytical_sol.grab_steady_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function return steady state amounts of components</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>r_dict (dict): reactants dictionary
+p_dict (dict): products dictionary
+c_s (dict): dictionary of concentration Symbols/values
+c_so (dict): dictionary of initial concentration Symbols/values
+da_dt ([type]): ode expression
+j_s ([type]): list of components</p>
+</dd>
+<dt>Returns:</dt><dd><p>Matrix: steady state result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.propagation.symbolic.analytical_sol.cs_to_csr">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.propagation.symbolic.analytical_sol.</span></span><span class="sig-name descname"><span class="pre">cs_to_csr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs_r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">not_semi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.propagation.symbolic.analytical_sol.cs_to_csr" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>f_x (expression): sympy expression
+c_s (Symbol): sympy symbols
+cs_r (Symbol): equivalent of c_s
+not_semi (boolean): if True, use pure symbolic</p>
+</dd>
+<dt>Returns:</dt><dd><p>expression: substituted expression</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.propagation.symbolic.analytical_sol.analyt_soln">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.propagation.symbolic.analytical_sol.</span></span><span class="sig-name descname"><span class="pre">analyt_soln</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp_comp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ks_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stch_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">not_semi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.propagation.symbolic.analytical_sol.analyt_soln" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function finds an analytical solution to a system of ODE.</p>
+<dl>
+<dt>Args:</dt><dd><p>sp_comp (dict): dictionary of components
+ks_dict (dict):  dictionary of rate constant
+conc (dict): dictionary of concentrations
+r_dict (dict): dictionary of reactants
+p_dict (dict): dictionary of products
+stch_var (Matrix): stoichiomentric matrix
+items (tuple, optional): (canvas, scroll_x, scrolly).
+rfile (str, optional): BioSANS topology file.
+not_semi (bool, optional): if True, use pure symbolic solution;</p>
+<blockquote>
+<div><p>which is a function of time, initial concentration, and
+rate constant. Defaults to True.</p>
+</div></blockquote>
+<dl>
+<dt>mode (str, optional): mode of computation;</dt><dd><blockquote>
+<div><p>ftxo - function of time and initial condition
+ftks - function of time and rate constant</p>
+</div></blockquote>
+<p>Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>dict: dictionary of solution</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">biosans.doc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Erickson Fajiculay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../../../_sources/autoapi/BioSANS2020/propagation/symbolic/analytical_sol/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

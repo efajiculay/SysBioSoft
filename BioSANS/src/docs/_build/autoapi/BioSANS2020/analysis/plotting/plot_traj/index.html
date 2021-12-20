@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>BioSANS2020.analysis.plotting.plot_traj &#8212; biosans.doc 0.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-BioSANS2020.analysis.plotting.plot_traj">
+<span id="biosans2020-analysis-plotting-plot-traj"></span><h1><a class="reference internal" href="#module-BioSANS2020.analysis.plotting.plot_traj" title="BioSANS2020.analysis.plotting.plot_traj"><code class="xref py py-mod docutils literal notranslate"><span class="pre">BioSANS2020.analysis.plotting.plot_traj</span></code></a><a class="headerlink" href="#module-BioSANS2020.analysis.plotting.plot_traj" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>This is the plot_traj module</p>
+</div></blockquote>
+<p>This module process numeric trajectories and plots them</p>
+<p>The following is the list of function for this module:</p>
+<ol class="arabic simple">
+<li><p>plot_traj</p></li>
+<li><p>plot_traj2</p></li>
+</ol>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.analysis.plotting.plot_traj.plot_traj" title="BioSANS2020.analysis.plotting.plot_traj.plot_traj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_traj</span></code></a>(data, slabels, items, plotted, mix_plot=True, logx=False, logy=False, normalize=False, si_ticked=None)</p></td>
+<td><p>This function plots time series trajectories.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.analysis.plotting.plot_traj.plot_traj2" title="BioSANS2020.analysis.plotting.plot_traj.plot_traj2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_traj2</span></code></a>(data, slabels, items, plotted, logx=False, logy=False, normalize=False, xlabel='conc', ylabel='conc', zlabel='conc', trange=None)</p></td>
+<td><p>This function plots time series trajectories or phase portriat.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.plotting.plot_traj.plot_traj">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.plotting.plot_traj.</span></span><span class="sig-name descname"><span class="pre">plot_traj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slabels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mix_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">si_ticked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.plotting.plot_traj.plot_traj" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function plots time series trajectories.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>data<span class="classifier">three dimensional data. The outermost index represents</span></dt><dd><p>the trajectories. Each row of trajectory contains a 2 x 2
+numpy array where the rows is the time and the columns
+are the labels. The first column is time and the next few
+columns are the trajectories.</p>
+</dd>
+</dl>
+<p>slabels : labels of the trajectories in data
+items : 3 item list of [canvas, scroll_x, scroll_y]
+plotted : an array where the figures plotted are pushed i.e.</p>
+<blockquote>
+<div><p>plotted.append([plt.gca(), fig, lines]). This is used
+for managing the plots in the GUI.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>mix_plot<span class="classifier">if true, the all data will be plotted together in one</span></dt><dd><p>plot otherwise in seperate plots</p>
+</dd>
+</dl>
+<p>logx : if true, uses logscale in x-axis
+logy : if true, uses logscale in y-axis
+normalize : normalized the data based on max(data)
+si_ticked : list of indexes in slabels to be shown in plot</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.plotting.plot_traj.plot_traj2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.plotting.plot_traj.</span></span><span class="sig-name descname"><span class="pre">plot_traj2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slabels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'conc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.plotting.plot_traj.plot_traj2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function plots time series trajectories or phase portriat.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>data<span class="classifier">three dimensional data. The outermost index represents</span></dt><dd><p>the trajectories. Each row of trajectory contains a 2 x 2
+numpy array where the rows is the time and the columns
+are the labels. The first column is time and the next few
+columns are the trajectories.</p>
+</dd>
+</dl>
+<p>slabels : labels of the trajectories in data
+items : 3 item list of [canvas, scroll_x, scroll_y]
+plotted : an array where the figures plotted are pushed i.e.</p>
+<blockquote>
+<div><p>plotted.append([plt.gca(), fig, lines]). This is used
+for managing the plots in the GUI.</p>
+</div></blockquote>
+<p>logx : if true, uses logscale in x-axis
+logy : if true, uses logscale in y-axis
+normalize : normalized the data based on max(data)
+xlabel : label of x-axis
+ylabel : label of y-axis
+zlabel : label of y-axis
+trange : slice indexes of the trajectory i.e. -1000:-1</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">biosans.doc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Erickson Fajiculay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../../../_sources/autoapi/BioSANS2020/analysis/plotting/plot_traj/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

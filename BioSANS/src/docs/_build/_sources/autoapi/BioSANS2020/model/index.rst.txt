@@ -1,0 +1,27 @@
+:py:mod:`BioSANS2020.model`
+===========================
+
+.. py:module:: BioSANS2020.model
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   fileconvert/index.rst
+   ode_parse/index.rst
+   param_est/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   new_file/index.rst
+   topology_view/index.rst
+
+

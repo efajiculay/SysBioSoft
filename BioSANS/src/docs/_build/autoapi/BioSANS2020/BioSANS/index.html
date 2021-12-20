@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>BioSANS2020.BioSANS &#8212; biosans.doc 0.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-BioSANS2020.BioSANS">
+<span id="biosans2020-biosans"></span><h1><a class="reference internal" href="#module-BioSANS2020.BioSANS" title="BioSANS2020.BioSANS"><code class="xref py py-mod docutils literal notranslate"><span class="pre">BioSANS2020.BioSANS</span></code></a><a class="headerlink" href="#module-BioSANS2020.BioSANS" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>This module is the BioSANS module</p>
+</div></blockquote>
+<p>The purpose of this module  is to provide a graphical user interface and
+to facilitate  the transfer of information from BioSANS topology file to
+other modules.</p>
+<p>The following are the list of functions in this module</p>
+<ol class="arabic simple">
+<li><p>load_data</p></li>
+<li><p>show_file_dir</p></li>
+<li><p>create_file</p></li>
+<li><p>extract_ode</p></li>
+<li><p>sbml_to_topo2</p></li>
+<li><p>save_file</p></li>
+<li><p>runpy_file</p></li>
+<li><p>run_ssl</p></li>
+<li><p>load_data2</p></li>
+<li><p>tload_data2</p></li>
+<li><p>delete_this</p></li>
+<li><p>canvas_update_widgets</p></li>
+<li><p>load_image</p></li>
+<li><p>eval2</p></li>
+<li><p>dict_trans</p></li>
+<li><p>convert</p></li>
+<li><p>range_trans</p></li>
+<li><p>range_prep</p></li>
+<li><p>mrun_propagation</p></li>
+<li><p>tprocess</p></li>
+<li><p>analysis_case</p></li>
+<li><p>plot_traj_d2</p></li>
+<li><p>param_set</p></li>
+</ol>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.load_data" title="BioSANS2020.BioSANS.load_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_data</span></code></a>(itups)</p></td>
+<td><p>This fuction reads topology file and display the contents in a</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.show_file_dir" title="BioSANS2020.BioSANS.show_file_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_file_dir</span></code></a>(path)</p></td>
+<td><p>This function opens the current working directory</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.create_file" title="BioSANS2020.BioSANS.create_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_file</span></code></a>(itups, ftype)</p></td>
+<td><p>This function creates a temporary file in a temporary directory</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.extract_ode" title="BioSANS2020.BioSANS.extract_ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_ode</span></code></a>(itups)</p></td>
+<td><p>This function extracts topology from ODE file format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.sbml_to_topo2" title="BioSANS2020.BioSANS.sbml_to_topo2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sbml_to_topo2</span></code></a>(tocon, itups)</p></td>
+<td><p>This function helps  in the conversion  of SBML files  to BioSANS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.save_file" title="BioSANS2020.BioSANS.save_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_file</span></code></a>()</p></td>
+<td><p>This function saves the content of the last opened text area into</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.runpy_file" title="BioSANS2020.BioSANS.runpy_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">runpy_file</span></code></a>()</p></td>
+<td><p>This module write the contents of the text area into a python</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.run_ssl" title="BioSANS2020.BioSANS.run_ssl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_ssl</span></code></a>()</p></td>
+<td><p>This function initiates BioSSL or the BioSABS structured</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.load_data2" title="BioSANS2020.BioSANS.load_data2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_data2</span></code></a>(plot=False)</p></td>
+<td><p>This function loads data for numerical processing or for plotting</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.tload_data2" title="BioSANS2020.BioSANS.tload_data2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tload_data2</span></code></a>(plot=False)</p></td>
+<td><p>This function starts a thread that handles loading data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.delete_this" title="BioSANS2020.BioSANS.delete_this"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_this</span></code></a>(frame, canvas)</p></td>
+<td><p>This function delete an object in the canvas</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.canvas_update_widgets" title="BioSANS2020.BioSANS.canvas_update_widgets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">canvas_update_widgets</span></code></a>(_, canvas)</p></td>
+<td><p>This function rearranged the elements in the canvas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.load_image" title="BioSANS2020.BioSANS.load_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_image</span></code></a>(wdata=False)</p></td>
+<td><p>This function load image into a canvas and display in BioSANS.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.eval2" title="BioSANS2020.BioSANS.eval2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval2</span></code></a>(xvar)</p></td>
+<td><p>This function evaluates expression</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.dict_trans" title="BioSANS2020.BioSANS.dict_trans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_trans</span></code></a>(x_1)</p></td>
+<td><p>This function creates a dictionary from a list assignment</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.convert" title="BioSANS2020.BioSANS.convert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert</span></code></a>(xvar, con)</p></td>
+<td><p>This function converts a variable into con data type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.range_trans" title="BioSANS2020.BioSANS.range_trans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">range_trans</span></code></a>(x_1)</p></td>
+<td><p>This function converts the x_1 comma concatenated string into a</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.range_prep" title="BioSANS2020.BioSANS.range_prep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">range_prep</span></code></a>(x_1)</p></td>
+<td><p>This function process some string input and converts them to a</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.mrun_propagation" title="BioSANS2020.BioSANS.mrun_propagation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mrun_propagation</span></code></a>(par, entry_list, defs2)</p></td>
+<td><p>Ths function grabs the values from defs2 whcih serves as the set</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.tprocess" title="BioSANS2020.BioSANS.tprocess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tprocess</span></code></a>(defs)</p></td>
+<td><p>This function creates a thread and sed defs to the</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.analysis_case" title="BioSANS2020.BioSANS.analysis_case"><code class="xref py py-obj docutils literal notranslate"><span class="pre">analysis_case</span></code></a>(ana_case, itups)</p></td>
+<td><p>This function  redirects input to  the corresponding numerical or</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.plot_traj_d" title="BioSANS2020.BioSANS.plot_traj_d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_traj_d</span></code></a>(current_data, itups)</p></td>
+<td><p>This function plot the trajectory data stored as current data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.get_checked" title="BioSANS2020.BioSANS.get_checked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_checked</span></code></a>(el_1, slabels)</p></td>
+<td><p>This function returns the components name with a check from el_1</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.plot_traj_d2" title="BioSANS2020.BioSANS.plot_traj_d2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_traj_d2</span></code></a>(current_data, itups)</p></td>
+<td><p>This function is another plotting function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.param_set" title="BioSANS2020.BioSANS.param_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">param_set</span></code></a>(method)</p></td>
+<td><p>This function opens the parameter setting dialof box and grab the</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.TEMPORARY_FOLDER" title="BioSANS2020.BioSANS.TEMPORARY_FOLDER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TEMPORARY_FOLDER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.TOP" title="BioSANS2020.BioSANS.TOP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TOP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.HEADER" title="BioSANS2020.BioSANS.HEADER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HEADER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.FRAME" title="BioSANS2020.BioSANS.FRAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FRAME</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.FOOTER" title="BioSANS2020.BioSANS.FOOTER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FOOTER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.FILE_NAME" title="BioSANS2020.BioSANS.FILE_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FILE_NAME</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.CURRENT_DATA" title="BioSANS2020.BioSANS.CURRENT_DATA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CURRENT_DATA</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.SUPER_THREAD_RUN" title="BioSANS2020.BioSANS.SUPER_THREAD_RUN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SUPER_THREAD_RUN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.BioSANS.MENUBUT1" title="BioSANS2020.BioSANS.MENUBUT1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MENUBUT1</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.TEMPORARY_FOLDER">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">TEMPORARY_FOLDER</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.TEMPORARY_FOLDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.TOP">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">TOP</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.TOP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.HEADER">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">HEADER</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.FRAME">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">FRAME</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.FRAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.FOOTER">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">FOOTER</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.FOOTER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.FILE_NAME">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">FILE_NAME</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.FILE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.load_data">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>This fuction reads topology file and display the contents in a
+text area.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>itups (tuple): (canvas, scroll_x, scroll_y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.show_file_dir">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">show_file_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.show_file_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function opens the current working directory</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): directory path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.create_file">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">create_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.create_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a temporary file in a temporary directory
+where new topology / files can be placed.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>itups (tuple): (canvas, scroll_x, scroll_y)
+ftype (int): 1 for BioSANS topology file, 2 for ODE file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.extract_ode">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">extract_ode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.extract_ode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts topology from ODE file format</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>itups (tuple): (canvas, scroll_x, scroll_y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.sbml_to_topo2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">sbml_to_topo2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tocon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.sbml_to_topo2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function helps  in the conversion  of SBML files  to BioSANS
+topology files.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tocon (str): sbml file name to convert
+itups (tuple): (canvas, scroll_x, scroll_y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.save_file">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">save_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.save_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves the content of the last opened text area into
+a file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.runpy_file">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">runpy_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.runpy_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>This module write the contents of the text area into a python
+file and run the file as a python script.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.run_ssl">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">run_ssl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.run_ssl" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function initiates BioSSL or the BioSABS structured
+simulation language.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.load_data2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">load_data2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.load_data2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function loads data for numerical processing or for plotting</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>plot (bool, optional): if True, loaded trajectory is plotted.
+Defaults to False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.tload_data2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">tload_data2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.tload_data2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function starts a thread that handles loading data.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>plot (bool, optional): if True, loaded trajectory is plotted.
+Defaults to False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.delete_this">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">delete_this</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.delete_this" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function delete an object in the canvas</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>frame (tkinter.Frame): frame or other objects
+canvas (tkinter.Canvas): canvas object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.canvas_update_widgets">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">canvas_update_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.canvas_update_widgets" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function rearranged the elements in the canvas.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>_ (None): Not needed
+canvas (tkinter.Canvas): canvas object]</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: “break”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.load_image">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">load_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wdata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.load_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function load image into a canvas and display in BioSANS.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>wdata (bool, optional): if True, data will also be loaded in the</dt><dd><p>memory. Defaults to False.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.eval2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">eval2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xvar</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.eval2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function evaluates expression</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>xvar (str): expression</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: evaluated expression</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.CURRENT_DATA">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">CURRENT_DATA</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.CURRENT_DATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.dict_trans">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">dict_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.dict_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a dictionary from a list assignment
+Args:</p>
+<blockquote>
+<div><p>x_1 (str): string of symbols and assinged values.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>dict: a dictionary from a list assignment</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.convert">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">con</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function converts a variable into con data type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>xvar (str): string
+con (con): new data type con</p>
+</dd>
+<dt>Returns:</dt><dd><p>con: xvar equivalent in con</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.range_trans">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">range_trans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.range_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function converts the x_1 comma concatenated string into a
+list and put the first element as the last element.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>x_1 (str): comma concatenated string</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: the first element goes last now</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.range_prep">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">range_prep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.range_prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function process some string input and converts them to a
+list which is used as a range on other fuctions.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>x_1 (str): comma concatenated string</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: list of float or list of list and floats</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.mrun_propagation">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">mrun_propagation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defs2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.mrun_propagation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ths function grabs the values from defs2 whcih serves as the set
+of input for the tprocess function.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>par (tkinter.Toplevel): top level container
+entry_list (list): list of tkinter.Entry or tkinter.OptionMenu
+defs2 (list): values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.SUPER_THREAD_RUN">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">SUPER_THREAD_RUN</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.SUPER_THREAD_RUN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.tprocess">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">tprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.tprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a thread and sed defs to the
+BioSANS2020.prepcodes.process function.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>defs (list): inputs for process fucntion</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.analysis_case">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">analysis_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ana_case</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.analysis_case" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function  redirects input to  the corresponding numerical or
+plotting processes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ana_case (str): type of analysis
+itups (tuple): (canvas, scroll_x, scroll_y)</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray : numerical values or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.plot_traj_d">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">plot_traj_d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.plot_traj_d" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function plot the trajectory data stored as current data.
+The plot can be the phase portrait.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>current_data (np.ndarray or list): loaded data
+itups (tuple): (canvas, scroll_x, scroll_y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.get_checked">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">get_checked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slabels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.get_checked" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the components name with a check from el_1
+check boxes list.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>el_1 (list): list of values
+slabels (list):components or species labels</p>
+</dd>
+<dt>Returns:</dt><dd><p>[type]: [description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.plot_traj_d2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">plot_traj_d2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.plot_traj_d2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is another plotting function.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>current_data (np.ndarray or list): loaded data
+itups (tuple): (canvas, scroll_x, scroll_y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.param_set">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">param_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.BioSANS.param_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function opens the parameter setting dialof box and grab the
+user custom settings.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>method (str): Defaults to “CLE”. Any of the option in</dt><dd><p>the list of available method keywords is listed below;</p>
+<p>Stochastic (refer to section 10.2.4)</p>
+<ol class="arabic simple">
+<li><p>“CLE”            - Molecules(micro), tau-adaptive</p></li>
+<li><p>“CLE2”           - Molecules(micro), cle-fixIntvl</p></li>
+<li><p>“<a href="#id1"><span class="problematic" id="id2">Gillespie_</span></a>”     - Molecules(micro), Direct method</p></li>
+<li><dl class="simple">
+<dt>“Tau-leaping”    - Molecules(micro),</dt><dd><p>Not swapping with Gillespie</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“Tau-leaping2”   - Molecules(micro),</dt><dd><p>Swapping with Gillespie</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“Sim-TauLeap”    - Molecules(micro), Simplified,</dt><dd><p>Swapping with Gillespie</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Deterministic (refer to section 10.2.1)</p>
+<ol class="arabic simple" start="7">
+<li><p>“Euler-1”        - Molecules(micro), tau-adaptive-1</p></li>
+<li><p>“Euler-2”        - Molar (macro), tau-adaptive-1</p></li>
+<li><p>“Euler-3”        - Mole (macro), tau-adaptive-1</p></li>
+<li><p>“Euler2-1”           - Molecules(micro), tau-adaptive-2</p></li>
+<li><p>“Euler2-2”       - Molar (macro), tau-adaptive-2</p></li>
+<li><p>“Euler2-3”       - Mole (macro), tau-adaptive-2</p></li>
+<li><dl class="simple">
+<dt>“ODE-1”          - Molecules(micro),</dt><dd><p>using ode_int from scipy</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“ODE-2”          - Molar(macro),</dt><dd><p>using ode_int from scipy</p>
+</dd>
+</dl>
+</li>
+<li><p>“ODE-3”          - Mole(macro), using ode_int from scipy</p></li>
+<li><p>“rk4-1”          - Molecules(micro), fix-interval</p></li>
+<li><p>“rk4-2”          - Molar(macro), fix-interval</p></li>
+<li><p>“rk4-3”          - Mole(macro), fix-interval</p></li>
+<li><p>“rk4-1a”         - Molecules(micro), tau-adaptive</p></li>
+<li><p>“rk4-2a”         - Molar(macro), tau-adaptive</p></li>
+<li><p>“rk4-3a”         - Mole(macro), tau-adaptive</p></li>
+</ol>
+<p>Linear Noise Approximation (refer to 10.1.2 &amp; 10.2.2)</p>
+<ol class="arabic simple" start="22">
+<li><p>“LNA”             - Numeric, values</p></li>
+<li><p>“LNA-vs”          - Symbolic, values, Macroscopic</p></li>
+<li><p>“LNA-ks”          - Symbolic, f(ks), Macroscopic</p></li>
+<li><p>“LNA-xo”          - Symbolic, f(xo), Macroscopic</p></li>
+<li><p>“LNA2”            - Symbolic, f(xo,ks), Microscopic</p></li>
+<li><p>“LNA3”            - Symbolic, f(xo,ks), Macroscopic</p></li>
+<li><p>“LNA(t)”          - COV-time-dependent, Macroscopic</p></li>
+<li><p>“LNA2(t)”         - FF-time-dependent, Macroscopic</p></li>
+</ol>
+<p>Network Localization (refer to 10.1.3)</p>
+<ol class="arabic simple" start="30">
+<li><p>“NetLoc1”         - Symbolic, Macroscopic</p></li>
+<li><p>“NetLoc2”         - Numeric, Macroscopic</p></li>
+</ol>
+<p>Parameter estimation (refer to 10.2.3)</p>
+<ol class="arabic simple" start="32">
+<li><p>“k_est1”          - MCEM, Macroscopic</p></li>
+<li><p>“k_est2”          - MCEM, Microscopic</p></li>
+<li><p>“k_est3”          - NM-Diff. Evol., Macroscopic</p></li>
+<li><p>“k_est4”          - NM-Diff. Evol., Microscopic</p></li>
+<li><p>“k_est5”          - Parameter slider/scanner</p></li>
+<li><p>“k_est6”          - Nelder-Mead (NM), Macroscopic</p></li>
+<li><p>“k_est7”          - Nelder-Mead (NM), Microscopic</p></li>
+<li><p>“k_est8”          - Powell, Macroscopic</p></li>
+<li><p>“k_est9”          - Powell, Microscopic</p></li>
+<li><p>“k_est10”         - L-BFGS-B, Macroscopic</p></li>
+<li><p>“k_est11”         - L-BFGS-B, Microscopic</p></li>
+</ol>
+<p>Symbolic/Analytical expression of species (refer to 10.1.1)</p>
+<ol class="arabic simple" start="43">
+<li><p>“Analyt”          - Pure Symbolic :f(t,xo,k)</p></li>
+<li><p>“Analyt-ftx”      - Semi-Symbolic :f(t,xo)</p></li>
+<li><p>“SAnalyt”         - Semi-Symbolic :f(t)</p></li>
+<li><p>“SAnalyt-ftk”     - Semi-Symbolic :f(t,k)</p></li>
+<li><p>“Analyt2”         - Creates commands for wxmaxima</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.BioSANS.MENUBUT1">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.BioSANS.</span></span><span class="sig-name descname"><span class="pre">MENUBUT1</span></span><a class="headerlink" href="#BioSANS2020.BioSANS.MENUBUT1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">biosans.doc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Erickson Fajiculay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../_sources/autoapi/BioSANS2020/BioSANS/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

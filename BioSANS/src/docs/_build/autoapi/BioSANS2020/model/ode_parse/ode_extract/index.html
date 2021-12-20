@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>BioSANS2020.model.ode_parse.ode_extract &#8212; biosans.doc 0.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-BioSANS2020.model.ode_parse.ode_extract">
+<span id="biosans2020-model-ode-parse-ode-extract"></span><h1><a class="reference internal" href="#module-BioSANS2020.model.ode_parse.ode_extract" title="BioSANS2020.model.ode_parse.ode_extract"><code class="xref py py-mod docutils literal notranslate"><span class="pre">BioSANS2020.model.ode_parse.ode_extract</span></code></a><a class="headerlink" href="#module-BioSANS2020.model.ode_parse.ode_extract" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>This is the ode_extract module</p>
+</div></blockquote>
+<p>This module grabs stoichiometric matrix, propensity vector, and chemical
+reaction from a list of strings containing python expression</p>
+<p>List of functions:</p>
+<ol class="arabic simple">
+<li><p>process</p></li>
+<li><p>prop_extr</p></li>
+<li><p>term_ext</p></li>
+<li><p>get_prop_stoich</p></li>
+<li><p>print_stoich_prop</p></li>
+<li><p>grab_rxn_ksn</p></li>
+<li><p>transform_to_rxn</p></li>
+<li><p>odedxdt_to_topo</p></li>
+</ol>
+<p>For a given set of chemical species and corresponding ODE expression,
+this script can be used as follows;</p>
+<ol class="arabic simple">
+<li><p>Declare the list of ODE and variables or grab the list from a file.</p></li>
+</ol>
+<blockquote>
+<div><p>x = [“m”,”P”]
+dx_dt = [“km - m*rm”,”kp*m - P*rp”]</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Use “transform_to_rxn” command to get reactions that match the ODE.</p></li>
+</ol>
+<blockquote>
+<div><p>transform_to_rxn(x, dx_dt)</p>
+</div></blockquote>
+<p>The result of this command is as follows;</p>
+<blockquote>
+<div><p>0 NONE =&gt; 1.0 m, 1 ::::: lambda   : km
+1.0 m =&gt; 0 NONE, 1 ::::: lambda m : m*rm
+1.0 P =&gt; 0 NONE, 1 ::::: lambda P : P*rp
+0 NONE =&gt; 1.0 P, 1 ::::: lambda m : kp*m</p>
+</div></blockquote>
+<p>The first line corresponds to the formation of mRNA m with a rate
+constant of km. The second line is degradation of m with degradation
+constant rm. The third line is degradation of protein with degradation
+constant rp. The last line is the formation of P with rate constant kp.
+The lambda expression after the delimiter ‘:::::’ tells us the
+propensity for each reaction which is provided after ‘:’. The 0 NONE
+means there is no defined reactant and or degradation product for this
+reaction.</p>
+<ol class="arabic simple" start="3">
+<li><p>Use “print_stoich_prop” to print stoichiometric matrix and</p></li>
+</ol>
+<blockquote>
+<div><p>propensity vector.</p>
+<blockquote>
+<div><p>print_stoich_prop(dx_dt)</p>
+</div></blockquote>
+<p>The result is as follows;</p>
+<p>1.0*km - 1.0*m*rm
+-1.0*P*rp + 1.0*kp*m</p>
+<p>[1.00000000000000, -1.00000000000000, 0, 0]
+[0, 0, -1.00000000000000, 1.00000000000000]</p>
+<p>[km]
+[m*rm]
+[P*rp]
+[kp*m]</p>
+</div></blockquote>
+<p>The first two line here is the declared ODE. After the space, is the
+stoichiometric matrix. The rows corresponds to the species declared in
+step 1 i.e. first row in the matrix corresponds to x[0] or m and the
+second row corresponds to x[1] or P. The columns correspond to the terms
+in the propensity as listed after the stoichiometric matrix.</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.process" title="BioSANS2020.model.ode_parse.ode_extract.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>(xvar)</p></td>
+<td><p>This function formats the expression xvar into a form that can be</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.prop_extr" title="BioSANS2020.model.ode_parse.ode_extract.prop_extr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prop_extr</span></code></a>(expr, prop)</p></td>
+<td><p>This function extracts the propensity terms from the expression</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.term_ext" title="BioSANS2020.model.ode_parse.ode_extract.term_ext"><code class="xref py py-obj docutils literal notranslate"><span class="pre">term_ext</span></code></a>(expr)</p></td>
+<td><p>This function extracts the terms from the expression expr which</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.get_prop_stoich" title="BioSANS2020.model.ode_parse.ode_extract.get_prop_stoich"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_prop_stoich</span></code></a>(dxdt)</p></td>
+<td><p>This function extracts the propensity vector and stoichiometric</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.print_stoich_prop" title="BioSANS2020.model.ode_parse.ode_extract.print_stoich_prop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_stoich_prop</span></code></a>(dxdt)</p></td>
+<td><p>This function extracts the propensity vector and stoichiometric</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.grab_rxn_ksn" title="BioSANS2020.model.ode_parse.ode_extract.grab_rxn_ksn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grab_rxn_ksn</span></code></a>(stch_var, xvar, w_var)</p></td>
+<td><p>This function transform the stoichiometric matrix, species or</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.transform_to_rxn" title="BioSANS2020.model.ode_parse.ode_extract.transform_to_rxn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_to_rxn</span></code></a>(xvar, dxdt, x_ini=None, k_rc=None, items=None)</p></td>
+<td><p>This function transform the list of components and list of ODE</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.odedxdt_to_topo" title="BioSANS2020.model.ode_parse.ode_extract.odedxdt_to_topo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odedxdt_to_topo</span></code></a>(mfile, items)</p></td>
+<td><p>This function reads BioSANS ODE file format and converts it to</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.model.ode_parse.ode_extract.DONE_PARSING" title="BioSANS2020.model.ode_parse.ode_extract.DONE_PARSING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DONE_PARSING</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.DONE_PARSING">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">DONE_PARSING</span></span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.DONE_PARSING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.process">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xvar</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function formats the expression xvar into a form that can be
+easily processed by stripping and replacing invalid operators.
+Args:</p>
+<blockquote>
+<div><p>xvar : mathematical expresson i.e. ‘A*B*ka/(C**2 + 1)’</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>val : same as xvar but with invalid operator removed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.prop_extr">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">prop_extr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.prop_extr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts the propensity terms from the expression
+expr which is a string of python mathematical expression. Propensity
+terms are the terms that can be separated by + or - without the
+numerical coefficient or stoichiometric multiplier.
+Args:</p>
+<blockquote>
+<div><p>expr : mathematical expresson i.e. ‘A*B*ka/(C**2 + 1)’
+prop : propensity list to append extracted propensity term</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.term_ext">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">term_ext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.term_ext" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts the terms from the expression expr which
+is a string of python mathematical expression. The terms are part of
+expr which can be separated by + or - with the numerical coefficient
+or stoichiometric multiplier.
+Args:</p>
+<blockquote>
+<div><p>expr : mathematical expresson i.e. ‘A*B*ka/(C**2 + 1)’</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>term : the list of extracted terms</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.get_prop_stoich">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">get_prop_stoich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dxdt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.get_prop_stoich" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts the propensity vector and stoichiometric
+matrix from the list of ordinary differential equation.
+Args:</p>
+<blockquote>
+<div><p>dxdt : list of strings of mathematical expression</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns :</dt><dd><p>v_stoich : stoichiometric matrix (sympy Matrix)
+w_var : propensity vector ( sympy type Matrix )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.print_stoich_prop">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">print_stoich_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dxdt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.print_stoich_prop" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts the propensity vector and stoichiometric
+matrix from the list of ordinary differential equation and prints
+the output in the console.
+Args:</p>
+<blockquote>
+<div><p>dxdt : list of strings of mathematical expression</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.grab_rxn_ksn">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">grab_rxn_ksn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stch_var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_var</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.grab_rxn_ksn" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function transform the stoichiometric matrix, species or
+components, and propensity vector into a list of reactions and list
+of rate constants.
+Args:</p>
+<blockquote>
+<div><p>stch_var : stoichiometric matrix or 2D Matrix of coefficient
+xvar     : list of components or species
+w_var    : propensity vector or 1D Matrix of fluxes</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>rxn_var  : list of reaction similar to BioSANS reactions format
+ksn_var  : set of rate constant symbols if not numeric</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.transform_to_rxn">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">transform_to_rxn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dxdt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_ini</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_rc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.transform_to_rxn" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function transform the list of components and list of ODE
+into BioSANS topology file format.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>xvar<span class="classifier">list of components or species (variable in ODE)</span></dt><dd><p>example [“m”,”P”]</p>
+</dd>
+<dt>dxdt<span class="classifier">list of differential equations (python string)</span></dt><dd><p>example [“km - m*rm”,”kp*m - P*rp”]</p>
+</dd>
+<dt>x_ini<span class="classifier">dictionary of initial conecentration or value</span></dt><dd><p>example {“m” : 10, “p” : 0}</p>
+</dd>
+<dt>k_rc<span class="classifier">dictionary of rate constant symbols abd values</span></dt><dd><p>example {“km” : 0.1, “rm” : 0.2}</p>
+</dd>
+</dl>
+<p>items    : list containing [canvas, scroll_x, scroll_y]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>text     : text area where the outputs are written</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.model.ode_parse.ode_extract.odedxdt_to_topo">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.model.ode_parse.ode_extract.</span></span><span class="sig-name descname"><span class="pre">odedxdt_to_topo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.model.ode_parse.ode_extract.odedxdt_to_topo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads BioSANS ODE file format and converts it to
+BioSANS topology file format. The ODE file contains ODE expression,
+initial concentration, and rate constants separated by tags. There
+are three tags that is currently supported : ODE_DECLARATIONS,
+INI_CONCENTRATIONS, and RATE_CONSTANTS. Provided below is an example
+of the content of a typical ODE file.</p>
+<blockquote>
+<div><p>ODE_DECLARATIONS:
+A = -ka*A*B/(1+C**2) + kf1/(1+B**2)
+B = -ka*A*B/(1+C**2)
+C = -kc*C + kf2
+D = ka*A*B/(1+C**2) - kf2</p>
+<p>INI_CONCENTRATIONS:
+A = 100
+B = 200
+C = 150
+D = 0</p>
+<p>RATE_CONSTANTS:
+ka = 0.02
+kf1 = 0.2
+kc = 0.03
+kf2 = 0.01</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Args:</dt><dd><p>mfile    : file containing list of ODE expression
+items    : list containing [canvas, scroll_x, scroll_y]</p>
+</dd>
+<dt>Returns:</dt><dd><p>text     : text area where the outputs are written</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">biosans.doc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Erickson Fajiculay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../../../_sources/autoapi/BioSANS2020/model/ode_parse/ode_extract/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

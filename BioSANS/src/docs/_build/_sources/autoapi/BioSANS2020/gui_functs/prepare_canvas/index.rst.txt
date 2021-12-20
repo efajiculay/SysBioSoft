@@ -1,0 +1,44 @@
+:py:mod:`BioSANS2020.gui_functs.prepare_canvas`
+===============================================
+
+.. py:module:: BioSANS2020.gui_functs.prepare_canvas
+
+.. autoapi-nested-parse::
+
+              This is the prepare_canvas module
+
+   This module prepare the canvas for drawing figures, plots and images.
+
+   The following is the list of function for this module:
+
+   1. prepare_frame_for_plot
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.gui_functs.prepare_canvas.prepare_frame_for_plot
+
+
+
+.. py:function:: prepare_frame_for_plot(frame1a, width=1030, height=465)
+
+   This function prepares the frame that will serve as a parent of
+   the canvas that will serve as a parent of many frames that will
+   contain figures, image, and plots.
+   Args:
+       frame1a : the parent frame
+       width : width of frame1a
+       height : height frame1a
+   Returns:
+       tuple : (canvas, scroll_x, scroll_y)
+
+
+

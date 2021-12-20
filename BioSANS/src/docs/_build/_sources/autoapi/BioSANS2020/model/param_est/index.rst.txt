@@ -1,0 +1,17 @@
+:py:mod:`BioSANS2020.model.param_est`
+=====================================
+
+.. py:module:: BioSANS2020.model.param_est
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   my_mcem/index.rst
+   param_estimate/index.rst
+   param_slider/index.rst
+
+

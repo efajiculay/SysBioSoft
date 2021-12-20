@@ -1,0 +1,16 @@
+:py:mod:`BioSANS2020.prepcodes`
+===============================
+
+.. py:module:: BioSANS2020.prepcodes
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   process/index.rst
+   processes_hub/index.rst
+
+

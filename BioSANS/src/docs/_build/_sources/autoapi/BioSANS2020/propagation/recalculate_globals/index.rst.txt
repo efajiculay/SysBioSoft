@@ -1,0 +1,157 @@
+:py:mod:`BioSANS2020.propagation.recalculate_globals`
+=====================================================
+
+.. py:module:: BioSANS2020.propagation.recalculate_globals
+
+.. autoapi-nested-parse::
+
+                This module is the recalculate_globals module
+
+   The purpose of this module is to ensure that global variables holds True
+   each process for multitrajectory simulation.
+
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.propagation.recalculate_globals.eval2
+   BioSANS2020.propagation.recalculate_globals.rate_of
+   BioSANS2020.propagation.recalculate_globals.delay_part1
+   BioSANS2020.propagation.recalculate_globals.delay_part2
+   BioSANS2020.propagation.recalculate_globals.delay
+   BioSANS2020.propagation.recalculate_globals.none_to_list
+   BioSANS2020.propagation.recalculate_globals.apply_rules
+   BioSANS2020.propagation.recalculate_globals.get_globals
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.propagation.recalculate_globals.reserve_events_words
+   BioSANS2020.propagation.recalculate_globals.CONCP
+   BioSANS2020.propagation.recalculate_globals.RATESP
+   BioSANS2020.propagation.recalculate_globals.ORASP
+   BioSANS2020.propagation.recalculate_globals.SIP
+   BioSANS2020.propagation.recalculate_globals.ACTUALSP
+   BioSANS2020.propagation.recalculate_globals.CONCP2
+
+
+.. py:data:: reserve_events_words
+   
+
+   
+
+.. py:data:: CONCP
+   
+
+   
+
+.. py:data:: RATESP
+   
+
+   
+
+.. py:data:: ORASP
+   
+
+   
+
+.. py:data:: SIP
+   
+
+   
+
+.. py:data:: ACTUALSP
+   
+
+   
+
+.. py:data:: CONCP2
+   
+
+   
+
+.. py:function:: eval2(to_eval)
+
+   Evaluate a string expression using the SBML_FUNCT_DICT dictionary
+
+   Args:
+       to_eval (str): expression
+
+   Returns:
+       multitype: evaluated result
+
+
+.. py:function:: rate_of(xvar)
+
+   This is to supplement the SBML rateOf function. The return is the
+   instantaneous rate at the current state of the system
+
+
+.. py:function:: delay_part1(yvar, last)
+
+   Part of the delay function. See delay function for details
+       
+
+
+.. py:function:: delay_part2(last, delt, yvar)
+
+   Part of the delay function. See delay function for details
+       
+
+
+.. py:function:: delay(xvar, yvar)
+
+   This is to supplement the SBML delay function
+
+
+.. py:function:: none_to_list(xvar=None)
+
+   Transform a None variable into a list [] to avoid dangerous
+   initial values.
+
+
+.. py:function:: apply_rules(conc, yconc, oras=None, spconc=None, slabels=None)
+
+   This function modifies the concentration base on the rules stated
+   in BioSANS topology file.
+
+   Args:
+       conc (dict): dictionary of initial concentration.
+
+           For example;
+
+               {'A': 100.0, 'B': -1.0, 'C': 0.0}
+               negative means unknown or for estimation
+       yconc (dict): dictionary of initial concentration.
+
+           For example;
+
+               {'A': 100.0, 'B': -1.0, 'C': 0.0}
+               negative means unknown or for estimation
+       oras (float, optional): current time point. Defaults to None.
+       spconc (list, optional): values of conc at the current time.
+           Defaults to None.
+       slabels (list, optional): names of components. Defaults to None.
+
+
+.. py:function:: get_globals(rfile)
+
+   This function get the global variables from BioSANS topology file
+    called rfile.
+
+   Args:
+       rfile (str): name of topology file
+
+

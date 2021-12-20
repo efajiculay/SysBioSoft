@@ -1,0 +1,16 @@
+:py:mod:`BioSANS2020.analysis`
+==============================
+
+.. py:module:: BioSANS2020.analysis
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   numeric/index.rst
+   plotting/index.rst
+
+

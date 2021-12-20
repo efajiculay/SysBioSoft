@@ -1,0 +1,153 @@
+:py:mod:`BioSANS2020.model.param_est.my_mcem`
+=============================================
+
+.. py:module:: BioSANS2020.model.param_est.my_mcem
+
+.. autoapi-nested-parse::
+
+                    This module is the my_mcem module
+
+   This module is a simple implementation of monte-carlo expectation maximi
+   zation. The likelihood  function here is the joint probability distribu-
+   tion of the  error or  the difference between the true value and estima-
+   ted value. The error on each parameter estimate  is assumed to  be inde-
+   pendent and follows a normal  distribution. A uniform prior was set. The
+   log-likelihood  of  this function becomes the negative of the sum of the
+   squared  error  between  the  estimated value and true value. Parameters
+   were drawn  from  a log-normal distribution. In our  implementation, the
+   posterior  probability  is  calculated at each sampling  stage.  In  the
+   maximization step, the  ratio of posterior  probability between consecu-
+   tive draws (or the exponential of the difference between consecutive log
+   -likelihood) are  used to decide  whether to accept or reject the latest
+   values of the parameters based on a uniform random variable. After seve-
+   ral samplings  (decided programmatically in the algorithm), the mean and
+   standard deviation of the parameters  from all  the accepted  values are
+   calculated  and  used as the mean  and standard  deviation  for the next
+   sampling  stage.  This serves as the expectation step in our implementa-
+   tion because we  do not have a  close form for the parameters. The cycle
+   is repeated until  the calculated  mean and  standard deviations of each
+   parameters are no longer changing or  until  the maximum number of steps
+   is reached.
+
+   The following are the functions inside this module
+
+   1. log_likelihood
+   2. cost_value
+   3. exptn_maxtn
+   4. run_mcem
+
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   BioSANS2020.model.param_est.my_mcem.log_likelihood
+   BioSANS2020.model.param_est.my_mcem.cost_value
+   BioSANS2020.model.param_est.my_mcem.exptn_maxtn
+   BioSANS2020.model.param_est.my_mcem.run_mcem
+
+
+
+.. py:function:: log_likelihood(ks_var, custom_function, args=None)
+
+   This function evaluates the loglikelihood based on the definitons
+   provided in the custom_function. Here, it is the negative of the sum
+   of squared errors between true and estimated value.
+
+   Args:
+       ks_var (list): list of parameter values
+       custom_function (function): user/program defined objective/error
+           function  to  optimized  my expectation  maximization  or EM
+       args (tuple): Tuple  of  (data,  conc, tvar,  sp_comp,  ks_dict,
+           r_dict,  p_dict,  v_stoich,  c_miss,  k_miss, molar, rfile).
+           Defaults  to None. See param_estimate module for  the proper
+           definition of variables.
+
+   Returns:
+       float: numeric value of custom_function(ks_var, args)
+
+
+.. py:function:: cost_value(ks_var, custom_function, args=None)
+
+   This function  evaluates  the cost value or SSE of the definitons
+   provided in the custom_function.
+
+   Args:
+       ks_var (list): list of parameter values
+       custom_function (function): user/program defined objective/error
+           function  to  optimized  my  expectation  maximization or EM
+       args (tuple): Tuple  of  (data,  conc, tvar,  sp_comp,  ks_dict,
+           r_dict,  p_dict,  v_stoich,  c_miss,  k_miss, molar, rfile).
+           Defaults  to None. See param_estimate module for  the proper
+           definition of variables.
+
+   Returns:
+       float: numeric value of custom_function(ks_var, args)
+
+
+.. py:function:: exptn_maxtn(lst, seed_var, maxiter=50, inner_loop=1000, lenks=3, positive_only=False, likelihood=None, args=None, thr=1e-10)
+
+   This  function  performs  the  expectation  step and maximization
+   steps  bounded by  maxiter and inner_loop  variables. The process is
+   similar to the metrololis  hasting algorithm. There is a random walk
+   performed as the  posterior probability is maximized. The parameters
+   are updated in the randomwalk based on sampled values.
+
+   Args:
+       lst (multiprocessing.managers.ListProxy):
+           multiprocessing.Manager() from proc_global module. This help
+           in halting simulation when one of the chains already achived
+           the defined tolerance.
+       seed_var (float): random  seed  value picked  at random for each
+           trajectory. They have been sampled from the calling program.
+       maxiter (int, optional):  maximum  number  of expectation steps.
+           Defaults to 50. This is the outer loop.
+       inner_loop (int, optional): maximum number of maximization step.
+           Defaults to 1000.
+       lenks (int, optional): numbers  unknown  parameters to estimate.
+       positive_only (bool, optional): constraint the parameter estima-
+           tion to choose positive values. Defaults to False.
+       likelihood (function, optional): user/program defined objective/
+           error function  to  optimized
+       args (tuple): Tuple  of  (data,  conc, tvar,  sp_comp,  ks_dict,
+           r_dict,  p_dict,  v_stoich,  c_miss,  k_miss, molar, rfile).
+           Defaults  to None. See param_estimate module for  the proper
+           definition of variables.
+       thr (function, optional): error tolerance. Defaults to 1.0e-10.
+
+   Returns:
+       tuple: (list of estimated parameter, minimum error)
+
+
+.. py:function:: run_mcem(chains, n_pars, maxiter=5, inner_loop=5 * 1000, positive_only=False, likelihood=None, arg=None, r_rand=np.random.uniform(0, 1))
+
+   [summary]
+
+   Args:
+       chains (integer): number of parallel runs or chains
+       n_pars (integer): number of parameters
+       maxiter (int, optional):  maximum  number  of expectation steps.
+           Defaults to 50. This is the outer loop.
+       inner_loop (int, optional): maximum number of maximization step.
+           Defaults to 1000.
+       positive_only (bool, optional): constraint the parameter estima-
+           tion to choose positive values. Defaults to False.
+       likelihood (function, optional): user/program defined objective/
+           error function  to  optimized
+       args (tuple): Tuple  of  (data,  conc, tvar,  sp_comp,  ks_dict,
+           r_dict,  p_dict,  v_stoich,  c_miss,  k_miss, molar, rfile).
+           Defaults  to None. See param_estimate module for  the proper
+           definition of variables.
+       r_rand (float, optional): np.random.uniform(0, 1) for seeding
+
+   Returns:
+       [type]: [description]
+
+

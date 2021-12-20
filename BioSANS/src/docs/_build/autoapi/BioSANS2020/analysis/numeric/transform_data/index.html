@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>BioSANS2020.analysis.numeric.transform_data &#8212; biosans.doc 0.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-BioSANS2020.analysis.numeric.transform_data">
+<span id="biosans2020-analysis-numeric-transform-data"></span><h1><a class="reference internal" href="#module-BioSANS2020.analysis.numeric.transform_data" title="BioSANS2020.analysis.numeric.transform_data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">BioSANS2020.analysis.numeric.transform_data</span></code></a><a class="headerlink" href="#module-BioSANS2020.analysis.numeric.transform_data" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>This is the transform_data module</p>
+</div></blockquote>
+<p>This module process numeric trajectories and either prints the result or
+display the output into a text area embedded in a canvas or plots it</p>
+<p>The following is the list of function for this module:</p>
+<ol class="arabic simple">
+<li><p>normalize</p></li>
+<li><p>calc_cross_corr</p></li>
+<li><p>calc_covariance2</p></li>
+<li><p>calc_covariance</p></li>
+<li><p>fano_factor</p></li>
+<li><p>prob_density_calc</p></li>
+<li><p>prob_density_calc2</p></li>
+<li><p>prob_density_calc3</p></li>
+<li><p>ave_traj_calc</p></li>
+</ol>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.normalize" title="BioSANS2020.analysis.numeric.transform_data.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a>(vect)</p></td>
+<td><p>returns the normalized form of the input vector v</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.calc_cross_corr" title="BioSANS2020.analysis.numeric.transform_data.calc_cross_corr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_cross_corr</span></code></a>(edata, items)</p></td>
+<td><p>This function calculates the cross correlation of edata[0] and</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.calc_covariance2" title="BioSANS2020.analysis.numeric.transform_data.calc_covariance2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_covariance2</span></code></a>(edata)</p></td>
+<td><p>This function calculates the covariance of edata[0] and prints</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.calc_covariance" title="BioSANS2020.analysis.numeric.transform_data.calc_covariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_covariance</span></code></a>(edata, items, points=100)</p></td>
+<td><p>This function calculates the covariance of edata[0] and prints</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.fano_factor" title="BioSANS2020.analysis.numeric.transform_data.fano_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fano_factor</span></code></a>(edata, items, points=100)</p></td>
+<td><p>This function calculates the fano-factor of edata[0] and prints</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.prob_density_calc" title="BioSANS2020.analysis.numeric.transform_data.prob_density_calc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prob_density_calc</span></code></a>(edata, items)</p></td>
+<td><p>This function calculates the probability density of edata[0] and</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.prob_density_calc2" title="BioSANS2020.analysis.numeric.transform_data.prob_density_calc2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prob_density_calc2</span></code></a>(edata, items)</p></td>
+<td><p>This function calculates the probability density of edata[0] and</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.prob_density_calc3" title="BioSANS2020.analysis.numeric.transform_data.prob_density_calc3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prob_density_calc3</span></code></a>(edata, items, bins=50)</p></td>
+<td><p>This function calculates the probability density of edata[0] per</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#BioSANS2020.analysis.numeric.transform_data.ave_traj_calc" title="BioSANS2020.analysis.numeric.transform_data.ave_traj_calc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ave_traj_calc</span></code></a>(edata, items)</p></td>
+<td><p>This function calculates the average trajectory of edata[0] and</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.normalize">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the normalized form of the input vector v</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.calc_cross_corr">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">calc_cross_corr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.calc_cross_corr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the cross correlation of edata[0] and
+returns a plot of the correlation as a function of lags.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.calc_covariance2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">calc_covariance2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.calc_covariance2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the covariance of edata[0] and prints
+the result in a terminal window.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.calc_covariance">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">calc_covariance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.calc_covariance" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the covariance of edata[0] and prints
+the result in a text area embedded in a canvas.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]
+points : last number of points considered in covariance</p>
+<blockquote>
+<div><p>calculation from -points to the end of array
+or equivalent to [-points:] slice.</p>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.fano_factor">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">fano_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.fano_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the fano-factor of edata[0] and prints
+the result in a text area embedded in a canvas.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]
+points : last number of points considered in fano-factor</p>
+<blockquote>
+<div><p>calculation from -points to the end of array ([-points:] slice)</p>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.prob_density_calc">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">prob_density_calc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.prob_density_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the probability density of edata[0] and
+returns a plot of the probability density.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.prob_density_calc2">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">prob_density_calc2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.prob_density_calc2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the probability density of edata[0] and
+returns a plot of the probability density with time.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.prob_density_calc3">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">prob_density_calc3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.prob_density_calc3" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the probability density of edata[0] per
+bins and returns a plot of the probability density (time slice).
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]
+bins : number of bins an entire trajectory will be discretized</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BioSANS2020.analysis.numeric.transform_data.ave_traj_calc">
+<span class="sig-prename descclassname"><span class="pre">BioSANS2020.analysis.numeric.transform_data.</span></span><span class="sig-name descname"><span class="pre">ave_traj_calc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BioSANS2020.analysis.numeric.transform_data.ave_traj_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function calculates the average trajectory of edata[0] and
+returns a plot of the average trajectory as a function of time.
+Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>edata<span class="classifier">two dimensional array of data &amp; labels (data, label).</span></dt><dd><p>data is a 3D array where each row are the individual
+trajectories. Each trajectory is a 2D numpy array where
+the first column is time and the remaining columns are
+the corresponding components.</p>
+</dd>
+</dl>
+<p>items : 3 item list of [canvas, scroll_x, scroll_y]</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">biosans.doc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Erickson Fajiculay.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../../../_sources/autoapi/BioSANS2020/analysis/numeric/transform_data/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
