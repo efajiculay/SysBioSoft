@@ -149,7 +149,7 @@ def tau_leaping2(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
         elif maxrlen == 2:
             try:
                 g_i.append(lambda xvar: 2 + 1 / (xvar - 1))
-            except BaseException:
+            except:
                 g_i.append(lambda xvar: 2)
         else:
             g_i.append(lambda xvar: 1)
@@ -455,7 +455,7 @@ def ssa_support(tvar, ks_dict, r_dict, p_dict, stch_var,
                                 while t_c > tvar[tindex]:
                                     z_conc.append(zconc[-2])
                                     tindex = tindex + 1
-                        except BaseException:
+                        except:
                             pass
                     else:
                         for xvar, _ in enumerate(spc):

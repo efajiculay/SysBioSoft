@@ -352,7 +352,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                         work = True
                     except FunctionTimedOut:
                         work = False
-                except BaseException:
+                except:
                     pass
             else:
                 # print("llll",2)
@@ -360,7 +360,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                     try:
                         x_s = simplify(-left_hand**-1 * right_hand)
                         x_sol = x_s + exp(left_hand * tvar) * (x_o - x_s)
-                    except BaseException:
+                    except:
                         x_sol = simplify(
                             exp(left_hand * tvar) * x_o
                             + integrate(exp(left_hand * tvar)
@@ -374,7 +374,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                         if var_sp not in my_equations:
                             my_equations[var_sp] = answer
                     work = True
-                except BaseException:
+                except:
                     pass
 
     if not work:
@@ -398,7 +398,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
 
             except FunctionTimedOut:
                 float("jjj")
-        except BaseException:
+        except:
             try:
                 print(2)
                 ind = 0
@@ -471,7 +471,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                 if var_sp not in my_equations:
                                     my_equations[var_sp] = answer
                                 used3[var_sp] = True
-                        except BaseException:
+                        except:
                             denom = cs_to_csr(xvar[0].rhs, c_s, cs_r, not_semi)
                             itvar = cs_to_csr(spc[0], c_s, cs_r, not_semi)
                             val = integrate(
@@ -552,7 +552,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                         1 / denom, (itvar,
                                                     xvar[1][spc.subs(tvar, 0)],
                                                     spc)) - tvar
-                                except BaseException:
+                                except:
                                     denom = cs_to_csr(
                                         xvar[0].rhs, c_s, cs_r, False)
                                     itvar = cs_to_csr(spc, c_s, cs_r, False)
@@ -579,7 +579,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                 # my_equations[var_sp] = answer
                             else:
                                 not_f.append([xvar[0], xvar[1]])
-                        except BaseException:
+                        except:
                             not_f.append([xvar[0], xvar[1]])
                         c_c = c_c + 1
 
@@ -601,7 +601,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                     my_equations[var_sp] = answer
                                 ind = ind + 1
                             break
-            except BaseException:
+            except:
                 print(3)
                 ind = 0
                 not_f = []
@@ -661,7 +661,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                 if var_sp not in my_equations:
                                     my_equations[var_sp] = answer
                                 used3[var_sp] = True
-                        except BaseException:
+                        except:
                             denom = cs_to_csr(xvar[0].rhs, c_s, cs_r, not_semi)
                             itvar = cs_to_csr(spc[0], c_s, cs_r, not_semi)
                             val = integrate(
@@ -732,7 +732,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                         1 / denom,
                                         (itvar, xvar[1][spc.subs(tvar, 0)],
                                          spc)) - tvar
-                                except BaseException:
+                                except:
                                     denom = cs_to_csr(
                                         xvar[0].rhs, c_s, cs_r, False)
                                     itvar = cs_to_csr(spc, c_s, cs_r, False)
@@ -762,7 +762,7 @@ def analyt_soln(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None,
                                     my_equations[var_sp] = answer
                             else:
                                 not_f.append([xvar[0], xvar[1]])
-                        except BaseException:
+                        except:
                             not_f.append([xvar[0], xvar[1]])
                         c_c = c_c + 1
 

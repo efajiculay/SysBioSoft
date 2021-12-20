@@ -142,7 +142,7 @@ def sim_tauLeap(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
         elif maxrlen == 2:
             try:
                 g_i.append(lambda xvar: 2 + 1 / (xvar - 1))
-            except BaseException:
+            except:
                 g_i.append(lambda xvar: 2)
         else:
             g_i.append(lambda xvar: 1)

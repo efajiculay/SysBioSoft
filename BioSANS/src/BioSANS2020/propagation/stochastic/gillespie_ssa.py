@@ -202,7 +202,7 @@ def gillespie_ssa(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                                 while t_c > tvar[tindex]:
                                     z_c.append(zlist[-2])
                                     tindex = tindex + 1
-                        except BaseException:
+                        except:
                             pass
                         tnew.append(t_c)
                     else:

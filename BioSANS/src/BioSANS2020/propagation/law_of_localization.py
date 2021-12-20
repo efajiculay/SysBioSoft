@@ -247,12 +247,12 @@ def law_loc_symbolic(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                 try:
                     ffprint([knames[ih_index], "\t", js_name[ij_index],
                              "\t", stch_var[ih_index, ij_index], "\n"])
-                except BaseException:
+                except:
                     pass
             ffprint(["\n"])
     except NonSquareMatrixError:
         ffprint(["Non square matrix error"])
-    finally:
+    except:
         pass
 
     return [0, 0]

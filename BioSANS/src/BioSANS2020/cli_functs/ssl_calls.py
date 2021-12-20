@@ -419,7 +419,7 @@ def prob_density_calc_wtime(edata, fname, mname):
                                           int(np.max(zss)) + 1,
                                           int(delcon))
                                     ), cmap="Spectral_r")
-        except BaseException:
+        except:
             cntr = plt.contour(xss[1:], yss[1:], zss.T, 100, cmap="Spectral_r")
         fig = plt.gcf()
         fig.colorbar(cntr)

@@ -1,72 +1,119 @@
-#import sys
+"""
+
+                     This module is the BioSSl module
+
+This module process SSL (structured simulation language) queries.
+
+
+"""
+
+# import sys
 import os
+import webbrowser
+from sys import platform as PLATFORM
+import pandas as pd
+import matplotlib.pyplot as plt
 # sys.path.append(os.path.abspath("BioSANS2020"))
 
-import pathlib
-from BioSANS2020.prepcodes.process import *
-from BioSANS2020.cli_functs.ssl_calls import *
-import pandas as pd
+# import pathlib
+from BioSANS2020.prepcodes.process import process
+from BioSANS2020.cli_functs.ssl_calls \
+    import load_data_traj, calc_average_conc_at_tend, calc_covariance, \
+    prob_density_calc_wtime, prob_density_calc  # , \
+# calc_covariance_per_traj, calc_covariance_bootsrap, \
+# prob_density_calc_tslice
 from BioSANS2020.myglobal import mglobals as globals2
-import matplotlib.pyplot as plt
-import webbrowser
 
+if PLATFORM == "win32":
+    pass
+    # from subprocess import Popen, CREATE_NEW_CONSOLE
+elif PLATFORM == "darwin":
+    # try:
+    # from applescript import tell as my_tell_us
+    # except:
+    # pass
+    from subprocess import call as my_call_us
+elif PLATFORM == "linux":
+    pass
+else:
+    pass
+    # from subprocess import Popen
 
 if 'USERPROFILE' in os.environ:
-    cwd = os.path.join(os.environ['USERPROFILE'], "BioSSL_temporary_folder")
+    CWD = os.path.join(os.environ['USERPROFILE'], "BioSSL_temporary_folder")
 elif 'HOME' in os.environ:
-    cwd = os.path.join(os.environ['HOME'], "BioSSL_temporary_folder")
+    CWD = os.path.join(os.environ['HOME'], "BioSSL_temporary_folder")
 else:
     try:
         import tempfile
-        cwd = os.path.join(tempfile.gettempdir(), "BioSSL_temporary_folder")
-    except BaseException:
-        cwd = os.path.join(os.getcwd(), "BioSSL_temporary_folder")
+        CWD = os.path.join(tempfile.gettempdir(), "BioSSL_temporary_folder")
+    except:
+        CWD = os.path.join(os.getcwd(), "BioSSL_temporary_folder")
 
 try:
-    os.mkdir(cwd, 0o777)
-except BaseException:
+    os.mkdir(CWD, 0o777)
+except:
     pass
 
-globals2.init()
-trj = {}
+globals2.init(globals2)
+TRAJ = {}
+
+
+def eval2(to_eval):
+    """Evaluate expression"""
+    return eval(to_eval)
 
 
 def show_file_dir(path):
-    global platform
-    if platform == "win32":
+    """This function opens the current working directory
+
+    Args:
+        path (str): current working directory
+    """
+    if PLATFORM == "win32":
         os.startfile(os.path.dirname(path))
-    elif platform == "darwin":
+    elif PLATFORM == "darwin":
         my_call_us('open', os.path.dirname(path))
-    elif platform == "linux":
+    elif PLATFORM == "linux":
         my_call_us('xdg-open', os.path.dirname(path))
     else:
         webbrowser.open(os.path.dirname(path))
 
 
 def get_input():
+    """Thi function get the input commands as user type in console
+
+    Returns:
+        str: The input command
+    """
     try:
-        return raw_input("> ")
-    except BaseException:
         return input("> ")
+    except:
+        return raw_input("> ")
 
 
 def process_command(command):
-    global cwd, trj
+    """This function handles the processing of commands.
+
+    Args:
+        command (str): string of commands
+    """
+    global CWD
     rowc = command.strip().split()
     miter = 1
     tend = 100
-    Vol = 1.0
+    vol = 1.0
     tsc = 1.5
     tlen = 100
     mult_proc = False
     fout = "temp_traj"
-    fileUnit = "molecules"
+    file_unit = "molecules"
     plot = True
     mixp = True
     norm = False
     logx = False
     logy = False
-    EdataFile = None
+    edatafile = None
     topo = None
     if rowc[0].lower() == "propagate":
         rlen = len(rowc)
@@ -77,26 +124,26 @@ def process_command(command):
             i = i + 1
         rxns = rxns.split("&")
         # try:
-        fFile = cwd + "/temp.txt"
-        f = open(fFile, "w")
-        f.write("#REACTIONS\n")
-        for rx in rxns:
-            f.write(rx + "\n")
-        f.write("\n")
-        Mname = ""
-        f.write("@CONCENTRATION\n")
+        ffile = CWD + "/temp.txt"
+        fvar = open(ffile, "w")
+        fvar.write("#REACTIONS\n")
+        for r_x in rxns:
+            fvar.write(r_x + "\n")
+        fvar.write("\n")
+        mname = ""
+        fvar.write("@CONCENTRATION\n")
         conc = ""
 
         i = i + 1
         while rowc[i] != "using" and i < rlen:
             conc = conc + rowc[i]
-            Mname = rowc[i + 2]
+            mname = rowc[i + 2]
             i = i + 1
 
-        for cx in conc.split("&"):
-            f.write(cx.replace("=", ",") + "\n")
-        f.write("\n")
-        f.close()
+        for c_x in conc.split("&"):
+            fvar.write(c_x.replace("=", ",") + "\n")
+        fvar.write("\n")
+        fvar.close()
 
         i = i + 3
         opts = ""
@@ -105,11 +152,11 @@ def process_command(command):
             i = i + 1
         opts = opts.split("&")
         optsv = {}
-        for op in opts:
-            opr = op.split("=")
+        for o_p in opts:
+            opr = o_p.split("=")
             try:
                 optsv[opr[0].strip()] = opr[1]
-            except BaseException:
+            except:
                 pass
 
         if 'tend' in optsv:
@@ -117,7 +164,7 @@ def process_command(command):
         if 'tlen' in optsv:
             tlen = int(optsv['tlen'])
         if 'Vol' in optsv:
-            Vol = float(optsv['Vol'])
+            vol = float(optsv['Vol'])
         if 'tsc' in optsv:
             tsc = float(optsv['tsc'])
         if 'miter' in optsv:
@@ -137,45 +184,45 @@ def process_command(command):
         if 'logy' in optsv:
             norm = optsv['norm'].lower() == "logy"
         if 'fileUnit' in optsv:
-            fileUnit = optsv['fileUnit'].lower()
+            file_unit = optsv['fileUnit'].lower()
         if 'EdataFile' in optsv:
-            EdataFile = optsv['EdataFile']
-            EdataFile = os.path.join(cwd, EdataFile)
+            edatafile = optsv['EdataFile']
+            edatafile = os.path.join(CWD, edatafile)
         if 'topo' in optsv:
             topo = optsv['topo']
-            topo = os.path.join(cwd, topo)
-            fFile = topo
+            topo = os.path.join(CWD, topo)
+            ffile = topo
 
-        Fname = cwd + "/" + fout
+        fname = CWD + "/" + fout
         process(
-            rfile=fFile,
+            rfile=ffile,
             miter=miter,
-            conc_unit=fileUnit,
-            v_volms=Vol,
+            conc_unit=file_unit,
+            v_volms=vol,
             tend=tend,
             del_coef=tsc,
             normalize=norm,
             logx=logx,
             logy=logy,
-            method=Mname,
+            method=mname,
             tlen=tlen,
             mix_plot=mixp,
             save=True,
-            out_fname=Fname,
+            out_fname=fname,
             plot_show=plot,
             c_input={},
             vary="",
             mult_proc=mult_proc,
             items=None,
-            exp_data_file=EdataFile
+            exp_data_file=edatafile
         )
         # except:
         #print("temp.txt file not found")
     elif rowc[0].lower() == "load":
-        sslfile = cwd + "/" + rowc[1]
-        f = open(sslfile)
+        sslfile = CWD + "/" + rowc[1]
+        fvar = open(sslfile)
         command = ""
-        for row in f:
+        for row in fvar:
             if len(row.strip()) > 0:
                 if row.strip()[-1] == ";":
                     command = command + row.strip().replace(";", "")
@@ -183,56 +230,56 @@ def process_command(command):
                     command = ""
                 else:
                     command = command + row.strip() + " "
-        f.close()
+        fvar.close()
     elif rowc[0].lower() == "pwd":
-        print(cwd)
+        print(CWD)
     elif rowc[0].lower() == "mkdir":
         try:
-            os.mkdir(cwd + "/" + rowc[1], 0o777)
-        except BaseException:
+            os.mkdir(CWD + "/" + rowc[1], 0o777)
+        except:
             pass
     elif rowc[0].lower() == "ls":
         dirs = []
         try:
             if len(rowc) > 1:
-                dirs = os.listdir(cwd + "/" + rowc[1])
+                dirs = os.listdir(CWD + "/" + rowc[1])
             else:
-                dirs = os.listdir(cwd)
-        except BaseException:
+                dirs = os.listdir(CWD)
+        except:
             pass
-        for x in dirs:
-            if os.path.isdir(x):
-                print("directory : " + x)
+        for xvar in dirs:
+            if os.path.isdir(xvar):
+                print("directory : " + xvar)
             else:
-                print("file      : " + x)
+                print("file      : " + xvar)
     elif rowc[0].lower() == "cd":
         try:
-            if os.path.isdir(cwd + "/" + rowc[1]):
-                abspath = os.path.abspath(cwd + "/" + rowc[1])
+            if os.path.isdir(CWD + "/" + rowc[1]):
+                abspath = os.path.abspath(CWD + "/" + rowc[1])
                 dname = os.path.dirname(abspath)
                 os.chdir(dname)
-                cwd = str(abspath)
+                CWD = str(abspath)
             elif os.path.isdir(rowc[1].strip()):
                 abspath = os.path.abspath(rowc[1])
                 dname = os.path.dirname(abspath)
                 os.chdir(dname)
-                cwd = str(abspath)
+                CWD = str(abspath)
             else:
                 print("No such directory")
-        except BaseException:
+        except:
             print("cannot change dir")
     elif rowc[0].lower() == "read_traj":
         if len(rowc) == 4:
             if rowc[2].lower() == "as":
                 name = rowc[3].strip()
                 try:
-                    sslfile = cwd + "/" + rowc[1]
-                    trj[name] = load_data_traj(sslfile)
-                except BaseException:
+                    sslfile = CWD + "/" + rowc[1]
+                    TRAJ[name] = load_data_traj(sslfile)
+                except:
                     try:
                         sslfile = rowc[1]
-                        trj[name] = load_data_traj(sslfile)
-                    except BaseException:
+                        TRAJ[name] = load_data_traj(sslfile)
+                    except:
                         print("File not found")
             else:
                 print("use as to assign content to variable")
@@ -243,60 +290,61 @@ def process_command(command):
         try:
             if len(rowc) == 3:
                 try:
-                    print(trj[rowc[1].strip()][eval(rowc[2].strip())])
-                except BaseException:
-                    print(trj[rowc[1].strip()]
-                          [eval("'" + rowc[2].strip() + "'")])
+                    print(TRAJ[rowc[1].strip()][eval2(rowc[2].strip())])
+                except:
+                    print(TRAJ[rowc[1].strip()]
+                          [eval2("'" + rowc[2].strip() + "'")])
             else:
-                print(trj[rowc[1].strip()])
-        except BaseException:
+                print(TRAJ[rowc[1].strip()])
+        except:
             pass
     elif rowc[0].lower() == "plot":
         if len(rowc) == 4:
-            trj[rowc[1].strip()].plot(x=rowc[2], y=rowc[3], kind='scatter', s=1)
+            TRAJ[rowc[1].strip()].plot(
+                xvar=rowc[2], y=rowc[3], kind='scatter', s=1)
             plt.show()
         elif len(rowc) > 4:
-            qx = rowc[3:]
+            q_x = rowc[3:]
             plt.xlabel(rowc[2])
-            for x in qx:
-                plt.scatter(trj[rowc[1]][rowc[2]],
-                            trj[rowc[1]][x], label=x, s=1)
+            for xvar in q_x:
+                plt.scatter(TRAJ[rowc[1]][rowc[2]],
+                            TRAJ[rowc[1]][xvar], label=xvar, s=1)
             plt.legend()
             plt.show()
         else:
             print("Invalid syntax")
     elif rowc[0].lower() == "calc_covariance":
         try:
-            calc_covariance(trj[rowc[1].strip()], int(rowc[2]))
-        except BaseException:
-            calc_covariance(trj[rowc[1].strip()], 100)
+            calc_covariance(TRAJ[rowc[1].strip()], int(rowc[2]))
+        except:
+            calc_covariance(TRAJ[rowc[1].strip()], 100)
     elif rowc[0].lower() == "prob_density":
-        prob_density_calc(trj[rowc[1].strip()], cwd + "/" + rowc[1].strip())
+        prob_density_calc(TRAJ[rowc[1].strip()], CWD + "/" + rowc[1].strip())
     elif rowc[0].lower() == "prob_density_wtime":
-        prob_density_calc_wtime(trj[rowc[1].strip()], cwd +
+        prob_density_calc_wtime(TRAJ[rowc[1].strip()], CWD +
                                 "/" + rowc[1].strip(), "Mname")
     elif rowc[0].lower() == "calc_average":
         try:
-            calc_average_conc_at_tend(trj[rowc[1].strip()], int(rowc[2]))
-        except BaseException:
-            calc_average_conc_at_tend(trj[rowc[1].strip()], 100)
+            calc_average_conc_at_tend(TRAJ[rowc[1].strip()], int(rowc[2]))
+        except:
+            calc_average_conc_at_tend(TRAJ[rowc[1].strip()], 100)
     elif rowc[0].lower() == "length":
         try:
-            print(len(trj[rowc[1].strip()]))
-        except BaseException:
+            print(len(TRAJ[rowc[1].strip()]))
+        except:
             pass
     elif rowc[0].lower() == "pdread_traj":
         if len(rowc) == 4:
             if rowc[2].lower() == "as":
                 name = rowc[3].strip()
                 try:
-                    sslfile = cwd + "/" + rowc[1]
-                    trj[name] = pd.read_csv(sslfile, delimiter="\t")
-                except BaseException:
+                    sslfile = CWD + "/" + rowc[1]
+                    TRAJ[name] = pd.read_csv(sslfile, delimiter="\t")
+                except:
                     try:
                         sslfile = rowc[1]
-                        trj[name] = pd.read_csv(sslfile, delimiter="\t")
-                    except BaseException:
+                        TRAJ[name] = pd.read_csv(sslfile, delimiter="\t")
+                    except:
                         print("file not found")
             else:
                 print("use as to assign content to variable")
@@ -304,28 +352,28 @@ def process_command(command):
         else:
             print("invalid syntax")
     elif rowc[0].lower() == "open_pwd":
-        show_file_dir(cwd + "/.")
+        show_file_dir(CWD + "/.")
 
 
 if __name__ == '__main__':
     print("###############################################################")
     print("Welcome to BioSSL commandline interface\n")
 
-    abspath = cwd  # os.path.abspath(cwd)
-    dname = os.path.dirname(abspath)
-    os.chdir(dname)
-    cwd = str(abspath).replace("\\", "/")
+    ABSPATH = CWD  # os.path.abspath(CWD)
+    DNAME = os.path.dirname(ABSPATH)
+    os.chdir(DNAME)
+    CWD = str(ABSPATH).replace("\\", "/")
 
-    row = " "
-    command = " "
+    ROW = " "
+    COMMAND = " "
 
-    while row.strip() != "quit()":
-        row = " " + get_input().strip()
-        if row[-1] == ";":
-            command = command + " " + row.strip().replace(";", "")
-            if command.strip() != "":
-                process_command(command)
-            command = " "
-            row = " "
+    while ROW.strip() != "quit()":
+        ROW = " " + get_input().strip()
+        if ROW[-1] == ";":
+            COMMAND = COMMAND + " " + ROW.strip().replace(";", "")
+            if COMMAND.strip() != "":
+                process_command(COMMAND)
+            COMMAND = " "
+            ROW = " "
         else:
-            command = command + " " + row
+            COMMAND = COMMAND + " " + ROW

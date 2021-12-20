@@ -109,7 +109,7 @@ def delay(xvar, yvar):
                     return val
             else:
                 return 0
-        except BaseException:
+        except:
             xvar = ACTUALSP
             return CONCP[0][SIP.index(xvar)]
 
@@ -166,7 +166,7 @@ def apply_rules(conc, yconc, oras=None, spconc=None, slabels=None):
                 suby = pfunc(*sprv)
                 try:
                     suby = sympy_re(suby.evalf())
-                except BaseException:
+                except:
                     pass
                 if not isinstance(suby, tuple):
                     if suby is not None:
@@ -179,7 +179,7 @@ def apply_rules(conc, yconc, oras=None, spconc=None, slabels=None):
                 suby = pfunc()
                 try:
                     suby = sympy_re(suby.evalf())
-                except BaseException:
+                except:
                     pass
                 if not isinstance(suby, tuple):
                     if suby is not None:
@@ -285,7 +285,7 @@ def get_globals(rfile):
                                                     .split(",")[1]
                                                     .replace(")", ""))
                                     globals2.TCHECK.append(rrv)
-                            except BaseException:
+                            except:
                                 pass
                             cc2 = ccv.split(":")[0].replace(
                                 "lambda", "").split(",")
@@ -339,7 +339,7 @@ def get_globals(rfile):
                             xxvar = xvar.split("=")
                             globals2.SETTINGS[xxvar[0].strip()
                                               ] = xxvar[1].strip()
-                    except BaseException:
+                    except:
                         pass
                 elif row[0] == "@":
                     last = "@"
@@ -367,5 +367,5 @@ def get_globals(rfile):
                         [(cc2, eval2(krow[0]))]
 
         globals2.TCHECK.sort()
-    except BaseException:
+    except:
         pass

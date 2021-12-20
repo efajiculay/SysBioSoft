@@ -165,10 +165,10 @@ def extract_species(modk):
     for xvar in here:
         try:
             float(xvar)
-        except BaseException:
+        except:
             try:
                 float(eval_exp(xvar))
-            except BaseException:
+            except:
                 sp_comp.add(xvar)
     return ",".join(sp_comp)
 
@@ -194,7 +194,7 @@ def extract_par_num(modk):
         try:
             float(xvar)
             sp_comp.add(xvar)
-        except BaseException:
+        except:
             pass
 
     return sp_comp
@@ -263,14 +263,14 @@ def extract_function(pforms, rbig_params, compartments, functions,
             for yvar in spcorm[ind + 1:]:
                 try:
                     float(yvar)
-                except BaseException:
+                except:
                     if yvar not in OPERS_LIST and yvar not in OPERS_LIST2 \
                             and yvar not in functions:
                         ssv.append(newSymbol(yvar))
             if len(ssv) == npar:
                 try:
                     modk = str(functions[sp_comp](*ssv))
-                except BaseException:
+                except:
                     modk = functions_str[sp_comp]
                     modk = funct_redefine_var(modk, ssv)
             else:
@@ -279,7 +279,7 @@ def extract_function(pforms, rbig_params, compartments, functions,
                     + pforms[ind2:]
                 try:
                     modk = str(eval_exp(modk)(*ssv))
-                except BaseException:
+                except:
                     modk = str(eval_exp(modk[0:-1])(*ssv))
             break
         else:
@@ -643,7 +643,7 @@ def process_sbml(file, molar=False, variables=None):
                 + "*(" + ssv + ")"
         try:
             ssv = eval_exp(par_substitution(ssv, parameters))
-        except BaseException:
+        except:
             ssv = par_substitution(ssv, parameters)
         initial_assign[sp_comp] = ssv
 
@@ -690,7 +690,7 @@ def process_sbml(file, molar=False, variables=None):
                     .replace(" " + sp_comp + " ", sp_comp + "/"
                              + str(compartments[species_comp[sp_comp]][0])) \
                     .replace(" ", "")
-        except BaseException:
+        except:
             pass
 
         mods = extract_species(ssv)
@@ -708,7 +708,7 @@ def process_sbml(file, molar=False, variables=None):
                 try:
                     ssv = str(eval_exp(par_substitution(
                         Mysbml.formulaToString(yvar.getMath()), constant_par)))
-                except BaseException:
+                except:
                     ssv = par_substitution(
                         Mysbml.formulaToString(yvar.getMath()), constant_par)
                     ssv = par_substitution(ssv, constant_comp)
@@ -887,7 +887,7 @@ def process_sbml(file, molar=False, variables=None):
         elif xvar in parameters:
             try:
                 parameters[xvar][0] = eval_exp(ssv)
-            except BaseException:
+            except:
                 pass
 
     big_none_added = False
@@ -1030,7 +1030,7 @@ def process_sbml(file, molar=False, variables=None):
                         if kxid in non_const_par:
                             stoich_var[kxid] = ddvar
                         produ = produ + str(1) + " " + key + " + "
-                    except BaseException:
+                    except:
                         kxid = Mysbml.formulaToString(
                             reactions[xvar].getKineticLaw().getMath())
                         if kxid in non_const_par:
@@ -1063,7 +1063,7 @@ def process_sbml(file, molar=False, variables=None):
         try:
             modk = extract_function(
                 pforms, rbig_params, constant_comp, functions, functions_str)
-        except BaseException:
+        except:
             modk = ""
 
         if len(modk) == 0:
@@ -1254,7 +1254,7 @@ def process_sbml(file, molar=False, variables=None):
             ssv = eval_exp("lambda " + ",".join(spss) + " : " + ssv)
             ssi = [newSymbol(xvar) for xvar in spss]
             ssv = ssv(*ssi)
-        except BaseException:
+        except:
             pass
         algebr_rules[yvar] = "Eq(" + str(ssv) + ",0)"
 
@@ -1363,7 +1363,7 @@ def process_sbml(file, molar=False, variables=None):
                                 "*" +
                                 str(factor)))
                 fftopofile.write("0 NONE" + " => " + xvar + ", " + modk + "\n")
-            except BaseException:
+            except:
                 if not reversible:
                     modk = modk.replace(xvar, "$" + xvar)
                     modk = var_substitution(
@@ -1448,7 +1448,7 @@ def process_sbml(file, molar=False, variables=None):
                     float(ssv)
                     fftopofile.write(
                         "0 NONE" + " => " + xvar + "," + str(ssv) + "\n")
-                except BaseException:
+                except:
                     ssv = var_substitution(
                         ssv, rbig_params, constant_par, compartments,
                         rate_rules)
@@ -1467,7 +1467,7 @@ def process_sbml(file, molar=False, variables=None):
                 float(ssv)
                 fftopofile.write("0 NONE" + " => " + xvar + ","
                                  + str(ssv) + "\n")
-            except BaseException:
+            except:
                 ssv = var_substitution(
                     ssv, rbig_params, constant_par, compartments, rate_rules)
                 fftopofile.write(
@@ -1586,11 +1586,11 @@ def process_sbml(file, molar=False, variables=None):
                     rate_rules)
                 for ini in sp_initial_conc:
                     ssv = ssv.replace(ini, str(sp_initial_conc[ini]))
-            except BaseException:
+            except:
                 ssv = str(sp_initial_conc[xvar])
             try:
                 val1 = eval_exp(ssv)
-            except BaseException:
+            except:
                 val1 = 0
                 val2 = ssv
         if xvar in assign_rules:
@@ -1609,7 +1609,7 @@ def process_sbml(file, molar=False, variables=None):
                 if float(val2):
                     if val1 == "":
                         val1 = val2
-            except BaseException:
+            except:
                 val2 = ssv
                 if val1 == "":
                     val1 = 0
@@ -1733,7 +1733,7 @@ def process_sbml(file, molar=False, variables=None):
             try:
                 float(assign_rules[xvar])
                 fftopofile.write(xvar + ", " + assign_rules[xvar] + "\n")
-            except BaseException:
+            except:
                 ssv = var_substitution(assign_rules[xvar], rbig_params,
                                        constant_par, compartments, rate_rules)
                 if xvar in stoich_par:
@@ -1748,7 +1748,7 @@ def process_sbml(file, molar=False, variables=None):
             try:
                 float(assign_rules[xvar])
                 fftopofile.write(xvar + ", " + initial_assign[xvar] + "\n")
-            except BaseException:
+            except:
                 ssv = var_substitution(initial_assign[xvar], rbig_params,
                                        parameters, compartments, rate_rules)
                 if not molar:
@@ -1766,11 +1766,11 @@ def process_sbml(file, molar=False, variables=None):
                 fftopofile.write(xvar + "," + ssv + "," + "lambda " +
                                  extract_species(str(ddvar[ssphere]))
                                  + " : " + str(ddvar[ssphere]) + "\n")
-            except BaseException:
+            except:
                 try:
                     float(ssv)
                     fftopofile.write(xvar + "," + ssv + "\n")
-                except BaseException:
+                except:
                     pass
         big_none_added = True
 
@@ -1800,7 +1800,7 @@ def process_sbml(file, molar=False, variables=None):
                                      + ", lambda :"
                                      + str(eval_exp(parameters[xvar][0]))
                                      + "\n")
-                except BaseException:
+                except:
                     fftopofile.write(xvar + "," + "0" + ", lambda :" +
                                      str(parameters[xvar][0]) + "\n")
         else:
@@ -1810,7 +1810,7 @@ def process_sbml(file, molar=False, variables=None):
                                      + ", lambda :"
                                      + str(eval_exp(parameters[xvar][0]))
                                      + "\n")
-                except BaseException:
+                except:
                     fftopofile.write(xvar + "," + "0" + ", lambda :" +
                                      str(parameters[xvar][0]) + "\n")
 

@@ -71,7 +71,10 @@ from BioSANS2020.model.new_file import new_file
 if PLATFORM == "win32":
     from subprocess import Popen, CREATE_NEW_CONSOLE
 elif PLATFORM == "darwin":
-    from applescript import tell as my_tell_us
+    try:
+        from applescript import tell as my_tell_us
+    except:
+        pass
     from subprocess import check_output, call as my_call_us
 elif PLATFORM == "linux":
     pass
@@ -82,7 +85,7 @@ try:
     import tempfile
     TEMPORARY_FOLDER = str(tempfile.gettempdir()).replace(
         "\\", "/") + "/BioSANS_temporary_folder"
-except BaseException:
+except:
     TEMPORARY_FOLDER = "BioSANS_temporary_folder"
 
 globals2.init(globals2)
@@ -134,7 +137,7 @@ def load_data(itups):
     Args:
         itups (tuple): (canvas, scroll_x, scroll_y)
     """
-    global FILE_NAME
+    # global FILE_NAME
     file = gui.filedialog.askopenfilename(title="Select file")
     FILE_NAME["topology"] = file
     FILE_NAME["current_folder"] = file
@@ -149,7 +152,7 @@ def show_file_dir(path):
     Args:
         path (str): directory path
     """
-    global PLATFORM
+    # global PLATFORM
     if PLATFORM == "win32":
         os.startfile(os.path.dirname(path))
     elif PLATFORM == "darwin":
@@ -168,10 +171,10 @@ def create_file(itups, ftype):
         itups (tuple): (canvas, scroll_x, scroll_y)
         ftype (int): 1 for BioSANS topology file, 2 for ODE file
     """
-    global FILE_NAME, TEMPORARY_FOLDER
+    # global FILE_NAME, TEMPORARY_FOLDER
     try:
         os.mkdir(TEMPORARY_FOLDER, 0o777)
-    except BaseException:
+    except:
         for item in Path(TEMPORARY_FOLDER).iterdir():
             if item.is_dir():
                 pass
@@ -244,6 +247,8 @@ def save_file():
 
 
 def runpy_file():
+    """This module write the contents of the text area into a python
+    file and run the file as a python script."""
     # global FILE_NAME, PIPE
     with open(FILE_NAME["topology"], "w") as ffvar:
         ffvar.write(FILE_NAME['last_open'].get("0.0", "end"))
@@ -337,11 +342,26 @@ def tload_data2(plot=False):
 
 
 def delete_this(frame, canvas):
+    """This function delete an object in the canvas
+
+    Args:
+        frame (tkinter.Frame): frame or other objects
+        canvas (tkinter.Canvas): canvas object
+    """
     canvas.delete(frame)
     canvas_update_widgets(None, canvas)
 
 
 def canvas_update_widgets(_, canvas):
+    """This function rearranged the elements in the canvas.
+
+    Args:
+        _ (None): Not needed
+        canvas (tkinter.Canvas): canvas object]
+
+    Returns:
+        str: "break"
+    """
     # R = canvas._root().winfo_height()
     # root = canvas._root()
     # width = root.winfo_screenwidth()
@@ -350,19 +370,25 @@ def canvas_update_widgets(_, canvas):
     cheigh = canvas.winfo_height()
     cwidth = canvas.winfo_width()
     obj_can = canvas.find_all()
-    objLen = len(obj_can)
+    obj_len = len(obj_can)
     ind = 0
     for xvar in obj_can:
         canvas.itemconfig(xvar, height=cheigh, width=cwidth - 5)
         # x_1, y_1, x_2, y_2 = canvas.bbox( xvar)
         _, y_1, _, _ = canvas.bbox(xvar)
-        canvas.move(xvar, 0, (objLen - ind) * cheigh - y_1 + 3)
+        canvas.move(xvar, 0, (obj_len - ind) * cheigh - y_1 + 3)
         ind = ind + 1
     canvas.configure(scrollregion=canvas.bbox("all"))
     return "break"
 
 
 def load_image(wdata=False):
+    """This function load image into a canvas and display in BioSANS.
+
+    Args:
+        wdata (bool, optional): if True, data will also be loaded in the
+            memory. Defaults to False.
+    """
     t_o = time.time()
     global CURRENT_DATA
     canvas, scroll_x, scroll_y = ITUPS
@@ -405,13 +431,21 @@ def load_image(wdata=False):
 
 
 def eval2(xvar):
+    """This function evaluates expression
+
+    Args:
+        xvar (str): expression
+
+    Returns:
+        str: evaluated expression
+    """
     try:
         return eval(xvar)
-    except BaseException:
+    except:
         try:
             par = str(xvar).lower().capitalize()
             return eval(par)
-        except BaseException:
+        except:
             return str(xvar)
 
 
@@ -419,25 +453,50 @@ CURRENT_DATA = None
 
 
 def dict_trans(x_1):
+    """This function creates a dictionary from a list assignment
+    Args:
+        x_1 (str): string of symbols and assinged values.
+
+    Returns:
+        dict: a dictionary from a list assignment
+    """
     x_2 = x_1.split(",")
     x_3 = {}
     try:
         for xvar in x_2:
             rvar = xvar.split("=")
             x_3[rvar[0].strip()] = float(rvar[1])
-    except BaseException:
+    except:
         pass
     return x_3
 
 
 def convert(xvar, con):
+    """This function converts a variable into con data type.
+
+    Args:
+        xvar (str): string
+        con (con): new data type con
+
+    Returns:
+        con: xvar equivalent in con
+    """
     try:
         return con(xvar)
-    except BaseException:
+    except:
         return xvar
 
 
 def range_trans(x_1):
+    """This function converts the x_1 comma concatenated string into a
+    list and put the first element as the last element.
+
+    Args:
+        x_1 (str): comma concatenated string
+
+    Returns:
+        list: the first element goes last now
+    """
     x_3 = []
     x_2 = x_1.split(",")
     if len(x_2) > 1:
@@ -447,6 +506,15 @@ def range_trans(x_1):
 
 
 def range_prep(x_1):
+    """This function process some string input and converts them to a
+    list which is used as a range on other fuctions.
+
+    Args:
+        x_1 (str): comma concatenated string
+
+    Returns:
+        list: list of float or list of list and floats
+    """
     x_3 = []
     x_2 = x_1.split(",")
     if len(x_2) > 1:
@@ -464,10 +532,18 @@ def range_prep(x_1):
 
 
 def mrun_propagation(par, entry_list, defs2):
-    global CURRENT_DATA
+    """Ths function grabs the values from defs2 whcih serves as the set
+    of input for the tprocess function.
+
+    Args:
+        par (tkinter.Toplevel): top level container
+        entry_list (list): list of tkinter.Entry or tkinter.OptionMenu
+        defs2 (list): values
+    """
+    # global CURRENT_DATA
     try:
         del FILE_NAME["trajectory"]
-    except BaseException:
+    except:
         pass
 
     defs = []
@@ -475,7 +551,7 @@ def mrun_propagation(par, entry_list, defs2):
         try:
             val = eval2(entry_list[i].get())
             defs.append(val)
-        except BaseException:
+        except:
             val = eval2(defs2[i].get())
             defs.append(val)
     # defs[15] = dict_trans(entry_list[15].get())
@@ -502,6 +578,12 @@ SUPER_THREAD_RUN = None
 
 
 def tprocess(defs):
+    """This function creates a thread and sed defs to the
+    BioSANS2020.prepcodes.process function.
+
+    Args:
+        defs (list): inputs for process fucntion
+    """
     global SUPER_THREAD_RUN
     if defs[9] == "k_est5":
         process(*defs)
@@ -509,12 +591,21 @@ def tprocess(defs):
         if __name__ == '__main__':
             SUPER_THREAD_RUN = 1
             tvar = threading.Thread(
-                target=lambda: process(
-                    *defs), daemon=False)
+                target=lambda: process(*defs), daemon=False)
             tvar.start()
 
 
 def analysis_case(ana_case, itups):
+    """This function  redirects input to  the corresponding numerical or
+    plotting processes.
+
+    Args:
+        ana_case (str): type of analysis
+        itups (tuple): (canvas, scroll_x, scroll_y)
+
+    Returns:
+        np.ndarray : numerical values or None
+    """
     global FILE_NAME
     if "trajectory" not in FILE_NAME:
         gui.messagebox.showinfo(
@@ -522,10 +613,10 @@ def analysis_case(ana_case, itups):
             save it into a file during your last run.")
         try:
             load_data2(False)
-        except BaseException:
+        except:
             try:
                 del FILE_NAME["trajectory"]
-            except BaseException:
+            except:
                 pass
             return None
         # data, slabels = CURRENT_DATA
@@ -552,6 +643,13 @@ def analysis_case(ana_case, itups):
 
 
 def plot_traj_d(current_data, itups):
+    """This function plot the trajectory data stored as current data.
+    The plot can be the phase portrait.
+
+    Args:
+        current_data (np.ndarray or list): loaded data
+        itups (tuple): (canvas, scroll_x, scroll_y)
+    """
     # global SUPER_THREAD_RUN
     if SUPER_THREAD_RUN == 1:
         gui.messagebox.showinfo(
@@ -591,7 +689,7 @@ def plot_traj_d(current_data, itups):
             ylabel=opt_sel_var[1].get(), zlabel=opt_sel_var[2].get(),
             trange=entry_list[-1].get()))
         but_b1.grid(row=5, column=0, sticky=gui.W, pady=2)
-    except BaseException:
+    except:
         gui.messagebox.showinfo(
             "Trajectory not loaded yet",
             "Please load the trajectory. BioSANS save it into a file during \
@@ -599,6 +697,16 @@ def plot_traj_d(current_data, itups):
 
 
 def get_checked(el_1, slabels):
+    """This function returns the components name with a check from el_1
+    check boxes list.
+
+    Args:
+        el_1 (list): list of values
+        slabels (list):components or species labels
+
+    Returns:
+        [type]: [description]
+    """
     check_si = []
     for i, _ in enumerate(el_1):
         key = el_1[i].get()
@@ -608,6 +716,12 @@ def get_checked(el_1, slabels):
 
 
 def plot_traj_d2(current_data, itups):
+    """This function is another plotting function.
+
+    Args:
+        current_data (np.ndarray or list): loaded data
+        itups (tuple): (canvas, scroll_x, scroll_y)
+    """
     try:
         data, slabels = current_data
         pard = gui.Toplevel()
@@ -654,7 +768,7 @@ def plot_traj_d2(current_data, itups):
                 logx=False, logy=False, normalize=False,
                 si_ticked=get_checked(el_1, slabels)))
         but_b1.pack(side="bottom", fill="x")
-    except BaseException:
+    except:
         gui.messagebox.showinfo(
             "Trajectory not loaded yet",
             "Please load the trajectory. BioSANS save it into a file \
@@ -662,7 +776,84 @@ def plot_traj_d2(current_data, itups):
 
 
 def param_set(method):
-    global FILE_NAME, ITUPS
+    """This function opens the parameter setting dialof box and grab the
+    user custom settings.
+
+    Args:
+        method (str): Defaults to "CLE". Any of the option in
+            the list of available method keywords is listed below;
+
+            Stochastic (refer to section 10.2.4)
+
+            1.	"CLE"            - Molecules(micro), tau-adaptive
+            2.	"CLE2"           - Molecules(micro), cle-fixIntvl
+            3.	"Gillespie_"     - Molecules(micro), Direct method
+            4.	"Tau-leaping"    - Molecules(micro),
+                                   Not swapping with Gillespie
+            5.	"Tau-leaping2"   - Molecules(micro),
+                                   Swapping with Gillespie
+            6.	"Sim-TauLeap"    - Molecules(micro), Simplified,
+                                   Swapping with Gillespie
+
+            Deterministic (refer to section 10.2.1)
+
+            7.	"Euler-1"        - Molecules(micro), tau-adaptive-1
+            8.	"Euler-2"        - Molar (macro), tau-adaptive-1
+            9.	"Euler-3"        - Mole (macro), tau-adaptive-1
+            10.	"Euler2-1"	     - Molecules(micro), tau-adaptive-2
+            11.	"Euler2-2"       - Molar (macro), tau-adaptive-2
+            12.	"Euler2-3"       - Mole (macro), tau-adaptive-2
+            13.	"ODE-1"          - Molecules(micro),
+                                   using ode_int from scipy
+            14.	"ODE-2"          - Molar(macro),
+                                   using ode_int from scipy
+            15.	"ODE-3"          - Mole(macro), using ode_int from scipy
+            16.	"rk4-1"          - Molecules(micro), fix-interval
+            17.	"rk4-2"          - Molar(macro), fix-interval
+            18.	"rk4-3"          - Mole(macro), fix-interval
+            19.	"rk4-1a"         - Molecules(micro), tau-adaptive
+            20.	"rk4-2a"         - Molar(macro), tau-adaptive
+            21.	"rk4-3a"         - Mole(macro), tau-adaptive
+
+            Linear Noise Approximation (refer to 10.1.2 & 10.2.2)
+
+            22.	"LNA"             - Numeric, values
+            23.	"LNA-vs"          - Symbolic, values, Macroscopic
+            24.	"LNA-ks"          - Symbolic, f(ks), Macroscopic
+            25.	"LNA-xo"          - Symbolic, f(xo), Macroscopic
+            26.	"LNA2"            - Symbolic, f(xo,ks), Microscopic
+            27.	"LNA3"            - Symbolic, f(xo,ks), Macroscopic
+            28.	"LNA(t)"          - COV-time-dependent, Macroscopic
+            29.	"LNA2(t)"         - FF-time-dependent, Macroscopic
+
+            Network Localization (refer to 10.1.3)
+
+            30.	"NetLoc1"         - Symbolic, Macroscopic
+            31.	"NetLoc2"         - Numeric, Macroscopic
+
+            Parameter estimation (refer to 10.2.3)
+
+            32.	"k_est1"          - MCEM, Macroscopic
+            33.	"k_est2"          - MCEM, Microscopic
+            34.	"k_est3"          - NM-Diff. Evol., Macroscopic
+            35.	"k_est4"          - NM-Diff. Evol., Microscopic
+            36.	"k_est5"          - Parameter slider/scanner
+            37.	"k_est6"          - Nelder-Mead (NM), Macroscopic
+            38.	"k_est7"          - Nelder-Mead (NM), Microscopic
+            39.	"k_est8"          - Powell, Macroscopic
+            40.	"k_est9"          - Powell, Microscopic
+            41.	"k_est10"         - L-BFGS-B, Macroscopic
+            42.	"k_est11"         - L-BFGS-B, Microscopic
+
+            Symbolic/Analytical expression of species (refer to 10.1.1)
+
+            43.	"Analyt"          - Pure Symbolic :f(t,xo,k)
+            44.	"Analyt-ftx"      - Semi-Symbolic :f(t,xo)
+            45.	"SAnalyt"         - Semi-Symbolic :f(t)
+            46.	"SAnalyt-ftk"     - Semi-Symbolic :f(t,k)
+            47.	"Analyt2"         - Creates commands for wxmaxima
+    """
+    # global FILE_NAME, ITUPS
     with open(FILE_NAME["topology"], "w") as ffvar:
         ffvar.write(FILE_NAME['last_open'].get("0.0", "end"))
 

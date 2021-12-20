@@ -41,7 +41,7 @@ def propensity_vec(ks_dict, conc, r_dict, p_dict, odeint=False):
                 for cvar, _ in enumerate(spvar):
                     sprv.append(conc[spvar[cvar].strip()])
                 conc[xvar] = pfunc(*sprv)
-            except BaseException:
+            except:
                 conc[xvar] = pfunc()
 
     for rvar in range(rxn):
@@ -55,7 +55,7 @@ def propensity_vec(ks_dict, conc, r_dict, p_dict, odeint=False):
                     for cvar, _ in enumerate(spvar):
                         sprv.append(conc[spvar[cvar].strip()])
                     prop_flux.append(pfunc(*sprv))
-                except BaseException:
+                except:
                     prop_flux.append(pfunc())
         else:
             if len(r_dict[rvar]) == 1:
@@ -95,7 +95,7 @@ def propensity_vec(ks_dict, conc, r_dict, p_dict, odeint=False):
                     prop_flux.append(pvar)
     try:
         return np.array(prop_flux).reshape(len(prop_flux), 1).astype(float)
-    except BaseException:
+    except:
         return np.array(prop_flux).reshape(len(prop_flux), 1)
 
 
@@ -124,7 +124,7 @@ def propensity_vec_molar(ks_dict, conc, r_dict, p_dict, odeint=False):
                 for cvar, _ in enumerate(spvar):
                     sprv.append(conc[spvar[cvar].strip()])
                 conc[xvar] = pfunc(*sprv)
-            except BaseException:
+            except:
                 suby = pfunc()
                 conc[xvar] = suby
 
@@ -139,7 +139,7 @@ def propensity_vec_molar(ks_dict, conc, r_dict, p_dict, odeint=False):
                     for cvar, _ in enumerate(spvar):
                         sprv.append(conc[spvar[cvar].strip()])
                     prop_flux.append(pfunc(*sprv))
-                except BaseException:
+                except:
                     prop_flux.append(pfunc())
         else:
             if len(r_dict[rvar]) == 1:
@@ -171,5 +171,5 @@ def propensity_vec_molar(ks_dict, conc, r_dict, p_dict, odeint=False):
 
     try:
         return np.array(prop_flux).reshape(len(prop_flux), 1).astype(float)
-    except BaseException:
+    except:
         return np.array(prop_flux).reshape(len(prop_flux), 1)

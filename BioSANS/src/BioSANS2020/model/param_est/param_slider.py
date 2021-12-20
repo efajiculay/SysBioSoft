@@ -90,7 +90,7 @@ def load_data():
                 end_time = cols[0]
             data.append(np.array(ddvar))
             return (data, slabels)
-    except BaseException:
+    except:
         return None
 
 
