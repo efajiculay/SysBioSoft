@@ -1,250 +1,596 @@
-#import sys
-#import os
-#sys.path.append(os.path.abspath("BioSANS2020"))
+"""
+
+                 This module is the runge_kutta4 module
+
+This module serves in the integration of ODE trajectory using RK4 and
+tau-adaptive RK4-algorithm.
+
+The list of functions in this module are
+
+1. rk4_model
+2. runge_kutta_forth
+3. rungek4_int
+rkck
+rkqs
+rungek4a_int
+
+
+"""
+
+
+# import sys
+# import os
+# sys.path.append(os.path.abspath("BioSANS2020"))
 
 import numpy as np
-from BioSANS2020.propagation.propensity import *
-from BioSANS2020.propagation.recalculate_globals import *
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
+from BioSANS2020.propagation.recalculate_globals import get_globals, \
+    apply_rules
 from BioSANS2020.myglobal import mglobals as globals2
 
-def rk4_model(Sp,Ks,conc,Rr,Rp,V,t,molar=False):	
-	if not molar:
-		D = propensity_vec(Ks,conc,Rr,Rp)
-	else:
-		D = propensity_vec_molar(Ks,conc,Rr,Rp)
-	dxdt = np.matmul(V,D).reshape(len(Sp))	
-	if globals2.conBoundary:	
-		Spc = [sp for sp in Sp]
-		for x in globals2.conBoundary:
-			ind = Spc.index(x)
-			dxdt[ind] = 0
-	return dxdt 
-	
-def runge_kutta_forth(Sp,Ks,conc,Rr,Rp,V,t,delt,nSp,molar=False):
-	
-	yconc = { x : conc[x] for x in nSp }
-	
-	dAdt = rk4_model(Sp,Ks,conc,Rr,Rp,V,t,molar)
-	newA1 = dAdt*delt
-	ind = 0
-	for sp in Sp: 
-		yconc[sp] = conc[sp] + 0.5*newA1[ind]
-		ind = ind + 1
-	
-	dAdt = rk4_model(Sp,Ks,yconc,Rr,Rp,V,t+0.5*delt,molar)
-	newA2 = dAdt*delt
-	ind = 0
-	for sp in Sp: 
-		yconc[sp] = conc[sp] + 0.5*newA2[ind]
-		ind = ind + 1	
-	
-	dAdt = rk4_model(Sp,Ks,yconc,Rr,Rp,V,t+0.5*delt,molar)
-	newA3 = dAdt*delt
-	ind = 0
-	for sp in Sp: 
-		yconc[sp] = conc[sp] + 0.5*newA3[ind]
-		ind = ind + 1	
-	
-	dAdt = rk4_model(Sp,Ks,yconc,Rr,Rp,V,t+delt,molar)
-	newA4 = dAdt*delt
 
-	NEW = (newA1+2.0*newA2+2.0*newA3+newA4)/6.0
-	
-	newA = yconc
-	ind = 0
-	for sp in Sp:
-		newA[sp] = conc[sp] + NEW[ind]
-		ind = ind + 1
-	
-	return [newA,t+delt]
-	
-def rungek4_int(conc,time,Sp,Ks,Rr,Rp,V,molar=False,delx=1,rfile=""): 
-	get_globals(rfile)
-	tn = time[-1]
-	div = max(1,int(1/delx))
-	delt = (time[-1]-time[-2])/div
-	yconc = { x:conc[x] for x in conc }
-	Si = [a for a in Sp]
-	apply_rules(conc, yconc,[0],[conc[a] for a in Sp],Si)				
-	z = [conc[a] for a in Sp]
-	Z = [z]
-	t = 0.0
-	Tc = [t]
-	nSp = [ x for x in conc if x not in Sp ]
-	dv = 0
-	Tc2 = [t]
-	Z2 = [z]
-	
-	while abs(t-tn)>1.0e-10:				
-		conc, t = runge_kutta_forth(Sp,Ks,conc,Rr,Rp,V,t,delt,nSp,molar)
-		#conc, yerr = rkck(delt,Sp,Ks,conc,Rr,Rp,V,t,nSp,molar) #higher order runge-kutta
-		#t = t + delt                                           #higher order runge-kutta
-		apply_rules(conc, yconc, Tc2, Z2, Si)	
-		Z2.append([conc[a] for a in Sp])
-		Tc2.append(t)
-		if dv==div-1:
-			Z.append([conc[a] for a in Sp])
-			Tc.append(t)
-			dv = 0
-		else:
-			dv = dv + 1
-	Z = np.array(Z)
-	return [Tc,Z]
-	
-def rkck(h,Sp,Ks,conc,Rr,Rp,V,t,nSp,molar):
+def rk4_model(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
+              tvar, molar=False):
+    """This function returns  the evaluated  value of the  derivative of
+    each component with respwct to time at a particular instant based on
+    the state of the system at that instant.
 
-	A2 = 0.2 
-	A3 = 0.3 
-	A4 = 0.6 
-	A5 = 1.0 
-	A6 = 0.875 
-	
-	B21 = 0.2
-	B31 = 3.0/40.0 
-	B32=9.0/40.0
-	
-	B41 = 0.3 
-	B42 = -0.9 
-	B43 = 1.2 
-	
-	B51 = -11.9/54.0 
-	B52 = 2.5 
-	B53 = -70.0/27.0
-	B54 = 35.0/27.0 
-	
-	B61 = 1631.0/55296.0 
-	B62 = 175.0/512.0 
-	B63 = 575.0/13824.0
-	B64 = 44275.0/110592.0 
-	B65 = 253.0/4096.0 
-	
-	C1 = 37.0/378.0 
-	C3 = 250.0/621.0
-	C4 = 125.0/594.0 
-	C6 = 512.0/1771.0 
-	
-	DC1 = C1-2825.0/27648.0 
-	DC3 = C3-18575.0/48384.0 
-	DC4 = C4-13525.0/55296.0 
-	DC5 = -277.0/14336.0 
-	DC6 = C6-0.25
-	
-	dydx = rk4_model(Sp,Ks,conc,Rr,Rp,V,t,molar)
-	
-	ytemp = { x : conc[x] for x in nSp }
-	ind = 0
-	for sp in Sp:
-		ytemp[sp] = conc[sp] + B21*h*dydx[ind]
-		ind = ind + 1		
-	ak2 = rk4_model(Sp,Ks,ytemp,Rr,Rp,V,t+A2*h,molar)
-	
-	ind = 0
-	for sp in Sp:	
-		ytemp[sp] = conc[sp] + h*(B31*dydx[ind]+B32*ak2[ind])
-		ind = ind + 1
-	ak3 = rk4_model(Sp,Ks,ytemp,Rr,Rp,V,t+A3*h,molar)
+    Args:
+        sp_comp (dict): dictionary of appearance or position of species
+            or component in the reaction tag of BioSANS topology file.
 
-	ind = 0
-	for sp in Sp:		
-		ytemp[sp] = conc[sp]+h*(B41*dydx[ind]+B42*ak2[ind]+B43*ak3[ind])
-		ind = ind + 1
-	ak4 = rk4_model(Sp,Ks,ytemp,Rr,Rp,V,t+A4*h,molar)
+            For example;
 
-	ind = 0
-	for sp in Sp:	
-		ytemp[sp] = conc[sp]+h*(B51*dydx[ind]+B52*ak2[ind]+B53*ak3[ind]+B54*ak4[ind])
-		ind = ind + 1
-	ak5 = rk4_model(Sp,Ks,ytemp,Rr,Rp,V,t+A5*h,molar)
+                #REACTIONS
+                A => B, -kf1    # negative means to be estimated
+                B => C, kf2
 
-	ind = 0
-	for sp in Sp:	
-		ytemp[sp] = conc[sp]+h*(B61*dydx[ind]+B62*ak2[ind]+B63*ak3[ind]+B64*ak4[ind]+B65*ak5[ind])
-		ind = ind + 1
-	ak6 = rk4_model(Sp,Ks,ytemp,Rr,Rp,V,t+A6*h,molar)
+            The value of sp_comp is
 
-	yout = ytemp
-	yerr = []
-	ind = 0
-	for sp in Sp:	
-		yout[sp] = conc[sp]+h*(C1*dydx[ind]+C3*ak3[ind]+C4*ak4[ind]+C6*ak6[ind])
-		yerr.append(h*(DC1*dydx[ind]+DC3*ak3[ind]+DC4*ak4[ind]+DC5*ak5[ind]+DC6*ak6[ind]))
-		ind = ind + 1
-		
-	return [yout, yerr]
-	
-def rkqs(htry, eps, yscal,Sp,Ks,conc,Rr,Rp,V,t,nSp,molar):
-	SAFETY = 0.9
-	PGROW = -0.2
-	PSHRNK = -0.25
-	ERRCON = 1.89e-4
-	errmax = 1000
-	h = htry
-	while errmax>1:
-		ytemp, yerr = rkck(h,Sp,Ks,conc,Rr,Rp,V,t,nSp,molar)
-		errmax = max(0,np.max(np.array(yerr)/np.array(yscal)))/eps
-		if errmax>1:
-			h = SAFETY*h*(errmax**PSHRNK)
-			if h<0.1*h:
-				h = 0.1*h
-		else:
-			if errmax>ERRCON:
-				hnext=SAFETY*h*(errmax**PGROW)
-			else:
-				hnext=5.0*h
-			hdid = h
-			conc = ytemp
-		
-	return [conc, hdid, hnext, yerr]
+                sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
 
-def rungek4a_int(t,Sp,Ks,conc,Rr,Rp,V,yscal=10,molar=False,implicit=False,rfile=""):
-	get_globals(rfile)
-	tnew = []
-	delt = t[-1]-t[-2]
-	eps = 1.0e-8
-	nSp = [ x for x in conc if x not in Sp ]
-	yconc = { x:conc[x] for x in Sp }
-	Si = [a for a in Sp]
-	apply_rules(conc, yconc,[0],[conc[a] for a in Sp],Si)	
-	y = [ conc[a] for a in Sp ]
-	S = [y]
-	if not implicit:
-		tnow = t[0]
-		tnew.append(tnow)
-		tindex = 1
-		
-		while abs((tnew[-1]-t[-1])/t[-1])>1.0e-5: 
-				   
-			y_old = conc
-			conc, dt, delt, e = rkqs(delt, eps, yscal,Sp,Ks, conc ,Rr,Rp,V,tnow,nSp,molar)	
-			tnow = tnow + dt
-			apply_rules(conc, yconc)				
-			if tnow>t[tindex]:
-				tnow = tnow - dt
-				dt = t[tindex] - tnow
-				conc, tnow = runge_kutta_forth(Sp,Ks,y_old,Rr,Rp,V,tnow,dt,nSp,molar)	
-				delt = 5*dt	
-				apply_rules(conc, yconc)						
-				tindex = tindex + 1	
-			S.append([ conc[a] for a in Sp ])
-			tnew.append(tnow)	
-	else:
-		tnow = t[0]
-		tnew.append(tnow)
-		tindex = 1
-		
-		while abs((tnew[-1]-t[-1])/t[-1])>1.0e-5: 
-				   
-			y_old = conc
-			conc, dt, delt, e = rkqs(delt, eps, yscal,Sp,Ks, conc ,Rr,Rp,V,tnow,nSp,molar)	
-			tnow = tnow + dt
-			apply_rules(conc, yconc)				
-			if tnow>t[tindex]:
-				tnow = tnow - dt
-				dt = t[tindex] - tnow
-				conc, tnow = runge_kutta_forth(Sp,Ks,y_old,Rr,Rp,V,tnow,dt,nSp,molar)	
-				delt = 5*dt	
-				apply_rules(conc, yconc)						
-				S.append([ conc[a] for a in Sp ])
-				tnew.append(tnow)	
-				tindex = tindex + 1				
-	return [tnew,np.array(S)]
+                A appears in first reaction with index 0
+                B appears in first and second reaction with index 0, 1
+                C appears in second reaction with index 1
+        ksn_dict (dict): dictionary of rate constant that appear in each
+            reactions.
+
+            For example;
+
+                #REACTIONS
+                A => B , 0.3        # first reaction
+                B <=> C, 0.1, 0.2   # second reaction
+
+            The value of ks_dict is
+
+                ks_dict = {
+                    0 : [0.3],      # first reaction
+                    1 : [0.1, 0.2]  # second reaction
+                }
+        conc (dict): dictionary of initial concentration.
+
+            For example;
+
+                {'A': 100.0, 'B': -1.0, 'C': 0.0}
+                negative means unknown or for estimation
+        r_dict (dict): dictionary of reactant stoichiometry. For example
+
+            r_dict = {
+                0: {'A': 1},  # first reaction, coefficient of A is 1
+                1: {'B': 1}   # second reaction, coefficient of B is 1
+            }
+        p_dict (dict): dictionary of product stoichiometry. For example
+
+            p_dict = {
+                0: {'B': 1},  # first reaction, coefficient of B is 1
+                1: {'C': 1}   # second reaction, coefficient of C is 1
+            }
+        stoch_var (numpy.ndarray): stoichiometric matrix. For example
+
+            stoch_var = np.array([
+                [   -1,           0   ]            # species A
+                [    1,          -1   ]            # species B
+                [    0,           1   ]            # species C
+                  #1st rxn    2nd rxn
+            ])
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
+        molar (bool, optional): If True, the units for any amount is in
+            molar. Propensity will be macroscopic. Defaults to False.
+
+    Returns:
+        np.ndarray: value of dx/dt
+    """
+    if not molar:
+        prop_flux = propensity_vec(ks_dict, conc, r_dict, p_dict)
+    else:
+        prop_flux = propensity_vec_molar(ks_dict, conc, r_dict, p_dict)
+    dxdt = np.matmul(stch_var, prop_flux).reshape(len(sp_comp))
+    if globals2.CON_BOUNDARY:
+        spc = list(sp_comp.keys())  # [spi for spi in sp_comp]
+        for xvar in globals2.CON_BOUNDARY:
+            ind = spc.index(xvar)
+            dxdt[ind] = 0*tvar[0]  # useless multiplication
+    return dxdt
+
+
+def runge_kutta_forth(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
+                      tvar, delt, n_sp, molar=False):
+    """this function prepare some stuffs for the integration
+
+    Args:
+        sp_comp (dict): dictionary of appearance or position of species
+            or component in the reaction tag of BioSANS topology file.
+
+            For example;
+
+                #REACTIONS
+                A => B, -kf1    # negative means to be estimated
+                B => C, kf2
+
+            The value of sp_comp is
+
+                sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+                A appears in first reaction with index 0
+                B appears in first and second reaction with index 0, 1
+                C appears in second reaction with index 1
+        ks_dict (dict): dictionary of rate constant that appears in each
+            reactions.
+
+            For example;
+
+                #REACTIONS
+                A => B , 0.3        # first reaction
+                B <=> C, 0.1, 0.2   # second reaction
+
+            The value of ks_dict is
+
+                ks_dict = {
+                    0 : [0.3],      # first reaction
+                    1 : [0.1, 0.2]  # second reaction
+                }
+        conc ([type]): [description]
+        r_dict (dict): dictionary of reactant stoichiometry. For example
+
+            r_dict = {
+                0: {'A': 1},  # first reaction, coefficient of A is 1
+                1: {'B': 1}   # second reaction, coefficient of B is 1
+            }
+
+        p_dict (dict): dictionary of product stoichiometry. For example
+
+            p_dict = {
+                0: {'B': 1},  # first reaction, coefficient of B is 1
+                1: {'C': 1}   # second reaction, coefficient of C is 1
+            }
+        v_stoich (numpy.ndarray): stoichiometric matrix. For example
+
+            v_stoich = np.array([
+                [   -1,           0   ]            # species A
+                [    1,          -1   ]            # species B
+                [    0,           1   ]            # species C
+                  #1st rxn    2nd rxn
+            ])
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
+        delt (float): step size
+        n_sp (dict): dictionary of keywords
+        molar (bool, optional): If True, the units for any amount is in
+            molar. Propensity will be macroscopic. Defaults to False.
+
+    Returns:
+        list: [updated concn, updated time]
+    """
+
+    yconc = {xvar: conc[xvar] for xvar in n_sp}
+
+    da_dt = rk4_model(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
+                      tvar, molar)
+    new_a1 = da_dt * delt
+    ind = 0
+    for spi in sp_comp:
+        yconc[spi] = conc[spi] + 0.5 * new_a1[ind]
+        ind = ind + 1
+
+    da_dt = rk4_model(sp_comp, ks_dict, yconc, r_dict, p_dict, stch_var,
+                      tvar + 0.5 * delt, molar)
+    new_a2 = da_dt * delt
+    ind = 0
+    for spi in sp_comp:
+        yconc[spi] = conc[spi] + 0.5 * new_a2[ind]
+        ind = ind + 1
+
+    da_dt = rk4_model(sp_comp, ks_dict, yconc, r_dict, p_dict, stch_var,
+                      tvar + 0.5 * delt, molar)
+    new_a3 = da_dt * delt
+    ind = 0
+    for spi in sp_comp:
+        yconc[spi] = conc[spi] + 0.5 * new_a3[ind]
+        ind = ind + 1
+
+    da_dt = rk4_model(sp_comp, ks_dict, yconc, r_dict, p_dict, stch_var,
+                      tvar + delt, molar)
+    new_a4 = da_dt * delt
+
+    new = (new_a1 + 2.0 * new_a2 + 2.0 * new_a3 + new_a4) / 6.0
+
+    new_a = yconc
+    ind = 0
+    for spi in sp_comp:
+        new_a[spi] = conc[spi] + new[ind]
+        ind = ind + 1
+
+    return [new_a, tvar + delt]
+
+
+def rungek4_int(conc, time, sp_comp, ks_dict, r_dict, p_dict, stch_var,
+                molar=False, delx=1, rfile=""):
+    """Peforms the RK4 integration
+
+    Args:
+        conc (dict): dictionary of initial concentration.
+
+            For example;
+
+                {'A': 100.0, 'B': -1.0, 'C': 0.0}
+                negative means unknown or for estimation
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
+        sp_comp (dict): dictionary of appearance or position of species
+            or component in the reaction tag of BioSANS topology file.
+
+            For example;
+
+                #REACTIONS
+                A => B, -kf1    # negative means to be estimated
+                B => C, kf2
+
+            The value of sp_comp is
+
+                sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+                A appears in first reaction with index 0
+                B appears in first and second reaction with index 0, 1
+                C appears in second reaction with index 1
+        ks_dict (dict): dictionary of rate constant that appears in each
+            reactions.
+
+            For example;
+
+                #REACTIONS
+                A => B , 0.3        # first reaction
+                B <=> C, 0.1, 0.2   # second reaction
+
+            The value of ks_dict is
+
+                ks_dict = {
+                    0 : [0.3],      # first reaction
+                    1 : [0.1, 0.2]  # second reaction
+                }
+        r_dict (dict): dictionary of reactant stoichiometry. For example
+
+            r_dict = {
+                0: {'A': 1},  # first reaction, coefficient of A is 1
+                1: {'B': 1}   # second reaction, coefficient of B is 1
+            }
+        p_dict (dict): dictionary of product stoichiometry. For example
+
+            p_dict = {
+                0: {'B': 1},  # first reaction, coefficient of B is 1
+                1: {'C': 1}   # second reaction, coefficient of C is 1
+            }
+        stch_var (numpy.ndarray): stoichiometric matrix. For example
+
+            v_stoich = np.array([
+                [   -1,           0   ]            # species A
+                [    1,          -1   ]            # species B
+                [    0,           1   ]            # species C
+                  #1st rxn    2nd rxn
+            ])
+        molar (bool, optional): If True, the units for any amount is in
+            molar. Propensity will be macroscopic. Defaults to False.
+        delx (float, optional): stepsize modifier. Defaults to 1.
+        rfile (string, optional): name of topology file where some
+            parameters or components are negative indicating  they  have
+            to be estimated. Defaults to None.
+
+    Returns:
+        list: [time stamp, trajectory]
+    """
+    get_globals(rfile)
+    tend = time[-1]
+    div = max(1, int(1 / delx))
+    delt = (time[-1] - time[-2]) / div
+    yconc = {xvar: conc[xvar] for xvar in conc}
+    slabels = list(sp_comp.keys())  # [a for a in sp_comp]
+    apply_rules(conc, yconc, [0], [conc[a] for a in sp_comp], slabels)
+    zvar = [conc[a] for a in sp_comp]
+    zlist = [zvar]
+    tvar = 0.0
+    t_c = [tvar]
+    n_sp = [xvar for xvar in conc if xvar not in sp_comp]
+    d_v = 0
+    tc2 = [tvar]
+    z_2 = [zvar]
+
+    while abs(tvar - tend) > 1.0e-10:
+        conc, tvar = runge_kutta_forth(
+            sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, tvar,
+            delt, n_sp, molar)
+        # conc, yerr = rkck(delt,sp_comp,ks_dict,conc,r_dict,p_dict,
+        # stch_var,tvar,n_sp,molar) #higher order runge-kutta
+        # tvar = tvar + delt     # higher order
+        # runge-kutta
+        apply_rules(conc, yconc, tc2, z_2, slabels)
+        z_2.append([conc[a] for a in sp_comp])
+        tc2.append(tvar)
+        if d_v == div - 1:
+            zlist.append([conc[a] for a in sp_comp])
+            t_c.append(tvar)
+            d_v = 0
+        else:
+            d_v = d_v + 1
+    zlist = np.array(zlist)
+    return [t_c, zlist]
+
+
+def rkck(hvar, sp_comp, ks_dict, conc, r_dict, p_dict,
+         stch_var, tvar, n_sp, molar):
+    """This function is a helper function for tau-adaptive RK4"""
+
+    a_2 = 0.2
+    a_3 = 0.3
+    a_4 = 0.6
+    a_5 = 1.0
+    a_6 = 0.875
+
+    b_21 = 0.2
+    b_31 = 3.0 / 40.0
+    b_32 = 9.0 / 40.0
+
+    b_41 = 0.3
+    b_42 = -0.9
+    b_43 = 1.2
+
+    b_51 = -11.9 / 54.0
+    b_52 = 2.5
+    b_53 = -70.0 / 27.0
+    b_54 = 35.0 / 27.0
+
+    b_61 = 1631.0 / 55296.0
+    b_62 = 175.0 / 512.0
+    b_63 = 575.0 / 13824.0
+    b_64 = 44275.0 / 110592.0
+    b_65 = 253.0 / 4096.0
+
+    c_1 = 37.0 / 378.0
+    c_3 = 250.0 / 621.0
+    c_4 = 125.0 / 594.0
+    c_6 = 512.0 / 1771.0
+
+    dc_1 = c_1 - 2825.0 / 27648.0
+    dc_3 = c_3 - 18575.0 / 48384.0
+    dc_4 = c_4 - 13525.0 / 55296.0
+    dc_5 = -277.0 / 14336.0
+    dc_6 = c_6 - 0.25
+
+    dydx = rk4_model(sp_comp, ks_dict, conc, r_dict, p_dict,
+                     stch_var, tvar, molar)
+
+    ytemp = {xvar: conc[xvar] for xvar in n_sp}
+    ind = 0
+    for spi in sp_comp:
+        ytemp[spi] = conc[spi] + b_21 * hvar * dydx[ind]
+        ind = ind + 1
+    ak2 = rk4_model(sp_comp, ks_dict, ytemp, r_dict, p_dict,
+                    stch_var, tvar + a_2 * hvar, molar)
+
+    ind = 0
+    for spi in sp_comp:
+        ytemp[spi] = conc[spi] + hvar * (b_31 * dydx[ind] + b_32 * ak2[ind])
+        ind = ind + 1
+    ak3 = rk4_model(sp_comp, ks_dict, ytemp, r_dict, p_dict,
+                    stch_var, tvar + a_3 * hvar, molar)
+
+    ind = 0
+    for spi in sp_comp:
+        ytemp[spi] = conc[spi] + hvar * \
+            (b_41 * dydx[ind] + b_42 * ak2[ind] + b_43 * ak3[ind])
+        ind = ind + 1
+    ak4 = rk4_model(sp_comp, ks_dict, ytemp, r_dict, p_dict,
+                    stch_var, tvar + a_4 * hvar, molar)
+
+    ind = 0
+    for spi in sp_comp:
+        ytemp[spi] = conc[spi] + hvar * \
+            (b_51 * dydx[ind] + b_52 * ak2[ind] +
+             b_53 * ak3[ind] + b_54 * ak4[ind])
+        ind = ind + 1
+    ak5 = rk4_model(sp_comp, ks_dict, ytemp, r_dict, p_dict,
+                    stch_var, tvar + a_5 * hvar, molar)
+
+    ind = 0
+    for spi in sp_comp:
+        ytemp[spi] = conc[spi] + hvar * (b_61 * dydx[ind] + b_62
+                                         * ak2[ind] + b_63 * ak3[ind]
+                                         + b_64 * ak4[ind] + b_65 * ak5[ind])
+        ind = ind + 1
+    ak6 = rk4_model(sp_comp, ks_dict, ytemp, r_dict, p_dict,
+                    stch_var, tvar + a_6 * hvar, molar)
+
+    yout = ytemp
+    yerr = []
+    ind = 0
+    for spi in sp_comp:
+        yout[spi] = conc[spi] + hvar * \
+            (c_1 * dydx[ind] + c_3 * ak3[ind] +
+             c_4 * ak4[ind] + c_6 * ak6[ind])
+        yerr.append(hvar * (dc_1 * dydx[ind] + dc_3 * ak3[ind] + dc_4 *
+                            ak4[ind] + dc_5 * ak5[ind] + dc_6 * ak6[ind]))
+        ind = ind + 1
+
+    return [yout, yerr]
+
+
+def rkqs(htry, eps, yscal, sp_comp, ks_dict, conc, r_dict, p_dict,
+         stch_var, tvar, n_sp, molar):
+    """This function is a helper function for tau-adaptive RK4"""
+    safety = 0.9
+    pgrow = -0.2
+    pshrnk = -0.25
+    errcon = 1.89e-4
+    errmax = 1000
+    hvar = htry
+    while errmax > 1:
+        ytemp, yerr = rkck(hvar, sp_comp, ks_dict, conc, r_dict, p_dict,
+                           stch_var, tvar, n_sp, molar)
+        errmax = max(0, np.max(np.array(yerr) / np.array(yscal))) / eps
+        if errmax > 1:
+            hvar = safety * hvar * (errmax**pshrnk)
+            if hvar < 0.1 * hvar:
+                hvar = 0.1 * hvar
+        else:
+            if errmax > errcon:
+                hnext = safety * hvar * (errmax**pgrow)
+            else:
+                hnext = 5.0 * hvar
+            hdid = hvar
+            conc = ytemp
+
+    return [conc, hdid, hnext, yerr]
+
+
+def rungek4a_int(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
+                 yscal=10, molar=False, implicit=False, rfile=""):
+    """[summary]
+
+    Args:
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
+        sp_comp (dict): dictionary of appearance or position of species
+            or component in the reaction tag of BioSANS topology file.
+
+            For example;
+
+                #REACTIONS
+                A => B, -kf1    # negative means to be estimated
+                B => C, kf2
+
+            The value of sp_comp is
+
+                sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+                A appears in first reaction with index 0
+                B appears in first and second reaction with index 0, 1
+                C appears in second reaction with index 1
+        ks_dict (dict): dictionary of rate constant that appears in each
+            reactions.
+
+            For example;
+
+                #REACTIONS
+                A => B , 0.3        # first reaction
+                B <=> C, 0.1, 0.2   # second reaction
+
+            The value of ks_dict is
+
+                ks_dict = {
+                    0 : [0.3],      # first reaction
+                    1 : [0.1, 0.2]  # second reaction
+                }
+        conc (dict): dictionary of initial concentration.
+
+            For example;
+
+                {'A': 100.0, 'B': -1.0, 'C': 0.0}
+                negative means unknown or for estimation
+        r_dict (dict): dictionary of reactant stoichiometry. For example
+
+            r_dict = {
+                0: {'A': 1},  # first reaction, coefficient of A is 1
+                1: {'B': 1}   # second reaction, coefficient of B is 1
+            }
+        p_dict (dict): dictionary of product stoichiometry. For example
+
+            p_dict = {
+                0: {'B': 1},  # first reaction, coefficient of B is 1
+                1: {'C': 1}   # second reaction, coefficient of C is 1
+            }
+        stch_var (numpy.ndarray): stoichiometric matrix. For example
+
+            v_stoich = np.array([
+                [   -1,           0   ]            # species A
+                [    1,          -1   ]            # species B
+                [    0,           1   ]            # species C
+                  #1st rxn    2nd rxn
+            ])
+        yscal (int, optional): [description]. Defaults to 10.
+        molar (bool, optional): If True, the units for any amount is in
+            molar. Propensity will be macroscopic. Defaults to False.
+        implicit (bool, optional): True means report in time intervals
+            similar to the input time intervals even if actual step is
+            more or less. Defaults to False.
+        rfile (string, optional): name of topology file where some
+            parameters or components are negative indicating  they  have
+            to be estimated. Defaults to None.
+
+    Returns:
+        list: [time stamp, trajectory]
+    """
+    get_globals(rfile)
+    tnew = []
+    delt = tvar[-1] - tvar[-2]
+    eps = 1.0e-8
+    n_sp = [xvar for xvar in conc if xvar not in sp_comp]
+    yconc = {xvar: conc[xvar] for xvar in sp_comp}
+    slabels = list(sp_comp.keys())  # [a for a in sp_comp]
+    apply_rules(conc, yconc, [0], [conc[a] for a in sp_comp], slabels)
+    yvar = [conc[a] for a in sp_comp]
+    s_list = [yvar]
+    if not implicit:
+        tnow = tvar[0]
+        tnew.append(tnow)
+        tindex = 1
+
+        while abs((tnew[-1] - tvar[-1]) / tvar[-1]) > 1.0e-5:
+
+            y_old = conc
+            conc, dtime, delt, _ = rkqs(
+                delt, eps, yscal, sp_comp, ks_dict, conc, r_dict,
+                p_dict, stch_var, tnow, n_sp, molar)
+            tnow = tnow + dtime
+            apply_rules(conc, yconc)
+            if tnow > tvar[tindex]:
+                tnow = tnow - dtime
+                dtime = tvar[tindex] - tnow
+                conc, tnow = runge_kutta_forth(
+                    sp_comp, ks_dict, y_old, r_dict, p_dict, stch_var,
+                    tnow, dtime, n_sp, molar)
+                delt = 5 * dtime
+                apply_rules(conc, yconc)
+                tindex = tindex + 1
+            s_list.append([conc[a] for a in sp_comp])
+            tnew.append(tnow)
+    else:
+        tnow = tvar[0]
+        tnew.append(tnow)
+        tindex = 1
+
+        while abs((tnew[-1] - tvar[-1]) / tvar[-1]) > 1.0e-5:
+
+            y_old = conc
+            conc, dtime, delt, _ = rkqs(
+                delt, eps, yscal, sp_comp, ks_dict, conc, r_dict, p_dict,
+                stch_var, tnow, n_sp, molar)
+            tnow = tnow + dtime
+            apply_rules(conc, yconc)
+            if tnow > tvar[tindex]:
+                tnow = tnow - dtime
+                dtime = tvar[tindex] - tnow
+                conc, tnow = runge_kutta_forth(
+                    sp_comp, ks_dict, y_old, r_dict, p_dict, stch_var,
+                    tnow, dtime, n_sp, molar)
+                delt = 5 * dtime
+                apply_rules(conc, yconc)
+                s_list.append([conc[a] for a in sp_comp])
+                tnew.append(tnow)
+                tindex = tindex + 1
+    return [tnew, np.array(s_list)]
