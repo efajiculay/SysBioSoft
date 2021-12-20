@@ -2,7 +2,7 @@
 
                   This module is the RunBioSANS module
 
-This can be used to run BioSANS and BioSSL byb running the folloeing.
+This can be used to run BioSANS and BioSSL byb running the following.
 
 BioSSL()
 BioSANS()
@@ -21,5 +21,15 @@ def BioSANS():
 
 
 def BioSSL():
+    """This function launched BioSSL"""
+    system(str(executable) + " -m BioSANS2020.BioSSL")
+
+
+def biosans():
+    """This function launched BioSANS"""
+    Popen([str(executable), "-m", "BioSANS2020.BioSANS"])
+
+
+def biossl():
     """This function launched BioSSL"""
     system(str(executable) + " -m BioSANS2020.BioSSL")

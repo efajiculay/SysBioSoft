@@ -413,8 +413,8 @@ def process(
 
     ksn_dict = {}
     concn = {}
-    #try:
-    if True:
+    try:
+    # if True:
         for r_ind in range(rxn_rows):
             ksn_dict[r_ind] = [0] * 2
             if len(r_dict[r_ind]) == 1:
@@ -486,7 +486,6 @@ def process(
         # print(time.time()-t_o,"Process time")
 
         return data
-"""
     except Exception as error:
         print(c_input)
         print(error)
@@ -494,4 +493,4 @@ def process(
             "showinfo",
             "Check your topology files for missing species \
                 in reaction and concentration tag : " + str(error))
-"""
+                
