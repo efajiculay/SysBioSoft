@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.model.param_est.param_estimate</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.model.html"><font color="#ffffff">model</font></a>.<a href="BioSANS2020.model.param_est.html"><font color="#ffffff">param_est</font></a>.param_estimate</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cerickson%5Cdesktop%5Cbiosans%5Csrc%5Cbiosans2020%5Cmodel%5Cparam_est%5Cparam_estimate.py">c:\users\erickson\desktop\biosans\src\biosans2020\model\param_est\param_estimate.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;param_est&nbsp;module<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;are&nbsp;the&nbsp;functions&nbsp;inside&nbsp;this&nbsp;module<br>
+&nbsp;<br>
+1.&nbsp;load_data<br>
+2.&nbsp;custom_likelihood<br>
+3.&nbsp;ave_abs_dev<br>
+4.&nbsp;label_param<br>
+5.&nbsp;param_estimate</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="scipy.optimize.html">scipy.optimize</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-ave_abs_dev"><strong>ave_abs_dev</strong></a>(ks_par, args=None)</dt><dd><tt>This&nbsp;&nbsp;function&nbsp;&nbsp;returns&nbsp;&nbsp;the&nbsp;&nbsp;mean&nbsp;of&nbsp;relative&nbsp;absolute&nbsp;deviation<br>
+between&nbsp;the&nbsp;true&nbsp;value&nbsp;of&nbsp;trajectory&nbsp;and&nbsp;estimated&nbsp;trajectory.&nbsp;This<br>
+serves&nbsp;&nbsp;as&nbsp;the&nbsp;fitness/objective/cost&nbsp;function&nbsp;&nbsp;with&nbsp;a&nbsp;maximum&nbsp;value<br>
+of&nbsp;zero.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_par&nbsp;(list):&nbsp;list&nbsp;of&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args&nbsp;(tuple):&nbsp;Tuple&nbsp;&nbsp;of&nbsp;&nbsp;(data,&nbsp;&nbsp;conc,&nbsp;tvar,&nbsp;&nbsp;sp_comp,&nbsp;&nbsp;ks_dict,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict,&nbsp;&nbsp;p_dict,&nbsp;&nbsp;v_stoich,&nbsp;&nbsp;c_miss,&nbsp;&nbsp;k_miss,&nbsp;molar,&nbsp;rfile).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;&nbsp;to&nbsp;None.&nbsp;See&nbsp;param_estimate&nbsp;function&nbsp;for&nbsp;&nbsp;the&nbsp;pro-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;per&nbsp;definition&nbsp;of&nbsp;each&nbsp;variables.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;float:&nbsp;mean&nbsp;of&nbsp;relative&nbsp;absolute&nbsp;deviation</tt></dd></dl>
+ <dl><dt><a name="-custom_likelihood"><strong>custom_likelihood</strong></a>(ks_par, args=None)</dt><dd><tt>This&nbsp;&nbsp;function&nbsp;returns&nbsp;&nbsp;the&nbsp;negative&nbsp;of&nbsp;the&nbsp;sum&nbsp;of&nbsp;squared&nbsp;errors<br>
+between&nbsp;the&nbsp;true&nbsp;value&nbsp;of&nbsp;trajectory&nbsp;and&nbsp;estimated&nbsp;trajectory.&nbsp;This<br>
+serves&nbsp;&nbsp;as&nbsp;the&nbsp;fitness/objective/cost&nbsp;function&nbsp;&nbsp;with&nbsp;a&nbsp;maximum&nbsp;value<br>
+of&nbsp;zero.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_par&nbsp;(list):&nbsp;list&nbsp;of&nbsp;parameters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args&nbsp;(tuple):&nbsp;Tuple&nbsp;&nbsp;of&nbsp;&nbsp;(data,&nbsp;&nbsp;conc,&nbsp;tvar,&nbsp;&nbsp;sp_comp,&nbsp;&nbsp;ks_dict,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict,&nbsp;&nbsp;p_dict,&nbsp;&nbsp;v_stoich,&nbsp;&nbsp;c_miss,&nbsp;&nbsp;k_miss,&nbsp;molar,&nbsp;rfile).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;&nbsp;to&nbsp;None.&nbsp;See&nbsp;param_estimate&nbsp;function&nbsp;for&nbsp;&nbsp;the&nbsp;pro-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;per&nbsp;definition&nbsp;of&nbsp;each&nbsp;variables.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;float:&nbsp;negative&nbsp;of&nbsp;the&nbsp;sum&nbsp;of&nbsp;squared&nbsp;error</tt></dd></dl>
+ <dl><dt><a name="-label_param"><strong>label_param</strong></a>(k_miss, c_miss, ks_par)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;k_miss&nbsp;(list):&nbsp;list&nbsp;of&nbsp;position&nbsp;of&nbsp;unkwon&nbsp;parameters&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;forward&nbsp;rate&nbsp;constant&nbsp;is&nbsp;unknown<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;-1,&nbsp;-1&nbsp;&nbsp;#&nbsp;forward&nbsp;and&nbsp;backward&nbsp;is&nbsp;unknown<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;negative&nbsp;values&nbsp;means&nbsp;rate&nbsp;constant&nbsp;is&nbsp;unknown&nbsp;for&nbsp;those<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reaction.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;k_miss&nbsp;will&nbsp;be;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k_miss&nbsp;=&nbsp;[(0,0),&nbsp;(1,&nbsp;0),&nbsp;(1,&nbsp;1)]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;format&nbsp;of&nbsp;the&nbsp;tuple&nbsp;is;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reaction&nbsp;index,&nbsp;rate&nbsp;constant&nbsp;index)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(0,&nbsp;0)&nbsp;-&nbsp;first&nbsp;reaction,&nbsp;first&nbsp;rate&nbsp;constant<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1,&nbsp;0)&nbsp;-&nbsp;second&nbsp;reaction,&nbsp;first&nbsp;rate&nbsp;constant<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1,&nbsp;1)&nbsp;-&nbsp;second&nbsp;reaction,&nbsp;second&nbsp;rate&nbsp;constant<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;c_miss&nbsp;(list):&nbsp;component/species&nbsp;without&nbsp;trajectory&nbsp;data.&nbsp;They<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;set&nbsp;in&nbsp;a&nbsp;topology&nbsp;file&nbsp;with&nbsp;negative&nbsp;values&nbsp;as&nbsp;well.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@CONCENTRATION<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A,&nbsp;Ao<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B,&nbsp;-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C,&nbsp;Co<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;c_miss&nbsp;will&nbsp;be;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c_miss&nbsp;=&nbsp;['B']<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_par&nbsp;(list):&nbsp;list&nbsp;of&nbsp;estimated&nbsp;parameter&nbsp;values&nbsp;for&nbsp;k_miss&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;it&nbsp;appears&nbsp;sequencially&nbsp;and&nbsp;list&nbsp;of&nbsp;initial&nbsp;value&nbsp;for&nbsp;c_miss<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;it&nbsp;appears&nbsp;sequencially.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_par&nbsp;=&nbsp;[<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k1f,&nbsp;#&nbsp;numeric&nbsp;value&nbsp;for&nbsp;position&nbsp;(0,&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k2f,&nbsp;#&nbsp;numeric&nbsp;value&nbsp;for&nbsp;position&nbsp;(1,&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k2b,&nbsp;#&nbsp;numeric&nbsp;value&nbsp;for&nbsp;position&nbsp;(1,&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bo&nbsp;&nbsp;&nbsp;#&nbsp;numeric&nbsp;initial&nbsp;value&nbsp;for&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dictionary:&nbsp;dictionary&nbsp;&nbsp;of&nbsp;estimated&nbsp;&nbsp;values&nbsp;&nbsp;with&nbsp;the&nbsp;following<br>
+&nbsp;&nbsp;&nbsp;&nbsp;format&nbsp;{label&nbsp;:&nbsp;estimate,...}</tt></dd></dl>
+ <dl><dt><a name="-load_data"><strong>load_data</strong></a>(file=None)</dt><dd><tt>This&nbsp;function&nbsp;reads&nbsp;the&nbsp;trajectory&nbsp;file&nbsp;containing&nbsp;the&nbsp;data&nbsp;which<br>
+should&nbsp;follow&nbsp;the&nbsp;following&nbsp;example&nbsp;format;<br>
+&nbsp;<br>
+time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B<br>
+0.0&nbsp;100.0&nbsp;&nbsp;&nbsp;0.0<br>
+0.25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88.24969025197632&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.750309748023732<br>
+0.5&nbsp;77.88007831231087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22.119921687689185<br>
+0.75&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;68.72892784164061&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31.27107215835944<br>
+1.0&nbsp;60.65306592491437&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;39.346934075085684<br>
+1.25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;53.526142785532&nbsp;46.473857214468055<br>
+1.5&nbsp;47.236655135816875&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;52.76334486418318<br>
+1.75&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;41.68620193454698&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;58.31379806545308<br>
+2.0&nbsp;36.78794415253036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;63.21205584746969<br>
+2.25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;32.46524678349081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;67.53475321650924<br>
+...<br>
+&nbsp;<br>
+The&nbsp;format&nbsp;&nbsp;above&nbsp;have&nbsp;&nbsp;a&nbsp;header&nbsp;where&nbsp;the&nbsp;first&nbsp;&nbsp;column&nbsp;is&nbsp;time&nbsp;and<br>
+all&nbsp;other&nbsp;columns&nbsp;are&nbsp;species&nbsp;or&nbsp;components.&nbsp;The&nbsp;rows&nbsp;are&nbsp;the&nbsp;values<br>
+of&nbsp;measurements&nbsp;&nbsp;corresponding&nbsp;to&nbsp;&nbsp;the&nbsp;header.&nbsp;Each&nbsp;row&nbsp;is&nbsp;delimited<br>
+by&nbsp;&nbsp;tab&nbsp;character&nbsp;"&nbsp;".&nbsp;If&nbsp;&nbsp;the&nbsp;data&nbsp;file&nbsp;is&nbsp;in&nbsp;excel,&nbsp;just&nbsp;copy&nbsp;the<br>
+data&nbsp;&nbsp;from&nbsp;&nbsp;excel&nbsp;to&nbsp;a&nbsp;text&nbsp;editor,&nbsp;save&nbsp;&nbsp;it&nbsp;with&nbsp;a&nbsp;&nbsp;filename&nbsp;and&nbsp;it<br>
+will&nbsp;already&nbsp;&nbsp;be&nbsp;tab&nbsp;delimited.&nbsp;If&nbsp;there&nbsp;&nbsp;are&nbsp;several&nbsp;&nbsp;replicates&nbsp;of<br>
+the&nbsp;&nbsp;data,&nbsp;just&nbsp;append&nbsp;them&nbsp;to&nbsp;&nbsp;the&nbsp;end&nbsp;without&nbsp;&nbsp;the&nbsp;header&nbsp;and&nbsp;this<br>
+function&nbsp;can&nbsp;still&nbsp;handle&nbsp;all&nbsp;replicates.<br>
+&nbsp;<br>
+time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B<br>
+0.0&nbsp;100.0&nbsp;&nbsp;&nbsp;0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;replicate<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;continuation<br>
+0.0&nbsp;100.0&nbsp;&nbsp;&nbsp;0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;replicate<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;continuation<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;(string,&nbsp;optional):&nbsp;trajectory&nbsp;file.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;tuple&nbsp;&nbsp;of&nbsp;&nbsp;data&nbsp;and&nbsp;&nbsp;labels&nbsp;(data,&nbsp;labels).&nbsp;The&nbsp;data&nbsp;is&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;of&nbsp;all&nbsp;&nbsp;the&nbsp;trajectories&nbsp;in&nbsp;the&nbsp;file&nbsp;and&nbsp;the&nbsp;labels&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;name&nbsp;of&nbsp;the&nbsp;columns&nbsp;in&nbsp;the&nbsp;trajectory</tt></dd></dl>
+ <dl><dt><a name="-param_estimate"><strong>param_estimate</strong></a>(conc, tvar, sp_comp, ks_dict, r_dict, p_dict, v_stoich, items, molar=False, mode='MCEM', true_data_fil=None, rfile=None)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tvar&nbsp;(list):&nbsp;time&nbsp;stamp&nbsp;of&nbsp;trajectories&nbsp;i.e.&nbsp;[0,&nbsp;0.1,&nbsp;0.2,&nbsp;...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appears&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;(list):&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;units&nbsp;for&nbsp;any&nbsp;amount&nbsp;is&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;molar.&nbsp;Propensity&nbsp;will&nbsp;be&nbsp;macroscopic.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mode&nbsp;(str,&nbsp;optional):&nbsp;parameter&nbsp;estimation&nbsp;method&nbsp;keyword&nbsp;which<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;&nbsp;one&nbsp;of&nbsp;"MCEM",&nbsp;"DEvol",&nbsp;"NeldMead",&nbsp;"Powell",&nbsp;"L-BFGS-B"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;true_data_fil&nbsp;(string,&nbsp;optional):&nbsp;file&nbsp;&nbsp;name&nbsp;&nbsp;of&nbsp;&nbsp;the&nbsp;trajectory<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;containing&nbsp;experimental&nbsp;or&nbsp;observed&nbsp;trajectory.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(string,&nbsp;optional):&nbsp;name&nbsp;of&nbsp;topology&nbsp;file&nbsp;where&nbsp;some<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;or&nbsp;components&nbsp;are&nbsp;negative&nbsp;indicating&nbsp;&nbsp;they&nbsp;&nbsp;have<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;estimated.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;(0,&nbsp;param_res)&nbsp;where&nbsp;param_res&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;estima-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ted&nbsp;&nbsp;values&nbsp;&nbsp;with&nbsp;the&nbsp;following&nbsp;format&nbsp;{label&nbsp;:&nbsp;estimate,...}</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>INSERT</strong> = 'insert'</td></tr></table>
+</body></html>

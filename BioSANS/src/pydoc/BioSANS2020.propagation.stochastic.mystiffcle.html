@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.propagation.stochastic.mystiffcle</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.propagation.html"><font color="#ffffff">propagation</font></a>.<a href="BioSANS2020.propagation.stochastic.html"><font color="#ffffff">stochastic</font></a>.mystiffcle</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cerickson%5Cdesktop%5Cbiosans%5Csrc%5Cbiosans2020%5Cpropagation%5Cstochastic%5Cmystiffcle.py">c:\users\erickson\desktop\biosans\src\biosans2020\propagation\stochastic\mystiffcle.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;module&nbsp;is&nbsp;the&nbsp;mystiffcle&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;can&nbsp;propagate&nbsp;non-stiff&nbsp;to&nbsp;moderately&nbsp;stiff&nbsp;stochastic&nbsp;simulation<br>
+using&nbsp;the&nbsp;chemical&nbsp;langevine&nbsp;equation.&nbsp;Here&nbsp;two&nbsp;versions&nbsp;are&nbsp;provided<br>
+&nbsp;<br>
+1)&nbsp;Tau-adaptive&nbsp;CLE<br>
+2)&nbsp;Fix-inreval&nbsp;CLE<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;are&nbsp;the&nbsp;list&nbsp;of&nbsp;function&nbsp;for&nbsp;this&nbsp;module.<br>
+&nbsp;<br>
+1.&nbsp;cle_model<br>
+2.&nbsp;cle_calculate<br>
+3.&nbsp;cle2_calculate</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-cle2_calculate"><strong>cle2_calculate</strong></a>(tvar, sp_comp, ks_dict, sconc, r_dict, p_dict, stch_var, del_coef=1, rand_seed=1, rfile='')</dt><dd><tt>This&nbsp;functions&nbsp;performs&nbsp;the&nbsp;fix-interval&nbsp;CLE&nbsp;integration<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tvar&nbsp;(list):&nbsp;time&nbsp;stamp&nbsp;of&nbsp;simulation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appear&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sconc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;del_coef&nbsp;(float):&nbsp;step-size&nbsp;factor&nbsp;or&nbsp;modifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rand_seed&nbsp;(float):&nbsp;random&nbsp;&nbsp;seed&nbsp;value&nbsp;picked&nbsp;&nbsp;at&nbsp;random&nbsp;for&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectory.&nbsp;They&nbsp;have&nbsp;been&nbsp;sampled&nbsp;from&nbsp;the&nbsp;calling&nbsp;program.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(string,&nbsp;optional):&nbsp;name&nbsp;of&nbsp;topology&nbsp;file&nbsp;where&nbsp;some<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;or&nbsp;components&nbsp;are&nbsp;negative&nbsp;indicating&nbsp;&nbsp;they&nbsp;&nbsp;have<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;estimated.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;(time,&nbsp;trajectories)</tt></dd></dl>
+ <dl><dt><a name="-cle_calculate"><strong>cle_calculate</strong></a>(tvar, sp_comp, ks_dict, sconc, r_dict, p_dict, stch_var, del_coef=10, rand_seed=1, implicit=False, rfile='')</dt><dd><tt>This&nbsp;functions&nbsp;performs&nbsp;the&nbsp;tau-adaptive&nbsp;CLE&nbsp;integration<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tvar&nbsp;(list):&nbsp;time&nbsp;stamp&nbsp;of&nbsp;simulation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appear&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sconc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;del_coef&nbsp;(float):&nbsp;step-size&nbsp;factor&nbsp;or&nbsp;modifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rand_seed&nbsp;(float):&nbsp;random&nbsp;&nbsp;seed&nbsp;value&nbsp;picked&nbsp;&nbsp;at&nbsp;random&nbsp;for&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectory.&nbsp;They&nbsp;have&nbsp;been&nbsp;sampled&nbsp;from&nbsp;the&nbsp;calling&nbsp;program.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;implicit&nbsp;(bool,&nbsp;optional):&nbsp;True&nbsp;means&nbsp;report&nbsp;in&nbsp;time&nbsp;intervals<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;similar&nbsp;to&nbsp;the&nbsp;input&nbsp;time&nbsp;intervals&nbsp;even&nbsp;if&nbsp;actual&nbsp;step&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;more&nbsp;or&nbsp;less.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(string,&nbsp;optional):&nbsp;name&nbsp;of&nbsp;topology&nbsp;file&nbsp;where&nbsp;some<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;or&nbsp;components&nbsp;are&nbsp;negative&nbsp;indicating&nbsp;&nbsp;they&nbsp;&nbsp;have<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;estimated.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;(time,&nbsp;trajectories)</tt></dd></dl>
+ <dl><dt><a name="-cle_model"><strong>cle_model</strong></a>(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, dtime, del_coef, reg=False)</dt><dd><tt>This&nbsp;functions&nbsp;prepare&nbsp;the&nbsp;CLE&nbsp;model&nbsp;for&nbsp;integration<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appear&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dtime&nbsp;(float):&nbsp;step-size<br>
+&nbsp;&nbsp;&nbsp;&nbsp;del_coef&nbsp;(float):&nbsp;step-size&nbsp;factor&nbsp;or&nbsp;modifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;reg&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;model&nbsp;is&nbsp;for&nbsp;fix-interval&nbsp;CLE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;np.ndarray:&nbsp;f_d&nbsp;=&nbsp;fofx&nbsp;*&nbsp;dtime&nbsp;+&nbsp;gofx&nbsp;*&nbsp;sqdt</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>reserve_events_words</strong> = {'delay', 'dtime', 'finish', 'status', 'status2', 't', ...}</td></tr></table>
+</body></html>

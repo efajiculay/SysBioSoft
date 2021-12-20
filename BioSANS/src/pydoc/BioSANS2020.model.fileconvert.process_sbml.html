@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.model.fileconvert.process_sbml</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.model.html"><font color="#ffffff">model</font></a>.<a href="BioSANS2020.model.fileconvert.html"><font color="#ffffff">fileconvert</font></a>.process_sbml</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cerickson%5Cdesktop%5Cbiosans%5Csrc%5Cbiosans2020%5Cmodel%5Cfileconvert%5Cprocess_sbml.py">c:\users\erickson\desktop\biosans\src\biosans2020\model\fileconvert\process_sbml.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;process_sbml&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;contains&nbsp;functions&nbsp;that&nbsp;facilitates&nbsp;the&nbsp;conversion&nbsp;of&nbsp;sbml<br>
+file&nbsp;format&nbsp;into&nbsp;BioSANS&nbsp;topology&nbsp;format.&nbsp;Currently,&nbsp;this&nbsp;module&nbsp;highly<br>
+relies&nbsp;on&nbsp;string&nbsp;manipulations,&nbsp;sympify,&nbsp;eval,&nbsp;and&nbsp;exec&nbsp;python&nbsp;functions<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;are&nbsp;the&nbsp;list&nbsp;of&nbsp;function&nbsp;in&nbsp;this&nbsp;module<br>
+&nbsp;<br>
+1.&nbsp;get_exponent_sp<br>
+2.&nbsp;replace_crucial_funct<br>
+3.&nbsp;extract_species<br>
+4.&nbsp;extract_par_num<br>
+5.&nbsp;extract_var_func<br>
+6.&nbsp;extract_function<br>
+7.&nbsp;par_substitution<br>
+8.&nbsp;add2_spaces_sep<br>
+9.&nbsp;sp_substitution<br>
+10.&nbsp;var_substitution<br>
+11.&nbsp;funct_redefine_var<br>
+12.&nbsp;get_sbml_units<br>
+13.&nbsp;get_compartment_details<br>
+14.&nbsp;get_species_details<br>
+15.&nbsp;get_initial_conc<br>
+16.&nbsp;get_param_DETAILS<br>
+17.&nbsp;get_rule_details<br>
+18.&nbsp;process_sbml</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="libsbml.html">libsbml</a><br>
+</td><td width="25%" valign=top><a href="BioSANS2020.myglobal.mglobals.html">BioSANS2020.myglobal.mglobals</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-add2_spaces_sep"><strong>add2_spaces_sep</strong></a>(modk)</dt><dd><tt>This&nbsp;function&nbsp;adds&nbsp;paddings&nbsp;on&nbsp;both&nbsp;sides&nbsp;of&nbsp;the&nbsp;operators&nbsp;and<br>
+return&nbsp;the&nbsp;expression&nbsp;modk&nbsp;with&nbsp;the&nbsp;operators&nbsp;padded.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;string&nbsp;math&nbsp;expression<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;string&nbsp;math&nbsp;expression&nbsp;with&nbsp;the&nbsp;operators&nbsp;padded</tt></dd></dl>
+ <dl><dt><a name="-eval_exp"><strong>eval_exp</strong></a>(xvar)</dt></dl>
+ <dl><dt><a name="-extract_function"><strong>extract_function</strong></a>(pforms, rbig_params, compartments, functions, functions_str)</dt><dd><tt>This&nbsp;function&nbsp;converts&nbsp;a&nbsp;user&nbsp;defined&nbsp;function&nbsp;or&nbsp;function&nbsp;call<br>
+in&nbsp;the&nbsp;SBML&nbsp;file&nbsp;to&nbsp;actual&nbsp;expression.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pforms&nbsp;:&nbsp;from&nbsp;formulaToString(xvar.getMath())&nbsp;where&nbsp;xvar&nbsp;can&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;object&nbsp;from&nbsp;getListOfRules()&nbsp;in&nbsp;libsbml.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;:&nbsp;compartment*multiply(k1,S1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rbig_params&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;parameter&nbsp;name&nbsp;:&nbsp;parameter&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;kinetic&nbsp;rate&nbsp;law&nbsp;expression&nbsp;in&nbsp;sbml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;compartments&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;compartments&nbsp;name&nbsp;:&nbsp;[size,&nbsp;units]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;functions&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;function&nbsp;name&nbsp;:&nbsp;function&nbsp;definition<br>
+&nbsp;&nbsp;&nbsp;&nbsp;functions_str&nbsp;:&nbsp;the&nbsp;string&nbsp;equivalent&nbsp;of&nbsp;functions&nbsp;above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;:&nbsp;{'multiply':&nbsp;'lambda&nbsp;x,y&nbsp;:&nbsp;x*y'}<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;expanded&nbsp;form&nbsp;of&nbsp;pforms&nbsp;where&nbsp;every&nbsp;function&nbsp;definition<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;evaluated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;:&nbsp;compartment*1*(S1*k1)</tt></dd></dl>
+ <dl><dt><a name="-extract_par_num"><strong>extract_par_num</strong></a>(modk)</dt><dd><tt>This&nbsp;function&nbsp;is&nbsp;currently&nbsp;not&nbsp;used&nbsp;but&nbsp;it&nbsp;can&nbsp;extract&nbsp;the<br>
+numeric&nbsp;values&nbsp;from&nbsp;a&nbsp;given&nbsp;expression<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(<a href="#-extract_par_num">extract_par_num</a>("(5.0)*(6.0)*S1+S2**3"))&nbsp;will&nbsp;give<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{'5.0',&nbsp;'6.0',&nbsp;'3'}</tt></dd></dl>
+ <dl><dt><a name="-extract_species"><strong>extract_species</strong></a>(modk)</dt><dd><tt>This&nbsp;function&nbsp;extracts&nbsp;the&nbsp;components&nbsp;or&nbsp;species&nbsp;from&nbsp;a&nbsp;given&nbsp;ex-<br>
+pression&nbsp;and&nbsp;returns&nbsp;a&nbsp;comma&nbsp;concatenated&nbsp;string&nbsp;of&nbsp;them.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;propensity&nbsp;expression&nbsp;converted&nbsp;to&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;"2*0.5*A*B"<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;",".join(sp_comp)&nbsp;:&nbsp;a&nbsp;string&nbsp;of&nbsp;comma&nbsp;concatenated&nbsp;components<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;"A,B"</tt></dd></dl>
+ <dl><dt><a name="-extract_var_func"><strong>extract_var_func</strong></a>(ssv)</dt><dd><tt>This&nbsp;function&nbsp;extract&nbsp;the&nbsp;variables&nbsp;from&nbsp;an&nbsp;expression&nbsp;and&nbsp;gives<br>
+a&nbsp;2D&nbsp;list&nbsp;containing&nbsp;a&nbsp;comma&nbsp;concatenated&nbsp;string&nbsp;of&nbsp;variable&nbsp;and&nbsp;a<br>
+string&nbsp;of&nbsp;the&nbsp;expression.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ssv&nbsp;:&nbsp;comma&nbsp;concatenated&nbsp;string&nbsp;of&nbsp;variables&nbsp;and&nbsp;expression.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;:&nbsp;&nbsp;"x,y,x*y"<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;["comma&nbsp;concatenated&nbsp;variables","expression"]&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;:&nbsp;['x,y',&nbsp;'x*y']</tt></dd></dl>
+ <dl><dt><a name="-funct_redefine_var"><strong>funct_redefine_var</strong></a>(modk, ssv)</dt><dd><tt>This&nbsp;function&nbsp;transform&nbsp;the&nbsp;variables&nbsp;in&nbsp;a&nbsp;lambda&nbsp;function&nbsp;to&nbsp;the<br>
+actual&nbsp;variables&nbsp;needed.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;string&nbsp;math&nbsp;lambda&nbsp;expression&nbsp;with&nbsp;abstract&nbsp;variables<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ssv&nbsp;:&nbsp;sympy&nbsp;symbols<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;definition&nbsp;expression&nbsp;with&nbsp;actual&nbsp;varaibles</tt></dd></dl>
+ <dl><dt><a name="-get_compartments_details"><strong>get_compartments_details</strong></a>(model, molar)</dt><dd><tt>Returns&nbsp;compartment&nbsp;dictionary&nbsp;from&nbsp;sbml&nbsp;file.&nbsp;The&nbsp;model&nbsp;is<br>
+defined&nbsp;by&nbsp;the&nbsp;following&nbsp;python&nbsp;syntax;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model&nbsp;=&nbsp;libsbml.SBMLReader().readSBML(sbml_file).getModel()<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model&nbsp;:&nbsp;model&nbsp;definition&nbsp;like&nbsp;shown&nbsp;above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;:&nbsp;True&nbsp;if&nbsp;conc.&nbsp;is&nbsp;in&nbsp;molar&nbsp;else&nbsp;False<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;compartments&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;all&nbsp;compartments&nbsp;with&nbsp;the&nbsp;following<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;'c1'&nbsp;:&nbsp;[size,&nbsp;units]}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;constant_comp&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;constant&nbsp;compartments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;'c1'&nbsp;:&nbsp;[size,&nbsp;units]}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;non_constant_comp&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;non&nbsp;constant&nbsp;compartments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;'c1'&nbsp;:&nbsp;[size,&nbsp;units]}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;orig_size&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;original&nbsp;size&nbsp;of&nbsp;compartment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;'c1'&nbsp;:&nbsp;size}</tt></dd></dl>
+ <dl><dt><a name="-get_exponent_sp"><strong>get_exponent_sp</strong></a>(key, modk)</dt><dd><tt>This&nbsp;function&nbsp;extract&nbsp;the&nbsp;exponent&nbsp;of&nbsp;component&nbsp;or&nbsp;species&nbsp;key<br>
+from&nbsp;a&nbsp;given&nbsp;propensity&nbsp;expression&nbsp;modk.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;key&nbsp;:&nbsp;species/component&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;propensity&nbsp;expression&nbsp;converted&nbsp;to&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;"2*0.5*A*B"<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;exponent_in_formula&nbsp;:&nbsp;the&nbsp;power&nbsp;of&nbsp;species&nbsp;key<br>
+Example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;=&nbsp;(1.0)*(1.0)*S1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;key&nbsp;=&nbsp;S1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;exponent_in_formula&nbsp;=&nbsp;1</tt></dd></dl>
+ <dl><dt><a name="-get_initial_conc"><strong>get_initial_conc</strong></a>(species)</dt><dd><tt>Returns&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration&nbsp;from&nbsp;species</tt></dd></dl>
+ <dl><dt><a name="-get_param_details"><strong>get_param_details</strong></a>(model)</dt><dd><tt>Returns&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;parameter&nbsp;name&nbsp;:&nbsp;[value,&nbsp;unit]</tt></dd></dl>
+ <dl><dt><a name="-get_rule_details"><strong>get_rule_details</strong></a>(model, constant_par)</dt><dd><tt>This&nbsp;function&nbsp;returns&nbsp;the&nbsp;assignment&nbsp;rules,&nbsp;rate&nbsp;rules,&nbsp;and<br>
+algebraic&nbsp;rules&nbsp;from&nbsp;sbml&nbsp;model&nbsp;given&nbsp;the&nbsp;disctionary&nbsp;of&nbsp;constant<br>
+parameters.&nbsp;The&nbsp;constants&nbsp;are&nbsp;already&nbsp;substituted&nbsp;in&nbsp;the&nbsp;return</tt></dd></dl>
+ <dl><dt><a name="-get_sbml_units"><strong>get_sbml_units</strong></a>(model, sbml_units)</dt><dd><tt>Returns&nbsp;units&nbsp;dictionary&nbsp;from&nbsp;sbml&nbsp;file.&nbsp;The&nbsp;model&nbsp;is&nbsp;defined&nbsp;by<br>
+the&nbsp;following&nbsp;python&nbsp;syntax;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model&nbsp;=&nbsp;libsbml.SBMLReader().readSBML(sbml_file).getModel()<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model&nbsp;:&nbsp;model&nbsp;definition&nbsp;like&nbsp;shown&nbsp;above<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sbml_units&nbsp;:&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;sbml&nbsp;unit&nbsp;equivalence<br>
+&nbsp;Returns&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;units_sbml&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;sbml&nbsp;units&nbsp;associated&nbsp;to&nbsp;the&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-get_species_details"><strong>get_species_details</strong></a>(model)</dt><dd><tt>Returns&nbsp;species&nbsp;dictionary&nbsp;from&nbsp;sbml&nbsp;file.&nbsp;The&nbsp;model&nbsp;is<br>
+defined&nbsp;by&nbsp;the&nbsp;following&nbsp;python&nbsp;syntax;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model&nbsp;=&nbsp;libsbml.SBMLReader().readSBML(sbml_file).getModel()<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;model&nbsp;:&nbsp;model&nbsp;definition&nbsp;like&nbsp;shown&nbsp;above<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;species&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;all&nbsp;species&nbsp;with&nbsp;the&nbsp;following<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;id&nbsp;:&nbsp;species_label&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;species_comp&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;species&nbsp;compartments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;species_label&nbsp;:&nbsp;compartment&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;constant_species&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;constant&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;species_label&nbsp;:&nbsp;True&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;has_only_sunits&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;species&nbsp;with&nbsp;only&nbsp;substance&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;id&nbsp;:&nbsp;True&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_wcfactor&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;convertion&nbsp;factor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;format&nbsp;{&nbsp;id&nbsp;:&nbsp;conversion&nbsp;factor&nbsp;}</tt></dd></dl>
+ <dl><dt><a name="-par_substitution"><strong>par_substitution</strong></a>(modk, parameters, index=0)</dt><dd><tt>This&nbsp;function&nbsp;substitute&nbsp;parameters&nbsp;to&nbsp;modk&nbsp;expression&nbsp;by&nbsp;first<br>
+padding&nbsp;the&nbsp;operators&nbsp;to&nbsp;ensure&nbsp;parameters&nbsp;can&nbsp;be&nbsp;distinguished&nbsp;from<br>
+the&nbsp;expression.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;math&nbsp;expression&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;parameters&nbsp;name&nbsp;:&nbsp;[value,&nbsp;unit]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;:&nbsp;0&nbsp;or&nbsp;1.&nbsp;0&nbsp;will&nbsp;give&nbsp;value&nbsp;and&nbsp;1&nbsp;will&nbsp;give&nbsp;unit<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;expression&nbsp;where&nbsp;parameters&nbsp;are&nbsp;now&nbsp;numeric</tt></dd></dl>
+ <dl><dt><a name="-process_sbml"><strong>process_sbml</strong></a>(file, molar=False, variables=None)</dt><dd><tt>This&nbsp;function&nbsp;read&nbsp;the&nbsp;sbml&nbsp;file&nbsp;and&nbsp;extracts&nbsp;the&nbsp;necessary&nbsp;most<br>
+of&nbsp;the&nbsp;details&nbsp;to&nbsp;construct&nbsp;the&nbsp;corresponding&nbsp;topology&nbsp;file&nbsp;of&nbsp;the<br>
+system&nbsp;described&nbsp;by&nbsp;the&nbsp;SBML&nbsp;tags.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;:&nbsp;this&nbsp;is&nbsp;the&nbsp;sbml&nbsp;file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;:&nbsp;True&nbsp;or&nbsp;False,&nbsp;tells&nbsp;if&nbsp;the&nbsp;systems&nbsp;unit&nbsp;molar&nbsp;or&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;variables&nbsp;:&nbsp;None&nbsp;or&nbsp;constant&nbsp;compartment&nbsp;to&nbsp;show&nbsp;in&nbsp;plot</tt></dd></dl>
+ <dl><dt><a name="-replace_crucial_funct"><strong>replace_crucial_funct</strong></a>(trep)</dt><dd><tt>this&nbsp;function&nbsp;converts&nbsp;some&nbsp;problematic&nbsp;operator/logical/function<br>
+and&nbsp;etc.&nbsp;to&nbsp;its&nbsp;equivalent&nbsp;in&nbsp;SBML.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trep&nbsp;:&nbsp;result&nbsp;of&nbsp;SBML&nbsp;formulaToString(xvar.getMath())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xvar&nbsp;is&nbsp;an&nbsp;object&nbsp;in&nbsp;SBML&nbsp;getListOfFunctionDefinitions()</tt></dd></dl>
+ <dl><dt><a name="-sp_substitution"><strong>sp_substitution</strong></a>(modk, parameters)</dt><dd><tt>This&nbsp;is&nbsp;a&nbsp;redundant&nbsp;function&nbsp;to&nbsp;par_substitution.&nbsp;This&nbsp;function<br>
+substitute&nbsp;parameters&nbsp;to&nbsp;modk&nbsp;expression&nbsp;by&nbsp;first&nbsp;padding&nbsp;the<br>
+operators&nbsp;to&nbsp;ensure&nbsp;parameters&nbsp;can&nbsp;be&nbsp;distinguished&nbsp;fromthe<br>
+expression.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;math&nbsp;expression&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;parameters&nbsp;name&nbsp;:&nbsp;[value,&nbsp;unit]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intended&nbsp;for&nbsp;constant&nbsp;parameters<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;expression&nbsp;where&nbsp;parameters&nbsp;are&nbsp;now&nbsp;numeric</tt></dd></dl>
+ <dl><dt><a name="-var_substitution"><strong>var_substitution</strong></a>(modk, rbig_params, parameters, compartments, rate_rules)</dt><dd><tt>This&nbsp;function&nbsp;substitute&nbsp;variables&nbsp;to&nbsp;modk&nbsp;expression&nbsp;by&nbsp;first<br>
+padding&nbsp;the&nbsp;operators&nbsp;to&nbsp;ensure&nbsp;variables&nbsp;can&nbsp;be&nbsp;distinguished&nbsp;from<br>
+the&nbsp;expression.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;math&nbsp;expression&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rbig_params&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;parameter&nbsp;name&nbsp;:&nbsp;parameter&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;kinetic&nbsp;rate&nbsp;law&nbsp;expression&nbsp;in&nbsp;sbml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;parameters&nbsp;name&nbsp;:&nbsp;[value,&nbsp;unit]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;compartments&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;compartments&nbsp;name&nbsp;:&nbsp;[size,&nbsp;units]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rate_rules&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;variable&nbsp;:&nbsp;variable&nbsp;modifier&nbsp;function<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;modk&nbsp;:&nbsp;expression&nbsp;where&nbsp;variables&nbsp;are&nbsp;substituted</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>OPERS_LIST</strong> = {'(', ')', '*', '+', ',', '-', ...}<br>
+<strong>OPERS_LIST2</strong> = {'And', 'False', 'None', 'Not', 'Or', 'True', ...}<br>
+<strong>SBML_FUNCT_DICT</strong> = {'And': &lt;function And&gt;, 'INF': inf, 'NAN': nan, 'Not': &lt;function Not&gt;, 'Or': &lt;function Or&gt;, 'acos': &lt;function acos&gt;, 'acosh': &lt;function acosh&gt;, 'acot': &lt;function acot&gt;, 'acoth': &lt;function acoth&gt;, 'acsc': &lt;function acsc&gt;, ...}</td></tr></table>
+</body></html>

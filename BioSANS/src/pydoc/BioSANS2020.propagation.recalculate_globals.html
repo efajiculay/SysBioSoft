@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.propagation.recalculate_globals</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.propagation.html"><font color="#ffffff">propagation</font></a>.recalculate_globals</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cerickson%5Cdesktop%5Cbiosans%5Csrc%5Cbiosans2020%5Cpropagation%5Crecalculate_globals.py">c:\users\erickson\desktop\biosans\src\biosans2020\propagation\recalculate_globals.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;module&nbsp;is&nbsp;the&nbsp;recalculate_globals&nbsp;module<br>
+&nbsp;<br>
+The&nbsp;purpose&nbsp;of&nbsp;this&nbsp;module&nbsp;is&nbsp;to&nbsp;ensure&nbsp;that&nbsp;global&nbsp;variables&nbsp;holds&nbsp;True<br>
+each&nbsp;process&nbsp;for&nbsp;multitrajectory&nbsp;simulation.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="BioSANS2020.myglobal.mglobals.html">BioSANS2020.myglobal.mglobals</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="random.html">random</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-apply_rules"><strong>apply_rules</strong></a>(conc, yconc, oras=None, spconc=None, slabels=None)</dt><dd><tt>This&nbsp;function&nbsp;modifies&nbsp;the&nbsp;concentration&nbsp;base&nbsp;on&nbsp;the&nbsp;rules&nbsp;stated<br>
+in&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;yconc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;oras&nbsp;(float,&nbsp;optional):&nbsp;current&nbsp;time&nbsp;point.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spconc&nbsp;(list,&nbsp;optional):&nbsp;values&nbsp;of&nbsp;conc&nbsp;at&nbsp;the&nbsp;current&nbsp;time.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slabels&nbsp;(list,&nbsp;optional):&nbsp;names&nbsp;of&nbsp;components.&nbsp;Defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+ <dl><dt><a name="-delay"><strong>delay</strong></a>(xvar, yvar)</dt><dd><tt>This&nbsp;is&nbsp;to&nbsp;supplement&nbsp;the&nbsp;SBML&nbsp;delay&nbsp;function</tt></dd></dl>
+ <dl><dt><a name="-delay_part1"><strong>delay_part1</strong></a>(yvar, last)</dt><dd><tt>Part&nbsp;of&nbsp;the&nbsp;delay&nbsp;function.&nbsp;See&nbsp;delay&nbsp;function&nbsp;for&nbsp;details</tt></dd></dl>
+ <dl><dt><a name="-delay_part2"><strong>delay_part2</strong></a>(last, delt, yvar)</dt><dd><tt>Part&nbsp;of&nbsp;the&nbsp;delay&nbsp;function.&nbsp;See&nbsp;delay&nbsp;function&nbsp;for&nbsp;details</tt></dd></dl>
+ <dl><dt><a name="-eval2"><strong>eval2</strong></a>(to_eval)</dt><dd><tt>Evaluate&nbsp;a&nbsp;string&nbsp;expression&nbsp;using&nbsp;the&nbsp;SBML_FUNCT_DICT&nbsp;dictionary<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to_eval&nbsp;(str):&nbsp;expression<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;multitype:&nbsp;evaluated&nbsp;result</tt></dd></dl>
+ <dl><dt><a name="-get_globals"><strong>get_globals</strong></a>(rfile)</dt><dd><tt>This&nbsp;function&nbsp;get&nbsp;the&nbsp;global&nbsp;variables&nbsp;from&nbsp;BioSANS&nbsp;topology&nbsp;file<br>
+&nbsp;called&nbsp;rfile.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(str):&nbsp;name&nbsp;of&nbsp;topology&nbsp;file</tt></dd></dl>
+ <dl><dt><a name="-none_to_list"><strong>none_to_list</strong></a>(xvar=None)</dt><dd><tt>Transform&nbsp;a&nbsp;None&nbsp;variable&nbsp;into&nbsp;a&nbsp;list&nbsp;[]&nbsp;to&nbsp;avoid&nbsp;dangerous<br>
+initial&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-rate_of"><strong>rate_of</strong></a>(xvar)</dt><dd><tt>This&nbsp;is&nbsp;to&nbsp;supplement&nbsp;the&nbsp;SBML&nbsp;rateOf&nbsp;function.&nbsp;The&nbsp;return&nbsp;is&nbsp;the<br>
+instantaneous&nbsp;rate&nbsp;at&nbsp;the&nbsp;current&nbsp;state&nbsp;of&nbsp;the&nbsp;system</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACTUALSP</strong> = None<br>
+<strong>CONCP</strong> = None<br>
+<strong>CONCP2</strong> = None<br>
+<strong>ORASP</strong> = None<br>
+<strong>RATESP</strong> = None<br>
+<strong>SBML_FUNCT_DICT</strong> = {'And': &lt;function And&gt;, 'INF': inf, 'NAN': nan, 'Not': &lt;function Not&gt;, 'Or': &lt;function Or&gt;, 'acos': &lt;function acos&gt;, 'acosh': &lt;function acosh&gt;, 'acot': &lt;function acot&gt;, 'acoth': &lt;function acoth&gt;, 'acsc': &lt;function acsc&gt;, ...}<br>
+<strong>SIP</strong> = None<br>
+<strong>reserve_events_words</strong> = {'delay', 'dtime', 'finish', 'status', 'status2', 't', ...}</td></tr></table>
+</body></html>

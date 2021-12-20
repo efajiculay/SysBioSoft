@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.prepcodes.process</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.prepcodes.html"><font color="#ffffff">prepcodes</font></a>.process</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cerickson%5Cdesktop%5Cbiosans%5Csrc%5Cbiosans2020%5Cprepcodes%5Cprocess.py">c:\users\erickson\desktop\biosans\src\biosans2020\prepcodes\process.py</a></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;process&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;reads&nbsp;BioSANS&nbsp;topology&nbsp;file,&nbsp;grab&nbsp;the&nbsp;components&nbsp;or&nbsp;species,<br>
+rate&nbsp;&nbsp;constants,&nbsp;stoichiometric&nbsp;&nbsp;matrix,&nbsp;&nbsp;propensity&nbsp;&nbsp;&nbsp;vector,&nbsp;algebraic<br>
+rules,&nbsp;conditional&nbsp;statements,&nbsp;and&nbsp;othe&nbsp;types&nbsp;of&nbsp;definitions&nbsp;into&nbsp;a&nbsp;dic-<br>
+tionary.&nbsp;&nbsp;This&nbsp;module&nbsp;&nbsp;calls&nbsp;the&nbsp;process_hub&nbsp;&nbsp;module&nbsp;that&nbsp;distribute&nbsp;the<br>
+tasks&nbsp;to&nbsp;other&nbsp;modules.<br>
+&nbsp;<br>
+The&nbsp;functions&nbsp;in&nbsp;this&nbsp;module&nbsp;are&nbsp;as&nbsp;follows;&nbsp;#<br>
+&nbsp;<br>
+1.&nbsp;eval_dict<br>
+2.&nbsp;tofloat<br>
+3.&nbsp;is_number<br>
+4.&nbsp;process</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="tkinter.messagebox.html">tkinter.messagebox</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-eval_dict"><strong>eval_dict</strong></a>(to_eval, loc_dict)</dt><dd><tt>This&nbsp;function&nbsp;takes&nbsp;a&nbsp;string&nbsp;expression&nbsp;and&nbsp;return&nbsp;the&nbsp;evaluated<br>
+expression&nbsp;using&nbsp;SBML_FUNCT_DICT&nbsp;and&nbsp;the&nbsp;locals()&nbsp;dictionary&nbsp;where<br>
+eval_dict&nbsp;is&nbsp;called.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to_eval&nbsp;(str):&nbsp;the&nbsp;expression&nbsp;to&nbsp;evaluate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loc_dict&nbsp;(dict):&nbsp;local&nbsp;dictionary&nbsp;from&nbsp;the&nbsp;calling&nbsp;function<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;multitype:&nbsp;result&nbsp;of&nbsp;eval&nbsp;command</tt></dd></dl>
+ <dl><dt><a name="-is_number"><strong>is_number</strong></a>(xvar)</dt><dd><tt>This&nbsp;function&nbsp;checks&nbsp;if&nbsp;a&nbsp;string&nbsp;xvar&nbsp;is&nbsp;float<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xvar&nbsp;(str):&nbsp;input&nbsp;string&nbsp;expression&nbsp;or&nbsp;number<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool:&nbsp;True&nbsp;if&nbsp;xvar&nbsp;cal&nbsp;be&nbsp;converted&nbsp;to&nbsp;float&nbsp;otherwise&nbsp;False</tt></dd></dl>
+ <dl><dt><a name="-process"><strong>process</strong></a>(rfile='Reactions', miter=1, conc_unit='molecules', v_volms=1e-20, tend=1, del_coef=10, normalize=False, logx=False, logy=False, method='CLE', tlen=1000, mix_plot=True, save=True, out_fname='', plot_show=True, time_unit='time (sec)', vary='', vary2='', mult_proc=False, implicit=False, items=None, exp_data_file=None, c_input=None)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(str):&nbsp;file&nbsp;name&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;miter&nbsp;(int,&nbsp;optional):&nbsp;Number&nbsp;of&nbsp;iteration&nbsp;or&nbsp;trajectory&nbsp;samples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;stochastic&nbsp;integration<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc_unit&nbsp;(bool,&nbsp;optional):&nbsp;"mole","molar",&nbsp;or&nbsp;"molecules"&nbsp;-&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unit&nbsp;used&nbsp;in&nbsp;any&nbsp;amount&nbsp;in&nbsp;topology&nbsp;file.&nbsp;Defaults&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"molecules".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_volms&nbsp;(float,&nbsp;optional):&nbsp;the&nbsp;volume&nbsp;of&nbsp;compartment&nbsp;used&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;simulation.&nbsp;Defaults&nbsp;to&nbsp;1.0e-20.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tend&nbsp;(float):&nbsp;trajectory&nbsp;simulation&nbsp;end&nbsp;time.&nbsp;Defaults&nbsp;to&nbsp;1.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;del_coef&nbsp;(float,&nbsp;optional):&nbsp;factor&nbsp;for&nbsp;modifying&nbsp;time&nbsp;steps&nbsp;used<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;integration/propagation&nbsp;of&nbsp;ODE.&nbsp;Defaults&nbsp;to&nbsp;10.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;normalize&nbsp;(bool,&nbsp;optional):&nbsp;True&nbsp;&nbsp;will&nbsp;&nbsp;be&nbsp;normalized&nbsp;the&nbsp;y&nbsp;axis<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;based&nbsp;on&nbsp;max&nbsp;value&nbsp;.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;logx&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;x-axis&nbsp;will&nbsp;be&nbsp;in&nbsp;log&nbsp;scale.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;logy&nbsp;(bool,&nbsp;optional):&nbsp;if&nbsp;True,&nbsp;the&nbsp;y-axis&nbsp;will&nbsp;be&nbsp;in&nbsp;log&nbsp;scale.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;method&nbsp;(str,&nbsp;optional):&nbsp;Defaults&nbsp;to&nbsp;"CLE".&nbsp;Any&nbsp;of&nbsp;the&nbsp;option&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;list&nbsp;of&nbsp;available&nbsp;method&nbsp;keywords&nbsp;is&nbsp;listed&nbsp;below;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stochastic&nbsp;(refer&nbsp;to&nbsp;section&nbsp;10.2.4)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;&nbsp;"CLE"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;tau-adaptive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;&nbsp;"CLE2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;cle-fixIntvl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3.&nbsp;&nbsp;"Gillespie_"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;Direct&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.&nbsp;&nbsp;"Tau-leaping"&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Not&nbsp;swapping&nbsp;with&nbsp;Gillespie<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.&nbsp;&nbsp;"Tau-leaping2"&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Swapping&nbsp;with&nbsp;Gillespie<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6.&nbsp;&nbsp;"Sim-TauLeap"&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;Simplified,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Swapping&nbsp;with&nbsp;Gillespie<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Deterministic&nbsp;(refer&nbsp;to&nbsp;section&nbsp;10.2.1)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7.&nbsp;&nbsp;"Euler-1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;tau-adaptive-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8.&nbsp;&nbsp;"Euler-2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molar&nbsp;(macro),&nbsp;tau-adaptive-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9.&nbsp;&nbsp;"Euler-3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Mole&nbsp;(macro),&nbsp;tau-adaptive-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10.&nbsp;"Euler2-1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;tau-adaptive-2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.&nbsp;"Euler2-2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molar&nbsp;(macro),&nbsp;tau-adaptive-2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;12.&nbsp;"Euler2-3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Mole&nbsp;(macro),&nbsp;tau-adaptive-2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13.&nbsp;"ODE-1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;using&nbsp;ode_int&nbsp;from&nbsp;scipy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;14.&nbsp;"ODE-2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molar(macro),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;using&nbsp;ode_int&nbsp;from&nbsp;scipy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15.&nbsp;"ODE-3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Mole(macro),&nbsp;using&nbsp;ode_int&nbsp;from&nbsp;scipy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;16.&nbsp;"rk4-1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;fix-interval<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;17.&nbsp;"rk4-2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molar(macro),&nbsp;fix-interval<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18.&nbsp;"rk4-3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Mole(macro),&nbsp;fix-interval<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;19.&nbsp;"rk4-1a"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molecules(micro),&nbsp;tau-adaptive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20.&nbsp;"rk4-2a"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Molar(macro),&nbsp;tau-adaptive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;21.&nbsp;"rk4-3a"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Mole(macro),&nbsp;tau-adaptive<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Linear&nbsp;Noise&nbsp;Approximation&nbsp;(refer&nbsp;to&nbsp;10.1.2&nbsp;&amp;&nbsp;10.2.2)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22.&nbsp;"LNA"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Numeric,&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;23.&nbsp;"LNA-vs"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Symbolic,&nbsp;values,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;24.&nbsp;"LNA-ks"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Symbolic,&nbsp;f(ks),&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;25.&nbsp;"LNA-xo"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Symbolic,&nbsp;f(xo),&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;26.&nbsp;"LNA2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Symbolic,&nbsp;f(xo,ks),&nbsp;Microscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;27.&nbsp;"LNA3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Symbolic,&nbsp;f(xo,ks),&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;28.&nbsp;"LNA(t)"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;COV-time-dependent,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;29.&nbsp;"LNA2(t)"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;FF-time-dependent,&nbsp;Macroscopic<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Network&nbsp;Localization&nbsp;(refer&nbsp;to&nbsp;10.1.3)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30.&nbsp;"NetLoc1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Symbolic,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31.&nbsp;"NetLoc2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Numeric,&nbsp;Macroscopic<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parameter&nbsp;estimation&nbsp;(refer&nbsp;to&nbsp;10.2.3)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;32.&nbsp;"k_est1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;MCEM,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;33.&nbsp;"k_est2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;MCEM,&nbsp;Microscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34.&nbsp;"k_est3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;NM-Diff.&nbsp;Evol.,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;35.&nbsp;"k_est4"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;NM-Diff.&nbsp;Evol.,&nbsp;Microscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;36.&nbsp;"k_est5"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Parameter&nbsp;slider/scanner<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;37.&nbsp;"k_est6"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Nelder-Mead&nbsp;(NM),&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;38.&nbsp;"k_est7"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Nelder-Mead&nbsp;(NM),&nbsp;Microscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;39.&nbsp;"k_est8"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Powell,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40.&nbsp;"k_est9"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Powell,&nbsp;Microscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;41.&nbsp;"k_est10"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;L-BFGS-B,&nbsp;Macroscopic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;42.&nbsp;"k_est11"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;L-BFGS-B,&nbsp;Microscopic<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Symbolic/Analytical&nbsp;expression&nbsp;of&nbsp;species&nbsp;(refer&nbsp;to&nbsp;10.1.1)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;43.&nbsp;"Analyt"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Pure&nbsp;Symbolic&nbsp;:f(t,xo,k)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;44.&nbsp;"Analyt-ftx"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Semi-Symbolic&nbsp;:f(t,xo)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;45.&nbsp;"SAnalyt"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Semi-Symbolic&nbsp;:f(t)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;46.&nbsp;"SAnalyt-ftk"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Semi-Symbolic&nbsp;:f(t,k)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;47.&nbsp;"Analyt2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Creates&nbsp;commands&nbsp;for&nbsp;wxmaxima<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tlen&nbsp;(int,&nbsp;optional):&nbsp;number&nbsp;of&nbsp;integration&nbsp;steps&nbsp;reported&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;final&nbsp;result.&nbsp;Defaults&nbsp;to&nbsp;1000.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mix_plot&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;all&nbsp;species&nbsp;are&nbsp;plotted&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;one&nbsp;plot/figure.&nbsp;Defaults&nbsp;to&nbsp;True.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;save&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;resulting&nbsp;trajectory&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;simulation&nbsp;will&nbsp;be&nbsp;saved&nbsp;as&nbsp;a&nbsp;file.&nbsp;Defaults&nbsp;to&nbsp;True.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;out_fname&nbsp;(str,&nbsp;optional):&nbsp;output&nbsp;filename.&nbsp;Defaults&nbsp;to&nbsp;"".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;plot_show&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;an&nbsp;image&nbsp;of&nbsp;the&nbsp;plots&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;created&nbsp;in&nbsp;the&nbsp;directory&nbsp;of&nbsp;the&nbsp;topology&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;time_unit&nbsp;(str,&nbsp;optional):&nbsp;Defaults&nbsp;to&nbsp;"time&nbsp;(sec)".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vary&nbsp;(str,&nbsp;optional):&nbsp;Varying&nbsp;initial&nbsp;concentration.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;"".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vary2&nbsp;(str,&nbsp;optional):&nbsp;[description].&nbsp;Defaults&nbsp;to&nbsp;"".<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mult_proc&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;trajectories&nbsp;will&nbsp;be&nbsp;propa-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gated&nbsp;on&nbsp;parallel.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;implicit&nbsp;(bool,&nbsp;optional):&nbsp;True&nbsp;means&nbsp;report&nbsp;in&nbsp;time&nbsp;intervals<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;similar&nbsp;to&nbsp;the&nbsp;input&nbsp;time&nbsp;intervals&nbsp;even&nbsp;if&nbsp;actual&nbsp;step&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;more&nbsp;or&nbsp;less.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;(tuple,&nbsp;optional):&nbsp;(canvas,&nbsp;scroll_x,&nbsp;scroll_y).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;exp_data_file&nbsp;([type],&nbsp;optional):&nbsp;Experimental&nbsp;data&nbsp;file&nbsp;contai-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ning&nbsp;True&nbsp;or&nbsp;accepted&nbsp;trajectories.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;c_input&nbsp;(dict,&nbsp;optional):&nbsp;[description].&nbsp;Defaults&nbsp;to&nbsp;{}.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;list&nbsp;of&nbsp;simulated&nbsp;trajecotry.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j][0]&nbsp;-&nbsp;time&nbsp;for&nbsp;trajectory&nbsp;j<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j][1][:,&nbsp;i]&nbsp;-&nbsp;trajectories&nbsp;of&nbsp;each&nbsp;component&nbsp;i</tt></dd></dl>
+ <dl><dt><a name="-tofloat"><strong>tofloat</strong></a>(val, loc_dict)</dt><dd><tt>This&nbsp;function&nbsp;attempts&nbsp;to&nbsp;convert&nbsp;the&nbsp;input&nbsp;val&nbsp;into&nbsp;float<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;val&nbsp;(str):&nbsp;the&nbsp;expression&nbsp;to&nbsp;evaluate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loc_dict&nbsp;(dict):&nbsp;local&nbsp;dictionary&nbsp;from&nbsp;the&nbsp;calling&nbsp;function<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;float:&nbsp;float&nbsp;equivalent&nbsp;of&nbsp;val</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>SBML_FUNCT_DICT</strong> = {'And': &lt;function And&gt;, 'INF': inf, 'NAN': nan, 'Not': &lt;function Not&gt;, 'Or': &lt;function Or&gt;, 'acos': &lt;function acos&gt;, 'acosh': &lt;function acosh&gt;, 'acot': &lt;function acot&gt;, 'acoth': &lt;function acoth&gt;, 'acsc': &lt;function acsc&gt;, ...}</td></tr></table>
+</body></html>
