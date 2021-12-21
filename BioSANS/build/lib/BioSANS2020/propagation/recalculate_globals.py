@@ -56,6 +56,7 @@ def rate_of(xvar):
     rate = (CONCP[-1][indx] - CONCP[-2][indx]) / delt
     return rate
 
+
 SBML_FUNCT_DICT['rateOf'] = rate_of
 
 
@@ -114,6 +115,9 @@ def delay(xvar, yvar):
             return CONCP[0][SIP.index(xvar)]
 
     return CONCP[SIP.index(ACTUALSP)]
+
+
+SBML_FUNCT_DICT['delay'] = delay
 
 
 def none_to_list(xvar=None):

@@ -489,8 +489,7 @@ def process(
     except Exception as error:
         print(c_input)
         print(error)
-        message_upon_error.showinfo(
+        message_upon_error.showerror(
             "showinfo",
             "Check your topology files for missing species \
                 in reaction and concentration tag : " + str(error))
-                

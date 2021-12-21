@@ -557,7 +557,8 @@ def rungek4a_int(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                 delt, eps, yscal, sp_comp, ks_dict, conc, r_dict,
                 p_dict, stch_var, tnow, n_sp, molar)
             tnow = tnow + dtime
-            apply_rules(conc, yconc)
+            # apply_rules(conc, yconc)
+            apply_rules(conc, yconc, tnew, s_list, slabels)
             if tnow > tvar[tindex]:
                 tnow = tnow - dtime
                 dtime = tvar[tindex] - tnow
@@ -565,7 +566,8 @@ def rungek4a_int(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                     sp_comp, ks_dict, y_old, r_dict, p_dict, stch_var,
                     tnow, dtime, n_sp, molar)
                 delt = 5 * dtime
-                apply_rules(conc, yconc)
+                # apply_rules(conc, yconc)
+                apply_rules(conc, yconc, tnew, s_list, slabels)
                 tindex = tindex + 1
             s_list.append([conc[a] for a in sp_comp])
             tnew.append(tnow)
@@ -581,7 +583,8 @@ def rungek4a_int(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                 delt, eps, yscal, sp_comp, ks_dict, conc, r_dict, p_dict,
                 stch_var, tnow, n_sp, molar)
             tnow = tnow + dtime
-            apply_rules(conc, yconc)
+            # apply_rules(conc, yconc)
+            apply_rules(conc, yconc, tnew, s_list, slabels)
             if tnow > tvar[tindex]:
                 tnow = tnow - dtime
                 dtime = tvar[tindex] - tnow
@@ -589,7 +592,8 @@ def rungek4a_int(tvar, sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
                     sp_comp, ks_dict, y_old, r_dict, p_dict, stch_var,
                     tnow, dtime, n_sp, molar)
                 delt = 5 * dtime
-                apply_rules(conc, yconc)
+                # apply_rules(conc, yconc)
+                apply_rules(conc, yconc, tnew, s_list, slabels)
                 s_list.append([conc[a] for a in sp_comp])
                 tnew.append(tnow)
                 tindex = tindex + 1

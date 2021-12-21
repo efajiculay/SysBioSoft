@@ -359,7 +359,7 @@ def Or(*xvar):
     """returns True if at least one value in xvar is True else False"""
     for yvar in xvar:
         # if yvar == True:
-        if not yvar:
+        if yvar:
             return True
     return False
 
