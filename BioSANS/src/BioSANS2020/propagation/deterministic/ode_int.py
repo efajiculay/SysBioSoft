@@ -179,12 +179,15 @@ def ode_int(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
     # for x in globals2.MODIFIED:
         # print(x, globals2.MODIFIED[x],222)
 
+    slabels = list(sp_comp.keys())
     yconc = {xvar: conc[xvar] for xvar in conc}
     sconc = {xvar: conc[xvar] for xvar in conc}
-    apply_rules(sconc, yconc)
     straj_list = [[sconc[z] for z in sp_comp]]
+    apply_rules(sconc, yconc, [0], straj_list, slabels)
 
     t_index = 0
+    gtime = []
+    gtime.append(tvar[t_index])
     while t_index < len(tvar) - 1:
         zrow = odeint(
             ode_model, straj_list[-1], [tvar[t_index], tvar[t_index + 1]],
@@ -194,7 +197,8 @@ def ode_int(conc, tvar, sp_comp, ks_dict, r_dict, p_dict,
         for spi in sp_comp:
             sconc[spi] = zrow[-1][ind]
             ind = ind + 1
-        apply_rules(sconc, yconc)
+        apply_rules(sconc, yconc, gtime, straj_list, slabels)
         straj_list.append([sconc[z] for z in sp_comp])
         t_index = t_index + 1
+        gtime.append(tvar[t_index])
     return np_array(straj_list)

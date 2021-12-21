@@ -27,7 +27,7 @@ cdirs = glob.glob("./0*")
 start =  1
 
 def run_this(ih):
-	globals2.init()
+	globals2.init(globals2)
 
 	cdir = cdirs[ih]
 	method = "rk4-3" #"Euler-3"#
@@ -108,10 +108,10 @@ def run_this(ih):
 			process(
 				rfile    	= topo,
 				miter		= 1,
-				inMolar		= FileIn,
-				Vm 			= Volume,
-				tn			= tend ,
-				delX		= delx,
+				conc_unit		= FileIn,
+				v_volms 			= Volume,
+				tend			= tend ,
+				del_coef		= delx,
 				normalize	= False,
 				logx		= False,
 				logy		= False,
@@ -121,7 +121,7 @@ def run_this(ih):
 				save		= True,
 				out_fname	= outf,
 				plot_show	= False,
-				Cinput		= {},
+				c_input		= {},
 				vary 		= "",
 				mult_proc	= False,
 				implicit    = True,

@@ -10,14 +10,14 @@ from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_t
 from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.myglobal import proc_global as proc_global
 from BioSANS2020.propagation.recalculate_globals import get_globals
-globals2.init()
+globals2.init(globals2)
 
 if __name__ == '__main__':
 
 	start = 1
 	ends = 2
 	for ih in range(start-1,ends):
-		proc_global.init()
+		proc_global.init(proc_global)
 
 	#crucials = [14, 33, 34, 38, 44]
 	#for val in crucials:
@@ -57,10 +57,10 @@ if __name__ == '__main__':
 				process(
 					rfile    	= topo,
 					miter		= 1,
-					inMolar		= FileIn,
-					Vm 			= Volume,
-					tn			= 50 ,
-					delX		= 1,
+					conc_unit	= FileIn,
+					v_volms 	= Volume,
+					tend		= 50 ,
+					del_coef	= 1,
 					normalize	= False,
 					logx		= False,
 					logy		= False,
@@ -70,12 +70,12 @@ if __name__ == '__main__':
 					save		= False,
 					out_fname	= None,
 					plot_show	= False,
-					Cinput		= {},
+					c_input		= {},
 					vary 		= "",
 					mult_proc	= False,
 					implicit    = True,
 					items		= 0,
-					expDataFile = EdataFile
+					exp_data_file = EdataFile
 				)		
 			)	
 			print("\n")

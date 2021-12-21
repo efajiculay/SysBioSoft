@@ -65,7 +65,7 @@ OPERS_LIST2 = {
 
 
 def eval_exp(xvar):
-    return eval(xvar, globals(), SBML_FUNCT_DICT)
+    return eval(xvar, SBML_FUNCT_DICT)
 
 
 def get_exponent_sp(key, modk):
