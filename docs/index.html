@@ -9,6 +9,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		<script> 
 
+
 			const doc_pages = new Set([
 				"BioSANS2020.analysis.numeric.sample_points.html",
 				"BioSANS2020.analysis.numeric.transform_data.html",
@@ -54,6 +55,7 @@
 			$(document).ready(function(){
 
 
+				$("li.toctree-l2").find("li.toctree-l2").find('a').siblings('ul').toggle();
 				$("li.toctree-l2").find('a').click(function(event){
 					event.preventDefault();
 					$(this).siblings('ul').toggle();
@@ -74,7 +76,7 @@
 		<style type="text/css">
 			.modal-iframe{
 				display: block;
-				background: #000;
+				background: rgba(145, 25, 25, 0.623);
 				border: none;
 				height: 100vh;
 				width: 100%;
@@ -104,21 +106,51 @@
 						<li class="list-group-item toctree-l2">
 							<a class="reference internal" href="BioSANS2020/index.html">
 								<code class="xref py py-mod docutils literal notranslate">
-									<span class="pre">Video Tutorials</span>
+									<span class="pre">Frequently asked questions</span>
 								</code>
 							</a>
 						</li>
 						<li class="list-group-item toctree-l2">
-							<a class="reference internal" href="BioSANS2020/index.html">
+							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
-									<span class="pre">Simulations</span>
+									<span class="pre">Use case/examples</span>
 								</code>
 							</a>
+							<ul>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Symbolic</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Deterministic</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Parameter estimation</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Stochastic</span>
+										</code>
+									</a>
+								</li>
+							</ul>
 						</li>
 						<li class="list-group-item toctree-l2">
 							<a class="reference internal" href="BioSANS2020/index.html">
 								<code class="xref py py-mod docutils literal notranslate">
-									<span class="pre">BioSANS2020 modules</span>
+									<span id="biosans_root" class="pre">BioSANS2020 reference</span>
 								</code>
 							</a>
 							<ul>
