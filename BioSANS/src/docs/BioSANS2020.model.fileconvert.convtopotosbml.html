@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.model.fileconvert.convtopotosbml</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.model.html"><font color="#ffffff">model</font></a>.<a href="BioSANS2020.model.fileconvert.html"><font color="#ffffff">fileconvert</font></a>.convtopotosbml</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;module&nbsp;is&nbsp;the&nbsp;convtopotosbml&nbsp;module<br>
+&nbsp;<br>
+The&nbsp;sole&nbsp;purpose&nbsp;of&nbsp;this&nbsp;module&nbsp;is&nbsp;to&nbsp;faciliate&nbsp;conversion&nbsp;of&nbsp;topology<br>
+files&nbsp;into&nbsp;SBML&nbsp;files.&nbsp;Currently,&nbsp;this&nbsp;module&nbsp;still&nbsp;have&nbsp;a&nbsp;lot&nbsp;of<br>
+problems&nbsp;and&nbsp;the&nbsp;converted&nbsp;file&nbsp;may&nbsp;not&nbsp;run&nbsp;properly.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="BioSANS2020.myglobal.mglobals.html">BioSANS2020.myglobal.mglobals</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-topo_to_sbml"><strong>topo_to_sbml</strong></a>(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms, items=None, molar=False, rfile=None)</dt><dd><tt>This&nbsp;function&nbsp;helps&nbsp;in&nbsp;the&nbsp;conversion&nbsp;of&nbsp;topology&nbsp;file&nbsp;to&nbsp;SBML.<br>
+Consider&nbsp;a&nbsp;file&nbsp;containing&nbsp;the&nbsp;following&nbsp;reaction&nbsp;topology;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&lt;=&gt;&nbsp;B,&nbsp;0.5,&nbsp;0.3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;B&nbsp;=&gt;&nbsp;2&nbsp;C,&nbsp;0.04<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@CONCENTRATION<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A,&nbsp;100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;B,&nbsp;90<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C,&nbsp;80<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;components&nbsp;where&nbsp;the&nbsp;key&nbsp;is&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;component&nbsp;and&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;set&nbsp;of&nbsp;integers&nbsp;that&nbsp;tell<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;rank&nbsp;or&nbsp;order&nbsp;of&nbsp;that&nbsp;reaction&nbsp;as&nbsp;it&nbsp;appears&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;file.&nbsp;For&nbsp;the&nbsp;above&nbsp;topology<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_vals&nbsp;:&nbsp;dictioary&nbsp;of&nbsp;parameters&nbsp;where&nbsp;the&nbsp;key&nbsp;is&nbsp;the&nbsp;line&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;file&nbsp;and&nbsp;the&nbsp;value&nbsp;is&nbsp;the&nbsp;list&nbsp;of&nbsp;parameter&nbsp;found<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i.e.&nbsp;for&nbsp;the&nbsp;above&nbsp;topology;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_vals&nbsp;=&nbsp;{0:&nbsp;[0.5,&nbsp;0.3],&nbsp;1:&nbsp;[0.04]}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration&nbsp;i.e.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;=&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;90.0,&nbsp;'C':&nbsp;80}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_react&nbsp;:&nbsp;dictionary&nbsp;where&nbsp;the&nbsp;key&nbsp;is&nbsp;the&nbsp;line&nbsp;in&nbsp;the&nbsp;file&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;reactants&nbsp;where&nbsp;the&nbsp;key<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;component&nbsp;and&nbsp;the&nbsp;value&nbsp;is&nbsp;its&nbsp;stoichiometric<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coefficient&nbsp;in&nbsp;that&nbsp;line&nbsp;i.e.&nbsp;for&nbsp;the&nbsp;above&nbsp;topology;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_react&nbsp;=&nbsp;{0:&nbsp;{'A':&nbsp;1},&nbsp;1:&nbsp;{'B':&nbsp;3}}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_prods&nbsp;:&nbsp;dictionary&nbsp;where&nbsp;the&nbsp;key&nbsp;is&nbsp;the&nbsp;line&nbsp;in&nbsp;the&nbsp;file&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;products&nbsp;where&nbsp;the&nbsp;key<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;component&nbsp;and&nbsp;the&nbsp;value&nbsp;is&nbsp;its&nbsp;stoichiometric<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;coefficient&nbsp;in&nbsp;that&nbsp;line&nbsp;i.e.&nbsp;for&nbsp;the&nbsp;above&nbsp;topology;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_prods&nbsp;=&nbsp;{0:&nbsp;{'B':&nbsp;1},&nbsp;1:&nbsp;{'C':&nbsp;2}}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vbig&nbsp;:&nbsp;not&nbsp;used&nbsp;but&nbsp;pertains&nbsp;to&nbsp;stoichiometric&nbsp;matrix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_volms&nbsp;:&nbsp;volume&nbsp;of&nbsp;compartment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;:&nbsp;True&nbsp;if&nbsp;conc.&nbsp;is&nbsp;in&nbsp;molar&nbsp;otherwise&nbsp;False<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;:&nbsp;path&nbsp;of&nbsp;the&nbsp;topology&nbsp;file&nbsp;+&nbsp;name&nbsp;of&nbsp;topology&nbsp;file</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>UNIT_KIND_ITEM</strong> = 12<br>
+<strong>UNIT_KIND_LITER</strong> = 17<br>
+<strong>UNIT_KIND_MOLE</strong> = 23<br>
+<strong>UNIT_KIND_SECOND</strong> = 28</td></tr></table>
+</body></html>
