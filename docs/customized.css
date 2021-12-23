@@ -1,0 +1,16 @@
+.modal-iframe{
+	display: block;
+	background: white;
+	border: none;
+	height: 100vh;
+	width: 100%;
+}
+
+.my-bgcolor{
+	background-color: #6495ED			
+}
+
+.encapsulate{
+	  border-style: solid;
+	  border-color: red;	
+}

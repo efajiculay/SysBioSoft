@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: BioSANS2020
-Version: 0.2.0
+Version: 0.2.1
 Summary: Symbolic and Numeric Software for Systems Biology
 Home-page: https://github.com/efajiculay/SysBioSoft
 Author: Erickson Erigio Fajiculay
@@ -40,7 +40,7 @@ Description: # BioSANS - Symbolic and Numeric Software for Systems Biology
         4. etc.
         
 Platform: UNKNOWN
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Operating System :: OS Independent
