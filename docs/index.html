@@ -115,7 +115,12 @@
 					window.location.href = $(this).attr("href");
 				});
 				
-
+				$("#Stut_1").click(function(event){
+					event.preventDefault();
+					file_html = "https://www.youtube.com/embed/a3ICNMQW7Ok?controls=1";
+					$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+"/>");
+				});
+				
 			});
 
 		</script>
@@ -285,6 +290,13 @@
 								<li class="toctree-l3">
 									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">What is a topology file?</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">How to run basic simulation?</span>
 										</code>
 									</a>
@@ -300,13 +312,6 @@
 									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">How to run stochastic estimation?</span>
-										</code>
-									</a>
-								</li>
-								<li class="toctree-l3">
-									<a class="reference internal" href="">
-										<code class="xref py py-mod docutils literal notranslate">
-											<span class="pre">What is a topology file?</span>
 										</code>
 									</a>
 								</li>
@@ -333,12 +338,21 @@
 								</code>
 							</a>
 							<ul>
-								<li class="toctree-l3">
+								<li class="toctree-l2">
 									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">Symbolic</span>
 										</code>
 									</a>
+									<ul>
+										<li class="toctree-l3">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span id="Stut_1" class="pre">Tutorial 1</span>
+												</code>
+											</a>
+										</li>
+									</ul>
 								</li>
 								<li class="toctree-l3">
 									<a class="reference internal" href="">

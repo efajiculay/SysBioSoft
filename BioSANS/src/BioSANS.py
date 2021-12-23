@@ -189,8 +189,8 @@ def create_file(itups, ftype):
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert(
-            'insert', "#REACTIONS, Volume = 1, tend = 100, steps = 100, \
-            FileUnit = molar\n")
+            'insert', "#REACTIONS, Volume = 1, tend = 100, steps = 100, "
+            +"FileUnit = molar\n")
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert('insert', "\n")

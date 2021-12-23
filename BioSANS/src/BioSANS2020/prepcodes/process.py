@@ -314,7 +314,7 @@ def process(
                 # pass
             elif row[0] == "@":
                 last = "@"
-            elif row.strip() == "Function_Definitions:":
+            elif row.strip().upper() == "FUNCTION_DEFINITIONS:":
                 last = "Function_Definitions"
 
         file.close()
