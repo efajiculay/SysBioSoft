@@ -66,7 +66,10 @@
 					event.preventDefault();
 					file_html = $(this).text()+".html";
 					if (doc_pages.has(file_html)){
-						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+" />")
+						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+" />");
+					}else if(file_html == "Sphinx base documentation.html"){
+						$(".modal-body").find(".modal-iframe")
+						.replaceWith("<iframe class='modal-iframe' src='https://efajiculay.github.io/biosans.docs/' />");
 					}
 				});
 
@@ -97,14 +100,46 @@
 					<div>
 					<ul class="list-group">
 						<li class="list-group-item toctree-l2">
-							<a class="reference internal" href="BioSANS2020/index.html">
+							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
-									<span class="pre">Installation</span>
+									<span class="pre">Download BioSANS</span>
+								</code>
+							</a>
+							
+							<ul>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Windows</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Ubuntu</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">MacOS</span>
+										</code>
+									</a>
+								</li>
+							</ul>													
+							
+						</li>
+						<li class="list-group-item toctree-l2">
+							<a class="reference internal" href="">
+								<code class="xref py py-mod docutils literal notranslate">
+									<span class="pre">Installation steps</span>
 								</code>
 							</a>
 						</li>
 						<li class="list-group-item toctree-l2">
-							<a class="reference internal" href="BioSANS2020/index.html">
+							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
 									<span class="pre">Frequently asked questions</span>
 								</code>
@@ -148,35 +183,35 @@
 							</ul>
 						</li>
 						<li class="list-group-item toctree-l2">
-							<a class="reference internal" href="BioSANS2020/index.html">
+							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
 									<span id="biosans_root" class="pre">BioSANS2020 reference</span>
 								</code>
 							</a>
 							<ul>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/analysis/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.analysis</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/analysis/numeric/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.analysis.numeric</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/analysis/numeric/sample_points/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.analysis.numeric.sample_points</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/analysis/numeric/transform_data/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.analysis.numeric.transform_data</span>
 														</code>
@@ -185,14 +220,14 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/analysis/plotting/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.analysis.plotting</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/analysis/plotting/plot_traj/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.analysis.plotting.plot_traj</span>
 														</code>
@@ -203,14 +238,14 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/cli_functs/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.cli_functs</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/cli_functs/ssl_calls/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.cli_functs.ssl_calls</span>
 												</code>
@@ -219,28 +254,28 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/gui_functs/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.gui_functs</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/gui_functs/draw_figure/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.gui_functs.draw_figure</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/gui_functs/prepare_canvas/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.gui_functs.prepare_canvas</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/gui_functs/scrollable_text/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.gui_functs.scrollable_text</span>
 												</code>
@@ -249,14 +284,14 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/math_functs/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.math_functs</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/math_functs/sbml_math/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.math_functs.sbml_math</span>
 												</code>
@@ -265,28 +300,28 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/model/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.model</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/model/fileconvert/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.model.fileconvert</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/model/fileconvert/convtopotosbml/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.model.fileconvert.convtopotosbml</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/model/fileconvert/process_sbml/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.model.fileconvert.process_sbml</span>
 														</code>
@@ -295,14 +330,14 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/model/ode_parse/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.model.ode_parse</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/model/ode_parse/ode_extract/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.model.ode_parse.ode_extract</span>
 														</code>
@@ -311,28 +346,28 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/model/param_est/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.model.param_est</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/model/param_est/my_mcem/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.model.param_est.my_mcem</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/model/param_est/param_estimate/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.model.param_est.param_estimate</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/model/param_est/param_slider/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.model.param_est.param_slider</span>
 														</code>
@@ -341,14 +376,14 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/model/new_file/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.model.new_file</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/model/topology_view/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.model.topology_view</span>
 												</code>
@@ -357,21 +392,21 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/myglobal/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.myglobal</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/myglobal/mglobals/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.myglobal.mglobals</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/myglobal/proc_global/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.myglobal.proc_global</span>
 												</code>
@@ -380,21 +415,21 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/prepcodes/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.prepcodes</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/prepcodes/process/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.prepcodes.process</span> 
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/prepcodes/processes_hub/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.prepcodes.processes_hub</span>
 												</code>
@@ -403,49 +438,49 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/propagation/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.propagation</span>
 										</code>
 									</a>
 									<ul>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/deterministic/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.deterministic</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/deterministic/euler_mod/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.deterministic.euler_mod</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/deterministic/lna_approx/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.deterministic.lna_approx</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/deterministic/lna_function_of_time/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.deterministic.lna_function_of_time</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/deterministic/ode_int/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.deterministic.ode_int</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/deterministic/runge_kutta4/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.deterministic.runge_kutta4</span>
 														</code>
@@ -454,42 +489,42 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/stochastic/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.stochastic</span>
 												</code>
 											</a>
 											<ul>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/stochastic/gillespie_ssa/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.stochastic.gillespie_ssa</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/stochastic/mystiffcle/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.stochastic.mystiffcle</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/stochastic/mytauleap/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.stochastic.mytauleap</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/stochastic/tau_leaping/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.stochastic.tau_leaping</span>
 														</code>
 													</a>
 												</li>
 												<li class="toctree-l4">
-													<a class="reference internal" href="BioSANS2020/propagation/stochastic/tau_leaping2/index.html">
+													<a class="reference internal" href="">
 														<code class="xref py py-mod docutils literal notranslate">
 															<span class="pre">BioSANS2020.propagation.stochastic.tau_leaping2</span>
 														</code>
@@ -498,21 +533,21 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/symbolic/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.symbolic</span>
 												</code>
 											</a>
 										<ul>
 											<li class="toctree-l4">
-												<a class="reference internal" href="BioSANS2020/propagation/symbolic/analytical_sol/index.html">
+												<a class="reference internal" href="">
 													<code class="xref py py-mod docutils literal notranslate">
 														<span class="pre">BioSANS2020.propagation.symbolic.analytical_sol</span>
 													</code>
 												</a>
 											</li>
 											<li class="toctree-l4">
-												<a class="reference internal" href="BioSANS2020/propagation/symbolic/lna_approx2/index.html">
+												<a class="reference internal" href="">
 													<code class="xref py py-mod docutils literal notranslate">
 														<span class="pre">BioSANS2020.propagation.symbolic.lna_approx2</span>
 													</code>
@@ -521,28 +556,28 @@
 											</ul>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/create_wxmaxima_command/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.create_wxmaxima_command</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/law_of_localization/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.law_of_localization</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/propensity/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.propensity</span>
 												</code>
 											</a>
 										</li>
 										<li class="toctree-l3">
-											<a class="reference internal" href="BioSANS2020/propagation/recalculate_globals/index.html">
+											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span class="pre">BioSANS2020.propagation.recalculate_globals</span>
 												</code>
@@ -551,34 +586,41 @@
 									</ul>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/BioSANS/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.BioSANS</span>
 										</code>
 									</a>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/BioSSL/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.BioSSL</span>
 										</code>
 									</a>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/RunBioSANS/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">BioSANS2020.RunBioSANS</span>
 										</code>
 									</a>
 								</li>
 								<li class="toctree-l2">
-									<a class="reference internal" href="BioSANS2020/__main__/index.html">
+									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 										<span class="pre">BioSANS2020.__main__</span>
 										</code>
 									</a>
 								</li>
 							</ul>
+						</li>
+						<li class="list-group-item toctree-l2">
+							<a class="reference internal" href="https://efajiculay.github.io/biosans.docs/">
+								<code class="xref py py-mod docutils literal notranslate">
+									<span class="pre sphinx">Sphinx base documentation</span>
+								</code>
+							</a>
 						</li>
 					</ul>
 					</div>  
