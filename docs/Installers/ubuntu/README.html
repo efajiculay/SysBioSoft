@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: Consolas,"courier new";
+				color: black;
+				padding: 2px;
+				font-size: 100%;
+			}
+		</style>
+	</head>
+	<pre>
+	## The following are BioSANS installer for Ubuntu
+	
+
+	### Main installers:
+	
+	1) Installation using pip - preferred way(Ubuntu terminal)
+	
+	In most cases, Ubuntu comes with python and recently python 3.8 is default in Ubuntu.
+	We can simply Install BioSANS by running the following command in Ubuntu Terminal;  
+
+	For anaconda users:
+
+		Create new conda envinroment where you can install BioSANS
+
+			<code>conda create -n BioSANS python==3.8.8</code>
+		   
+		Activate conda environment
+
+			<code>activate BioSANS</code>
+		   
+		Install BioSANS using pip
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+
+	For non anaconda users:
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+			
+	After the installation, you can launcehd BioSANS GUI by any of the following terminal commands;
+	   
+		<code>BioSANS</code> 
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code> 
+	   
+	To launched BioSSL which is a command line structured simulation langguage associated with BioSANS;
+	Issue any of the following commands;
+	   
+		<code>BioSSL</code> 
+		<code>python3 -m BioSANS2020.BioSSL</code>
+
+	To uninstall BioSANS, issue the following command
+
+	   <code>pip uninstall BioSANS2020</code>
+   
+		   
+	2) Installation using executable - we provide an executable to install BioSANS but still requires the terminal.
+
+		BioSANS_Ubuntu_Installer - just cd to the directory of this executable after you download it and type;
+
+		<code>./Ubuntu_Installer</code>
+	   
+	   This will also create a desktop shortcut to run BioSANS
+	   
+	   
+	3) If the above installation procedure fails
+	
+		#The following script are optional
+		<code>sudo apt update</code>
+		<code>sudo apt install software-properties-common</code>
+		#sudo add-apt-repository ppa:deadsnakes/ppa   -might not be needed in most cases
+
+		#If python3.7 or higher is not installed (normally already have 3.8 by default)
+		<code>sudo apt install python3</code>
+		<code>sudo apt-get install python3-tk</code>
+		<code>sudo apt install python3-distutils</code>
+
+		#Installing pip here
+		<code>sudo apt install curl</code>
+		<code>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</code>
+		<code>python3 get-pip.py</code>
+
+		#Installing BioSANS
+		<code>python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+		#Locating BioSANS installation directory
+		<code>python3 -m pip install show BioSANS2020</code>
+
+		# to run BioSANS
+		cd "to the location directory"
+		<code>python3 BioSANS.py</code>
+
+		#You may also run BioSANS using any of the following commands
+		<code>BioSANS</code>
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code>
+	</pre>
+</html>

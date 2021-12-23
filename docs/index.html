@@ -51,9 +51,8 @@
 				"BioSANS2020.propagation.symbolic.lna_approx2.html",
 				"BioSANS2020.RunBioSANS.html"				
 			]);
-
+			
 			$(document).ready(function(){
-
 
 				$("li.toctree-l2").find("li.toctree-l2").find('a').siblings('ul').toggle();
 				$("li.toctree-l2").find('a').click(function(event){
@@ -61,17 +60,52 @@
 					$(this).siblings('ul').toggle();
 				});
 
-
 				$(".pre").click(function(event){
 					event.preventDefault();
 					file_html = $(this).text()+".html";
 					if (doc_pages.has(file_html)){
-						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+" />");
+						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=pydoc_out/"+file_html+" />");
 					}else if(file_html == "Sphinx base documentation.html"){
 						$(".modal-body").find(".modal-iframe")
 						.replaceWith("<iframe class='modal-iframe' src='https://efajiculay.github.io/biosans.docs/' />");
 					}
+				});			
+							
+				$(".window_installer").click(function(e) {
+					e.preventDefault(); 
+					file = $(this).text()
+					if (file != "README.html"){
+						window.location.href = "Installers/windows/"+file;
+					}else{
+						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=Installers/windows/"+file+" />");
+					}
 				});
+				
+				$(".ubuntu_installer").click(function(e) {
+					e.preventDefault(); 
+					file = $(this).text()
+					if (file != "README.html"){
+						window.location.href = "Installers/ubuntu/"+file;
+					}else{
+						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=Installers/ubuntu/"+file+" />");
+					}
+				});
+				
+				$(".macos_installer").click(function(e) {
+					e.preventDefault(); 
+					file = $(this).text()
+					if (file != "README.html"){
+						window.location.href = "Installers/macos/"+file;
+					}else{
+						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=Installers/macos/"+file+" />");
+					}
+				});
+				
+				//$("#windows_id").toggle();
+				$("#ubuntu_id").toggle();
+				$("#macos_id").toggle();
+			
+				
 
 			});
 
@@ -79,7 +113,7 @@
 		<style type="text/css">
 			.modal-iframe{
 				display: block;
-				background: rgba(145, 25, 25, 0.623);
+				background: white;
 				border: none;
 				height: 100vh;
 				width: 100%;
@@ -105,14 +139,54 @@
 									<span class="pre">Download BioSANS</span>
 								</code>
 							</a>
-							
 							<ul>
 								<li class="toctree-l3">
 									<a class="reference internal" href="">
 										<code class="xref py py-mod docutils literal notranslate">
 											<span class="pre">Windows</span>
 										</code>
-									</a>
+									</a>						
+									<ul id="windows_id">
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="glyphicon glyphicon-download"></span>
+													<span class="pre window_installer">BioSANS_installer_py3.7.4_x86_32.zip</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="glyphicon glyphicon-download"></span>
+													<span class="pre window_installer">BioSANS_installer_py3.7.4_x86_64.zip</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="glyphicon glyphicon-download"></span>
+													<span class="pre window_installer">BioSANS_installer_py3.9.5_amd32.zip</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="glyphicon glyphicon-download"></span>
+													<span class="pre window_installer">BioSANS_installer_py3.9.5_amd64.zip</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="pre window_installer">README.html</span>
+												</code>
+											</a>
+										</li>
+									</ul>																									
 								</li>
 								<li class="toctree-l3">
 									<a class="reference internal" href="">
@@ -120,6 +194,23 @@
 											<span class="pre">Ubuntu</span>
 										</code>
 									</a>
+									<ul id="ubuntu_id">
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="glyphicon glyphicon-download"></span>
+													<span class="pre ubuntu_installer">BioSANS_Ubuntu_Installer</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="pre ubuntu_installer">README.html</span>
+												</code>
+											</a>
+										</li>
+									</ul>
 								</li>
 								<li class="toctree-l3">
 									<a class="reference internal" href="">
@@ -127,14 +218,30 @@
 											<span class="pre">MacOS</span>
 										</code>
 									</a>
+									<ul id="macos_id">
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="glyphicon glyphicon-download"></span>
+													<span class="pre macos_installer">BioSANS_MacOSX_installer</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l4">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span class="pre macos_installer">README.html</span>
+												</code>
+											</a>
+										</li>
+									</ul>
 								</li>
-							</ul>													
-							
+							</ul>																	
 						</li>
 						<li class="list-group-item toctree-l2">
 							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
-									<span class="pre">Installation steps</span>
+									<span class="pre">Installation tutorials</span>
 								</code>
 							</a>
 						</li>
@@ -144,11 +251,55 @@
 									<span class="pre">Frequently asked questions</span>
 								</code>
 							</a>
+							<ul>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">How to run basic simulation?</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">How to run parameter estimation?</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">How to run stochastic estimation?</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">What is a topology file?</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">What is an ODE file?</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a class="reference internal" href="">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">What is a tab delimited file?</span>
+										</code>
+									</a>
+								</li>
+							</ul>
 						</li>
 						<li class="list-group-item toctree-l2">
 							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
-									<span class="pre">Use case/examples</span>
+									<span class="pre">Use case/examples tutorials</span>
 								</code>
 							</a>
 							<ul>
@@ -628,7 +779,7 @@
 
 				<div class="col-sm-8" style="background-color:lavenderblush;">
 					<div class="modal-body">
-						<iframe class="modal-iframe" src="BioSANS2020.BioSANS.html" />
+						<iframe class="modal-iframe" src="pydoc_out/BioSANS2020.BioSANS.html" />
 					</div>	
 				</div>
 			</div> 

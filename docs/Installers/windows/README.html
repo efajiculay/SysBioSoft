@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: Consolas,"courier new";
+				color: black;
+				padding: 2px;
+				font-size: 100%;
+			}
+		</style>
+	</head>
+	<pre>
+	## The following are BioSANS installer for windows
+	
+
+	### Main installers:
+	
+	Executable installer(Double click executable installer)
+
+	1) BioSANS_installer_py3.9.5_amd32.exe   - for windows > 7
+	2) BioSANS_installer_py3.9.5_amd64.exe   - for windows > 7
+	3) BioSANS_installer_py3.7.4_x86_64.exe  - for windows > XP
+	4) BioSANS_installer_py3.7.4_x86_32.exe  - for windows > XP
+	
+	Installation using pip - preferred way(python/anaconda terminal)
+	
+		for windows version > XP where python >= 3.7 is installed  
+
+	For anaconda terminal users:
+
+		Create new conda envinroment where you can install BioSANS
+
+			<code>conda create -n BioSANS python==3.8.8</code>
+		   
+		Activate conda environment
+
+			<code>activate BioSANS</code>
+		   
+		Install BioSANS using pip
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+
+	For python terminal users:
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+			
+	After the installation, you can launcehd BioSANS GUI by any of the following terminal commands;
+	   
+		<code>BioSANS</code> 
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code> 
+	   
+	To launched BioSSL which is a command line structured simulation langguage associated with BioSANS;
+	Issue any of the following commands;
+	   
+		<code>BioSSL</code> 
+		<code>python3 -m BioSANS2020.BioSSL</code>
+
+	To uninstall BioSANS, issue the following command
+
+	   <code>pip uninstall BioSANS2020</code>
+
+	   
+	### Uninstallation procedure:
+
+	For installers 1-4, Uninstall the corresponding python version in the control panel <br/>
+	For installed using pip, type the following command.
+
+		   <code>pip uninstall BioSANS2020</code>
+	</pre>
+</html>
