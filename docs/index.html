@@ -117,6 +117,12 @@
 				
 				$("#Stut_1").click(function(event){
 					event.preventDefault();
+					file_html = "https://www.youtube.com/embed/qt3e6Uw5F2g";
+					$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+"/>");
+				});
+				
+				$("#Stut_2").click(function(event){
+					event.preventDefault();
 					file_html = "https://www.youtube.com/embed/nBODhuZ2aSg";
 					$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+"/>");
 				});
@@ -349,6 +355,13 @@
 											<a class="reference internal" href="">
 												<code class="xref py py-mod docutils literal notranslate">
 													<span id="Stut_1" class="pre">Tutorial 1</span>
+												</code>
+											</a>
+										</li>
+										<li class="toctree-l3">
+											<a class="reference internal" href="">
+												<code class="xref py py-mod docutils literal notranslate">
+													<span id="Stut_2" class="pre">Tutorial 2</span>
 												</code>
 											</a>
 										</li>
