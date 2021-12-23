@@ -52,7 +52,25 @@
 				"BioSANS2020.RunBioSANS.html"				
 			]);
 			
+			function getDocHeight(doc) {
+				doc = doc || document;
+				var body = doc.body, html = doc.documentElement;
+				var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+				return height;
+			}
+			
+			function setIframeHeight(id) {
+				var ifrm = document.getElementById(id);
+				var doc = ifrm.contentDocument? ifrm.contentDocument:ifrm.contentWindow.document;
+				ifrm.style.visibility = 'hidden';
+				ifrm.style.height = "10px"; 
+				ifrm.style.height = getDocHeight( doc ) + 4 + "px";
+				ifrm.style.visibility = 'visible';
+			}
+			
 			$(document).ready(function(){
+			
+				MyIFrame = $(".modal-body").find(".modal-iframe")
 
 				$("li.toctree-l2").find("li.toctree-l2").find('a').siblings('ul').toggle();
 				$("li.toctree-l2").find('a').click(function(event){
@@ -64,10 +82,9 @@
 					event.preventDefault();
 					file_html = $(this).text()+".html";
 					if (doc_pages.has(file_html)){
-						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=pydoc_out/"+file_html+" />");
+						MyIFrame.attr("src", "pydoc_out/"+file_html)
 					}else if(file_html == "Sphinx base documentation.html"){
-						$(".modal-body").find(".modal-iframe")
-						.replaceWith("<iframe class='modal-iframe' src='https://efajiculay.github.io/biosans.docs/' />");
+						MyIFrame.attr("src", "https://efajiculay.github.io/biosans.docs/");
 					}
 				});			
 							
@@ -77,7 +94,7 @@
 					if (file != "README.html"){
 						window.location.href = "Installers/windows/"+file;
 					}else{
-						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=Installers/windows/"+file+" />");
+						MyIFrame.attr("src", "Installers/windows/"+file);
 					}
 				});
 				
@@ -87,7 +104,7 @@
 					if (file != "README.html"){
 						window.location.href = "Installers/ubuntu/"+file;
 					}else{
-						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=Installers/ubuntu/"+file+" />");
+						MyIFrame.attr("src", "Installers/ubuntu/"+file);
 					}
 				});
 				
@@ -97,7 +114,7 @@
 					if (file != "README.html"){
 						window.location.href = "Installers/macos/"+file;
 					}else{
-						$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src=Installers/macos/"+file+" />");
+						MyIFrame.attr("src", "Installers/macos/"+file);
 					}
 				});
 				
@@ -118,14 +135,21 @@
 				$("#Stut_1").click(function(event){
 					event.preventDefault();
 					file_html = "https://www.youtube.com/embed/qt3e6Uw5F2g";
-					$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+"/>");
+					MyIFrame.attr("src", file_html);
 				});
 				
 				$("#Stut_2").click(function(event){
 					event.preventDefault();
 					file_html = "https://www.youtube.com/embed/nBODhuZ2aSg";
-					$(".modal-body").find(".modal-iframe").replaceWith("<iframe class='modal-iframe' src="+file_html+"/>");
+					MyIFrame.attr("src", file_html);
 				});
+							
+				MyIFrame.on('load',function(){
+					$(this).height(10000)				
+				});
+				
+				alert(MyIFrame.);
+														
 				
 			});
 
@@ -850,7 +874,7 @@
 
 				<div class="col-sm-8" style="background-color:lavenderblush;">
 					<div class="modal-body">
-						<iframe class="modal-iframe" src="pydoc_out/BioSANS2020.BioSANS.html" />
+						<iframe id="my_frame" class="modal-iframe" src="pydoc_out/BioSANS2020.BioSANS.html" scrolling="no" frameborder="0" />
 					</div>	
 				</div>
 			</div> 
