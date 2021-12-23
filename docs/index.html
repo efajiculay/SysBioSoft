@@ -101,10 +101,19 @@
 					}
 				});
 				
-				//$("#windows_id").toggle();
+				$("#windows_id").toggle();
 				$("#ubuntu_id").toggle();
 				$("#macos_id").toggle();
-			
+				
+				$("#git_hub").click(function(e){
+					e.preventDefault(); 
+					window.location.href = $(this).attr("href");
+				});
+				
+				$("#test_pypi").click(function(e){
+					e.preventDefault(); 
+					window.location.href = $(this).attr("href");
+				});
 				
 
 			});
@@ -118,21 +127,42 @@
 				height: 100vh;
 				width: 100%;
 			}
+			.my-bgcolor{
+				background-color: #6495ED			
+			}
 		</style>
 	</head>
 	<body>
-		<div class="container-fluid .text-center">
-			<h1 class="text-center">BioSANS Documentation</h1>
-			<br>
-			<p>
-		  
-
-			</p>
+		<div class="container-fluid my-bgcolor">
+			<h1 style="color: white;" class="text-primary">BioSANS Documentation</h1>
 			<div class="row">
 				<div class="col-sm-4" style="background-color:lavender;">
 					<br>
 					<div>
 					<ul class="list-group">
+						<li class="list-group-item toctree-l2">
+							<a class="reference internal" href="">
+								<code class="xref py py-mod docutils literal notranslate">
+									<span class="pre">Source code links</span>
+								</code>
+							</a>
+							<ul>
+								<li class="toctree-l3">
+									<a id = "test_pypi" class="reference internal" href="https://test.pypi.org/project/BioSANS2020/#files">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">test.pypi</span>
+										</code>
+									</a>
+								</li>
+								<li class="toctree-l3">
+									<a id="git_hub" class="reference internal" href="https://github.com/efajiculay/SysBioSoft/tree/BioSANS_updated/BioSANS/src">
+										<code class="xref py py-mod docutils literal notranslate">
+											<span class="pre">Github</span>
+										</code>
+									</a>
+								</li>
+							</ul>
+						</li>
 						<li class="list-group-item toctree-l2">
 							<a class="reference internal" href="">
 								<code class="xref py py-mod docutils literal notranslate">
@@ -332,6 +362,20 @@
 									</a>
 								</li>
 							</ul>
+						</li>
+						<li class="list-group-item toctree-l2">
+							<a class="reference internal" href="">
+								<code class="xref py py-mod docutils literal notranslate">
+									<span id="biosans_root" class="pre">BioSANS as a python import</span>
+								</code>
+							</a>
+						</li>
+						<li class="list-group-item toctree-l2">
+							<a class="reference internal" href="">
+								<code class="xref py py-mod docutils literal notranslate">
+									<span id="biosans_root" class="pre">BioSANS Structured Simulation Language</span>
+								</code>
+							</a>
 						</li>
 						<li class="list-group-item toctree-l2">
 							<a class="reference internal" href="">

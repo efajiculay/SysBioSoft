@@ -1,15 +1,13 @@
 import sys, os
-from sympy import*
+import numpy as np
 from func_timeout import func_timeout, FunctionTimedOut 
-import matplotlib.pyplot as plt
 
 sys.path.append(os.path.abspath("../../"))
 
-from BioSANS2020.prepcodes.process import *
-from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
+from BioSANS2020.prepcodes.process import process
 from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.myglobal import proc_global as proc_global
-from BioSANS2020.propagation.recalculate_globals import get_globals
+from BioSANS2020.math_functs.sbml_math import SBML_FUNCT_DICT
 
 Wrong = 0
 start = 1
@@ -33,7 +31,7 @@ for ih in range(start-1,2):
 		for row in file:
 			if last == "Function_Definitions":
 				if row.strip()!="" and row[0] != "#":
-					exec(row.strip(),globals())
+					exec(row.strip(), globals(), SBML_FUNCT_DICT)
 				elif row[0] == "#":
 					last = "#"
 			elif row.strip() == "Function_Definitions:":
@@ -48,10 +46,10 @@ for ih in range(start-1,2):
 			process(
 				rfile    	= topo,
 				miter		= 1,
-				conc_unit		= FileIn,
-				v_volms 			= Volume,
-				tend			= 100 ,
-				del_coef		= 1,
+				conc_unit	= FileIn,
+				v_volms 	= Volume,
+				tend	    = 100 ,
+				del_coef	= 1,
 				normalize	= False,
 				logx		= False,
 				logy		= False,
@@ -90,7 +88,7 @@ for ih in range(start-1,2):
 			row = [t]
 			for x in oriLabel[1:]:
 				key = x+"(t)"
-				row.append( eval( rs[key] ) )
+				row.append( eval( rs[key], globals(), SBML_FUNCT_DICT ) )
 			dataSim.append(row)		
 		dataSim = np.array(dataSim)	
 		
@@ -107,6 +105,6 @@ for ih in range(start-1,2):
 		if Wrong >= 0.05*len(dataOri):
 			print("Test"+str(ih+1), Wrong,"-----------------------Wrong---------------------")
 			#break
-	except:
-		print("Test",ih+1," have error ")
+	except Exception as e:
+		print("Test",ih+1," have error ",e)
 		#break

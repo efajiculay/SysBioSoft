@@ -1,16 +1,23 @@
+"""
+
+This example is similar to the propagation example but this time doing 
+the propagation on many files. This cript is what we use in the semantic
+test for SBML compliance
+
+
+"""
+
 import sys, os
 import glob
-import matplotlib.pyplot as plt
+import numpy as np
 from func_timeout import func_timeout, FunctionTimedOut 
-import time
 
 sys.path.append(os.path.abspath("../../"))
 
-from BioSANS2020.prepcodes.process import *
+from BioSANS2020.prepcodes.process import process
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
 from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.myglobal import proc_global as proc_global
-from BioSANS2020.propagation.recalculate_globals import get_globals
 
 set_file = {}
 """
