@@ -68,10 +68,10 @@ function installer_download_info(id, os){
 		e.preventDefault(); 
 		file = $(this).text()
 		path_ref = "Installers/"+os+"/"+file
-		if (file != "README.html"){
+		if (file != "README" & file != "Instructions"){
 			window.location.href = path_ref;
 		}else{
-			MyIFrame.attr("src", path_ref);
+			MyIFrame.attr("src", path_ref+".html");
 		}
 	});
 }
@@ -100,6 +100,7 @@ $(document).ready(function(){
 	installer_download_info(".window_installer", "windows");
 	installer_download_info(".ubuntu_installer", "ubuntu");
 	installer_download_info(".macos_installer", "macos");
+	installer_download_info(".all_three_steps", "all_three");
 	
 	$("#windows_id").toggle();
 	$("#ubuntu_id").toggle();
