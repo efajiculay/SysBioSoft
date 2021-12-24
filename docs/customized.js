@@ -47,6 +47,34 @@ $.fn.extend({
 		});
 	}
 });	
+
+function you_tube_embed(id, yid, ifr){
+	$(id).click(function(event){
+		event.preventDefault();
+		file_html = "https://www.youtube.com/embed/"+yid;
+		ifr.attr("src", file_html);
+	});	
+}
+
+function redirect(id){
+	$(id).click(function(e){
+		e.preventDefault(); 
+		window.location.href = $(this).attr("href");
+	});
+}
+
+function installer_download_info(id, os){
+	$(id).click(function(e) {
+		e.preventDefault(); 
+		file = $(this).text()
+		path_ref = "Installers/"+os+"/"+file
+		if (file != "README.html"){
+			window.location.href = path_ref;
+		}else{
+			MyIFrame.attr("src", path_ref);
+		}
+	});
+}
 		
 $(document).ready(function(){
 	
@@ -67,83 +95,29 @@ $(document).ready(function(){
 		}else if(file_html == "Sphinx base documentation.html"){
 			MyIFrame.attr("src", "https://efajiculay.github.io/biosans.docs/");
 		}
-	});			
-				
-	$(".window_installer").click(function(e) {
-		e.preventDefault(); 
-		file = $(this).text()
-		if (file != "README.html"){
-			window.location.href = "Installers/windows/"+file;
-		}else{
-			MyIFrame.attr("src", "Installers/windows/"+file);
-		}
-	});
+	});					
 	
-	$(".ubuntu_installer").click(function(e) {
-		e.preventDefault(); 
-		file = $(this).text()
-		if (file != "README.html"){
-			window.location.href = "Installers/ubuntu/"+file;
-		}else{
-			MyIFrame.attr("src", "Installers/ubuntu/"+file);
-		}
-	});
-	
-	$(".macos_installer").click(function(e) {
-		e.preventDefault(); 
-		file = $(this).text()
-		if (file != "README.html"){
-			window.location.href = "Installers/macos/"+file;
-		}else{
-			MyIFrame.attr("src", "Installers/macos/"+file);
-		}
-	});
+	installer_download_info(".window_installer", "windows");
+	installer_download_info(".ubuntu_installer", "ubuntu");
+	installer_download_info(".macos_installer", "macos");
 	
 	$("#windows_id").toggle();
 	$("#ubuntu_id").toggle();
 	$("#macos_id").toggle();
 	
-	$("#git_hub").click(function(e){
-		e.preventDefault(); 
-		window.location.href = $(this).attr("href");
-	});
+	redirect("#git_hub");
+	redirect("#test_pypi");
 	
-	$("#test_pypi").click(function(e){
-		e.preventDefault(); 
-		window.location.href = $(this).attr("href");
-	});
+	you_tube_embed("#Stut_1", "qt3e6Uw5F2g", MyIFrame);
+	you_tube_embed("#Stut_2", "nBODhuZ2aSg", MyIFrame);
+	you_tube_embed("#Dtut_1", "3DPYf5s6BRI", MyIFrame);
+	you_tube_embed("#Dtut_2", "ToBqENBDwOc", MyIFrame); 
+	you_tube_embed("#Ttut_1", "Zxg7XfEAbPA", MyIFrame); 
+	you_tube_embed("#Ttut_2", "A3JIYJZqHkI", MyIFrame); 
+	you_tube_embed("#Itut_1", "g3ZmjWEGm40", MyIFrame); 
+	you_tube_embed("#Itut_2", "J_SngTfG_fk", MyIFrame);
 	
-	$("#Stut_1").click(function(event){
-		event.preventDefault();
-		file_html = "https://www.youtube.com/embed/qt3e6Uw5F2g";
-		MyIFrame.attr("src", file_html);
-	});
-	
-	$("#Stut_2").click(function(event){
-		event.preventDefault();
-		file_html = "https://www.youtube.com/embed/nBODhuZ2aSg";
-		MyIFrame.attr("src", file_html);
-	});
-	
-	$("#Dtut_1").click(function(event){
-		event.preventDefault();
-		file_html = "https://www.youtube.com/embed/3DPYf5s6BRI";
-		MyIFrame.attr("src", file_html);
-	});
-	
-	$("#Ttut_1").click(function(event){
-		event.preventDefault();
-		file_html = "https://www.youtube.com/embed/Zxg7XfEAbPA";
-		MyIFrame.attr("src", file_html);
-	});
-	
-	$("#Ttut_2").click(function(event){
-		event.preventDefault();
-		file_html = "https://www.youtube.com/embed/A3JIYJZqHkI";
-		MyIFrame.attr("src", file_html);
-	});
-	
-				
+
 	MyIFrame.on('load',function(){
 		what = $(this).attr('src')
 		if(what.indexOf("youtube") != -1){
@@ -153,5 +127,4 @@ $(document).ready(function(){
 		}
 	});
 											
-	
 });
