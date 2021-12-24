@@ -162,6 +162,7 @@ def plot_traj2(data, slabels, items, plotted, logx=False, logy=False,
         draw_figure(items, fig)
         # plt.close()
     else:
+        plt.close("all")
         axf = plt.axes(projection='3d')
         for j in range(miter):
             ind1 = -1 if xlabel == "time" else slabels.index(xlabel)

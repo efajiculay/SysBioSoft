@@ -52,6 +52,7 @@ from numpy import array as np_array
 # from queue import Queue
 
 
+from BioSANS2020.test_data import test_data2 as test_data2
 from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.myglobal import proc_global
 from BioSANS2020.gui_functs.prepare_canvas import prepare_frame_for_plot
@@ -65,7 +66,7 @@ from BioSANS2020.model.fileconvert.process_sbml \
     import process_sbml as sbml_to_topo
 from BioSANS2020.model.ode_parse import ode_extract
 
-import BioSANS2020.model.topology_view as topology_view
+from BioSANS2020.model import topology_view
 from BioSANS2020.model.new_file import new_file
 
 if PLATFORM == "win32":
@@ -73,7 +74,7 @@ if PLATFORM == "win32":
 elif PLATFORM == "darwin":
     try:
         from applescript import tell as my_tell_us
-    except:
+    except BaseException:
         pass
     from subprocess import check_output, call as my_call_us
 elif PLATFORM == "linux":
@@ -85,7 +86,7 @@ try:
     import tempfile
     TEMPORARY_FOLDER = str(tempfile.gettempdir()).replace(
         "\\", "/") + "/BioSANS_temporary_folder"
-except:
+except BaseException:
     TEMPORARY_FOLDER = "BioSANS_temporary_folder"
 
 globals2.init(globals2)
@@ -174,7 +175,7 @@ def create_file(itups, ftype):
     # global FILE_NAME, TEMPORARY_FOLDER
     try:
         os.mkdir(TEMPORARY_FOLDER, 0o777)
-    except:
+    except BaseException:
         for item in Path(TEMPORARY_FOLDER).iterdir():
             if item.is_dir():
                 pass
@@ -190,7 +191,7 @@ def create_file(itups, ftype):
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert(
             'insert', "#REACTIONS, Volume = 1, tend = 100, steps = 100, "
-            +"FileUnit = molar\n")
+            + "FileUnit = molar\n")
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert('insert', "\n")
         FILE_NAME['last_open'].insert('insert', "\n")
@@ -266,7 +267,7 @@ def runpy_file():
 
 
 def run_ssl():
-    """This function initiates BioSSL or the BioSABS structured
+    """This function initiates BioSSL or the BioSANS structured
     simulation language."""
     if PLATFORM == "win32":
         Popen([sys_executable, "-m", "BioSANS2020.BioSSL"],
@@ -294,7 +295,7 @@ def run_ssl():
               os.path.join(os.getcwd(), "BioSSL.py"), shell=True)
 
 
-def load_data2(plot=False):
+def load_data2(plot=False, def_data=None):
     """This function loads data for numerical processing or for plotting
 
     Args:
@@ -303,21 +304,24 @@ def load_data2(plot=False):
     """
     # t_o = time.time()
     global CURRENT_DATA
-    file = gui.filedialog.askopenfilename(title="Select file")
-    FILE_NAME["trajectory"] = file
-    FILE_NAME["current_folder"] = file
-    with open(FILE_NAME["trajectory"], "r") as fvar:
-        data = []
-        ddvar = []
-        row1 = str(fvar.readline()).strip()
-        slabels = row1.split("\t")[1:]
-        for row in fvar:
-            cols = [float(xvar) for xvar in row.split("\t")]
-            if cols[0] == 0.0 and ddvar:
-                data.append(np_array(ddvar))
-                ddvar = []
-            ddvar.append(cols)
-        data.append(np_array(ddvar))
+    if not def_data:
+        file = gui.filedialog.askopenfilename(title="Select file")
+        FILE_NAME["trajectory"] = file
+        FILE_NAME["current_folder"] = file
+        with open(FILE_NAME["trajectory"], "r") as fvar:
+            data = []
+            ddvar = []
+            row1 = str(fvar.readline()).strip()
+            slabels = row1.split("\t")[1:]
+            for row in fvar:
+                cols = [float(xvar) for xvar in row.split("\t")]
+                if cols[0] == 0.0 and ddvar:
+                    data.append(np_array(ddvar))
+                    ddvar = []
+                ddvar.append(cols)
+            data.append(np_array(ddvar))
+    else:
+        data, slabels = def_data
     if plot:
         plot_traj(data, slabels, ITUPS, globals2.PLOTTED, mix_plot=True,
                   logx=False, logy=False, normalize=False)
@@ -325,7 +329,8 @@ def load_data2(plot=False):
     # print(data[1], "\n\n")
     # print(data[2], "\n")
     CURRENT_DATA = (data, slabels)
-    gui.messagebox.showinfo("showinfo", "Trajectory loaded succesfully")
+    if not def_data:
+        gui.messagebox.showinfo("showinfo", "Trajectory loaded succesfully")
     # print(time.time()-t_o)
 
 
@@ -441,11 +446,11 @@ def eval2(xvar):
     """
     try:
         return eval(xvar)
-    except:
+    except BaseException:
         try:
             par = str(xvar).lower().capitalize()
             return eval(par)
-        except:
+        except BaseException:
             return str(xvar)
 
 
@@ -466,7 +471,7 @@ def dict_trans(x_1):
         for xvar in x_2:
             rvar = xvar.split("=")
             x_3[rvar[0].strip()] = float(rvar[1])
-    except:
+    except BaseException:
         pass
     return x_3
 
@@ -483,7 +488,7 @@ def convert(xvar, con):
     """
     try:
         return con(xvar)
-    except:
+    except BaseException:
         return xvar
 
 
@@ -543,7 +548,7 @@ def mrun_propagation(par, entry_list, defs2):
     # global CURRENT_DATA
     try:
         del FILE_NAME["trajectory"]
-    except:
+    except BaseException:
         pass
 
     defs = []
@@ -551,7 +556,7 @@ def mrun_propagation(par, entry_list, defs2):
         try:
             val = eval2(entry_list[i].get())
             defs.append(val)
-        except:
+        except BaseException:
             val = eval2(defs2[i].get())
             defs.append(val)
     # defs[15] = dict_trans(entry_list[15].get())
@@ -613,10 +618,10 @@ def analysis_case(ana_case, itups):
             save it into a file during your last run.")
         try:
             load_data2(False)
-        except:
+        except BaseException:
             try:
                 del FILE_NAME["trajectory"]
-            except:
+            except BaseException:
                 pass
             return None
         # data, slabels = CURRENT_DATA
@@ -689,7 +694,7 @@ def plot_traj_d(current_data, itups):
             ylabel=opt_sel_var[1].get(), zlabel=opt_sel_var[2].get(),
             trange=entry_list[-1].get()))
         but_b1.grid(row=5, column=0, sticky=gui.W, pady=2)
-    except:
+    except BaseException:
         gui.messagebox.showinfo(
             "Trajectory not loaded yet",
             "Please load the trajectory. BioSANS save it into a file during \
@@ -768,7 +773,7 @@ def plot_traj_d2(current_data, itups):
                 logx=False, logy=False, normalize=False,
                 si_ticked=get_checked(el_1, slabels)))
         but_b1.pack(side="bottom", fill="x")
-    except:
+    except BaseException:
         gui.messagebox.showinfo(
             "Trajectory not loaded yet",
             "Please load the trajectory. BioSANS save it into a file \
@@ -785,73 +790,73 @@ def param_set(method):
 
             Stochastic (refer to section 10.2.4)
 
-            1.	"CLE"            - Molecules(micro), tau-adaptive
-            2.	"CLE2"           - Molecules(micro), cle-fixIntvl
-            3.	"Gillespie_"     - Molecules(micro), Direct method
-            4.	"Tau-leaping"    - Molecules(micro),
+            1.    "CLE"            - Molecules(micro), tau-adaptive
+            2.    "CLE2"           - Molecules(micro), cle-fixIntvl
+            3.    "Gillespie_"     - Molecules(micro), Direct method
+            4.    "Tau-leaping"    - Molecules(micro),
                                    Not swapping with Gillespie
-            5.	"Tau-leaping2"   - Molecules(micro),
+            5.    "Tau-leaping2"   - Molecules(micro),
                                    Swapping with Gillespie
-            6.	"Sim-TauLeap"    - Molecules(micro), Simplified,
+            6.    "Sim-TauLeap"    - Molecules(micro), Simplified,
                                    Swapping with Gillespie
 
             Deterministic (refer to section 10.2.1)
 
-            7.	"Euler-1"        - Molecules(micro), tau-adaptive-1
-            8.	"Euler-2"        - Molar (macro), tau-adaptive-1
-            9.	"Euler-3"        - Mole (macro), tau-adaptive-1
-            10.	"Euler2-1"	     - Molecules(micro), tau-adaptive-2
-            11.	"Euler2-2"       - Molar (macro), tau-adaptive-2
-            12.	"Euler2-3"       - Mole (macro), tau-adaptive-2
-            13.	"ODE-1"          - Molecules(micro),
+            7.    "Euler-1"        - Molecules(micro), tau-adaptive-1
+            8.    "Euler-2"        - Molar (macro), tau-adaptive-1
+            9.    "Euler-3"        - Mole (macro), tau-adaptive-1
+            10.    "Euler2-1"         - Molecules(micro), tau-adaptive-2
+            11.    "Euler2-2"       - Molar (macro), tau-adaptive-2
+            12.    "Euler2-3"       - Mole (macro), tau-adaptive-2
+            13.    "ODE-1"          - Molecules(micro),
                                    using ode_int from scipy
-            14.	"ODE-2"          - Molar(macro),
+            14.    "ODE-2"          - Molar(macro),
                                    using ode_int from scipy
-            15.	"ODE-3"          - Mole(macro), using ode_int from scipy
-            16.	"rk4-1"          - Molecules(micro), fix-interval
-            17.	"rk4-2"          - Molar(macro), fix-interval
-            18.	"rk4-3"          - Mole(macro), fix-interval
-            19.	"rk4-1a"         - Molecules(micro), tau-adaptive
-            20.	"rk4-2a"         - Molar(macro), tau-adaptive
-            21.	"rk4-3a"         - Mole(macro), tau-adaptive
+            15.    "ODE-3"          - Mole(macro), using ode_int from scipy
+            16.    "rk4-1"          - Molecules(micro), fix-interval
+            17.    "rk4-2"          - Molar(macro), fix-interval
+            18.    "rk4-3"          - Mole(macro), fix-interval
+            19.    "rk4-1a"         - Molecules(micro), tau-adaptive
+            20.    "rk4-2a"         - Molar(macro), tau-adaptive
+            21.    "rk4-3a"         - Mole(macro), tau-adaptive
 
             Linear Noise Approximation (refer to 10.1.2 & 10.2.2)
 
-            22.	"LNA"             - Numeric, values
-            23.	"LNA-vs"          - Symbolic, values, Macroscopic
-            24.	"LNA-ks"          - Symbolic, f(ks), Macroscopic
-            25.	"LNA-xo"          - Symbolic, f(xo), Macroscopic
-            26.	"LNA2"            - Symbolic, f(xo,ks), Microscopic
-            27.	"LNA3"            - Symbolic, f(xo,ks), Macroscopic
-            28.	"LNA(t)"          - COV-time-dependent, Macroscopic
-            29.	"LNA2(t)"         - FF-time-dependent, Macroscopic
+            22.    "LNA"             - Numeric, values
+            23.    "LNA-vs"          - Symbolic, values, Macroscopic
+            24.    "LNA-ks"          - Symbolic, f(ks), Macroscopic
+            25.    "LNA-xo"          - Symbolic, f(xo), Macroscopic
+            26.    "LNA2"            - Symbolic, f(xo,ks), Microscopic
+            27.    "LNA3"            - Symbolic, f(xo,ks), Macroscopic
+            28.    "LNA(t)"          - COV-time-dependent, Macroscopic
+            29.    "LNA2(t)"         - FF-time-dependent, Macroscopic
 
             Network Localization (refer to 10.1.3)
 
-            30.	"NetLoc1"         - Symbolic, Macroscopic
-            31.	"NetLoc2"         - Numeric, Macroscopic
+            30.    "NetLoc1"         - Symbolic, Macroscopic
+            31.    "NetLoc2"         - Numeric, Macroscopic
 
             Parameter estimation (refer to 10.2.3)
 
-            32.	"k_est1"          - MCEM, Macroscopic
-            33.	"k_est2"          - MCEM, Microscopic
-            34.	"k_est3"          - NM-Diff. Evol., Macroscopic
-            35.	"k_est4"          - NM-Diff. Evol., Microscopic
-            36.	"k_est5"          - Parameter slider/scanner
-            37.	"k_est6"          - Nelder-Mead (NM), Macroscopic
-            38.	"k_est7"          - Nelder-Mead (NM), Microscopic
-            39.	"k_est8"          - Powell, Macroscopic
-            40.	"k_est9"          - Powell, Microscopic
-            41.	"k_est10"         - L-BFGS-B, Macroscopic
-            42.	"k_est11"         - L-BFGS-B, Microscopic
+            32.    "k_est1"          - MCEM, Macroscopic
+            33.    "k_est2"          - MCEM, Microscopic
+            34.    "k_est3"          - NM-Diff. Evol., Macroscopic
+            35.    "k_est4"          - NM-Diff. Evol., Microscopic
+            36.    "k_est5"          - Parameter slider/scanner
+            37.    "k_est6"          - Nelder-Mead (NM), Macroscopic
+            38.    "k_est7"          - Nelder-Mead (NM), Microscopic
+            39.    "k_est8"          - Powell, Macroscopic
+            40.    "k_est9"          - Powell, Microscopic
+            41.    "k_est10"         - L-BFGS-B, Macroscopic
+            42.    "k_est11"         - L-BFGS-B, Microscopic
 
             Symbolic/Analytical expression of species (refer to 10.1.1)
 
-            43.	"Analyt"          - Pure Symbolic :f(t,xo,k)
-            44.	"Analyt-ftx"      - Semi-Symbolic :f(t,xo)
-            45.	"SAnalyt"         - Semi-Symbolic :f(t)
-            46.	"SAnalyt-ftk"     - Semi-Symbolic :f(t,k)
-            47.	"Analyt2"         - Creates commands for wxmaxima
+            43.    "Analyt"          - Pure Symbolic :f(t,xo,k)
+            44.    "Analyt-ftx"      - Semi-Symbolic :f(t,xo)
+            45.    "SAnalyt"         - Semi-Symbolic :f(t)
+            46.    "SAnalyt-ftk"     - Semi-Symbolic :f(t,k)
+            47.    "Analyt2"         - Creates commands for wxmaxima
     """
     # global FILE_NAME, ITUPS
     with open(FILE_NAME["topology"], "w") as ffvar:
@@ -1227,5 +1232,5 @@ if __name__ == "__main__":
                        bg='#8c8c8c', borderwidth=2)
     FRAME1.place(x=0, y=35, relheight=0.93, relwidth=1.0)
     ITUPS = prepare_frame_for_plot(FRAME1, 972, 435)
-
+    load_data2(True, [test_data2.data, test_data2.label])
     TOP.mainloop()

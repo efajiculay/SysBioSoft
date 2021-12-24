@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
 	name="BioSANS2020",
-	version="0.2.1",
+	version="0.2.2",
     author="Erickson Erigio Fajiculay",
     author_email="efajiculay@yahoo.com",
     description="Symbolic and Numeric Software for Systems Biology",
