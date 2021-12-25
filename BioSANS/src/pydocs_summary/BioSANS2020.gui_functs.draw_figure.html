@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.gui_functs.draw_figure</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.gui_functs.html"><font color="#ffffff">gui_functs</font></a>.draw_figure</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;draw_figure&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;controls&nbsp;how&nbsp;plots&nbsp;are&nbsp;drawn&nbsp;inside&nbsp;BioSANS&nbsp;canvas<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;is&nbsp;the&nbsp;list&nbsp;of&nbsp;function&nbsp;for&nbsp;this&nbsp;module:<br>
+&nbsp;<br>
+1.&nbsp;canvas_update_widgets<br>
+2.&nbsp;delete_this<br>
+3.&nbsp;draw_figure</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="BioSANS2020.myglobal.mglobals.html">BioSANS2020.myglobal.mglobals</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-canvas_update_widgets"><strong>canvas_update_widgets</strong></a>(_, canvas)</dt><dd><tt>This&nbsp;function&nbsp;update&nbsp;the&nbsp;canvas&nbsp;upon&nbsp;adding&nbsp;new&nbsp;objects&nbsp;by&nbsp;moving<br>
+objects&nbsp;to&nbsp;ensure&nbsp;they&nbsp;fit&nbsp;nicely.&nbsp;The&nbsp;arrangement&nbsp;is&nbsp;that&nbsp;the&nbsp;last<br>
+object&nbsp;added&nbsp;appear&nbsp;first&nbsp;(latest&nbsp;goes&nbsp;on&nbsp;top).<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;canvas&nbsp;:&nbsp;the&nbsp;canvas&nbsp;object</tt></dd></dl>
+ <dl><dt><a name="-delete_this"><strong>delete_this</strong></a>(frame, canvas)</dt><dd><tt>This&nbsp;function&nbsp;removes&nbsp;objects&nbsp;from&nbsp;the&nbsp;canvas&nbsp;and&nbsp;reorder&nbsp;objects</tt></dd></dl>
+ <dl><dt><a name="-draw_figure"><strong>draw_figure</strong></a>(items, figure, loc=(0, 0))</dt><dd><tt>This&nbsp;function&nbsp;draws&nbsp;figure&nbsp;to&nbsp;the&nbsp;canvas&nbsp;by&nbsp;first&nbsp;adding&nbsp;a&nbsp;canvas<br>
+object&nbsp;to&nbsp;the&nbsp;canvas,&nbsp;adding&nbsp;a&nbsp;frame&nbsp;to&nbsp;the&nbsp;newly&nbsp;created&nbsp;canvas&nbsp;and<br>
+putting&nbsp;the&nbsp;figure&nbsp;to&nbsp;FigureCanvasTkAgg&nbsp;with&nbsp;frame&nbsp;as&nbsp;the&nbsp;parent.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;figure:&nbsp;the&nbsp;figure&nbsp;to&nbsp;be&nbsp;drawn&nbsp;in&nbsp;canvas&nbsp;i.e.&nbsp;plt.gcf()&nbsp;figure</tt></dd></dl>
+</td></tr></table>
+</body></html>

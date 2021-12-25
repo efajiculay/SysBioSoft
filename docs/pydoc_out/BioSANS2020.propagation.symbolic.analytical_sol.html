@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.propagation.symbolic.analytical_sol</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.propagation.html"><font color="#ffffff">propagation</font></a>.<a href="BioSANS2020.propagation.symbolic.html"><font color="#ffffff">symbolic</font></a>.analytical_sol</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;module&nbsp;is&nbsp;the&nbsp;analytical_sol&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;handles&nbsp;analytical&nbsp;expression&nbsp;derivation<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;are&nbsp;the&nbsp;functions&nbsp;in&nbsp;this&nbsp;module<br>
+&nbsp;<br>
+1.&nbsp;solve_with_timeout<br>
+2.&nbsp;get_sets<br>
+3.&nbsp;grab_steady_state<br>
+4.&nbsp;cs_to_csr<br>
+5.&nbsp;analyt_soln</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-analyt_soln"><strong>analyt_soln</strong></a>(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None, rfile='', not_semi=True, mode=None)</dt><dd><tt>This&nbsp;function&nbsp;finds&nbsp;an&nbsp;analytical&nbsp;solution&nbsp;to&nbsp;a&nbsp;system&nbsp;of&nbsp;ODE.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;components<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;concentrations<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactants<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;products<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;(Matrix):&nbsp;stoichiomentric&nbsp;matrix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;(tuple,&nbsp;optional):&nbsp;(canvas,&nbsp;scroll_x,&nbsp;scrolly).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(str,&nbsp;optional):&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;not_semi&nbsp;(bool,&nbsp;optional):&nbsp;if&nbsp;True,&nbsp;use&nbsp;pure&nbsp;symbolic&nbsp;solution;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which&nbsp;is&nbsp;a&nbsp;function&nbsp;of&nbsp;time,&nbsp;initial&nbsp;concentration,&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rate&nbsp;constant.&nbsp;Defaults&nbsp;to&nbsp;True.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mode&nbsp;(str,&nbsp;optional):&nbsp;mode&nbsp;of&nbsp;computation;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ftxo&nbsp;-&nbsp;function&nbsp;of&nbsp;time&nbsp;and&nbsp;initial&nbsp;condition<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ftks&nbsp;-&nbsp;function&nbsp;of&nbsp;time&nbsp;and&nbsp;rate&nbsp;constant<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dict:&nbsp;dictionary&nbsp;of&nbsp;solution</tt></dd></dl>
+ <dl><dt><a name="-cs_to_csr"><strong>cs_to_csr</strong></a>(f_x, c_s, cs_r, not_semi)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f_x&nbsp;(expression):&nbsp;sympy&nbsp;expression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;c_s&nbsp;(Symbol):&nbsp;sympy&nbsp;symbols<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cs_r&nbsp;(Symbol):&nbsp;equivalent&nbsp;of&nbsp;c_s<br>
+&nbsp;&nbsp;&nbsp;&nbsp;not_semi&nbsp;(boolean):&nbsp;if&nbsp;True,&nbsp;use&nbsp;pure&nbsp;symbolic<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expression:&nbsp;substituted&nbsp;expression</tt></dd></dl>
+ <dl><dt><a name="-get_sets"><strong>get_sets</strong></a>(r_dict, p_dict)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactants<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;products<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;set:&nbsp;sets&nbsp;to&nbsp;sum&nbsp;that&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;constraints</tt></dd></dl>
+ <dl><dt><a name="-grab_steady_state"><strong>grab_steady_state</strong></a>(r_dict, p_dict, c_s, c_so, da_dt, j_s)</dt><dd><tt>This&nbsp;function&nbsp;return&nbsp;steady&nbsp;state&nbsp;amounts&nbsp;of&nbsp;components<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;reactants&nbsp;dictionary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;products&nbsp;dictionary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;c_s&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;concentration&nbsp;Symbols/values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;c_so&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration&nbsp;Symbols/values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;da_dt&nbsp;([type]):&nbsp;ode&nbsp;expression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;j_s&nbsp;([type]):&nbsp;list&nbsp;of&nbsp;components<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Matrix:&nbsp;steady&nbsp;state&nbsp;result</tt></dd></dl>
+ <dl><dt><a name="-solve_with_timeout"><strong>solve_with_timeout</strong></a>(f_e, j_s)</dt><dd><tt>resturn&nbsp;solution&nbsp;to&nbsp;the&nbsp;system&nbsp;of&nbsp;equation&nbsp;in&nbsp;f_e&nbsp;with&nbsp;variables<br>
+symbos&nbsp;in&nbsp;the&nbsp;list&nbsp;j_s<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;f_e&nbsp;(list):&nbsp;equations<br>
+&nbsp;&nbsp;&nbsp;&nbsp;j_s&nbsp;(list):&nbsp;Symbols<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dict:&nbsp;sometimes&nbsp;list&nbsp;but&nbsp;normally&nbsp;{variable&nbsp;:&nbsp;value}</tt></dd></dl>
+</td></tr></table>
+</body></html>

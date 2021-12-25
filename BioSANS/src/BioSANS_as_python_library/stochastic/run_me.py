@@ -1,16 +1,11 @@
 import sys, os
 import glob
-from func_timeout import func_timeout, FunctionTimedOut 
-import matplotlib.pyplot as plt
-
 sys.path.append(os.path.abspath("../../"))
-
 from BioSANS2020.prepcodes.process import *
 from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
 from BioSANS2020.myglobal import mglobals as globals2
 from BioSANS2020.myglobal import proc_global as proc_global
-from BioSANS2020.propagation.recalculate_globals import *
-globals2.init()
+globals2.init(globals2)
 
 
 if __name__ == '__main__':
@@ -52,8 +47,8 @@ if __name__ == '__main__':
 
 	Passed = True
 	for ih in range(start-1,ends):
-		proc_global.init()
-		globals2.init()
+		proc_global.init(proc_global)
+		globals2.init(globals2)
 
 		dir = dirs[ih]
 		iters = max_iter
@@ -106,10 +101,10 @@ if __name__ == '__main__':
 				process(
 					rfile		= topo,
 					miter		= iters,
-					inMolar		= FileIn,
-					Vm 			= Volume,
-					tn			= tend ,
-					delX		= scaler,
+					conc_unit	= FileIn,
+					v_volms 	= Volume,
+					tend		= tend ,
+					del_coef	= scaler,
 					normalize	= False,
 					logx		= False,
 					logy		= False,
@@ -119,7 +114,7 @@ if __name__ == '__main__':
 					save		= True,
 					out_fname	= outf,
 					plot_show	= False,
-					Cinput		= {},
+					c_input		= {},
 					vary 		= "",
 					mult_proc	= True,
 					implicit	= True,

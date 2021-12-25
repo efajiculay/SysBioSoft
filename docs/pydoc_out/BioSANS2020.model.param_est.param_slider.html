@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.model.param_est.param_slider</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.model.html"><font color="#ffffff">model</font></a>.<a href="BioSANS2020.model.param_est.html"><font color="#ffffff">param_est</font></a>.param_slider</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br</font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;module&nbsp;is&nbsp;the&nbsp;param_slider&nbsp;module<br>
+&nbsp;<br>
+The&nbsp;&nbsp;sole&nbsp;purpose&nbsp;of&nbsp;this&nbsp;&nbsp;module&nbsp;is&nbsp;&nbsp;to&nbsp;visually&nbsp;&nbsp;modify&nbsp;parameters&nbsp;and<br>
+compare&nbsp;the&nbsp;result&nbsp;to&nbsp;a&nbsp;PLOTTED&nbsp;data&nbsp;as&nbsp;the&nbsp;estimate&nbsp;changes&nbsp;in&nbsp;the&nbsp;plot<br>
+&nbsp;<br>
+The&nbsp;functions&nbsp;in&nbsp;this&nbsp;modules&nbsp;are;<br>
+&nbsp;<br>
+1.&nbsp;load_data<br>
+2.&nbsp;param_ode_model<br>
+3.&nbsp;update_range<br>
+4.&nbsp;submit<br>
+5.&nbsp;update<br>
+5.&nbsp;param_ode_int</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="tkinter.filedialog.html">tkinter.filedialog</a><br>
+</td><td width="25%" valign=top><a href="BioSANS2020.myglobal.mglobals.html">BioSANS2020.myglobal.mglobals</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-load_data"><strong>load_data</strong></a>()</dt><dd><tt>This&nbsp;function&nbsp;reads&nbsp;the&nbsp;trajectory&nbsp;file&nbsp;containing&nbsp;the&nbsp;data&nbsp;which<br>
+should&nbsp;follow&nbsp;the&nbsp;following&nbsp;example&nbsp;format;<br>
+&nbsp;<br>
+time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B<br>
+0.0&nbsp;100.0&nbsp;&nbsp;&nbsp;0.0<br>
+0.25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88.24969025197632&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.750309748023732<br>
+0.5&nbsp;77.88007831231087&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;22.119921687689185<br>
+0.75&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;68.72892784164061&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;31.27107215835944<br>
+1.0&nbsp;60.65306592491437&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;39.346934075085684<br>
+1.25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;53.526142785532&nbsp;46.473857214468055<br>
+1.5&nbsp;47.236655135816875&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;52.76334486418318<br>
+1.75&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;41.68620193454698&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;58.31379806545308<br>
+2.0&nbsp;36.78794415253036&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;63.21205584746969<br>
+2.25&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;32.46524678349081&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;67.53475321650924<br>
+...<br>
+&nbsp;<br>
+The&nbsp;format&nbsp;&nbsp;above&nbsp;have&nbsp;&nbsp;a&nbsp;header&nbsp;where&nbsp;the&nbsp;first&nbsp;&nbsp;column&nbsp;is&nbsp;time&nbsp;and<br>
+all&nbsp;other&nbsp;columns&nbsp;are&nbsp;species&nbsp;or&nbsp;components.&nbsp;The&nbsp;rows&nbsp;are&nbsp;the&nbsp;values<br>
+of&nbsp;measurements&nbsp;&nbsp;corresponding&nbsp;to&nbsp;&nbsp;the&nbsp;header.&nbsp;Each&nbsp;row&nbsp;is&nbsp;delimited<br>
+by&nbsp;&nbsp;tab&nbsp;character&nbsp;"&nbsp;".&nbsp;If&nbsp;&nbsp;the&nbsp;data&nbsp;file&nbsp;is&nbsp;in&nbsp;excel,&nbsp;just&nbsp;copy&nbsp;the<br>
+data&nbsp;&nbsp;from&nbsp;&nbsp;excel&nbsp;to&nbsp;a&nbsp;text&nbsp;editor,&nbsp;save&nbsp;&nbsp;it&nbsp;with&nbsp;a&nbsp;&nbsp;filename&nbsp;and&nbsp;it<br>
+will&nbsp;already&nbsp;&nbsp;be&nbsp;tab&nbsp;delimited.&nbsp;If&nbsp;there&nbsp;&nbsp;are&nbsp;several&nbsp;&nbsp;replicates&nbsp;of<br>
+the&nbsp;&nbsp;data,&nbsp;just&nbsp;append&nbsp;them&nbsp;to&nbsp;&nbsp;the&nbsp;end&nbsp;without&nbsp;&nbsp;the&nbsp;header&nbsp;and&nbsp;this<br>
+function&nbsp;can&nbsp;still&nbsp;handle&nbsp;all&nbsp;replicates.<br>
+&nbsp;<br>
+time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B<br>
+0.0&nbsp;100.0&nbsp;&nbsp;&nbsp;0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;replicate<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;continuation<br>
+0.0&nbsp;100.0&nbsp;&nbsp;&nbsp;0.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;replicate<br>
+...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;continuation<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;(string,&nbsp;optional):&nbsp;trajectory&nbsp;file.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;tuple&nbsp;&nbsp;of&nbsp;&nbsp;data&nbsp;and&nbsp;&nbsp;labels&nbsp;(data,&nbsp;labels).&nbsp;The&nbsp;data&nbsp;is&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;of&nbsp;all&nbsp;&nbsp;the&nbsp;trajectories&nbsp;in&nbsp;the&nbsp;file&nbsp;and&nbsp;the&nbsp;labels&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;name&nbsp;of&nbsp;the&nbsp;columns&nbsp;in&nbsp;the&nbsp;trajectory</tt></dd></dl>
+ <dl><dt><a name="-param_ode_int"><strong>param_ode_int</strong></a>(conc, t_var, sp_comp, ks_dict, r_dict, p_dict, v_stoich, molar=False, rfile='', set_p=None)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tvar&nbsp;(list):&nbsp;time&nbsp;stamp&nbsp;of&nbsp;trajectories&nbsp;i.e.&nbsp;[0,&nbsp;0.1,&nbsp;0.2,&nbsp;...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appears&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;units&nbsp;for&nbsp;any&nbsp;amount&nbsp;is&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;molar.&nbsp;Propensity&nbsp;will&nbsp;be&nbsp;macroscopic.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(string,&nbsp;optional):&nbsp;name&nbsp;of&nbsp;topology&nbsp;file&nbsp;where&nbsp;some<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;or&nbsp;components&nbsp;are&nbsp;negative&nbsp;indicating&nbsp;&nbsp;they&nbsp;&nbsp;have<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;estimated.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;set_p&nbsp;(list,&nbsp;optional):&nbsp;2&nbsp;item&nbsp;list&nbsp;of&nbsp;[xscale&nbsp;log,&nbsp;yscale&nbsp;log]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;maximum&nbsp;value.&nbsp;Defaults&nbsp;to&nbsp;None.&nbsp;Values&nbsp;can&nbsp;be&nbsp;any&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[0,0],[0,1],[1,0],[1,1]<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[type]:&nbsp;[description]</tt></dd></dl>
+ <dl><dt><a name="-param_ode_model"><strong>param_ode_model</strong></a>(z_var, _, sp_comp, ks_dict, r_dict, p_dict, v_stoich, molar=False)</dt><dd><tt>This&nbsp;fuction&nbsp;returns&nbsp;the&nbsp;differential&nbsp;equation&nbsp;of&nbsp;components&nbsp;with<br>
+respect&nbsp;to&nbsp;time.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;z_var&nbsp;(list):&nbsp;list&nbsp;of&nbsp;initial&nbsp;concentration<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tvar&nbsp;(list):&nbsp;time&nbsp;stamp&nbsp;of&nbsp;trajectories&nbsp;i.e.&nbsp;[0,&nbsp;0.1,&nbsp;0.2,&nbsp;...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appears&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;units&nbsp;for&nbsp;any&nbsp;amount&nbsp;is&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;molar.&nbsp;Propensity&nbsp;will&nbsp;be&nbsp;macroscopic.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dxdt&nbsp;(numpy.ndarray):&nbsp;value&nbsp;of&nbsp;time&nbsp;derivatives&nbsp;of&nbsp;components</tt></dd></dl>
+ <dl><dt><a name="-submit"><strong>submit</strong></a>(text, dk_var)</dt><dd><tt>This&nbsp;function&nbsp;prepares&nbsp;the&nbsp;2&nbsp;item&nbsp;list&nbsp;of&nbsp;slider&nbsp;minimum&nbsp;and<br>
+maximum&nbsp;value.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text&nbsp;(string):&nbsp;The&nbsp;user&nbsp;defined&nbsp;range&nbsp;in&nbsp;the&nbsp;TextBox&nbsp;separated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by&nbsp;comma&nbsp;i.e.&nbsp;"0.1,10"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dk_var&nbsp;(matplotlib.widgets.Slider):&nbsp;Slider&nbsp;object&nbsp;that&nbsp;controls<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameter&nbsp;values&nbsp;in&nbsp;plot</tt></dd></dl>
+ <dl><dt><a name="-update"><strong>update</strong></a>(ks_dict, kk_list, fig, slabels, lvar, sp_comp, r_dict, p_dict, v_stoich, molar, t_var, z_var)</dt><dd><tt>[summary]<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appears&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kk_list&nbsp;(list):&nbsp;list&nbsp;of&nbsp;matplotlib.widgets.Slider(Slider&nbsp;object)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fig&nbsp;(matplotlib.pylab.figure):&nbsp;plt.subplots&nbsp;object<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slabels&nbsp;(list):&nbsp;list&nbsp;of&nbsp;components&nbsp;key&nbsp;in&nbsp;sp_comp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;lvar&nbsp;(list):&nbsp;list&nbsp;of&nbsp;matplotlib.pylab.plot&nbsp;or&nbsp;plt.plot&nbsp;objects<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;molar&nbsp;(bool,&nbsp;optional):&nbsp;If&nbsp;True,&nbsp;the&nbsp;units&nbsp;for&nbsp;any&nbsp;amount&nbsp;is&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;molar.&nbsp;Propensity&nbsp;will&nbsp;be&nbsp;macroscopic.&nbsp;Defaults&nbsp;to&nbsp;False.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tvar&nbsp;(list):&nbsp;time&nbsp;stamp&nbsp;of&nbsp;trajectories&nbsp;i.e.&nbsp;[0,&nbsp;0.1,&nbsp;0.2,&nbsp;...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;z_var&nbsp;(list):&nbsp;list&nbsp;of&nbsp;initial&nbsp;concentration</tt></dd></dl>
+ <dl><dt><a name="-update_range"><strong>update_range</strong></a>(dk_var, valc)</dt><dd><tt>This&nbsp;function&nbsp;&nbsp;controls&nbsp;&nbsp;the&nbsp;&nbsp;parameter&nbsp;&nbsp;values&nbsp;&nbsp;in&nbsp;&nbsp;the&nbsp;plot&nbsp;and<br>
+updates&nbsp;the&nbsp;limits&nbsp;of&nbsp;the&nbsp;slider&nbsp;object.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dk_var&nbsp;(matplotlib.widgets.Slider):&nbsp;Slider&nbsp;object&nbsp;that&nbsp;controls<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameter&nbsp;values&nbsp;in&nbsp;plot<br>
+&nbsp;&nbsp;&nbsp;&nbsp;valc&nbsp;(list):&nbsp;2&nbsp;item&nbsp;list&nbsp;of&nbsp;slider&nbsp;minimum&nbsp;and&nbsp;maximum&nbsp;value</tt></dd></dl>
+</td></tr></table>
+</body></html>

@@ -1,0 +1,26 @@
+# Find MAC terminal by searching terminal in launchpad
+# click the black terminal
+# it will be shown as a white window
+# The following commands are the series of commands to install BioSANS using MAC terminal
+
+xcode-select —install
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+brew install python
+python3 -m pip install --upgrade pip
+brew install --cask anaconda
+
+python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020
+
+# The following command gives us the installation directory after the "Location :" tag
+python3 -m pip install show BioSANS2020
+
+# to run BioSANS
+cd "to the location directory"
+python3 BioSANS.py
+
+#You may also run BioSANS using any of the following commands
+BioSANS
+python3 -m BioSANS2020
+python3 -m BioSANS2020.BioSANS

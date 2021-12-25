@@ -419,7 +419,7 @@ def prob_density_calc_wtime(edata, fname, mname):
                                           int(np.max(zss)) + 1,
                                           int(delcon))
                                     ), cmap="Spectral_r")
-        except BaseException:
+        except:
             cntr = plt.contour(xss[1:], yss[1:], zss.T, 100, cmap="Spectral_r")
         fig = plt.gcf()
         fig.colorbar(cntr)
@@ -494,7 +494,7 @@ def prob_density_calc(edata, fname):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     data, slabels = edata
     nlen = len(data)

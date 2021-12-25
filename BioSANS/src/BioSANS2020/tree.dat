@@ -34,7 +34,7 @@ BIOSANS2020
 │   │   __init__.py
 │
 ├───math_functs
-│   │   sbmlMath.py
+│   │   sbml_math.py
 │   │   __init__.py
 │
 ├───model
@@ -70,30 +70,30 @@ BIOSANS2020
 │
 ├───propagation
 │   │   create_wxmaxima_command.py
-│   │   NetworkLoc.py
+│   │   law_of_localization.py
 │   │   propensity.py
 │   │   recalculate_globals.py
 │   │   __init__.py
 │   │
 │   ├───deterministic
 │   │   │   Euler.py
-│   │   │   LNAapprox.py
-│   │   │   LNAfunctionOfTime.py
+│   │   │   lna_approx.py
+│   │   │   lna_function_of_time.py
 │   │   │   ode_int.py
 │   │   │   runge_kutta4.py
 │   │   │   __init__.py
 │   │
 │   ├───stochastic
-│   │   │   Gillespie.py
+│   │   │   gillespie_ssa.py
 │   │   │   Gillespie_new.py
 │   │   │   mystiffcle.py
 │   │   │   mytauleap.py
 │   │   │   sde_int.py
-│   │   │   Tau_leaping.py
-│   │   │   Tau_leaping2.py
+│   │   │   tau_leaping.py
+│   │   │   tau_leaping2.py
 │   │   │   __init__.py
 │   │
 │   ├───symbolic
-│   │   │   Analytical_sol.py
-│   │   │   LNAapprox2.py
+│   │   │   analytical_sol.py
+│   │   │   lna_approx2.py
 │   │   │   __init__.py

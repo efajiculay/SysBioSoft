@@ -3,7 +3,7 @@
                  This module is the param_slider module
 
 The  sole purpose of this  module is  to visually  modify parameters and
-compare the result to a plotted data as the estimate changes in the plot
+compare the result to a PLOTTED data as the estimate changes in the plot
 
 The functions in this modules are;
 
@@ -27,8 +27,8 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, TextBox  # , RadioButtons
 
-from BioSANS2020.propagation.propensity import propensity_vec
-from BioSANS2020.propagation.propensity import propensity_vec_molar
+from BioSANS2020.propagation.propensity import propensity_vec, \
+    propensity_vec_molar
 from BioSANS2020.propagation.recalculate_globals import get_globals
 from BioSANS2020.myglobal import mglobals as globals2
 
@@ -90,25 +90,25 @@ def load_data():
                 end_time = cols[0]
             data.append(np.array(ddvar))
             return (data, slabels)
-    except BaseException:
+    except:
         return None
 
 
-def param_ode_model(z_var, t_var, sp_comp, ks_dict, r_dict, p_dict,
+def param_ode_model(z_var, _, sp_comp, ks_dict, r_dict, p_dict,
                     v_stoich, molar=False):
     """This fuction returns the differential equation of components with
     respect to time.
 
     Args:
         z_var (list): list of initial concentration
-        t_var (list): time stamp
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
         sp_comp (dict): dictionary of appearance or position of species
             or component in the reaction tag of BioSANS topology file.
 
             For example;
 
                 #REACTIONS
-                A => B, -kf1
+                A => B, -kf1    # negative means to be estimated
                 B => C, kf2
 
             The value of sp_comp is
@@ -119,7 +119,7 @@ def param_ode_model(z_var, t_var, sp_comp, ks_dict, r_dict, p_dict,
                 B appears in first and second reaction with index 0, 1
                 C appears in second reaction with index 1
         ks_dict (dict): dictionary of rate constant that appears in each
-            reactions. For the above reaction, the value of ks_dict is
+            reactions.
 
             For example;
 
@@ -161,7 +161,7 @@ def param_ode_model(z_var, t_var, sp_comp, ks_dict, r_dict, p_dict,
     Returns:
         dxdt (numpy.ndarray): value of time derivatives of components
     """
-    spc = [s for s in sp_comp]
+    spc = list(sp_comp.keys())  # [s for s in sp_comp]
     conc = {spc[xvar]: z_var[xvar] for xvar in range(len(spc))}
     if not molar:
         d_prop = propensity_vec(ks_dict, conc, r_dict, p_dict, True)
@@ -169,32 +169,105 @@ def param_ode_model(z_var, t_var, sp_comp, ks_dict, r_dict, p_dict,
         d_prop = propensity_vec_molar(ks_dict, conc, r_dict, p_dict, True)
 
     dxdt = np.matmul(v_stoich, d_prop).reshape(len(z_var))
-    for xvar in globals2.conBoundary:
+    for xvar in globals2.CON_BOUNDARY:
         ind = spc.index(xvar)
         dxdt[ind] = 0
     return dxdt
 
 
 def update_range(dk_var, valc):
-    """[summary]
+    """This function  controls  the  parameter  values  in  the plot and
+    updates the limits of the slider object.
 
     Args:
-        dk_var ([type]): [description]
-        valc ([type]): [description]
+        dk_var (matplotlib.widgets.Slider): Slider object that controls
+            parameter values in plot
+        valc (list): 2 item list of slider minimum and maximum value
     """
-    # print(dk_var, type(dk_var), valc, type(valc), sep="\n\n")
     dk_var.valmin = valc[0]
     dk_var.valmax = valc[1]
     dk_var.ax.set_xlim(dk_var.valmin, dk_var.valmax)
 
 
 def submit(text, dk_var):
+    """This function prepares the 2 item list of slider minimum and
+    maximum value.
+
+    Args:
+        text (string): The user defined range in the TextBox separated
+            by comma i.e. "0.1,10"
+        dk_var (matplotlib.widgets.Slider): Slider object that controls
+            parameter values in plot
+    """
     valc = [float(xvar.strip()) for xvar in text.split(",")]
     update_range(dk_var, valc)
 
 
 def update(ks_dict, kk_list, fig, slabels, lvar, sp_comp,
            r_dict, p_dict, v_stoich, molar, t_var, z_var):
+    """[summary]
+
+    Args:
+        ks_dict (dict): dictionary of rate constant that appears in each
+            reactions.
+
+            For example;
+
+                #REACTIONS
+                A => B , 0.3        # first reaction
+                B <=> C, 0.1, 0.2   # second reaction
+
+            The value of ks_dict is
+
+                ks_dict = {
+                    0 : [0.3],      # first reaction
+                    1 : [0.1, 0.2]  # second reaction
+                }
+        kk_list (list): list of matplotlib.widgets.Slider(Slider object)
+        fig (matplotlib.pylab.figure): plt.subplots object
+        slabels (list): list of components key in sp_comp
+        lvar (list): list of matplotlib.pylab.plot or plt.plot objects
+        sp_comp (dict): dictionary of appearance or position of species
+            or component in the reaction tag of BioSANS topology file.
+
+            For example;
+
+                #REACTIONS
+                A => B, -kf1    # negative means to be estimated
+                B => C, kf2
+
+            The value of sp_comp is
+
+                sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+                A appears in first reaction with index 0
+                B appears in first and second reaction with index 0, 1
+                C appears in second reaction with index 1
+        r_dict (dict): dictionary of reactant stoichiometry. For example
+
+            r_dict = {
+                0: {'A': 1},  # first reaction, coefficient of A is 1
+                1: {'B': 1}   # second reaction, coefficient of B is 1
+            }
+        p_dict (dict): dictionary of product stoichiometry. For example
+
+            p_dict = {
+                0: {'B': 1},  # first reaction, coefficient of B is 1
+                1: {'C': 1}   # second reaction, coefficient of C is 1
+            }
+        v_stoich (numpy.ndarray): stoichiometric matrix. For example
+
+            v_stoich = np.array([
+                [   -1,           0   ]            # species A
+                [    1,          -1   ]            # species B
+                [    0,           1   ]            # species C
+                  #1st rxn    2nd rxn
+            ])
+        molar (bool, optional): If True, the units for any amount is in
+            molar. Propensity will be macroscopic. Defaults to False.
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
+        z_var (list): list of initial concentration
+    """
     cc_var = 0
     for ih_var, _ in enumerate(ks_dict):
         if len(ks_dict[ih_var]) == 1:
@@ -215,10 +288,83 @@ def update(ks_dict, kk_list, fig, slabels, lvar, sp_comp,
 
 def param_ode_int(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
                   v_stoich, molar=False, rfile="", set_p=None):
+    """[summary]
+
+    Args:
+        conc (dict): dictionary of initial concentration.
+
+            For example;
+
+                {'A': 100.0, 'B': -1.0, 'C': 0.0}
+                negative means unknown or for estimation
+        tvar (list): time stamp of trajectories i.e. [0, 0.1, 0.2, ...]
+        sp_comp (dict): dictionary of appearance or position of species
+            or component in the reaction tag of BioSANS topology file.
+
+            For example;
+
+                #REACTIONS
+                A => B, -kf1    # negative means to be estimated
+                B => C, kf2
+
+            The value of sp_comp is
+
+                sp_comp = {'A': {0}, 'B': {0, 1}, 'C': {1}}
+
+                A appears in first reaction with index 0
+                B appears in first and second reaction with index 0, 1
+                C appears in second reaction with index 1
+        ks_dict (dict): dictionary of rate constant that appears in each
+            reactions.
+
+            For example;
+
+                #REACTIONS
+                A => B , 0.3        # first reaction
+                B <=> C, 0.1, 0.2   # second reaction
+
+            The value of ks_dict is
+
+                ks_dict = {
+                    0 : [0.3],      # first reaction
+                    1 : [0.1, 0.2]  # second reaction
+                }
+        r_dict (dict): dictionary of reactant stoichiometry. For example
+
+            r_dict = {
+                0: {'A': 1},  # first reaction, coefficient of A is 1
+                1: {'B': 1}   # second reaction, coefficient of B is 1
+            }
+        p_dict (dict): dictionary of product stoichiometry. For example
+
+            p_dict = {
+                0: {'B': 1},  # first reaction, coefficient of B is 1
+                1: {'C': 1}   # second reaction, coefficient of C is 1
+            }
+        v_stoich (numpy.ndarray): stoichiometric matrix. For example
+
+            v_stoich = np.array([
+                [   -1,           0   ]            # species A
+                [    1,          -1   ]            # species B
+                [    0,           1   ]            # species C
+                  #1st rxn    2nd rxn
+            ])
+        molar (bool, optional): If True, the units for any amount is in
+            molar. Propensity will be macroscopic. Defaults to False.
+        rfile (string, optional): name of topology file where some
+            parameters or components are negative indicating  they  have
+            to be estimated. Defaults to None.
+        set_p (list, optional): 2 item list of [xscale log, yscale log]
+            and maximum value. Defaults to None. Values can be any of
+            [0,0],[0,1],[1,0],[1,1]
+
+    Returns:
+        [type]: [description]
+    """
 
     if set_p is None:
         set_p = []
-    spc = [s for s in sp_comp]
+    spc = list(sp_comp.keys())  # [s for s in sp_comp]
     z_var = [conc[a] for a in sp_comp]
     c_miss = []
     for i, _ in enumerate(z_var):
@@ -247,7 +393,7 @@ def param_ode_int(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
 
     get_globals(rfile)
     z_var = [conc[a] for a in sp_comp]
-    slabels = [slabels for slabels in sp_comp]
+    slabels = list(sp_comp.keys())  # [slabels for slabels in sp_comp]
 
     nz_var = []
     reserve_events_words = {"t", "time", "status",
@@ -257,7 +403,7 @@ def param_ode_int(conc, t_var, sp_comp, ks_dict, r_dict, p_dict,
         if key not in reserve_events_words:
             nz_var.append(row)
     sp_comp = {slabels[z_var]: sp_comp[slabels[z_var]] for z_var in nz_var}
-    slabels = [slabels for slabels in sp_comp]
+    slabels = list(sp_comp.keys())  # [slabels for slabels in sp_comp]
 
     scount = 0
     for ih_var, _ in enumerate(ks_dict):

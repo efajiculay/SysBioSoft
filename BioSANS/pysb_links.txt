@@ -1,0 +1,5 @@
+https://pysb.org/download
+https://pysb.org/tutorials/
+https://pysb.org/
+
+https://www.poftut.com/how-to-uninstall-a-package-with-pip/

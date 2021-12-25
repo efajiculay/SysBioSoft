@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.analysis.numeric.transform_data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.analysis.html"><font color="#ffffff">analysis</font></a>.<a href="BioSANS2020.analysis.numeric.html"><font color="#ffffff">numeric</font></a>.transform_data</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;transform_data&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;process&nbsp;numeric&nbsp;trajectories&nbsp;and&nbsp;either&nbsp;prints&nbsp;the&nbsp;result&nbsp;or<br>
+display&nbsp;the&nbsp;output&nbsp;into&nbsp;a&nbsp;text&nbsp;area&nbsp;embedded&nbsp;in&nbsp;a&nbsp;canvas&nbsp;or&nbsp;plots&nbsp;it<br>
+&nbsp;<br>
+The&nbsp;following&nbsp;is&nbsp;the&nbsp;list&nbsp;of&nbsp;function&nbsp;for&nbsp;this&nbsp;module:<br>
+&nbsp;<br>
+1.&nbsp;normalize<br>
+2.&nbsp;calc_cross_corr<br>
+3.&nbsp;calc_covariance2<br>
+4.&nbsp;calc_covariance<br>
+5.&nbsp;fano_factor<br>
+6.&nbsp;prob_density_calc<br>
+7.&nbsp;prob_density_calc2<br>
+8.&nbsp;prob_density_calc3<br>
+9.&nbsp;ave_traj_calc</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="BioSANS2020.myglobal.mglobals.html">BioSANS2020.myglobal.mglobals</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-ave_traj_calc"><strong>ave_traj_calc</strong></a>(edata, items)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;average&nbsp;trajectory&nbsp;of&nbsp;edata[0]&nbsp;and<br>
+returns&nbsp;a&nbsp;plot&nbsp;of&nbsp;the&nbsp;average&nbsp;trajectory&nbsp;as&nbsp;a&nbsp;function&nbsp;of&nbsp;time.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]</tt></dd></dl>
+ <dl><dt><a name="-calc_covariance"><strong>calc_covariance</strong></a>(edata, items, points=100)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;covariance&nbsp;of&nbsp;edata[0]&nbsp;and&nbsp;prints<br>
+the&nbsp;result&nbsp;in&nbsp;a&nbsp;text&nbsp;area&nbsp;embedded&nbsp;in&nbsp;a&nbsp;canvas.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;points&nbsp;:&nbsp;last&nbsp;number&nbsp;of&nbsp;points&nbsp;considered&nbsp;in&nbsp;covariance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calculation&nbsp;from&nbsp;-points&nbsp;to&nbsp;the&nbsp;end&nbsp;of&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;equivalent&nbsp;to&nbsp;[-points:]&nbsp;slice.</tt></dd></dl>
+ <dl><dt><a name="-calc_covariance2"><strong>calc_covariance2</strong></a>(edata)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;covariance&nbsp;of&nbsp;edata[0]&nbsp;and&nbsp;prints<br>
+the&nbsp;result&nbsp;in&nbsp;a&nbsp;terminal&nbsp;window.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.</tt></dd></dl>
+ <dl><dt><a name="-calc_cross_corr"><strong>calc_cross_corr</strong></a>(edata, items)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;cross&nbsp;correlation&nbsp;of&nbsp;edata[0]&nbsp;and<br>
+returns&nbsp;a&nbsp;plot&nbsp;of&nbsp;the&nbsp;correlation&nbsp;as&nbsp;a&nbsp;function&nbsp;of&nbsp;lags.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]</tt></dd></dl>
+ <dl><dt><a name="-fano_factor"><strong>fano_factor</strong></a>(edata, items, points=100)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;fano-factor&nbsp;of&nbsp;edata[0]&nbsp;and&nbsp;prints<br>
+the&nbsp;result&nbsp;in&nbsp;a&nbsp;text&nbsp;area&nbsp;embedded&nbsp;in&nbsp;a&nbsp;canvas.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;points&nbsp;:&nbsp;last&nbsp;number&nbsp;of&nbsp;points&nbsp;considered&nbsp;in&nbsp;fano-factor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calculation&nbsp;from&nbsp;-points&nbsp;to&nbsp;the&nbsp;end&nbsp;of&nbsp;array&nbsp;([-points:]&nbsp;slice)</tt></dd></dl>
+ <dl><dt><a name="-normalize"><strong>normalize</strong></a>(vect)</dt><dd><tt>returns&nbsp;the&nbsp;normalized&nbsp;form&nbsp;of&nbsp;the&nbsp;input&nbsp;vector&nbsp;v</tt></dd></dl>
+ <dl><dt><a name="-prob_density_calc"><strong>prob_density_calc</strong></a>(edata, items)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;probability&nbsp;density&nbsp;of&nbsp;edata[0]&nbsp;and<br>
+returns&nbsp;a&nbsp;plot&nbsp;of&nbsp;the&nbsp;probability&nbsp;density.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]</tt></dd></dl>
+ <dl><dt><a name="-prob_density_calc2"><strong>prob_density_calc2</strong></a>(edata, items)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;probability&nbsp;density&nbsp;of&nbsp;edata[0]&nbsp;and<br>
+returns&nbsp;a&nbsp;plot&nbsp;of&nbsp;the&nbsp;probability&nbsp;density&nbsp;with&nbsp;time.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]</tt></dd></dl>
+ <dl><dt><a name="-prob_density_calc3"><strong>prob_density_calc3</strong></a>(edata, items, bins=50)</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;probability&nbsp;density&nbsp;of&nbsp;edata[0]&nbsp;per<br>
+bins&nbsp;and&nbsp;returns&nbsp;a&nbsp;plot&nbsp;of&nbsp;the&nbsp;probability&nbsp;density&nbsp;(time&nbsp;slice).<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;edata&nbsp;:&nbsp;two&nbsp;dimensional&nbsp;array&nbsp;of&nbsp;data&nbsp;&amp;&nbsp;labels&nbsp;(data,&nbsp;label).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data&nbsp;is&nbsp;a&nbsp;3D&nbsp;array&nbsp;where&nbsp;each&nbsp;row&nbsp;are&nbsp;the&nbsp;individual<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;trajectories.&nbsp;Each&nbsp;trajectory&nbsp;is&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;array&nbsp;where<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;first&nbsp;column&nbsp;is&nbsp;time&nbsp;and&nbsp;the&nbsp;remaining&nbsp;columns&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;corresponding&nbsp;components.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;:&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bins&nbsp;:&nbsp;number&nbsp;of&nbsp;bins&nbsp;an&nbsp;entire&nbsp;trajectory&nbsp;will&nbsp;be&nbsp;discretized</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>INSERT</strong> = 'insert'</td></tr></table>
+</body></html>

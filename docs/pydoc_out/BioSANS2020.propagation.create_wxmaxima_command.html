@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.propagation.create_wxmaxima_command</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.propagation.html"><font color="#ffffff">propagation</font></a>.create_wxmaxima_command</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br><</font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;module&nbsp;is&nbsp;the&nbsp;create_wxmaxima_command&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;attempts&nbsp;to&nbsp;transforms&nbsp;topology&nbsp;file&nbsp;into&nbsp;wxmaxima&nbsp;ODE&nbsp;input<br>
+that&nbsp;a&nbsp;user&nbsp;can&nbsp;copy&nbsp;and&nbsp;paste&nbsp;into&nbsp;wxmaxima&nbsp;to&nbsp;grab&nbsp;a&nbsp;symbolic&nbsp;solution</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-for_wxmaxima"><strong>for_wxmaxima</strong></a>(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var, items=None, rfile='')</dt><dd><tt>This&nbsp;function&nbsp;&nbsp;transforms&nbsp;topology&nbsp;file&nbsp;&nbsp;into&nbsp;wxmaxima&nbsp;&nbsp;ODE&nbsp;input<br>
+that&nbsp;a&nbsp;user&nbsp;can&nbsp;copy&nbsp;and&nbsp;paste&nbsp;into&nbsp;wxmaxima&nbsp;to&nbsp;grab&nbsp;a&nbsp;symbolic<br>
+solution.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;appearance&nbsp;or&nbsp;position&nbsp;of&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;component&nbsp;in&nbsp;the&nbsp;reaction&nbsp;tag&nbsp;of&nbsp;BioSANS&nbsp;topology&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B,&nbsp;-kf1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;negative&nbsp;means&nbsp;to&nbsp;be&nbsp;estimated<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&gt;&nbsp;C,&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;sp_comp&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;=&nbsp;{'A':&nbsp;{0},&nbsp;'B':&nbsp;{0,&nbsp;1},&nbsp;'C':&nbsp;{1}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;appears&nbsp;in&nbsp;first&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;appears&nbsp;in&nbsp;first&nbsp;and&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;0,&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;appears&nbsp;in&nbsp;second&nbsp;reaction&nbsp;with&nbsp;index&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;that&nbsp;appears&nbsp;in&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reactions.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#REACTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&gt;&nbsp;B&nbsp;,&nbsp;0.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&lt;=&gt;&nbsp;C,&nbsp;0.1,&nbsp;0.2&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;of&nbsp;ks_dict&nbsp;is<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;:&nbsp;[0.3],&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;first&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;:&nbsp;[0.1,&nbsp;0.2]&nbsp;&nbsp;#&nbsp;second&nbsp;reaction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;conc&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;concentration.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;example;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'A':&nbsp;100.0,&nbsp;'B':&nbsp;-1.0,&nbsp;'C':&nbsp;0.0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;negative&nbsp;means&nbsp;unknown&nbsp;or&nbsp;for&nbsp;estimation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;reactant&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'A':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;A&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'B':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;product&nbsp;stoichiometry.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p_dict&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:&nbsp;{'B':&nbsp;1},&nbsp;&nbsp;#&nbsp;first&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;B&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1:&nbsp;{'C':&nbsp;1}&nbsp;&nbsp;&nbsp;#&nbsp;second&nbsp;reaction,&nbsp;coefficient&nbsp;of&nbsp;C&nbsp;is&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;(numpy.ndarray):&nbsp;stoichiometric&nbsp;matrix.&nbsp;For&nbsp;example<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;=&nbsp;np.array([<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;-1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;A<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;1,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;B<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;&nbsp;&nbsp;0,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;species&nbsp;C<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#1st&nbsp;rxn&nbsp;&nbsp;&nbsp;&nbsp;2nd&nbsp;rxn<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;])<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;(list):&nbsp;list&nbsp;of&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rfile&nbsp;(string,&nbsp;optional):&nbsp;name&nbsp;of&nbsp;topology&nbsp;file&nbsp;where&nbsp;some<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parameters&nbsp;or&nbsp;components&nbsp;are&nbsp;negative&nbsp;indicating&nbsp;&nbsp;they&nbsp;&nbsp;have<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;be&nbsp;estimated.&nbsp;Defaults&nbsp;to&nbsp;None.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;[0,&nbsp;0]&nbsp;-&nbsp;contains&nbsp;nothing</tt></dd></dl>
+ <dl><dt><a name="-prepare_dict1"><strong>prepare_dict1</strong></a>(sp_comp)</dt><dd><tt>This&nbsp;function&nbsp;prepares&nbsp;cs_var,&nbsp;cso_var,&nbsp;time<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sp_comp&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;components&nbsp;position&nbsp;in&nbsp;reaction<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;multitype:&nbsp;cs_var,&nbsp;cso_var,&nbsp;time</tt></dd></dl>
+ <dl><dt><a name="-prepare_ffrrint"><strong>prepare_ffrrint</strong></a>(items)</dt><dd><tt>This&nbsp;function&nbsp;instantiate&nbsp;how&nbsp;the&nbsp;output&nbsp;will&nbsp;be&nbsp;printed&nbsp;by&nbsp;crea-<br>
+thing&nbsp;the&nbsp;function&nbsp;ffprint<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text&nbsp;(Text):&nbsp;text&nbsp;area&nbsp;where&nbsp;the&nbsp;outputs&nbsp;are&nbsp;written<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;(tuple):&nbsp;3&nbsp;item&nbsp;list&nbsp;of&nbsp;(canvas,&nbsp;scroll_x,&nbsp;scroll_y)<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;function:&nbsp;either&nbsp;print&nbsp;in&nbsp;console&nbsp;or&nbsp;in&nbsp;text&nbsp;area</tt></dd></dl>
+ <dl><dt><a name="-prepare_list1"><strong>prepare_list1</strong></a>(ks_dict)</dt><dd><tt>This&nbsp;function&nbsp;prepares&nbsp;a&nbsp;list&nbsp;of&nbsp;symbol&nbsp;for&nbsp;rate&nbsp;constant<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ks_dict&nbsp;(dict):&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;positions<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;rate&nbsp;constants&nbsp;symbols</tt></dd></dl>
+ <dl><dt><a name="-prepare_list2"><strong>prepare_list2</strong></a>(stch_var, slabels)</dt><dd><tt>This&nbsp;function&nbsp;prepares&nbsp;two&nbsp;list&nbsp;from&nbsp;stoichiometric&nbsp;matrix<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;(np.ndarray):&nbsp;toichiometric&nbsp;matrix<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;[non&nbsp;zero&nbsp;row&nbsp;values&nbsp;of&nbsp;&nbsp;stch_var,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonzero&nbsp;rows&nbsp;index&nbsp;of&nbsp;stch_var]</tt></dd></dl>
+</td></tr></table>
+</body></html>

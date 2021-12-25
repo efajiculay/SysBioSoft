@@ -50,7 +50,7 @@ def calc_cross_corr(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     if len(edata[0]) != 3:
         ndata, slabels = sample_points(edata)
@@ -87,7 +87,7 @@ def calc_cross_corr(edata, items):
                 line = plt.plot(xvar, vvv[jnd, knd])
                 fig = plt.gcf()
                 plt.tight_layout()
-                globals2.plotted.append([plt.gca(), fig, [line]])
+                globals2.PLOTTED.append([plt.gca(), fig, [line]])
                 draw_figure(items, fig)
                 # plt.close()
 
@@ -148,7 +148,7 @@ def calc_covariance(edata, items, points=100):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         points : last number of points considered in covariance
                  calculation from -points to the end of array
                  or equivalent to [-points:] slice.
@@ -206,7 +206,7 @@ def calc_covariance(edata, items, points=100):
             text.insert(INSERT, slabels[ind].ljust(50) + " = "
                         + str(fano_f[ind]) + "\n")
 
-    globals2.plot_i = globals2.plot_i + 1
+    globals2.PLOT_I = globals2.PLOT_I + 1
 
 
 def fano_factor(edata, items, points=100):
@@ -218,7 +218,7 @@ def fano_factor(edata, items, points=100):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         points : last number of points considered in fano-factor
          calculation from -points to the end of array ([-points:] slice)
     """
@@ -244,7 +244,7 @@ def fano_factor(edata, items, points=100):
             text.insert(INSERT, slabels[ind].ljust(50) + " = "
                         + str(fano_f[ind]) + "\n")
 
-    globals2.plot_i = globals2.plot_i + 1
+    globals2.PLOT_I = globals2.PLOT_I + 1
 
 
 def prob_density_calc(edata, items):
@@ -256,7 +256,7 @@ def prob_density_calc(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     data, slabels = edata
     data_length = len(data)
@@ -276,7 +276,7 @@ def prob_density_calc(edata, items):
         plt.legend([slabels[jnd]])
         plt.tight_layout()
         fig = plt.gcf()
-        globals2.plotted.append([plt.gca(), fig, [line]])
+        globals2.PLOTTED.append([plt.gca(), fig, [line]])
         draw_figure(items, fig)
         # plt.close()
 
@@ -290,7 +290,7 @@ def prob_density_calc2(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     data, slabels = edata
     data_length = len(data)
@@ -320,7 +320,7 @@ def prob_density_calc2(edata, items):
         fig = plt.gcf()
         fig.colorbar(cntr)
         plt.tight_layout()
-        globals2.plotted.append([plt.gca(), fig, [cntr]])
+        globals2.PLOTTED.append([plt.gca(), fig, [cntr]])
         draw_figure(items, fig)
         # plt.close()
 
@@ -334,7 +334,7 @@ def prob_density_calc3(edata, items, bins=50):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         bins : number of bins an entire trajectory will be discretized
     """
     if len(edata[0]) != 3:
@@ -372,7 +372,7 @@ def prob_density_calc3(edata, items, bins=50):
             axf.set_ylabel("conc(" + slabels[ind] + ")")
             axf.set_zlabel("freq")
             axf.view_init(elev=40, azim=-120)
-            globals2.plotted.append([axf, fig, lines])
+            globals2.PLOTTED.append([axf, fig, lines])
             draw_figure(items, fig)
             # plt.close()
 
@@ -386,7 +386,7 @@ def ave_traj_calc(edata, items):
                 trajectories. Each trajectory is a 2D numpy array where
                 the first column is time and the remaining columns are
                 the corresponding components.
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
     """
     if len(edata[0]) != 3:
         ndata, slabels = sample_points(edata)
@@ -412,6 +412,6 @@ def ave_traj_calc(edata, items):
         plt.legend()
         fig = plt.gcf()
         plt.tight_layout()
-        globals2.plotted.append([plt.gca(), fig, lines])
+        globals2.PLOTTED.append([plt.gca(), fig, lines])
         draw_figure(items, fig)
         # plt.close()

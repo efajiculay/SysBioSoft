@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module BioSANS2020.model.ode_parse.ode_extract</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="BioSANS2020.html"><font color="#ffffff">BioSANS2020</font></a>.<a href="BioSANS2020.model.html"><font color="#ffffff">model</font></a>.<a href="BioSANS2020.model.ode_parse.html"><font color="#ffffff">ode_parse</font></a>.ode_extract</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><br></font></td></tr></table>
+    <p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;ode_extract&nbsp;module<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;grabs&nbsp;stoichiometric&nbsp;matrix,&nbsp;propensity&nbsp;vector,&nbsp;and&nbsp;chemical<br>
+reaction&nbsp;from&nbsp;a&nbsp;list&nbsp;of&nbsp;strings&nbsp;containing&nbsp;python&nbsp;expression<br>
+&nbsp;<br>
+List&nbsp;of&nbsp;functions:<br>
+&nbsp;<br>
+1.&nbsp;process<br>
+2.&nbsp;prop_extr<br>
+3.&nbsp;term_ext<br>
+4.&nbsp;get_prop_stoich<br>
+5.&nbsp;print_stoich_prop<br>
+6.&nbsp;grab_rxn_ksn<br>
+7.&nbsp;transform_to_rxn<br>
+8.&nbsp;odedxdt_to_topo<br>
+&nbsp;<br>
+For&nbsp;a&nbsp;given&nbsp;set&nbsp;of&nbsp;chemical&nbsp;species&nbsp;and&nbsp;corresponding&nbsp;ODE&nbsp;expression,<br>
+this&nbsp;script&nbsp;can&nbsp;be&nbsp;used&nbsp;as&nbsp;follows;<br>
+&nbsp;<br>
+1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Declare&nbsp;the&nbsp;list&nbsp;of&nbsp;ODE&nbsp;and&nbsp;variables&nbsp;or&nbsp;grab&nbsp;the&nbsp;list&nbsp;from&nbsp;a&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;=&nbsp;["m","P"]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dx_dt&nbsp;=&nbsp;["km&nbsp;-&nbsp;m*rm","kp*m&nbsp;-&nbsp;P*rp"]<br>
+&nbsp;<br>
+2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use&nbsp;"transform_to_rxn"&nbsp;command&nbsp;to&nbsp;get&nbsp;reactions&nbsp;that&nbsp;match&nbsp;the&nbsp;ODE.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#-transform_to_rxn">transform_to_rxn</a>(x,&nbsp;dx_dt)<br>
+&nbsp;<br>
+The&nbsp;result&nbsp;of&nbsp;this&nbsp;command&nbsp;is&nbsp;as&nbsp;follows;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;NONE&nbsp;=&gt;&nbsp;1.0&nbsp;m,&nbsp;1&nbsp;:::::&nbsp;lambda&nbsp;&nbsp;&nbsp;:&nbsp;km<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.0&nbsp;m&nbsp;=&gt;&nbsp;0&nbsp;NONE,&nbsp;1&nbsp;:::::&nbsp;lambda&nbsp;m&nbsp;:&nbsp;m*rm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.0&nbsp;P&nbsp;=&gt;&nbsp;0&nbsp;NONE,&nbsp;1&nbsp;:::::&nbsp;lambda&nbsp;P&nbsp;:&nbsp;P*rp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;NONE&nbsp;=&gt;&nbsp;1.0&nbsp;P,&nbsp;1&nbsp;:::::&nbsp;lambda&nbsp;m&nbsp;:&nbsp;kp*m<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;line&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;formation&nbsp;of&nbsp;mRNA&nbsp;m&nbsp;with&nbsp;a&nbsp;rate<br>
+constant&nbsp;of&nbsp;km.&nbsp;The&nbsp;second&nbsp;line&nbsp;is&nbsp;degradation&nbsp;of&nbsp;m&nbsp;with&nbsp;degradation<br>
+constant&nbsp;rm.&nbsp;The&nbsp;third&nbsp;line&nbsp;is&nbsp;degradation&nbsp;of&nbsp;protein&nbsp;with&nbsp;degradation<br>
+constant&nbsp;rp.&nbsp;The&nbsp;last&nbsp;line&nbsp;is&nbsp;the&nbsp;formation&nbsp;of&nbsp;P&nbsp;with&nbsp;rate&nbsp;constant&nbsp;kp.<br>
+The&nbsp;lambda&nbsp;expression&nbsp;after&nbsp;the&nbsp;delimiter&nbsp;':::::'&nbsp;tells&nbsp;us&nbsp;the<br>
+propensity&nbsp;for&nbsp;each&nbsp;reaction&nbsp;which&nbsp;is&nbsp;provided&nbsp;after&nbsp;':'.&nbsp;The&nbsp;0&nbsp;NONE<br>
+means&nbsp;there&nbsp;is&nbsp;no&nbsp;defined&nbsp;reactant&nbsp;and&nbsp;or&nbsp;degradation&nbsp;product&nbsp;for&nbsp;this<br>
+reaction.<br>
+&nbsp;<br>
+3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use&nbsp;"print_stoich_prop"&nbsp;to&nbsp;print&nbsp;stoichiometric&nbsp;matrix&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;propensity&nbsp;vector.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#-print_stoich_prop">print_stoich_prop</a>(dx_dt)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;result&nbsp;is&nbsp;as&nbsp;follows;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.0*km&nbsp;-&nbsp;1.0*m*rm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-1.0*P*rp&nbsp;+&nbsp;1.0*kp*m<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[1.00000000000000,&nbsp;-1.00000000000000,&nbsp;0,&nbsp;0]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[0,&nbsp;0,&nbsp;-1.00000000000000,&nbsp;1.00000000000000]<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[km]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[m*rm]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[P*rp]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[kp*m]<br>
+&nbsp;<br>
+The&nbsp;first&nbsp;two&nbsp;line&nbsp;here&nbsp;is&nbsp;the&nbsp;declared&nbsp;ODE.&nbsp;After&nbsp;the&nbsp;space,&nbsp;is&nbsp;the<br>
+stoichiometric&nbsp;matrix.&nbsp;The&nbsp;rows&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;species&nbsp;declared&nbsp;in<br>
+step&nbsp;1&nbsp;i.e.&nbsp;first&nbsp;row&nbsp;in&nbsp;the&nbsp;matrix&nbsp;corresponds&nbsp;to&nbsp;x[0]&nbsp;or&nbsp;m&nbsp;and&nbsp;the<br>
+second&nbsp;row&nbsp;corresponds&nbsp;to&nbsp;x[1]&nbsp;or&nbsp;P.&nbsp;The&nbsp;columns&nbsp;correspond&nbsp;to&nbsp;the&nbsp;terms<br>
+in&nbsp;the&nbsp;propensity&nbsp;as&nbsp;listed&nbsp;after&nbsp;the&nbsp;stoichiometric&nbsp;matrix.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-get_prop_stoich"><strong>get_prop_stoich</strong></a>(dxdt)</dt><dd><tt>This&nbsp;function&nbsp;extracts&nbsp;the&nbsp;propensity&nbsp;vector&nbsp;and&nbsp;stoichiometric<br>
+matrix&nbsp;from&nbsp;the&nbsp;list&nbsp;of&nbsp;ordinary&nbsp;differential&nbsp;equation.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dxdt&nbsp;:&nbsp;list&nbsp;of&nbsp;strings&nbsp;of&nbsp;mathematical&nbsp;expression<br>
+Returns&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;v_stoich&nbsp;:&nbsp;stoichiometric&nbsp;matrix&nbsp;(sympy&nbsp;Matrix)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;w_var&nbsp;:&nbsp;propensity&nbsp;vector&nbsp;(&nbsp;sympy&nbsp;type&nbsp;Matrix&nbsp;)</tt></dd></dl>
+ <dl><dt><a name="-grab_rxn_ksn"><strong>grab_rxn_ksn</strong></a>(stch_var, xvar, w_var)</dt><dd><tt>This&nbsp;function&nbsp;transform&nbsp;the&nbsp;stoichiometric&nbsp;matrix,&nbsp;species&nbsp;or<br>
+components,&nbsp;and&nbsp;propensity&nbsp;vector&nbsp;into&nbsp;a&nbsp;list&nbsp;of&nbsp;reactions&nbsp;and&nbsp;list<br>
+of&nbsp;rate&nbsp;constants.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stch_var&nbsp;:&nbsp;stoichiometric&nbsp;matrix&nbsp;or&nbsp;2D&nbsp;Matrix&nbsp;of&nbsp;coefficient<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xvar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;of&nbsp;components&nbsp;or&nbsp;species<br>
+&nbsp;&nbsp;&nbsp;&nbsp;w_var&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;propensity&nbsp;vector&nbsp;or&nbsp;1D&nbsp;Matrix&nbsp;of&nbsp;fluxes<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rxn_var&nbsp;&nbsp;:&nbsp;list&nbsp;of&nbsp;reaction&nbsp;similar&nbsp;to&nbsp;BioSANS&nbsp;reactions&nbsp;format<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ksn_var&nbsp;&nbsp;:&nbsp;set&nbsp;of&nbsp;rate&nbsp;constant&nbsp;symbols&nbsp;if&nbsp;not&nbsp;numeric</tt></dd></dl>
+ <dl><dt><a name="-odedxdt_to_topo"><strong>odedxdt_to_topo</strong></a>(mfile, items)</dt><dd><tt>This&nbsp;function&nbsp;reads&nbsp;BioSANS&nbsp;ODE&nbsp;file&nbsp;format&nbsp;and&nbsp;converts&nbsp;it&nbsp;to<br>
+BioSANS&nbsp;topology&nbsp;file&nbsp;format.&nbsp;The&nbsp;ODE&nbsp;file&nbsp;contains&nbsp;ODE&nbsp;expression,<br>
+initial&nbsp;concentration,&nbsp;and&nbsp;rate&nbsp;constants&nbsp;separated&nbsp;by&nbsp;tags.&nbsp;There<br>
+are&nbsp;three&nbsp;tags&nbsp;that&nbsp;is&nbsp;currently&nbsp;supported&nbsp;:&nbsp;ODE_DECLARATIONS,<br>
+INI_CONCENTRATIONS,&nbsp;and&nbsp;RATE_CONSTANTS.&nbsp;Provided&nbsp;below&nbsp;is&nbsp;an&nbsp;example<br>
+of&nbsp;the&nbsp;content&nbsp;of&nbsp;a&nbsp;typical&nbsp;ODE&nbsp;file.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ODE_DECLARATIONS:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&nbsp;-ka*A*B/(1+C**2)&nbsp;+&nbsp;kf1/(1+B**2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&nbsp;-ka*A*B/(1+C**2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=&nbsp;-kc*C&nbsp;+&nbsp;kf2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;D&nbsp;=&nbsp;ka*A*B/(1+C**2)&nbsp;-&nbsp;kf2<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;INI_CONCENTRATIONS:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;=&nbsp;100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;=&nbsp;200<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C&nbsp;=&nbsp;150<br>
+&nbsp;&nbsp;&nbsp;&nbsp;D&nbsp;=&nbsp;0<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RATE_CONSTANTS:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ka&nbsp;=&nbsp;0.02<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kf1&nbsp;=&nbsp;0.2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kc&nbsp;=&nbsp;0.03<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kf2&nbsp;=&nbsp;0.01<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mfile&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;file&nbsp;containing&nbsp;list&nbsp;of&nbsp;ODE&nbsp;expression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;containing&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;text&nbsp;area&nbsp;where&nbsp;the&nbsp;outputs&nbsp;are&nbsp;written</tt></dd></dl>
+ <dl><dt><a name="-print_stoich_prop"><strong>print_stoich_prop</strong></a>(dxdt)</dt><dd><tt>This&nbsp;function&nbsp;extracts&nbsp;the&nbsp;propensity&nbsp;vector&nbsp;and&nbsp;stoichiometric<br>
+matrix&nbsp;from&nbsp;the&nbsp;list&nbsp;of&nbsp;ordinary&nbsp;differential&nbsp;equation&nbsp;and&nbsp;prints<br>
+the&nbsp;output&nbsp;in&nbsp;the&nbsp;console.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dxdt&nbsp;:&nbsp;list&nbsp;of&nbsp;strings&nbsp;of&nbsp;mathematical&nbsp;expression</tt></dd></dl>
+ <dl><dt><a name="-process"><strong>process</strong></a>(xvar)</dt><dd><tt>This&nbsp;function&nbsp;formats&nbsp;the&nbsp;expression&nbsp;xvar&nbsp;into&nbsp;a&nbsp;form&nbsp;that&nbsp;can&nbsp;be<br>
+easily&nbsp;processed&nbsp;by&nbsp;stripping&nbsp;and&nbsp;replacing&nbsp;invalid&nbsp;operators.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xvar&nbsp;:&nbsp;mathematical&nbsp;expresson&nbsp;i.e.&nbsp;'A*B*ka/(C**2&nbsp;+&nbsp;1)'<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;val&nbsp;:&nbsp;same&nbsp;as&nbsp;xvar&nbsp;but&nbsp;with&nbsp;invalid&nbsp;operator&nbsp;removed</tt></dd></dl>
+ <dl><dt><a name="-prop_extr"><strong>prop_extr</strong></a>(expr, prop)</dt><dd><tt>This&nbsp;function&nbsp;extracts&nbsp;the&nbsp;propensity&nbsp;terms&nbsp;from&nbsp;the&nbsp;expression<br>
+expr&nbsp;which&nbsp;is&nbsp;a&nbsp;string&nbsp;of&nbsp;python&nbsp;mathematical&nbsp;expression.&nbsp;Propensity<br>
+terms&nbsp;are&nbsp;the&nbsp;terms&nbsp;that&nbsp;can&nbsp;be&nbsp;separated&nbsp;by&nbsp;+&nbsp;or&nbsp;-&nbsp;without&nbsp;the<br>
+numerical&nbsp;coefficient&nbsp;or&nbsp;stoichiometric&nbsp;multiplier.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expr&nbsp;:&nbsp;mathematical&nbsp;expresson&nbsp;i.e.&nbsp;'A*B*ka/(C**2&nbsp;+&nbsp;1)'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prop&nbsp;:&nbsp;propensity&nbsp;list&nbsp;to&nbsp;append&nbsp;extracted&nbsp;propensity&nbsp;term</tt></dd></dl>
+ <dl><dt><a name="-term_ext"><strong>term_ext</strong></a>(expr)</dt><dd><tt>This&nbsp;function&nbsp;extracts&nbsp;the&nbsp;terms&nbsp;from&nbsp;the&nbsp;expression&nbsp;expr&nbsp;which<br>
+is&nbsp;a&nbsp;string&nbsp;of&nbsp;python&nbsp;mathematical&nbsp;expression.&nbsp;The&nbsp;terms&nbsp;are&nbsp;part&nbsp;of<br>
+expr&nbsp;which&nbsp;can&nbsp;be&nbsp;separated&nbsp;by&nbsp;+&nbsp;or&nbsp;-&nbsp;with&nbsp;the&nbsp;numerical&nbsp;coefficient<br>
+or&nbsp;stoichiometric&nbsp;multiplier.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expr&nbsp;:&nbsp;mathematical&nbsp;expresson&nbsp;i.e.&nbsp;'A*B*ka/(C**2&nbsp;+&nbsp;1)'<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;term&nbsp;:&nbsp;the&nbsp;list&nbsp;of&nbsp;extracted&nbsp;terms</tt></dd></dl>
+ <dl><dt><a name="-transform_to_rxn"><strong>transform_to_rxn</strong></a>(xvar, dxdt, x_ini=None, k_rc=None, items=None)</dt><dd><tt>This&nbsp;function&nbsp;transform&nbsp;the&nbsp;list&nbsp;of&nbsp;components&nbsp;and&nbsp;list&nbsp;of&nbsp;ODE<br>
+into&nbsp;BioSANS&nbsp;topology&nbsp;file&nbsp;format.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;xvar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;of&nbsp;components&nbsp;or&nbsp;species&nbsp;(variable&nbsp;in&nbsp;ODE)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;["m","P"]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dxdt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;of&nbsp;differential&nbsp;equations&nbsp;(python&nbsp;string)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;["km&nbsp;-&nbsp;m*rm","kp*m&nbsp;-&nbsp;P*rp"]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x_ini&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;initial&nbsp;conecentration&nbsp;or&nbsp;value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;{"m"&nbsp;:&nbsp;10,&nbsp;"p"&nbsp;:&nbsp;0}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;k_rc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;dictionary&nbsp;of&nbsp;rate&nbsp;constant&nbsp;symbols&nbsp;abd&nbsp;values<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;example&nbsp;{"km"&nbsp;:&nbsp;0.1,&nbsp;"rm"&nbsp;:&nbsp;0.2}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;list&nbsp;containing&nbsp;[canvas,&nbsp;scroll_x,&nbsp;scroll_y]<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;text&nbsp;area&nbsp;where&nbsp;the&nbsp;outputs&nbsp;are&nbsp;written</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DONE_PARSING</strong> = set()<br>
+<strong>INSERT</strong> = 'insert'</td></tr></table>
+</body></html>

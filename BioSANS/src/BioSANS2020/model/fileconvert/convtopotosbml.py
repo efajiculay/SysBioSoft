@@ -62,7 +62,7 @@ def topo_to_sbml(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms,
                   r_prods = {0: {'B': 1}, 1: {'C': 2}}
         vbig : not used but pertains to stoichiometric matrix
         v_volms : volume of compartment
-        items : three dimensional array of [canvas, scroll_x, scroll_y]
+        items : 3 item list of [canvas, scroll_x, scroll_y]
         molar : True if conc. is in molar otherwise False
         rfile : path of the topology file + name of topology file
     """
@@ -72,7 +72,7 @@ def topo_to_sbml(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms,
         cs_comp[xvar] = Symbol(xvar, real=True, negative=False)
 
     kcs_vals = []
-    for i in range(len(ks_vals)):
+    for i, _ in enumerate(ks_vals):
         row = []
         if len(ks_vals[i]) == 1:
             key = 'kf' + str(i + 1)
@@ -230,7 +230,7 @@ def topo_to_sbml(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms,
             spcs[-1].setHasOnlySubstanceUnits(True)
 
     rcks_var = []
-    for i in range(len(kcs_vals)):
+    for i, _ in enumerate(kcs_vals):
         if len(kcs_vals[i]) == 1:
             rcks_var.append(model.createParameter())
             rcks_var[-1].setId(str(kcs_vals[i][0]))
@@ -344,12 +344,12 @@ def topo_to_sbml(sp_comp, ks_vals, conc, r_react, r_prods, vbig, v_volms,
                     pbig_var[-1].setStoichiometry(r_prods[rvar][bvar])
 
     kinetic_law = []
-    for rvar in range(len(rxns)):
+    for rvar, _ in enumerate(rxns):
         kinetic_law.append(rxns[rvar].createKineticLaw())
         kinetic_law[-1].setMath(parseL3Formula(str(fprop[rvar]
                                                    ).replace("**", "^")))
 
     document.setModel(model)
-    writeSBMLToFile(document, globals2.toConvert + ".xml")
+    writeSBMLToFile(document, globals2.TO_CONVERT + ".xml")
     print(vbig, items)
     return [0, 0]

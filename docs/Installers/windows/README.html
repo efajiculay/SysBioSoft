@@ -1,0 +1,113 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: Consolas,"courier new";
+				color: black;
+				padding: 2px;
+				font-size: 100%;
+			}
+			.text-header{
+				background-color: #92a8d1;
+				color:white;
+			}
+			h1, h2 {
+				padding-top: 2px;
+				padding-bottom: 2px;
+			}
+		</style>
+	</head>
+	<h1 class="text-header">BioSANS installer for windows</h1>
+	<pre>	
+	Main executable installers:
+
+	1) BioSANS_installer_py3.9.5_amd32.exe   - for windows > 7
+	2) BioSANS_installer_py3.9.5_amd64.exe   - for windows > 7
+	3) BioSANS_installer_py3.7.4_x86_64.exe  - for windows > XP
+	4) BioSANS_installer_py3.7.4_x86_32.exe  - for windows > XP
+	
+	To install:
+	
+		Download appropriate installer and Double click executable	
+		This will create a shortcut in desktop to run BioSANS
+		
+	To uninstall:
+	
+		Uninstall the corresponding python version in the control panel and delete
+		the created files in C:\BioSANS or C:\BioSANS2020 or C:\BioSANS2021.
+	</pre>
+	<h2 class="text-header">Command line installation:</h2>
+	<pre>
+	
+	Command line installation using python/anaconda terminal is a preferred way
+	specially for those who want to use BioSANS as apython import/library. The 
+	following steps is applicable for windows version > XP.
+	
+	Steps:
+	
+		1) Download and install anaconda or python with python >= 3.7. 
+		
+		2) Launched terminal;
+		
+		   For anaconda, after installion, the terminal is accessible in the 
+		   windows search box in the task bar. Just type anaconda and click the
+		   anaconda terminal to launched.
+		   
+		   For python, you need to ticked the option to add python to the path
+		   during python installation. This will make python accessible in cmd.
+		   Type cmd in the  windows search box and launched the cmd terminal
+		   
+		3) Install using pip
+
+		   For anaconda terminal users:
+
+				Create new conda envinroment where you can install BioSANS
+
+				<code>conda create -n BioSANS python==3.8.8</code>
+		   
+				Activate conda environment
+
+				<code>activate BioSANS</code>
+				
+				<code>pip install BioSANS2020</code>
+		   
+		   For python terminal users:
+
+				<code>pip install BioSANS2020</code>
+				
+		        Note: Now python terminal also allow creating environment but 
+				      have a different syntax compare to anaconda
+			
+	    After the installation, you can launcehd BioSANS GUI by any of the following
+		terminal commands;
+	   
+			<code>BioSANS</code> 
+			<code>python3 -m BioSANS2020</code>
+			<code>python3 -m BioSANS2020.BioSANS</code> 
+	   
+		To launched BioSSL which is a command line structured simulation langguage
+		associated with BioSANS; Issue any of the following commands;
+	   
+			<code>BioSSL</code> 
+			<code>python3 -m BioSANS2020.BioSSL</code>
+
+		To uninstall BioSANS, issue the following command
+
+			<code>pip uninstall BioSANS2020</code>
+
+	</pre>
+</html>

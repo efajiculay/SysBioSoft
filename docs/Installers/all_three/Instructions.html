@@ -1,0 +1,371 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: Consolas,"courier new";
+				color: black;
+				padding: 2px;
+				font-size: 100%;
+			}
+			.text-header{
+				background-color: #92a8d1;
+				color:white;
+			}
+			h1, h2 {
+				padding-top: 2px;
+				padding-bottom: 2px;
+			}
+		</style>
+	</head>
+	<h1 class="text-header">BioSANS installation procedure</h1>
+	<pre>
+	
+	BioSANS installation  can easily be done if anaconda  or python terminal is 
+	already installed in the user machine. The following link is where anaconda
+	and python can be downloaded;
+	
+			<code>https://www.anaconda.com/products/individual</code>
+			
+			<code>https://www.python.org/downloads/</code>
+	
+	Download and  install one of those software and ensure that you have ticked
+	the option to add them to path.
+	
+	After installing anaconda and or python from the corresponding links above,
+	The user needs to find out how to lauched the terminal associated to either
+	python or anaconda. 
+	
+	In windows, you  can type cmd or anaconda in the windows search  located on
+	the left side of the Windows taskbar.
+	
+	In Ubuntu, just use CTRL + T to launched the terminal. Normally, python is
+	already installed in Ubuntu and probably dont need to install any of the 
+	links above.
+	
+	For MacOSX,  click the Launchpad. Search  for the  terminal and open it. If 
+	you  have ticked  the option to add python/anaconda  to path, then they are 
+	accessible in MacOSX terminal.
+	
+	In the terminal just type the following to install BioSANS;
+	
+			<code>pip install BioSANS2020</code>
+
+	To run BioSANS; just need to run any of this command in the same terminal;
+	
+			<code>BioSANS</code> 
+			<code>python -m BioSANS2020</code>
+			<code>python -m BioSANS2020.BioSANS</code>
+			
+	To run BioSSL; just need to run any of this command in the same terminal;
+	
+			<code>BioSSL</code> 
+			<code>python -m BioSANS2020.BioSSL</code>
+			
+	To uninstall; run the following commands;
+	
+			<code>python -m pip uninstall BioSANS2020</code>
+			
+	To see BioSANS installation directory; type the followung
+	
+			<code>python -m pip show BioSANS2020</code>
+			
+	</pre>
+	<h2 class="text-header">Windows intallation steps</h2>
+	<pre>
+	
+	
+	Main installers:
+	
+	Executable installer(Double click executable installer)
+
+	1) BioSANS_installer_py3.9.5_amd32.exe   - for windows > 7
+	2) BioSANS_installer_py3.9.5_amd64.exe   - for windows > 7
+	3) BioSANS_installer_py3.7.4_x86_64.exe  - for windows > XP
+	4) BioSANS_installer_py3.7.4_x86_32.exe  - for windows > XP
+	
+	Installation using pip - preferred way(python/anaconda terminal)
+	
+		for windows version > XP where python >= 3.7 is installed  
+
+	For anaconda terminal users:
+
+		Create new conda envinroment where you can install BioSANS
+
+			<code>conda create -n BioSANS python==3.8.8</code>
+		   
+		Activate conda environment
+
+			<code>activate BioSANS</code>
+		   
+		Install BioSANS using pip
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+
+	For python terminal users:
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+			
+	After the installation, you can launcehd BioSANS GUI by any of the following terminal commands;
+	   
+		<code>BioSANS</code> 
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code> 
+	   
+	To launched BioSSL which is a command line structured simulation langguage associated with BioSANS;
+	Issue any of the following commands;
+	   
+		<code>BioSSL</code> 
+		<code>python3 -m BioSANS2020.BioSSL</code>
+
+	To uninstall BioSANS, issue the following command
+
+	   <code>pip uninstall BioSANS2020</code>
+
+	   
+	### Uninstallation procedure:
+
+	For installers 1-4, Uninstall the corresponding python version in the control panel <br/>
+	For installed using pip, type the following command.
+
+		   <code>pip uninstall BioSANS2020</code>
+		   
+	</pre>
+	<h2 class="text-header">Ubuntu intallation steps</h2>
+	<pre>
+	
+
+	### Main installers:
+	
+	1) Installation using pip - preferred way(Ubuntu terminal)
+	
+	In most cases, Ubuntu comes with python and recently python 3.8 is default in Ubuntu.
+	We can simply Install BioSANS by running the following command in Ubuntu Terminal;  
+
+	For anaconda users:
+
+		Create new conda envinroment where you can install BioSANS
+
+			<code>conda create -n BioSANS python==3.8.8</code>
+		   
+		Activate conda environment
+
+			<code>activate BioSANS</code>
+		   
+		Install BioSANS using pip
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+
+	For non anaconda users:
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+			
+	After the installation, you can launcehd BioSANS GUI by any of the following terminal commands;
+	   
+		<code>BioSANS</code> 
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code> 
+	   
+	To launched BioSSL which is a command line structured simulation langguage associated with BioSANS;
+	Issue any of the following commands;
+	   
+		<code>BioSSL</code> 
+		<code>python3 -m BioSANS2020.BioSSL</code>
+
+	To uninstall BioSANS, issue the following command
+
+	   <code>pip uninstall BioSANS2020</code>
+   
+		   
+	2) Installation using executable - we provide an executable to install BioSANS but still requires the terminal.
+
+		BioSANS_Ubuntu_Installer - just cd to the directory of this executable after you download it and type;
+
+		<code>./Ubuntu_Installer</code>
+	   
+	   This will also create a desktop shortcut to run BioSANS
+	   
+	   
+	3) If the above installation procedure fails
+	
+		#The following script are optional
+		<code>sudo apt update</code>
+		<code>sudo apt install software-properties-common</code>
+		#sudo add-apt-repository ppa:deadsnakes/ppa   -might not be needed in most cases
+
+		#If python3.7 or higher is not installed (normally already have 3.8 by default)
+		<code>sudo apt install python3</code>
+		<code>sudo apt-get install python3-tk</code>
+		<code>sudo apt install python3-distutils</code>
+
+		#Installing pip here
+		<code>sudo apt install curl</code>
+		<code>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</code>
+		<code>python3 get-pip.py</code>
+
+		#Installing BioSANS
+		<code>python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+		#Locating BioSANS installation directory
+		<code>python3 -m pip install show BioSANS2020</code>
+
+		# to run BioSANS
+		cd "to the location directory"
+		<code>python3 BioSANS.py</code>
+
+		#You may also run BioSANS using any of the following commands
+		<code>BioSANS</code>
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code>
+		   
+	</pre>
+	<h2 class="text-header">MacOSX intallation steps</h2>
+	<pre>
+
+
+	Main installers:
+	
+	1) Installation using pip - preferred way(MacOSX terminal)
+	
+	In most cases, MacOSX don't have anaconda or python in its terminal. 
+	If you can manage to install anaconda or python and can find those
+	terminal, the following can be done to install BioSANS.
+
+	For anaconda users:
+
+		Create new conda envinroment where you can install BioSANS
+
+			<code>conda create -n BioSANS python==3.8.8</code>
+		   
+		Activate conda environment
+
+			<code>activate BioSANS</code>
+		   
+		Install BioSANS using pip
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+
+	For non anaconda users:
+
+			old way:
+
+			<code>pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+			new way:
+
+			<code>pip install BioSANS2020</code>
+			
+	After the installation, you can launcehd BioSANS GUI by any of the following terminal commands;
+	   
+		<code>BioSANS</code> 
+		<code>python3 -m BioSANS2020</code>
+		<code>python3 -m BioSANS2020.BioSANS</code> 
+	   
+	To launched BioSSL which is a command line structured simulation langguage associated with BioSANS;
+	Issue any of the following commands;
+	   
+		<code>BioSSL</code> 
+		<code>python3 -m BioSANS2020.BioSSL</code>
+
+	To uninstall BioSANS issue the following command
+
+	   <code>pip uninstall BioSANS2020</code>
+
+	   
+	### Uninstallation procedure:
+
+	For installers 1-4, Uninstall the corresponding python version in the control panel <br/>
+	For installed using pip, type the following command.
+
+		   <code>pip uninstall BioSANS2020</code>
+		   
+		   
+	2) Installation using executable - we provide an executable to install BioSANS for MacOSX.
+
+		MacOSX_installer - double click this to install
+	   
+		This will also create a desktop shortcut to run BioSANS
+		
+		
+	3) Installation using Homebrew
+	
+		For those who dont have python terminal, or anaconda terminal experience.
+		
+		# Find MAC terminal by searching terminal in launchpad
+		# click the black terminal
+		# it will be shown as a white window
+		# The following commands are the series of commands to install BioSANS using MAC terminal
+
+		<code>xcode-select —install</code>
+
+		<code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"</code>
+
+		<code>brew install python</code>
+		<code>python3 -m pip install --upgrade pip</code>
+		<code>brew install --cask anaconda</code>
+
+		<code>python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020</code>
+
+		# The following command gives us the installation directory after the "Location :" tag
+		<code>python3 -m pip install show BioSANS2020</code>
+
+		# to run BioSANS
+		<code>cd "to the location directory"</code>
+		<code>python3 BioSANS.py</code>
+
+		#You may also run BioSANS using any of the following commands
+		
+			GUI:
+				<code>BioSANS</code>
+				<code>python3 -m BioSANS2020</code>
+				<code>python3 -m BioSANS2020.BioSANS</code>
+			CONSOLE:
+				<code>BioSSL</code>
+				<code>python3 -m BioSANS2020.BioSSL</code>
+
+
+	</pre>
+</html>

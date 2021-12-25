@@ -220,7 +220,7 @@ def get_prop_stoich(dxdt):
                 xvar = sympify(xxvar) / w_var[j]
                 try:
                     s_var = s_var + float(xvar)
-                except BaseException:
+                except:
                     pass
             v_stoich[i][j] = s_var
 

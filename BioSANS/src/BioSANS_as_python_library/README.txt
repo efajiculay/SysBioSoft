@@ -21,7 +21,7 @@ The following are commonly importe dlibraries
 	from BioSANS2020.model.fileconvert.process_sbml import process_sbml as sbml_to_topo
 	from BioSANS2020.myglobal import mglobals as globals2
 	from BioSANS2020.myglobal import proc_global as proc_global
-	from BioSANS2020.propagation.recalculate_globals import *
+	from BioSANS2020.propagation.recalculate_globals import get_globals
 	globals2.init()
 	
 The following folders contains the examples codes that makes use of BioSANS as import
