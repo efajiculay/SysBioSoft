@@ -283,6 +283,7 @@ def process(
 
         last = ""
         for row in file:
+            row = row.strip()+" "
             if last == "Function_Definitions":
                 if row.strip() != "" and row[0] != "#":
                     exec(row.strip(), locals(), SBML_FUNCT_DICT)

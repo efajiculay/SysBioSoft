@@ -262,6 +262,7 @@ def get_globals(rfile):
             rows = []
             last = ""
             for row in file:
+                row = row.strip()+" "
                 if last == "Function_Definitions":
                     if row.strip() != "" and row[0] != "#":
                         exec(row.strip(), SBML_FUNCT_DICT)

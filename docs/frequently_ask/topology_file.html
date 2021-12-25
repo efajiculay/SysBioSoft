@@ -1,0 +1,137 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: Consolas,"courier new";
+				color: black;
+				padding: 2px;
+				font-size: 100%;
+			}
+			.text-header{
+				background-color: #92a8d1;
+				color:white;
+			}
+			h1, h2 {
+				padding-top: 2px;
+				padding-bottom: 2px;
+			}
+		</style>
+	</head>
+	<h1 class="text-header">What is a topology file</h1>
+	<pre>
+	BioSANS topology file contains  the model  which is describable by ordinary
+	differential equation. This model contains the following;
+	
+	1. A set of chemical reaction. They can be independent reaction.
+	2. Rate constants (can use dummy number if unknown)
+	   Note! If negative number is used, it is a tag for our software to
+	   include that rate cosntant for estimation when doing parameter estimation
+	3. Initial conditions/concentration (can use dummy number if unknown)
+	   Note! If negative number is used, it is a tag for our software to
+	   include that concentration for estimation when doing parameter estimation
+	4. Propensity lamdba function/modification - algebraic expression that 
+	   modifies the propensity. It may contain boolean logic and complex rules.
+	5. Concentration lambda function/modification  - algebraic expression that 
+	   modifies the concentration. It may contain boolean logic and complex rules.
+		   
+	The topology file contains tags that tells the software what the entries
+	after the tags are. There are three main tags in BioSANS as follows;
+	
+	1. <code>FUNCTION_DEFINITIONS</code>:
+	
+	   This is the list of variable declaration
+	   
+	2. <code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+	
+	   Everything after "#REACTIONS" are optional. They can have propensity
+	   modification after some delimiter
+	   
+	3. <code>@CONCENTRATION</code>
+	
+	   This tag are oncentration values w/ or w/o concentration modification
+	</pre>
+	<h2 class="text-header">Example topology file contents:</h2>
+	<pre>
+	The following is an example topology file for the reversible reaction A <=> B.
+	Shown in the example are the three main tags in BioSANS topology file.
+	
+		<code>FUNCTION_DEFINITIONS:</code>	
+		<code>Ao = 100</code>	
+		<code>Bo = 10</code>	
+		<code>kf1 = 0.5</code>	
+		<code>kb1 = 0.3</code>	
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>	
+		<code>A <=> B, kf1, kb1</code>	
+
+		<code>@CONCENTRATION</code>	
+		<code>A, Ao</code>	
+		<code>B, Bo</code>
+		
+	In the above reaction, the forward rate constant is kf1 and the backwards is kb1.
+	If the reaction is not reversible, only one rate constant is needed.
+	</pre>
+	<h2 class="text-header">Topology file with propensity modification:</h2>
+	<pre>
+	An alternative form of topology above is shown below. This is exactly the same
+	as above except with propensity modification in the form of lambda expression.
+	Take note that the lambda expression could have complex mathematical. Here we
+	only provide a simple example for demonstration.
+			
+		<code>FUNCTION_DEFINITIONS:</code>
+		<code>Ao = 100</code>
+		<code>Bo = 10</code>
+		<code>kf1 = 0.5</code>
+		<code>kb1 = 0.3</code>
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+		<code>A <=> B, 1, 1 ::::: lambda A : kf1*A ::: lambda B : kb1*B</code>
+
+		<code>@CONCENTRATION</code>
+		<code>A, Ao</code>
+		<code>B, Bo</code>
+		
+	In the above reaction, the forward rate constant is 1 and the backwards is 1
+	but, they are not used since we provide a propensity modification which is
+	after the delimeter ":::::". Since there are forward and backward reaction,
+	two propensity lambda expression are given delimited by ":::".
+	</pre>
+	<h2 class="text-header">Topology file with concentration modification:</h2>
+	<pre>
+	Concentration modification allows to introduce rule in concentration that tends 
+	to alter the propagated concentration at runtime. The rules can be based on the
+	current state of the system or from some other former state.
+	
+		<code>FUNCTION_DEFINITIONS:</code>	
+		<code>Ao = 100</code>	
+		<code>Bo = 10</code>	
+		<code>kf1 = 0.5</code>	
+		<code>kb1 = 0.3</code>	
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>	
+		<code>A <=> B, kf1, kb1</code>	
+
+		<code>@CONCENTRATION</code>	
+		<code>A, Ao, lambda A : 100 if A<50 else A</code>	
+		<code>B, Bo</code>	
+
+	</pre>
+	<h2 class="text-header">Examples of topology files</h2>
+	<pre>		
+
+	</pre>
+</html>
