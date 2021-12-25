@@ -119,8 +119,8 @@ $(document).ready(function(){
 	you_tube_embed("#Itut_2", "J_SngTfG_fk", MyIFrame);
 	//you_tube_embed("#Ptut_1", "PaR9msE8PdQ", MyIFrame);
 	//you_tube_embed("#Ptut_1", "PaR9msE8PdQ", MyIFrame);
-	you_tube_embed("#Stut_1", "PaR9msE8PdQ", MyIFrame);
-	//you_tube_embed("#Stut_2", "PaR9msE8PdQ", MyIFrame);
+	you_tube_embed("#Stchtut_1", "PaR9msE8PdQ", MyIFrame);
+	//you_tube_embed("#Stchtut_2", "PaR9msE8PdQ", MyIFrame);
 	
 
 	MyIFrame.on('load',function(){
