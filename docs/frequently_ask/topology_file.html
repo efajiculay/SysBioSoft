@@ -62,7 +62,7 @@
 	   
 	3. <code>@CONCENTRATION</code>
 	
-	   This tag are oncentration values w/ or w/o concentration modification
+	   This tag are concentration values w/ or w/o concentration modification
 	</pre>
 	<h2 class="text-header">Example topology file contents:</h2>
 	<pre>
@@ -75,7 +75,7 @@
 		<code>kf1 = 0.5</code>	
 		<code>kb1 = 0.3</code>	
 
-		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>	
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 1000, FileUnit = molar</code>	
 		<code>A <=> B, kf1, kb1</code>	
 
 		<code>@CONCENTRATION</code>	
@@ -98,7 +98,7 @@
 		<code>kf1 = 0.5</code>
 		<code>kb1 = 0.3</code>
 
-		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 1000, FileUnit = molar</code>
 		<code>A <=> B, 1, 1 ::::: lambda A : kf1*A ::: lambda B : kb1*B</code>
 
 		<code>@CONCENTRATION</code>
@@ -122,7 +122,7 @@
 		<code>kf1 = 0.5</code>	
 		<code>kb1 = 0.3</code>	
 
-		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>	
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 1000, FileUnit = molar</code>	
 		<code>A <=> B, kf1, kb1</code>	
 
 		<code>@CONCENTRATION</code>	
