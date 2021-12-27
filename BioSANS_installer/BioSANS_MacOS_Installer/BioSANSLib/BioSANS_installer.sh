@@ -13,4 +13,4 @@ pip install python-libsbml
 pip install pandas
 Pip install applescript
 Brew install python-tk
-python3 -m pip install -i https://test.pypi.org/simple/ BioSANS2020-efajiculay
+python3 -m pip install BioSANS2020 --upgrade

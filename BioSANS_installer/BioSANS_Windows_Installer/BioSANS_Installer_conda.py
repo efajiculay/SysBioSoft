@@ -46,7 +46,7 @@ if python_ok:
 			pass
 	"""
 
-	com = pipCommand+" "+"install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020"
+	com = pipCommand+" "+"install BioSANS2020 --upgrade"
 	rs = subprocess.Popen(com).communicate()[0]
 
 	"""
