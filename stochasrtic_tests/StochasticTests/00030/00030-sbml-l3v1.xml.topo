@@ -1,0 +1,9 @@
+Function_Definitions:
+
+#Reactions Volume = 1
+2.0 P  => 1.0 P2 ,1   :::::   lambda P :1*(0.001)*P*(P-1)/2
+1.0 P2  => 2.0 P ,1   :::::   lambda P2 :1*(0.01)*P2
+
+@Concentrations
+P , 100.0
+P2 , 0.0

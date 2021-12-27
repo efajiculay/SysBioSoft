@@ -1,0 +1,14 @@
+Function_Definitions:
+
+#Reactions Volume = 1
+2.0 P  => 1.0 P2 ,1   :::::   lambda P :1*(0.001)*P*(P-1)/2
+1.0 P2  => 2.0 P ,1   :::::   lambda P2 :1*(0.01)*P2
+0 NONE => t, 1
+
+@Concentrations
+P , 100.0, lambda t,status_P,P : 1*(100) if geq(t,25) and not status_P else P
+P2 , 0.0, lambda t,P2,status_P2 : 1*(0) if geq(t,25) and not status_P2 else P2
+t, 0, lambda t : round(t,20)
+status_P,0,lambda t : True if geq(t,25) else False
+status_P2,0,lambda t : True if geq(t,25) else False
+NONE , 1.0
