@@ -1,0 +1,443 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: Consolas,"courier new";
+				color: black;
+				padding: 2px;
+				font-size: 100%;
+			}
+			.text-header{
+				background-color: #92a8d1;
+				color:white;
+			}
+			h1, h2, h3 {
+				padding-top: 2px;
+				padding-bottom: 2px;
+			}
+			.text-header3{
+				background-color: #F08080;
+				color:white;			
+			}
+		</style>
+	</head>
+	<h1 class="text-header">What is a topology file</h1>
+	<pre>
+	BioSANS topology file contains  the model  which is describable by ordinary
+	differential equation. This model contains the following;
+	
+	1. A set of chemical reaction. They can be independent reaction.
+	2. Rate constants (can use dummy number if unknown)
+	   Note! If negative number is used, it is a tag for our software to
+	   include that rate cosntant for estimation when doing parameter estimation
+	3. Initial conditions/concentration (can use dummy number if unknown)
+	   Note! If negative number is used, it is a tag for our software to
+	   include that concentration for estimation when doing parameter estimation
+	4. Propensity lamdba function/modification - algebraic expression that 
+	   modifies the propensity. It may contain boolean logic and complex rules.
+	5. Concentration lambda function/modification  - algebraic expression that 
+	   modifies the concentration. It may contain boolean logic and complex rules.
+		   
+	The topology file contains tags that tells the software what the entries
+	after the tags are. There are three main tags in BioSANS as follows;
+	
+	1. <code>FUNCTION_DEFINITIONS</code>:
+	
+	   This is the list of variable declaration
+	   
+	2. <code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+	
+	   Everything after "#REACTIONS" are optional. They can have propensity
+	   modification after some delimiter
+	   
+	3. <code>@CONCENTRATION</code>
+	
+	   This tag are concentration values w/ or w/o concentration modification
+	</pre>
+	<h2 class="text-header">Example topology file contents:</h2>
+	<pre>
+	The following is an example topology file for the reversible reaction A <=> B.
+	Shown in the example are the three main tags in BioSANS topology file.
+	
+		<code>FUNCTION_DEFINITIONS:</code>	
+		<code>Ao = 100</code>	
+		<code>Bo = 10</code>	
+		<code>kf1 = 0.5</code>	
+		<code>kb1 = 0.3</code>	
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 1000, FileUnit = molar</code>	
+		<code>A <=> B, kf1, kb1</code>	
+
+		<code>@CONCENTRATION</code>	
+		<code>A, Ao</code>	
+		<code>B, Bo</code>
+		
+	In the above reaction, the forward rate constant is kf1 and the backwards is kb1.
+	If the reaction is not reversible, only one rate constant is needed.
+	</pre>
+	<h2 class="text-header">Topology file with propensity modification:</h2>
+	<pre>
+	An alternative form of topology above is shown below. This is exactly the same
+	as above except with propensity modification in the form of lambda expression.
+	Take note that the lambda expression could have complex mathematical. Here we
+	only provide a simple example for demonstration.
+			
+		<code>FUNCTION_DEFINITIONS:</code>
+		<code>Ao = 100</code>
+		<code>Bo = 10</code>
+		<code>kf1 = 0.5</code>
+		<code>kb1 = 0.3</code>
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 1000, FileUnit = molar</code>
+		<code>A <=> B, 1, 1 ::::: lambda A : kf1*A ::: lambda B : kb1*B</code>
+
+		<code>@CONCENTRATION</code>
+		<code>A, Ao</code>
+		<code>B, Bo</code>
+		
+	In the above reaction, the forward rate constant is 1 and the backwards is 1
+	but, they are not used since we provide a propensity modification which is
+	after the delimeter ":::::". Since there are forward and backward reaction,
+	two propensity lambda expression are given delimited by ":::".
+	</pre>
+	<h2 class="text-header">Topology file with concentration modification:</h2>
+	<pre>
+	Concentration modification allows to introduce rule in concentration that tends 
+	to alter the propagated concentration at runtime. The rules can be based on the
+	current state of the system or from some other former state.
+	
+		<code>FUNCTION_DEFINITIONS:</code>	
+		<code>Ao = 100</code>	
+		<code>Bo = 10</code>	
+		<code>kf1 = 0.5</code>	
+		<code>kb1 = 0.3</code>	
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 1000, FileUnit = molar</code>	
+		<code>A <=> B, kf1, kb1</code>	
+
+		<code>@CONCENTRATION</code>	
+		<code>A, Ao, lambda A : 100 if A<50 else A</code>	
+		<code>B, Bo</code>	
+
+	</pre>
+	<h2 class="text-header">Examples of topology files</h2>
+	<pre></pre>
+	<h3 class="text-header3">Topology file with time dependent event</h3>
+	<pre>
+	The following topology file is a topology file with feed forward loop. Here
+	species "X", "Y", and "Z" are formed from an unknown source labelled "0 NONE".
+	The formation of X has a rate constant of zero which means it is not changing
+	but it has a concentration modification which sets "X" to 0 whenever a timer
+	labelled timer_X becomes greater than or equal to 16 otherwise the value is 1.
+	The timer_X is a counter that is initially zero and increases with time being
+	given a rate constant of 1. The value of timer_X increases untill it becomes 
+	greater than or equal to 32 in which the value is reset to 0. The species "Y"
+	and "Z" are regular propensity modified reactions with lambda function with an
+	unknown source.
+	
+		<code>Function_Definitions:</code>	
+		<code> = 0.15</code>	
+		<code>rx  = 0.12</code>	
+		<code>ry  = 0.7</code>	
+		<code>kx  = 0.5</code>	
+		<code>ky  = 0.1</code>	
+		<code>Yo  = 0.7</code>	
+		<code>Zo  = 0</code>	
+		<code>theta = lambda x,k,n : (x**n)/(x**n+k**n)</code>	
+
+		<code>#REACTIONS</code>	
+		<code>0 NONE =>  X, 0</code>	
+		<code>0 NONE =>  timer_X, 1</code>	
+
+		<code>0 NONE =>  Y, 0  ::::: lambda X, Y    : -alp*Y + rx*theta(X,kx,2)</code>	
+		<code>0 NONE =>  Z, 0  ::::: lambda X, Y, Z : -alp*Z + rx*theta(X,kx,2)*ry*theta(Y,ky,2)</code>	
+
+		<code>@CONCENTRATION</code>	
+		<code>timer_X,   0, lambda timer_X  :  0 if timer_X >= 32 else timer_X</code>	
+		<code>X,         1, lambda timer_X  :  0 if timer_X >= 16 else 1</code>	
+		<code>Y,         Yo</code>	
+		<code>Z,         Zo</code>	
+		<code>NONE, 0</code>	
+
+	From above, the function "theta" is defined under function definitions and used
+	in the modified propensity expression.
+	</pre><h3 class="text-header3">Topology file with multiple independent reaction</h3><pre>
+	
+		<code>Function_Definitions:</code>
+		<code>alp = 0.5</code>
+		<code>bet = 0.2</code>
+
+		<code>#REACTIONS, Volume = 1, tend = 10, steps = 500, FileUnit = molar</code>
+		<code>0 NONE => A10    , bet</code>
+		<code>A10    => 0 phi  , alp</code>
+
+		<code>0 NONE  => A8    , bet</code>
+		<code>A8      => 0 phi , alp</code>
+
+		<code>0 NONE => A5     , bet</code>
+		<code>A5     => 0 phi  , alp</code>
+
+		<code>0 NONE => A0     , bet</code>
+		<code>A0     => 0 phi  , alp</code>
+
+		<code>@CONCENTRATION</code>
+		<code>A10    , 10</code> 
+		<code>A8     , 8</code>
+		<code>A5     , 5</code>
+		<code>A0     , 0</code>
+		<code>NONE   , 0</code>
+		<code>phi    , 0</code>	
+	</pre><h3 class="text-header3">Topology file with modified propensity </h3><pre>
+	
+		<code>Function_Definitions:</code>
+		<code>alpA = 0.5</code>
+		<code>betA = 0.2</code>
+
+		<code>alpR = 0.5</code>
+		<code>betR = 0.2</code>
+
+		<code>K = 0.2</code>
+
+		<code>#REACTIONS, Volume = 1, tend = 10, steps = 100, FileUnit = molar</code>
+		<code>0 NONE => A      , 1   ::::: lambda R : betA*K/(K+R)</code>
+		<code>A      => 0 phi  , alpA</code>
+
+		<code>0 NONE => R      , 1   ::::: lambda A : betR*A/(K+A)</code>
+		<code>R      => 0 phi  , alpR</code>
+
+		<code>@CONCENTRATION</code>
+		<code>A    , 0</code>
+		<code>R    , 0</code>
+		<code>NONE , 0</code>
+		<code>phi  , 0</code>
+	
+	Additional example
+	
+		<code>Function_Definitions:</code>
+		<code>alpX = 0.5</code>
+		<code>betX = 0.2</code>
+
+		<code>alpY = 0.55</code>
+		<code>betY = 0.25</code>
+
+		<code>K = 0.2</code>
+		<code>n = 2</code>
+
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+		<code>0 NONE => X      , 1   ::::: lambda Y : betX*(K**n)/(K**n+Y**n)</code>
+		<code>X      => 0 phi  , alpX</code>
+
+		<code>0 NONE => Y      , 1   ::::: lambda X : betY*(K**n)/(K**n+X**n)</code>
+		<code>Y      => 0 phi  , alpY</code>
+
+		<code>@CONCENTRATION</code>
+		<code>X    , 5</code>
+		<code>Y    , 2</code>
+		<code>NONE , 0</code>
+		<code>phi  , 0</code>
+	</pre><h3 class="text-header3">Topology file with concentration substitution</h3><pre>
+	
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+
+		<code>-Sa    => mA        , 100</code>
+		<code>mA     => 0 phi     , 1</code>
+		<code>mA     => A + mA    , 1</code>
+		<code>A      => 0 phi     , 1</code>
+
+		<code>-Sb    => mB        , 100</code>
+		<code>mB     => 0 phi     , 1</code>
+		<code>mB     => B + mB    , 1</code>
+		<code>B      => 0 phi     , 1</code>
+
+		<code>-Sc    => mC        , 100</code>
+		<code>mC     => 0 phi     , 1</code>
+		<code>mC     => C + mC    , 1</code>
+		<code>C      => 0 phi     , 1</code>  
+
+		<code>@CONCENTRATION, UNITS = molecules, VOLUME = 1 Liter</code>
+
+		<code>mA    , 1</code>
+		<code>mB    , 0</code>
+		<code>mC    , 0</code>
+
+		<code>A     , 0</code>
+		<code>B     , 0</code>
+		<code>C     , 0</code>
+
+		<code>phi   , 0</code>
+		<code>-Sa   , 0   ,lambda C : 1/(1+C**2)</code>
+		<code>-Sb   , 0   ,lambda A : 1/(1+A**2)</code>
+		<code>-Sc   , 0   ,lambda B : 1/(1+B**2)</code>
+	
+	mass action equivalent of above
+	
+		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
+		<code>Sa  + C <=> SaC       , 1000  , 100000</code>
+		<code>SaC + C <=> SaC2      , 100000, 1000</code>
+		<code>Sa       => mA + Sa   , 100</code>
+		<code>mA       => 0 phi     , 1</code>
+		<code>mA       => A + mA    , 1</code>
+		<code>A        => 0 phi     , 1</code>
+
+		<code>Sb  + A <=> SbA       , 1000  , 100000</code>
+		<code>SbA + A <=> SbA2      , 100000, 1000</code>
+		<code>Sb       => mB + Sb   , 100</code>
+		<code>mB       => 0 phi     , 1</code>
+		<code>mB       => B + mB    , 1</code>
+		<code>B        => 0 phi     , 1</code>
+
+		<code>Sc  + B <=> ScB       , 1000  , 100000</code>
+		<code>ScB + B <=> ScB2      , 100000, 1000</code>
+		<code>Sc       => mC + Sc   , 100</code>
+		<code>mC       => 0 phi     , 1</code>
+		<code>mC       => C + mC    , 1</code>
+		<code>C        => 0 phi     , 1</code>  
+
+		<code>@CONCENTRATION</code>
+		<code>mA    , 1</code>
+		<code>mB    , 0</code>
+		<code>mC    , 0</code>
+
+		<code>A     , 0</code>
+		<code>B     , 0</code>
+		<code>C     , 0</code>
+
+		<code>phi   , 0</code>
+		<code>Sa    , 1</code> 
+		<code>Sb    , 1</code>
+		<code>Sc    , 1</code> 
+
+		<code>SaC   , 0</code>  
+		<code>SbA   , 0</code>
+		<code>ScB   , 0</code>  
+
+		<code>SaC2  , 0</code> 
+		<code>SbA2  , 0</code>  
+		<code>ScB2  , 0</code>   
+	</pre><h3 class="text-header3">Topology file with conditional statement</h3><pre>
+	
+		<code>Function_Definitions:</code>  
+
+		<code>#REACTIONS</code>  
+		<code>0 NONE =>        A, 0</code>  
+		<code>0 NONE =>  timer_A, 1</code>  
+
+		<code>@CONCENTRATION</code>  
+		<code>timer_A,   0, lambda timer_A  :  0 if timer_A >= 30 else timer_A</code>  
+		<code>A,        10, lambda timer_A  :  0 if timer_A >= 15 else 10</code>  
+		<code>NONE, 0</code>   
+	</pre><h3 class="text-header3">Topology file with species-dependent events</h3><pre>	
+
+		<code>Function_Definitions:</code> 
+
+		<code>#REACTIONS</code> 
+		<code>0 NONE =>  A, 10</code> 
+
+		<code>@CONCENTRATION</code> 
+		<code>A   ,   0, lambda A  :  0 if A >= 15 else A</code> 
+		<code>NONE,   0</code> 
+	</pre><h3 class="text-header3">Topology file with events with delay</h3><pre>
+	
+		<code>Function_Definitions:</code>
+
+		<code>#REACTIONS</code>
+		<code>0 NONE =>  A      , 10</code>
+		<code>0 NONE =>  timer_A,  1</code>
+
+		<code>@CONCENTRATION</code>
+		<code>timer_A, 0, lambda A, timer_A  :  timer_A if A >= 15 else 0</code>
+		<code>A      , 0, lambda A, timer_A  :  0 if timer_A >=  5 else A</code>
+		<code>NONE   , 0</code>	
+	</pre><h3 class="text-header3">Topology file with time-dependent propensity</h3><pre>
+	
+		<code>Function_Definitions:</code>
+
+		<code>#REACTIONS</code>
+		<code>0 NONE =>  A, 0         ::::: lambda timer_A : sin(timer_A)</code>
+		<code>0 NONE =>  timer_A, 1</code>
+
+		<code>@CONCENTRATION</code>
+		<code>timer_A, 0</code>
+		<code>A      , 0</code>
+		<code>NONE   , 0</code> 
+	</pre><h3 class="text-header3">Topology file with non-constant volume, stoichiometry, and rate constant</h3><pre>
+	
+	non-constant volume:
+	
+		<code>Function_Definitions:</code> 
+		<code>kf1 = 0.5</code> 
+		<code>kf2 = 0.5</code> 
+
+		<code>#REACTIONS, tend = 10, tlen = 100</code> 
+		<code>0 NONE =>  A        , 1       ::::: lambda Volume :kf1/Volume</code> 
+			<code> A =>  0 NONE   , 1       ::::: lambda A, Volume :kf2*A/Volume</code> 
+		<code>0 NONE =>  Volume   , 0.5</code>      
+
+		<code>@CONCENTRATION</code> 
+		<code>Volume , 1</code> 
+		<code>A      , 0</code> 
+		<code>NONE   , 0</code> 
+	
+	non-constant rate constant:	
+
+		<code>Function_Definitions:</code>
+
+		<code>#Reactions Volume = 1.0, tend = 2, steps = 100</code>
+		<code>1.0 S1  => 1.0 S2 ,1   :::::   lambda S1,k1 :1.0*(1.0)*k1*S1</code>
+		<code>0 NONE  => k1     , 0.5</code>        
+
+		<code>@Concentrations</code>
+		<code>S1   , 0.15</code>
+		<code>S2   , 0.0</code>
+		<code>k1   , 1.0</code>
+		<code>NONE , 1.0</code>
+	
+	non-constant stoichiometry
+	
+		<code>Function_Definitions:</code>
+		<code>kf = 0.2</code>
+
+		<code>#Reactions Volume = 1.0, tend = 10, steps = 100</code>
+		<code>1.0 A  => 1.0 B   , 1   :::::   lambda A,S : S*kf*A</code>
+		<code>0 NONE  => S      , 1</code>           
+
+		<code>@Concentrations</code>
+		<code>A    , 0.15</code>
+		<code>B    , 0.0</code>
+		<code>S    , 1.0</code>
+		<code>NONE , 1.0</code>	
+	</pre><h3 class="text-header3">Encoding differential equation models into a topology file</h3><pre>
+	
+		dx/dt=10(y-x)
+
+		dy/dt=-xz+28x-y
+
+		dz/dt=xy-8/3 z
+			
+		<code>#REACTIONS</code>
+		<code>0 NONE => x, 1 ::::: lambda x, y    : 10*(y-x)</code>
+		<code>0 NONE => y, 1 ::::: lambda x, y, z : -z*x+28*x-y</code>
+		<code>0 NONE => z, 1 ::::: lambda x, y, z : x*y-(8/3)*z</code>
+
+		<code>@CONCENTRATION</code>
+		<code>x   , 9</code>
+		<code>y   , 9</code>
+		<code>z   , 28</code>
+		<code>NONE, 0</code>
+
+	</pre>
+</html>

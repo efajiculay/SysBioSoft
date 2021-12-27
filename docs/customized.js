@@ -63,7 +63,14 @@ function redirect(id){
 	});
 }
 
-function installer_download_info(id, os){
+function iframe_append(id, ifr, path_ref){
+	$(id).click(function(e) {
+		e.preventDefault(); 
+		MyIFrame.attr("src", path_ref);
+	});	
+}
+
+function installer_download_info(id, os, ifr){
 	$(id).click(function(e) {
 		e.preventDefault(); 
 		file = $(this).text()
@@ -71,7 +78,7 @@ function installer_download_info(id, os){
 		if (file != "README" & file != "Instructions"){
 			window.location.href = path_ref;
 		}else{
-			MyIFrame.attr("src", path_ref+".html");
+			ifr.attr("src", path_ref+".html");
 		}
 	});
 }
@@ -97,10 +104,10 @@ $(document).ready(function(){
 		}
 	});					
 	
-	installer_download_info(".window_installer", "windows");
-	installer_download_info(".ubuntu_installer", "ubuntu");
-	installer_download_info(".macos_installer", "macos");
-	installer_download_info(".all_three_steps", "all_three");
+	installer_download_info(".window_installer", "windows", MyIFrame);
+	installer_download_info(".ubuntu_installer", "ubuntu", MyIFrame);
+	installer_download_info(".macos_installer", "macos", MyIFrame);
+	installer_download_info(".all_three_steps", "all_three", MyIFrame);
 	
 	$("#windows_id").toggle();
 	$("#ubuntu_id").toggle();
@@ -119,8 +126,10 @@ $(document).ready(function(){
 	you_tube_embed("#Itut_2", "J_SngTfG_fk", MyIFrame);
 	//you_tube_embed("#Ptut_1", "PaR9msE8PdQ", MyIFrame);
 	//you_tube_embed("#Ptut_1", "PaR9msE8PdQ", MyIFrame);
-	you_tube_embed("#Stut_1", "PaR9msE8PdQ", MyIFrame);
-	//you_tube_embed("#Stut_2", "PaR9msE8PdQ", MyIFrame);
+	you_tube_embed("#Stchtut_1", "PaR9msE8PdQ", MyIFrame);
+	//you_tube_embed("#Stchtut_2", "PaR9msE8PdQ", MyIFrame); 
+	
+	iframe_append(".topo_def", MyIFrame, "frequently_ask/topology_file.html")
 	
 
 	MyIFrame.on('load',function(){

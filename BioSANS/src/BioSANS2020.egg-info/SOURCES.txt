@@ -1,4 +1,3 @@
-LICENSE
 README.md
 setup.py
 src/BioSANS2020/BioSANS.py
@@ -55,15 +54,12 @@ src/BioSANS2020/propagation/deterministic/lna_approx.py
 src/BioSANS2020/propagation/deterministic/lna_function_of_time.py
 src/BioSANS2020/propagation/deterministic/ode_int.py
 src/BioSANS2020/propagation/deterministic/runge_kutta4.py
-src/BioSANS2020/propagation/stochastic/Tau_leaping.py
-src/BioSANS2020/propagation/stochastic/Tau_leaping2.py
 src/BioSANS2020/propagation/stochastic/__init__.py
 src/BioSANS2020/propagation/stochastic/gillespie_ssa.py
 src/BioSANS2020/propagation/stochastic/mystiffcle.py
 src/BioSANS2020/propagation/stochastic/mytauleap.py
 src/BioSANS2020/propagation/stochastic/tau_leaping.py
 src/BioSANS2020/propagation/stochastic/tau_leaping2.py
-src/BioSANS2020/propagation/symbolic/Analytical_sol.py
 src/BioSANS2020/propagation/symbolic/__init__.py
 src/BioSANS2020/propagation/symbolic/analytical_sol.py
 src/BioSANS2020/propagation/symbolic/lna_approx2.py
