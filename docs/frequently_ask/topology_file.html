@@ -200,8 +200,7 @@
 		<code>A5     , 5</code>
 		<code>A0     , 0</code>
 		<code>NONE   , 0</code>
-		<code>phi    , 0</code>
-		
+		<code>phi    , 0</code>	
 	</pre><h3 class="text-header3">Topology file with modified propensity </h3><pre>
 	
 		<code>Function_Definitions:</code>
@@ -250,8 +249,6 @@
 		<code>Y    , 2</code>
 		<code>NONE , 0</code>
 		<code>phi  , 0</code>
-
-	
 	</pre><h3 class="text-header3">Topology file with concentration substitution</h3><pre>
 	
 		<code>#REACTIONS, Volume = 1, tend = 100, steps = 100, FileUnit = molar</code>
@@ -331,7 +328,6 @@
 		<code>SaC2  , 0</code> 
 		<code>SbA2  , 0</code>  
 		<code>ScB2  , 0</code>   
-
 	</pre><h3 class="text-header3">Topology file with conditional statement</h3><pre>
 	
 		<code>Function_Definitions:</code>  
@@ -344,7 +340,6 @@
 		<code>timer_A,   0, lambda timer_A  :  0 if timer_A >= 30 else timer_A</code>  
 		<code>A,        10, lambda timer_A  :  0 if timer_A >= 15 else 10</code>  
 		<code>NONE, 0</code>   
-
 	</pre><h3 class="text-header3">Topology file with species-dependent events</h3><pre>	
 
 		<code>Function_Definitions:</code> 
@@ -355,7 +350,6 @@
 		<code>@CONCENTRATION</code> 
 		<code>A   ,   0, lambda A  :  0 if A >= 15 else A</code> 
 		<code>NONE,   0</code> 
-	
 	</pre><h3 class="text-header3">Topology file with events with delay</h3><pre>
 	
 		<code>Function_Definitions:</code>
@@ -367,8 +361,7 @@
 		<code>@CONCENTRATION</code>
 		<code>timer_A, 0, lambda A, timer_A  :  timer_A if A >= 15 else 0</code>
 		<code>A      , 0, lambda A, timer_A  :  0 if timer_A >=  5 else A</code>
-		<code>NONE   , 0</code>
-	
+		<code>NONE   , 0</code>	
 	</pre><h3 class="text-header3">Topology file with time-dependent propensity</h3><pre>
 	
 		<code>Function_Definitions:</code>
@@ -381,7 +374,6 @@
 		<code>timer_A, 0</code>
 		<code>A      , 0</code>
 		<code>NONE   , 0</code> 
-	
 	</pre><h3 class="text-header3">Topology file with non-constant volume, stoichiometry, and rate constant</h3><pre>
 	
 	non-constant volume:
@@ -427,8 +419,7 @@
 		<code>A    , 0.15</code>
 		<code>B    , 0.0</code>
 		<code>S    , 1.0</code>
-		<code>NONE , 1.0</code>
-	
+		<code>NONE , 1.0</code>	
 	</pre><h3 class="text-header3">Encoding differential equation models into a topology file</h3><pre>
 	
 		dx/dt=10(y-x)
