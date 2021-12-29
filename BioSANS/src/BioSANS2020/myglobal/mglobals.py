@@ -23,6 +23,7 @@ SETTINGS = {}
 EXEC_FUNCTIONS = []
 DELAY_LIST = {}
 TCHECK = []
+CPU_MULT = 0.9
 
 
 def init(self):
@@ -40,3 +41,4 @@ def init(self):
     self.EXEC_FUNCTIONS = []
     self.DELAY_LIST = {}
     self.TCHECK = []
+    self.CPU_MULT = 0.9

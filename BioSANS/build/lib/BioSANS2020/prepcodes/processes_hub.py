@@ -260,7 +260,7 @@ def process_hub(
         miter = len(kval)
     if mult_proc:
         pool = multiprocessing.Pool(
-            min(miter, round(0.9 * multiprocessing.cpu_count())))
+            min(miter, round(globals2.CPU_MULT * multiprocessing.cpu_count())))
         concn_list = []
         ksns_list = []
         # if len(vary) > 0:
