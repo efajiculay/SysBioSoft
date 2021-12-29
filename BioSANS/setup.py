@@ -11,7 +11,7 @@ setuptools.setup(
     description="Symbolic and Numeric Software for Systems Biology",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/efajiculay/SysBioSoft",
+    url="https://efajiculay.github.io/SysBioSoft/",
 	package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
 	license="GPLv3",
