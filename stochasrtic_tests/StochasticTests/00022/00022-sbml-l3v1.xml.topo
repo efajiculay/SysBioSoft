@@ -1,9 +1,0 @@
-Function_Definitions:
-
-#Reactions Volume = 1
-0 NONE => 1.0 X ,1   :::::   lambda  :1*(5.0)
-1.0 X  => 0 NONE,1   :::::   lambda X :1*(0.1)*X
-
-@Concentrations
-X , 0.0
-NONE , 1.0
