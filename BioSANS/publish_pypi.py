@@ -2,7 +2,7 @@
 #print(os.environ["HOMEPATH"])
 #print(sys.version)
 #conda env remove -n BioSANS
-#conda create -n BioSANS python==3.8.8
+#conda create -n BioSANS python==3.9
 #conda activate BioSANS
 
 
@@ -21,7 +21,7 @@ twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 
 #https://realpython.com/python-import/#create-and-install-a-local-package
-python -m pip install -e ./
+python -m pip install -e ./ --index-url https://pypi.org/simple/
 
 #https://packaging.python.org/tutorials/packaging-projects/
 #working

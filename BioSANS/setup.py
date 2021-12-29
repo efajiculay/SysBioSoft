@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
 	name="BioSANS2020",
-	version="0.2.7",
+	version="0.2.8",
     author="Erickson Erigio Fajiculay",
     author_email="efajiculay@yahoo.com",
     description="Symbolic and Numeric Software for Systems Biology",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/efajiculay/SysBioSoft",
+    url="https://efajiculay.github.io/SysBioSoft/",
 	package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
 	license="GPLv3",
