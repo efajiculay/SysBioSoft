@@ -39,12 +39,12 @@ except:
 	pass
 	
 try:
-	system("pip3 install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020")
+	system("pip3 install BioSANS2020 --upgrade")
 except:
 	pass
 	
 try:
-	system("pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020")
+	system("pip install BioSANS2020 --upgrade")
 except:
 	pass	
 

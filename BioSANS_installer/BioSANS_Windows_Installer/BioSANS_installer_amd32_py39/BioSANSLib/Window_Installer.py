@@ -21,7 +21,7 @@ if python_ok:
 	except:
 		pass
 	
-	com = pipCommand+" "+"install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020"
+	com = pipCommand+" "+"install BioSANS2020 --upgrade"
 	rs = Popen(com).communicate()[0]
 	
 	Drive = os.path.abspath(os.environ["HOMEPATH"]).split(":")[0]+":"

@@ -11,10 +11,10 @@ brew install python
 python3 -m pip install --upgrade pip
 brew install --cask anaconda
 
-python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple BioSANS2020
+python3 -m pip install BioSANS2020 --upgrade
 
 # The following command gives us the installation directory after the "Location :" tag
-python3 -m pip install show BioSANS2020
+python3 -m pip show BioSANS2020
 
 # to run BioSANS
 cd "to the location directory"

@@ -27,6 +27,48 @@ The following are the list of function in this module
 17. get_rule_details
 18. process_sbml
 
+The following are the units
+
+sbml_units = {
+    Mysbml.UNIT_KIND_AMPERE : "ampere",
+    Mysbml.UNIT_KIND_AVOGADRO : "avogadro",
+    Mysbml.UNIT_KIND_BECQUEREL : "becquerel",
+    Mysbml.UNIT_KIND_CANDELA : "candela",
+    Mysbml.UNIT_KIND_CELSIUS : "celsius",
+    Mysbml.UNIT_KIND_COULOMB : "coulomb",
+    Mysbml.UNIT_KIND_DIMENSIONLESS : "dimensionless",,
+    Mysbml.UNIT_KIND_FARAD : "farad",
+    Mysbml.UNIT_KIND_GRAM : "gram",
+    Mysbml.UNIT_KIND_GRAY : "gray",
+    Mysbml.UNIT_KIND_HENRY : "henry",
+    Mysbml.UNIT_KIND_HERTZ : "hertz",
+    Mysbml.UNIT_KIND_ITEM : "item",
+    Mysbml.UNIT_KIND_JOULE : "joule",
+    Mysbml.UNIT_KIND_KATAL : "katal",
+    Mysbml.UNIT_KIND_KELVIN : "kelvin",
+    Mysbml.UNIT_KIND_KILOGRAM : "kilogram",
+    Mysbml.UNIT_KIND_LITER : "liter",
+    Mysbml.UNIT_KIND_LITRE : "litre",
+    Mysbml.UNIT_KIND_LUMEN : "lumen",
+    Mysbml.UNIT_KIND_LUX : "lux",
+    Mysbml.UNIT_KIND_METER : "meter",
+    Mysbml.UNIT_KIND_METRE : "metre",
+    Mysbml.UNIT_KIND_MOLE : "mole",
+    Mysbml.UNIT_KIND_NEWTON : "newton",
+    Mysbml.UNIT_KIND_OHM : "ohm",
+    Mysbml.UNIT_KIND_PASCAL : "pascal",
+    Mysbml.UNIT_KIND_RADIAN : "radian",
+    Mysbml.UNIT_KIND_SECOND : "second",
+    Mysbml.UNIT_KIND_SIEMENS : "siemens",
+    Mysbml.UNIT_KIND_SIEVERT : "sievert",
+    Mysbml.UNIT_KIND_STERADIAN : "steradian",
+    Mysbml.UNIT_KIND_TESLA : "tesla",
+    Mysbml.UNIT_KIND_VOLT : "volt",
+    Mysbml.UNIT_KIND_WATT : "watt",
+    Mysbml.UNIT_KIND_WEBER : "weber",
+    Mysbml.UNIT_KIND_INVALID : "invalid"
+}
+
 """
 
 # import sys
@@ -65,6 +107,7 @@ OPERS_LIST2 = {
 
 
 def eval_exp(xvar):
+    """Evaluate expression using SBML_FUNCT_DICT"""
     return eval(xvar, SBML_FUNCT_DICT)
 
 
@@ -584,12 +627,14 @@ def process_sbml(file, molar=False, variables=None):
     fftopofile = open(file + ".topo", "w")
 
     sbml_units = {
-        0: "ampere", 1: "avogadro", 2: "becquerel", 3: "candela", 5: "coulomb",
-        6: "dimensionless", 7: "farad", 8: "gram", 9: "gray", 10: "henry",
-        11: "hertz", 13: "joule", 14: "katal", 15: "kelvin", 18: "litre",
-        19: "lumen", 20: "lux", 22: "metre", 23: "mole", 24: "newton",
+        0: "ampere", 1: "avogadro", 2: "becquerel", 3: "candela", 4: "celsius",
+        5: "coulomb", 6: "dimensionless", 7: "farad", 8: "gram", 9: "gray",
+        10: "henry", 11: "hertz", 12: "item", 13: "joule", 14: "katal",
+        15: "kelvin", 16: "kilogram", 17: "liter", 18: "litre", 19: "lumen",
+        20: "lux", 21: "meter", 22: "metre", 23: "mole", 24: "newton",
         25: "ohm", 26: "pascal", 27: "radian", 28: "second", 29: "siemens",
-        30: "sievert", 31: "steradian", 32: "tesla", 34: "watt", 35: "weber"
+        30: "sievert", 31: "steradian", 32: "tesla", 33: "volt", 34: "watt",
+        35: "weber", 36: "invalid"
     }
 
     reader = Mysbml.SBMLReader()
