@@ -41,7 +41,7 @@ def install_BioSANS():
     
 
 def generate_shortcut():
-    A = check_output(['pip3', 'show', 'BioSANS2020-efajiculay'])
+    A = check_output(['pip3', 'show', 'BioSANS2020'])
     A = str(A).split("\\n")
 
     install_dir = ""
