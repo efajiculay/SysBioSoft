@@ -59,7 +59,7 @@ function you_tube_embed(id, yid, ifr){
 function redirect(id){
 	$(id).click(function(e){
 		e.preventDefault(); 
-		window.location.href = $(this).attr("href");
+		window.open($(this).attr("href"));
 	});
 }
 
@@ -124,21 +124,23 @@ $(document).ready(function(){
 	you_tube_embed("#Ttut_2", "A3JIYJZqHkI", MyIFrame); 
 	you_tube_embed("#Itut_1", "g3ZmjWEGm40", MyIFrame); 
 	you_tube_embed("#Itut_2", "J_SngTfG_fk", MyIFrame);
-	//you_tube_embed("#Ptut_1", "PaR9msE8PdQ", MyIFrame);
-	//you_tube_embed("#Ptut_1", "PaR9msE8PdQ", MyIFrame);
+	you_tube_embed("#Ptut_1", "hvK1J7lfGBE", MyIFrame);
+	you_tube_embed("#Ptut_2", "AAqIIQfZN4c", MyIFrame);
 	you_tube_embed("#Stchtut_1", "PaR9msE8PdQ", MyIFrame);
-	//you_tube_embed("#Stchtut_2", "PaR9msE8PdQ", MyIFrame); 
+	you_tube_embed("#Stchtut_2", "", MyIFrame); 
 	you_tube_embed("#Ftut_1", "iDJl5p-_Nj4", MyIFrame); 
-	you_tube_embed("#Ftut_1b", "iDJl5p-_Nj4", MyIFrame); 
+	you_tube_embed("#Ftut_1b", "iDJl5p-_Nj4", MyIFrame);    
 	
 	iframe_append(".topo_def", MyIFrame, "frequently_ask/topology_file.html")
+	redirect("#what_lambda");
+	//iframe_append("#what_lambda", MyIFrame, "https://www.w3schools.com/python/python_lambda.asp")	
+	
 	iframe_append("#deterministic", MyIFrame, "html_tutorials/deterministic.html")
 	iframe_append("#stochastic", MyIFrame, "html_tutorials/stochastic.html")
 	iframe_append("#symbolic", MyIFrame, "html_tutorials/symbolic.html")
 	iframe_append("#parameter_est", MyIFrame, "html_tutorials/parameter_est.html")
 	iframe_append("#lna_approx", MyIFrame, "html_tutorials/lna_approx.html")
 	iframe_append("#all_above", MyIFrame, "html_tutorials/all_above.html")
-	
 
 	MyIFrame.on('load',function(){
 		what = $(this).attr('src')
