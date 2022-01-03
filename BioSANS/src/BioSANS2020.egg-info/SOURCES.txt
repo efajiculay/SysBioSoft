@@ -6,6 +6,7 @@ src/BioSANS2020/BioSSL.py
 src/BioSANS2020/RunBioSANS.py
 src/BioSANS2020/__init__.py
 src/BioSANS2020/__main__.py
+src/BioSANS2020/biosans_lib.py
 src/BioSANS2020.egg-info/PKG-INFO
 src/BioSANS2020.egg-info/SOURCES.txt
 src/BioSANS2020.egg-info/dependency_links.txt

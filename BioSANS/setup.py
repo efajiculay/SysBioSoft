@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
 	name="BioSANS2020",
-	version="0.2.8",
+	version="0.3.0",
     author="Erickson Erigio Fajiculay",
     author_email="efajiculay@yahoo.com",
     description="Symbolic and Numeric Software for Systems Biology",
@@ -44,8 +44,8 @@ setuptools.setup(
     python_requires='>=3.7',
 )
 
-#https://python-packaging.readthedocs.io/en/latest/metadata.html
-#https://pypi.org/pypi?%3Aaction=list_classifiers
+# https://python-packaging.readthedocs.io/en/latest/metadata.html
+# https://pypi.org/pypi?%3Aaction=list_classifiers
 
 
 
