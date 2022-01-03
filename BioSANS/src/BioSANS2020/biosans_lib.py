@@ -111,6 +111,7 @@ class model():
     exp_data_file = None
     globals2.init(globals2)
     del_file = None
+    del_file2 = None
 
     def __init__(self, topo=None, sbml=None, FileIn=None, Volume=None):
         """This function initialized the model and model parameters"""
@@ -174,6 +175,25 @@ class model():
                 2) the first column is time and succeding columns are
                    components or species
             """)
+            
+        try:
+            expd = open(exp_data_file, "r")
+            expd.close()
+        except BaseException:
+            self.del_file2 = str(time.time())+"_temp_data.txt"
+            with open(self.del_file2, "w") as temp:
+                glim = "\n"
+                exp_datas = exp_data_file.strip().split(glim)
+                if len(exp_datas) == 1:
+                    glim = "\r\n"
+                    exp_datas = exp_data_file.split(glim)                    
+
+                exp_data_file = glim.join([
+                    exp_datas[ind].strip() for ind in range(len(exp_datas))
+                ])
+                temp.write(exp_data_file.replace(",","\t"))
+            exp_data_file  = self.del_file2
+            
         self.exp_data_file = exp_data_file
         return self
 
@@ -205,6 +225,9 @@ class model():
         if self.del_file:
             delete_file(self.del_file)
             self.del_file = None
+        if self.del_file2:
+            delete_file(self.del_file2)
+            self.del_file2 = None
 
     def run(self, method=None, ntraj=None, tend=None, step_size_scaler=None,
             steps=None, mult_proc=None, implicit=True, cpu_mult=0.9):
