@@ -107,5 +107,48 @@
 	<code>propagate A => B, 0.2 & B => C, 0.3 where A=100 & B=0.2 & C=0</code> 
 	<code>using CLE with tn=50 & tlen=1000 & miter=2 & mult_proc=True & fout=Traj2;</code>
 </pre><h2 class="text-header">BioSANS as a library import</h2><pre>
+<code>from BioSANS2020 import biosans_lib as biosans</code>
+
+<code># Parameter estimation example</code>
+
+
+<code>modelA = """</code>
+	<code>Function_Definitions:</code>
+	<code>Ao = 100</code>
+	<code>Co = 0</code>
+
+	<code>#REACTIONS</code>
+	<code>A => B, -1</code>
+	<code>B => C, -1</code>
+
+	<code>@CONCENTRATION</code>
+	<code>A, Ao</code>
+	<code>B, -1</code>
+	<code>C, Co</code>
+<code>"""</code>
+
+<code>dataA = """</code>
+	<code>time,A,C</code>
+	<code>0,100,0</code>
+	<code>1,60.65306595,5.775043762</code>
+	<code>2,36.78794412,17.97900716</code>
+	<code>3,22.313016,31.82710907</code>
+	<code>4,13.5335283,45.00173948</code>
+	<code>5,8.208499842,56.53020973</code>
+	<code>10,0.673794694,88.56392495</code>
+	<code>15,0.055308438,97.30571352</code>
+	<code>20,0.004539994,99.38712194</code>
+	<code>25,0.000372665,99.86228791</code>
+	<code>30,3.06E-05,99.96919344</code>
+	<code>35,2.51E-06,99.99311965</code>
+	<code>40,2.06E-07,99.99846425</code>
+	<code>45.5,1.32E-08,99.99970501</code>
+	<code>50,1.38E-09,99.99992352</code>
+<code>"""</code>
+
+<code>if __name__ == '__main__':</code>
+	<code>my_model = biosans.model(modelA).data(dataA)</code>
+	<code>data = my_model.run("k_est6")</code>
+	<code>my_model.clean()</code>
 </pre>
 </html>

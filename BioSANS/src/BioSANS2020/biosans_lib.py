@@ -164,7 +164,7 @@ class model():
         self.conc_unit = FileIn
         self.v_volms = Volume
 
-    def data(self, exp_data_file=None):
+    def data(self, exp_data_file=None): 
         """This method instantiate the data file for parameter estimation"""
         if not exp_data_file:
             print("""
@@ -175,7 +175,7 @@ class model():
                 2) the first column is time and succeding columns are
                    components or species
             """)
-            
+   
         try:
             expd = open(exp_data_file, "r")
             expd.close()
@@ -186,11 +186,8 @@ class model():
                 exp_datas = exp_data_file.strip().split(glim)
                 if len(exp_datas) == 1:
                     glim = "\r\n"
-                    exp_datas = exp_data_file.split(glim)                    
-
-                exp_data_file = glim.join([
-                    exp_datas[ind].strip() for ind in range(len(exp_datas))
-                ])
+                    exp_datas = exp_data_file.strip().split(glim)             
+                exp_data_file = glim.join([xval.strip() for xval in exp_datas])
                 temp.write(exp_data_file.replace(",","\t"))
             exp_data_file  = self.del_file2
             

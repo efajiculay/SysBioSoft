@@ -1,3 +1,4 @@
+LICENSE
 README.md
 setup.py
 src/BioSANS2020/BioSANS.py
