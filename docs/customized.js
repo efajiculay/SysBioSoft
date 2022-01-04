@@ -160,5 +160,15 @@ $(document).ready(function(){
 	});
 	
 	change_width();
-											
+	$(".col-out-1").hover(
+		function(){
+			$(this).addClass("col-out-1-mod");
+			change_width();
+		},
+		function(){
+			$(this).removeClass("col-out-1-mod");
+			change_width();
+		}
+	);
+		
 });

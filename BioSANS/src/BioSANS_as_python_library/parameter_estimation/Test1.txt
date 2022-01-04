@@ -4,7 +4,7 @@ Bo = 0
 kf1 = 0.5
 
 #REACTIONS
-A => B, -1
+A => B, kf1
 
 @CONCENTRATION
 A, Ao

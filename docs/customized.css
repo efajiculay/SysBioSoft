@@ -7,19 +7,24 @@
 }
 
 div.col-out-1 {
+	position:fixed;
 	overflow:auto;
 	display: inline-block;
 	width:auto;
 	min-width:300px;
 	float: left;
-	#position:fixed;
-	height:100%;
+	padding-top:35px;
+}
+
+.col-out-1-mod{
+	height:100%;	
 }
 
 div.col-out-2{
 	display: inline-block;
 	float: right;
 	width: 100%;
+	padding-top:40px;
 }
 
 
@@ -30,4 +35,14 @@ div.col-out-2{
 .encapsulate{
 	  border-style: solid;
 	  border-color: red;	
+}
+
+h1#head_title{
+	margin: 0;
+	padding: 0;
+	position: fixed;
+	background-color: #6495ED;
+	z-index: 1;
+	#height:50px;
+	width:100%;	
 }
