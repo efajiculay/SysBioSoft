@@ -1,0 +1,3 @@
+([('BioSANS',
+   '/Users/erickson/Desktop/BioSANS_Mac_Installer/BioSANSLib/dist/BioSANS',
+   'EXECUTABLE')],)

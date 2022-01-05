@@ -82,16 +82,23 @@ function installer_download_info(id, os, ifr){
 		}
 	});
 }
+
+function change_width(){
+	div1 = ".col-out-1 "
+	div2 = ".col-out-2 "
+	screenWidth  = window.screen.width-20;
+	$(div2).width(screenWidth - $(div1).width());
+}
 		
 $(document).ready(function(){
 	
-
 	MyIFrame = $(".modal-body").find(".modal-iframe")
 
 	$("li.toctree-l2").find("li.toctree-l2").find('a').siblings('ul').toggle();
 	$("li.toctree-l2").find('a').click(function(event){
 		event.preventDefault();
 		$(this).siblings('ul').toggle();
+		change_width();
 	});
 
 	$(".pre").click(function(event){
@@ -151,5 +158,17 @@ $(document).ready(function(){
 		}
 		$(document).scrollTop(0);
 	});
-											
+	
+	change_width();
+	$(".col-out-1").hover(
+		function(){
+			$(this).addClass("col-out-1-mod");
+			change_width();
+		},
+		function(){
+			$(this).removeClass("col-out-1-mod");
+			change_width();
+		}
+	);
+		
 });
