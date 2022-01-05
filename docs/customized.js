@@ -131,6 +131,7 @@ $(document).ready(function(){
 	you_tube_embed("#Ttut_2", "A3JIYJZqHkI", MyIFrame); 
 	you_tube_embed("#Itut_1", "g3ZmjWEGm40", MyIFrame); 
 	you_tube_embed("#Itut_2", "J_SngTfG_fk", MyIFrame);
+	you_tube_embed("#Itut_3", "Omi6AikB7f8", MyIFrame);
 	you_tube_embed("#Ptut_1", "hvK1J7lfGBE", MyIFrame);
 	you_tube_embed("#Ptut_2", "AAqIIQfZN4c", MyIFrame);
 	you_tube_embed("#Stchtut_1", "PaR9msE8PdQ", MyIFrame);
