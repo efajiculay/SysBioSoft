@@ -146,7 +146,8 @@ $(document).ready(function(){
 	iframe_append("#deterministic", MyIFrame, "html_tutorials/deterministic.html")
 	iframe_append("#stochastic", MyIFrame, "html_tutorials/stochastic.html")
 	iframe_append("#symbolic", MyIFrame, "html_tutorials/symbolic.html")
-	iframe_append("#parameter_est", MyIFrame, "html_tutorials/parameter_est.html")
+	iframe_append("#parameter_est1", MyIFrame, "html_tutorials/parameter_est1.html")
+	iframe_append("#parameter_est2", MyIFrame, "html_tutorials/parameter_est2.html")
 	iframe_append("#lna_approx", MyIFrame, "html_tutorials/lna_approx.html")
 	iframe_append("#all_above", MyIFrame, "html_tutorials/all_above.html")
 
@@ -161,13 +162,13 @@ $(document).ready(function(){
 	});
 	
 	change_width();
-	$(".col-out-1").hover(
+	$(".pre").hover(
 		function(){
-			$(this).addClass("col-out-1-mod");
+			$(this).addClass("text-mod");
 			change_width();
 		},
 		function(){
-			$(this).removeClass("col-out-1-mod");
+			$(this).removeClass("text-mod");
 			change_width();
 		}
 	);

@@ -14,10 +14,12 @@ div.col-out-1 {
 	min-width:300px;
 	float: left;
 	padding-top:35px;
+	height:100%;
 }
 
-.col-out-1-mod{
-	height:100%;	
+.text-mod{
+	color:blue;
+	font-weight:bold;
 }
 
 div.col-out-2{
@@ -33,8 +35,8 @@ div.col-out-2{
 }
 
 .encapsulate{
-	  border-style: solid;
-	  border-color: red;	
+	border-style: solid;
+	border-color: red;	
 }
 
 h1#head_title{
