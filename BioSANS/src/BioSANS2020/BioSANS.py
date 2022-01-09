@@ -128,7 +128,7 @@ FOOTER.configure(
 )
 FOOTER.pack(fill="x")
 
-FILE_NAME = {"topology": TEMPORARY_FOLDER, "current_folder": None}
+FILE_NAME = {"topology": TEMPORARY_FOLDER, "current_folder": TEMPORARY_FOLDER}
 
 
 def load_data(itups):
@@ -184,6 +184,7 @@ def create_file(itups, ftype):
 
     FILE_NAME['last_open'] = new_file(itups)
     FILE_NAME["topology"] = TEMPORARY_FOLDER + "/temp.txt"
+    FILE_NAME["current_folder"] = FILE_NAME["topology"]
     if ftype == 1:
         FILE_NAME['last_open'].insert('insert', "FUNCTION_DEFINITIONS:\n")
         FILE_NAME['last_open'].insert('insert', "\n")
@@ -273,7 +274,7 @@ def run_ssl():
         Popen([sys_executable, "-m", "BioSANS2020.BioSSL"],
               creationflags=CREATE_NEW_CONSOLE)
     elif PLATFORM == "darwin":
-        pip_show_out = check_output(['pip3', 'show', 'BioSANS2020-efajiculay'])
+        pip_show_out = check_output(['pip3', 'show', 'BioSANS2020'])
         pip_show_out = str(pip_show_out).split("\\n")
         install_dir = ""
         for row in pip_show_out:
@@ -614,8 +615,8 @@ def analysis_case(ana_case, itups):
     global FILE_NAME
     if "trajectory" not in FILE_NAME:
         gui.messagebox.showinfo(
-            "Trajectory not loaded yet", "Please load the trajectory. BioSANS \
-            save it into a file during your last run.")
+            "Trajectory not loaded yet", "Please load the trajectory. BioSANS"+
+            " save it into a file during your last run.")
         try:
             load_data2(False)
         except BaseException:
@@ -659,8 +660,8 @@ def plot_traj_d(current_data, itups):
     if SUPER_THREAD_RUN == 1:
         gui.messagebox.showinfo(
             "Warning: Unsafe thread",
-            "If you want to have a 3D Phase portrait, restart BioSANS and \
-            load trajectory. For 2D phase portrait, just continue")
+            "If you want to have a 3D Phase portrait, restart BioSANS and "+
+            "load trajectory. For 2D phase portrait, just continue")
     try:
         data, slabels = current_data
         par = gui.Toplevel()
@@ -697,8 +698,8 @@ def plot_traj_d(current_data, itups):
     except BaseException:
         gui.messagebox.showinfo(
             "Trajectory not loaded yet",
-            "Please load the trajectory. BioSANS save it into a file during \
-            your last run.")
+            "Please load the trajectory. BioSANS save it into a file during "+
+            "your last run.")
 
 
 def get_checked(el_1, slabels):
@@ -776,8 +777,8 @@ def plot_traj_d2(current_data, itups):
     except BaseException:
         gui.messagebox.showinfo(
             "Trajectory not loaded yet",
-            "Please load the trajectory. BioSANS save it into a file \
-                during your last run.")
+            "Please load the trajectory. BioSANS save it into a file "+
+                "during your last run.")
 
 
 def param_set(method):
