@@ -122,21 +122,21 @@ class model():
                     sbml_to_topo(sbml, True)
                 else:
                     sbml_to_topo(sbml, False)
-                topo = sbml+".topo"
+                topo = sbml + ".topo"
             else:
                 print("no model file provided")
 
         try:
             topfile = open(topo, "r")
         except BaseException:
-            self.del_file = str(time.time())+"_temp_topo.txt"
+            self.del_file = str(time.time()) + "_temp_topo.txt"
             with open(self.del_file, "w") as temp:
                 temp.write(topo)
             topo = self.del_file
             topfile = open(topo, "r")
 
         for row in topfile:
-            row = row.strip()+" "
+            row = row.strip() + " "
             if row[0] == "#":
                 g_g = row.split(",")[1:]
                 for xvar in g_g:
@@ -164,7 +164,7 @@ class model():
         self.conc_unit = FileIn
         self.v_volms = Volume
 
-    def data(self, exp_data_file=None): 
+    def data(self, exp_data_file=None):
         """This method instantiate the data file for parameter estimation"""
         if not exp_data_file:
             print("""
@@ -175,22 +175,22 @@ class model():
                 2) the first column is time and succeding columns are
                    components or species
             """)
-   
+
         try:
             expd = open(exp_data_file, "r")
             expd.close()
         except BaseException:
-            self.del_file2 = str(time.time())+"_temp_data.txt"
+            self.del_file2 = str(time.time()) + "_temp_data.txt"
             with open(self.del_file2, "w") as temp:
                 glim = "\n"
                 exp_datas = exp_data_file.strip().split(glim)
                 if len(exp_datas) == 1:
                     glim = "\r\n"
-                    exp_datas = exp_data_file.strip().split(glim)             
+                    exp_datas = exp_data_file.strip().split(glim)
                 exp_data_file = glim.join([xval.strip() for xval in exp_datas])
-                temp.write(exp_data_file.replace(",","\t"))
-            exp_data_file  = self.del_file2
-            
+                temp.write(exp_data_file.replace(",", "\t"))
+            exp_data_file = self.del_file2
+
         self.exp_data_file = exp_data_file
         return self
 
@@ -207,7 +207,7 @@ class model():
         """This function saves the trajectory in to a file"""
         self.save = True
         if not out_fname:
-            out_fname = self.rfile+".out.txt"
+            out_fname = self.rfile + ".out.txt"
         self.out_fname = out_fname
         return self
 
