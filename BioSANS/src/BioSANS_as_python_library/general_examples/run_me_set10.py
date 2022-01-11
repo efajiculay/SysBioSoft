@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append(os.path.abspath("../../"))
-from BioSANS2020 import biosans_lib_mod as biosans
+from BioSANS2020 import biosans_lib as biosans
 import numpy as np
 
 ################### PROPAGATION EXAMPLE #######################################
@@ -20,14 +20,29 @@ vcgn = """
 """
 
 my_model = biosans.model(vcgn)
-S, w = my_model.get_stoich_prop()
-my_model.clean()
 
-
-
+print()
+S, w, x, k = my_model.get_model_data()
 print(S)
 print()
 print(w)
 print()
-
+print(x)
+print()
+print(k)
+print()
 print(np.dot(S,w))
+
+print()
+S, w, x, k = my_model.get_model_data(algeb=True)
+print(S)
+print()
+print(w)
+print()
+print(x)
+print()
+print(k)
+print()
+print(np.dot(S,w))
+
+my_model.clean()

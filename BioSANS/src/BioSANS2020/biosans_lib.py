@@ -83,6 +83,8 @@ from BioSANS2020.prepcodes.process import process
 from BioSANS2020.model.fileconvert.process_sbml \
     import process_sbml as sbml_to_topo
 from BioSANS2020.myglobal import mglobals as globals2
+from BioSANS2020.prepcodes.get_topo_data \
+    import read_topo_data, dict_from_rows, propensity_vec_molar, propensity_vec
 
 
 class model():
@@ -225,6 +227,16 @@ class model():
         if self.del_file2:
             delete_file(self.del_file2)
             self.del_file2 = None
+
+    def get_model_data(self, mode="macro", algeb=False):
+        rows, conc = read_topo_data(self.rfile)
+        ks_dict, r_dict, p_dict, sp_comp, stoch_var, conc \
+            = dict_from_rows(rows, conc, algeb)
+        if mode == "macro":
+            prop = propensity_vec_molar(ks_dict, conc, r_dict, p_dict)
+        else:
+            prop = propensity_vec(ks_dict, conc, r_dict, p_dict)
+        return stoch_var, prop, conc, ks_dict
 
     def run(self, method=None, ntraj=None, tend=None, step_size_scaler=None,
             steps=None, mult_proc=None, implicit=True, cpu_mult=0.9):
