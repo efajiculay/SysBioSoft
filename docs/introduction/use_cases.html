@@ -1,0 +1,266 @@
+<html>
+	<head>
+		<style type="text/css">
+			.modal-iframe{
+				display: block;
+				background: white;
+				border: none;
+				height: 100vh;
+				width: 100%;
+			}
+			code{
+				font-family: Consolas,"courier new";
+				color: crimson;
+				background-color: #f1f1f1;
+				padding: 2px;
+				font-size: 90%;
+			}
+			pre{
+				font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+				font-weight: 300;
+				color: black;
+				padding: 2px 50px;
+				font-size: 100%;
+				white-space: pre-wrap;       /* Since CSS 2.1 */
+				white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+				white-space: -pre-wrap;      /* Opera 4-6 */
+				white-space: -o-pre-wrap;    /* Opera 7 */
+				word-wrap: break-word;       /* Internet Explorer 5.5+ */
+				text-align:justify;
+			}
+			.text-header{
+				background-color: #92a8d1;
+				color:white;
+			}
+			h1, h2, h3 {
+				padding-top: 2px;
+				padding-bottom: 2px;
+			}
+			.text-header3{
+				background-color: #e9967a;
+				color:white;			
+			}
+			.resize {
+			  max-width:70%;
+			  max-height:70%;
+			}
+			img{
+			  max-width:1000px;
+			  width: 100%;
+			  height: auto;
+			}
+		</style>
+	</head>
+<h1 class="text-header">BioSANS use cases and work flow</h1><pre>
+</pre><h2 class="text-header">Steps to start BioSANS GUI</h2><pre>
+
+For Windows, Mac, and Ubuntu users who use the executable installer, double click the BioSANS shortcut created in the desktop and in start menu.
+
+The following steps will launch BioSANS using a terminal
+
+a.	Open Anaconda or python terminal
+b.	Type BioSANS and press enter
+
+The following commands will also launch BioSANS.
+
+a.	python -m BioSANS2020 
+b.	python -m BioSANS2020.BioSANS
+
+</pre><h2 class="text-header">Loading topology or any file</h2><pre>
+
+a.	Click "File => Open => Topology/File" - this will open a File Browser window
+b.	Browse the topology or file - this will show the content of the topology or file in the BioSANS window.
+
+</pre><h2 class="text-header">Creating a new file</h2><pre>
+
+a.	Click "File => New File=>Blank file" - this will open a white text area for typing.
+b.	Choose the Topo file and or the ODE file instead of Blank file whenever necessary. Topo and ODE files already contain the tags for those file types.
+c.	Type any text in the blank file. It can be a python script. For the topo file, complete the model in each tag. For the ODE file, type the ODE descriptions.
+d.	Click the middle mouse button - this will open a save file window.
+e.	Write the file name and click save.
+
+</pre><h2 class="text-header">Saving file</h2><pre>
+
+a.	Click "File => Save File" - this will open a save file window.
+b.	Write the file name and click save.
+
+</pre><h2 class="text-header">Closing files</h2><pre>
+
+a.	Click the red x: button in the upper right corner of the internal window
+
+</pre><h2 class="text-header">Modifying files (i.e., topology files)</h2><pre>
+
+a.	For any file opened by "File => Open => Topology/File => Browse File", we can edit its contents by typing new contents, deleting, modifying etc.
+b.	Save the file using "File => Save File" or by clicking the middle mouse button.
+c.	Write the file name and click save.
+
+</pre><h2 class="text-header">Symbolic analytical expression for chemical species</h2><pre>
+
+The symbolic computation feature in BioSANS is described in detail in section 10.1.1. Here we present the steps to perform symbolic computation using the GUI.
+
+a.	Load topology files using "File => Open => Topology/File => Browse File"
+b.	Click "Propagation/Analysis => Analytical soln. => Choose one of the modes" 
+
+	I.	Pure symbolic: f(t, xo, k) - expression is a function of time initial, concentration and rate constant
+	II.	Semi symbolic: f(t, xo) - expression is a function of time and initial concentration
+	III.	Semi symbolic: f(t, k) - expression is a function of time and rate constant
+	IV.	Semi symbolic: f(t) - expression is a function of time
+	V.	For wxmaxima - this will create codes to run symbolic computation in wxmaxima. Users need to copy the codes, paste it to wxmaxima, and run it there. This may give a better analytical form.
+
+</pre><h2 class="text-header">Deterministic integration</h2><pre>
+
+A full description of deterministic integration algorithms use can be found in section 10.2.1. The following steps are BioSANS GUI steps to use the algorithms in 10.2.1.
+
+a.	Load topology files using "File => Open => Topology/File => Browse File"
+b.	Click "Propagation/Analysis => Any of the following five algorithms"
+
+	i.	ode_int - uses the LSODA algorithm from scipy.integrate
+	-	currently does not support conditional statements (events, etc.)
+	ii.	RK4-fix-interval - manually coded to support most SBML features
+	iii.	RK4-tau-adaptive - supports most SBML features
+	iv.	Euler-tau-adaptive-1 - fast and can handle not stiff to moderately stiff cases
+	v.	Euler-tau-adaptive-2 - slower but can handle stiff cases
+	
+c.	Choose among the following concentration options
+
+	i.	Molecule - concentration will be converted to molecule before integration
+	ii.	Molar - concentration will be converted to molar before integration
+	iii.	Mole - concentration will be converted to mole before integration
+	
+d.	Change settings as needed
+
+	i.	File name - no need to change
+	ii.	Number of iterations - normally no need to change for deterministic case For stochastic case this serves as the number of trajectories.
+	iii.File units - this is what the program uses to know how to perform unit conversion in letter c. We need to select between
+		1.	Molecule - topology file has molecular units 
+		2.	Molar - topology file has molar units
+		3.	Mole - topology file has mole units
+	iv.	    Volume - type the volume to use in simulation
+	v.	    End time - the end time in the propagation
+	vi.	    tau-scaler - modifier of time step (it is the f in the algorithm section of this supplementary information)
+	vii.	Normalized - if True, the y axis will be normalized based on max value
+	viii.	logx - if True, the x-axis will be in log scale
+	ix.	    logy - if True, the y-axis will be in log scale
+	x.	    method - this is preselected based on what the user selects in b.
+	xi.	    tsteps - number of steps reported in the final result
+	xii.	mix_plot - if True, all species are plotted in one frame
+	xiii.	save - if True, the trajectory file will be saved as a file
+	xiv.	outfname - directory of topology file + the filename of the output. The user can change the last word after the last "/" to any filename.
+	xv.	    showplot - if True, this will plot the result of the simulation. It also creates an image of the plots in the directory of the topology file
+	xvi.	time label - allows for changing the x-axis label of the plot.
+	xvii.	Cini range - allows for changing the range of initial concentration for a particular species. For example, typing "A, 5, 10, 15, 20", will initiate the simulation at varying A with concentrations of 5, 10, 15, 20. 
+	xviii.	K-range - allows for changing the rate constant range. For example, to change the top-most forward reaction, the user can type something like "kf1, [0.01, 0.02, 0.03]". This will use values 0.01, 0.02, and 0.03 for the forward rate constant in the first reaction in topology. Similarly, we can also do this for kb, (i.e., "kb2, [0.01, 0.02, 0.03]"), which will vary the backwards rate constant of reaction 2 in the topology. We can vary many rate constants for using BioSANS as a library or in console. The k-range has the following inputs for varying many rate constants: [[r1,r2],x], where r1 is the list of row numbers, r2 is a list of 0 or 1, where the forward reaction is 0 and the backward reaction is 1, and x is a list or rate constant.
+			Example: [ [ [0,2], [0,1] ], [0.1, 0.2] ]  which means kf1 = 0.1, kb1 = 0.2
+	xix.	multiproc - if True, it will use multiprocessing (useful for stochastic case)
+	xx.	Implicit - if True, it will give fixed-interval output of integration
+	
+e.	Click RUN - this will perform integration, plotting, saving results to file, etc.
+
+</pre><h2 class="text-header">Stochastic integration</h2><pre>
+
+Stochastic integration is discussed in section 10.2.4. The following steps show how to use stochastic algorithms with BioSANS GUI.
+
+a.	Load topology files using "File => Open => Topology/File => Browse File"
+b.	Click "Propagation/Analysis => Any of the following 5 algorithms"
+
+	I.	CLE (tau-adaptive) - performs our version of tau-adaptive chemical Langevin propagation
+	II.	CLE (fix-Intvl) - performs regular chemical Langevin propagation
+	III.Tau-leaping - uses Yang Cao’s tau-leaping algorithm implemented on 3 different ways
+		1.	Tau-leapingV1 - pure tau-leaping
+		2.	Tau-leapingV2 - swapping between Gillespie and tau-leaping
+		3.	Sim-TauLeap - with our modification
+	IV.	Gillespie - Exact algorithm. Makes use of the direct method.
+	
+c.	Change settings as needed. It follows the same setting choices in 6.1.8 d
+
+	I.	Number of iterations -  tells how many trajectories to run
+	II.	multiproc - change this to True for faster simulation
+	
+d.	Click RUN - this will perform integration, plotting, saving results to file, etc.
+
+</pre><h2 class="text-header">Linear noise approximation (LNA)</h2><pre>
+
+Sections 10.1.2 and 10.2.2 show the algorithmic details of symbolic and numeric LNA. The following steps show how to use LNA in BioSANS GUI.
+
+a.	Load topology files using "File => Open => Topology/File => Browse File"
+b.	Click "Propagation/Analysis => Linear Noise Appx." and choose among the following options:
+
+	I.	Numeric values - solves LNA using the solve_continuous_lyapunov function from SciPy. It follows the following form AC + CA.T + BB.T = 0. Deterministic trajectory is initially solved up to a point close to steady state. The nullspace of the ODE is then calculated. Lyapunov form is the set up for the  solve_continuous_lyapunov function.
+	II.	Symbolic, Microscopic - uses microscopic equations. Symbolically solves LNA using SymPy. The variables are first manipulated to AC + CA.T + BB.T = 0 form before we can solve the covariance matrix.
+	III.	Symbolic, Macroscopic - uses macroscopic equations. Symbolically solves LNA using SymPy and reports solutions as a function of initial concentration and rate constant.
+	IV.	Symbolic, f(xo), Macroscopic - report solutions as a function of initial concentration
+	V.	Symbolic, f(ks), Macroscopic - report solutions as a function of rate constant
+	VI.	Symbolic, values, Macroscopic - report solution as numerical values
+	VII.	COV-time-dependent - time-dependent covariance matrix with plots
+	VIII.	FF-time-dependent - time-dependent Fano-Factor with plots
+
+</pre><h2 class="text-header">Network localization</h2><pre>
+
+a.	Load topology files using "File => Open => Topology/File => Browse File"
+b.	Click "Propagation/Analysis => Network Localization." and choose among the following options:
+
+	I.	Symbolic, Macroscopic - solve network sensitivity matrix and report answer in analytical form (full details are in section 10.1.3)
+	II.	Numeric, Macroscopic - solve network sensitivity matrix numerically (refer to 10.1.3)
+
+</pre><h2 class="text-header">Parameter estimation</h2><pre>
+
+The details of parameter estimation are discussed in section 10.2.3. 
+
+a.	Load topology files using "File => Open => Topology/File => Browse File"
+There is a main difference between topology files for parameter estimation and regular topology files. For parameter estimation, we still need to indicate the estimated rate constant. For the rate constant we want to estimate, put a negative sign to our estimate. This will tell BioSANS that we want to estimate that particular rate constant. The following image is an example of a topology file for parameter estimation:
+
+ 
+
+The negative sign on kf1 and kb1 tells BioSANS that we want to estimate their values. Although we put some value for kb1 and kf1, they will not be used but are just there as a placeholder.
+
+b.	Click "File/Model => Estimate Params." and choose among the following options:
+
+	i.	Nelder Mead (NM), Macroscopic - uses SciPy Nelder-Mead algorithm
+	ii.	Nelder Mead (NM), Microscopic
+	iii.	Powell, Macroscopic - uses SciPy Powell algorithm
+	iv.	Powell, Microscopic
+	v.	L-BFGS-B, Macroscopic - uses SciPy L-BFGS-B algorithm
+	vi.	L-BFGS-B, Microscopic
+	vii.	NM-Diff. Evol., Macroscopic - combined Nelder-Mead and differential evolution algorithm
+	viii.	NM-Diff. Evol., Microscopic
+	ix.	Parameter slider/scanner - GUI to manually change parameter by slider and compare to actual data
+	x.	MCEM, Macroscopic - Our implementation of MCEM algorithm
+	xi.	MCEM, Microscopic
+	
+c.	After selecting the algorithm, browse the file containing the species trajectory data. It should be tab-delimited with the header of species using the names of species in the topology file. The first column is time, the second column and so on are for species concentration at that particular time. The following image is an example of the data file:
+
+ 
+
+Although the ideal case is that we know all species trajectories, in BioSANS we can still perform parameter estimation even if only a few species are available. The species label should match that in the topology file.
+
+</pre><h2 class="text-header">Post-processing/analysis</h2><pre>
+
+a.	For post-processing, we have to do simulation first then we can load the trajectory file of the simulation result in any of the following ways:
+
+	I.	"File => Open => Trajectory file" - loads trajectory data in memory
+	II.	"File => Open => Traj. w/ plot" - loads trajectory data and plots it
+	III.	"File => Open => Image w/ data" - loads trajectory data and image of plot
+	
+b.	Browse the trajectory file or the image of the trajectory plot. Select the file and click Open
+c.	Click "Analysis/post proc => Select among the following options:"
+
+	I.	 Covariance - calculates covariance for stochastic trajectories
+	II.	 Fano-Factor - calculate fano-factor for stochastic trajectories
+	III. Cross-correlation - calculate cross-correlation for stochastic trajectories
+	IV.	 Probability density - calculate probability density for stochastic trajectories
+	V.	 Frequency distribution with respect to time - calculator time-dependent frequency distribution
+	VI.	 Histogram slice of time - gives a histogram slice of time
+	VII. Average of trajectory - takes the mean of all stochastic trajectories
+	VIII.Phase Portrait - allows plotting species vs. species in 2d and 3d
+	
+		 1.	 choose x-axis - the species for x-axis
+		 2.	 choose y-axis - the species for y-axis
+		 3.	 choose z-axis - optional species for z-axis
+		 4.	 choose step-range - 0:-1 means all data. A user may put N:-1, which means the first N time points are not used. N can be any integer less than the total number of time points.
+		 
+	IX.	Plot Data - allows for selecting what to plot as a function of time
+	
+		 1.	 Put a check in the species to include them in plotting.
+		 2.	 Click plot
+</pre>
+</html>

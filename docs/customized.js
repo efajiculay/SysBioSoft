@@ -150,6 +150,8 @@ $(document).ready(function(){
 	iframe_append("#parameter_est2", MyIFrame, "html_tutorials/parameter_est2.html")
 	iframe_append("#lna_approx", MyIFrame, "html_tutorials/lna_approx.html")
 	iframe_append("#all_above", MyIFrame, "html_tutorials/all_above.html")
+	iframe_append("#use_cases", MyIFrame, "introduction/use_cases.html")
+	
 
 	MyIFrame.on('load',function(){
 		what = $(this).attr('src')
