@@ -492,5 +492,5 @@ def process(
         print(error)
         message_upon_error.showerror(
             "showinfo",
-            "Check your topology files for missing species \
-                in reaction and concentration tag : " + str(error))
+            "Check your topology files for missing species "+
+                "in reaction and concentration tag : " + str(error))

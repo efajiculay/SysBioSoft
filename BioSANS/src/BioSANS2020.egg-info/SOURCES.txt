@@ -6,6 +6,12 @@ src/BioSANS2020/RunBioSANS.py
 src/BioSANS2020/__init__.py
 src/BioSANS2020/__main__.py
 src/BioSANS2020/biosans_lib.py
+src/BioSANS2020.egg-info/PKG-INFO
+src/BioSANS2020.egg-info/SOURCES.txt
+src/BioSANS2020.egg-info/dependency_links.txt
+src/BioSANS2020.egg-info/entry_points.txt
+src/BioSANS2020.egg-info/requires.txt
+src/BioSANS2020.egg-info/top_level.txt
 src/BioSANS2020/analysis/__init__.py
 src/BioSANS2020/analysis/numeric/__init__.py
 src/BioSANS2020/analysis/numeric/sample_points.py
@@ -36,6 +42,7 @@ src/BioSANS2020/myglobal/__init__.py
 src/BioSANS2020/myglobal/mglobals.py
 src/BioSANS2020/myglobal/proc_global.py
 src/BioSANS2020/prepcodes/__init__.py
+src/BioSANS2020/prepcodes/get_topo_data.py
 src/BioSANS2020/prepcodes/process.py
 src/BioSANS2020/prepcodes/processes_hub.py
 src/BioSANS2020/propagation/__init__.py
@@ -60,9 +67,3 @@ src/BioSANS2020/propagation/symbolic/analytical_sol.py
 src/BioSANS2020/propagation/symbolic/lna_approx2.py
 src/BioSANS2020/test_data/__init__.py
 src/BioSANS2020/test_data/test_data2.py
-src/BioSANS2020_efajiculay.egg-info/PKG-INFO
-src/BioSANS2020_efajiculay.egg-info/SOURCES.txt
-src/BioSANS2020_efajiculay.egg-info/dependency_links.txt
-src/BioSANS2020_efajiculay.egg-info/entry_points.txt
-src/BioSANS2020_efajiculay.egg-info/requires.txt
-src/BioSANS2020_efajiculay.egg-info/top_level.txt
