@@ -137,7 +137,8 @@ $(document).ready(function(){
 	you_tube_embed("#Stchtut_1", "PaR9msE8PdQ", MyIFrame);
 	you_tube_embed("#Stchtut_2", "", MyIFrame); 
 	you_tube_embed("#Ftut_1", "iDJl5p-_Nj4", MyIFrame); 
-	you_tube_embed("#Ftut_1b", "iDJl5p-_Nj4", MyIFrame);    
+	you_tube_embed("#Ftut_1b", "iDJl5p-_Nj4", MyIFrame);
+	you_tube_embed("#biosans_ssl", "8FNKgD8d63w", MyIFrame);    
 	
 	iframe_append(".topo_def", MyIFrame, "frequently_ask/topology_file.html")
 	redirect("#what_lambda");
