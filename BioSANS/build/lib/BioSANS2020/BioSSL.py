@@ -159,6 +159,29 @@ def process_command(command):
             except:
                 pass
 
+        if 'topo' in optsv:
+            topo = optsv['topo']
+            topo = os.path.join(CWD, topo)
+            ffile = topo
+            try:
+                topfile = open(topo, "r")
+                for row in topfile:
+                    row = row.strip() + " "
+                    if row[0] == "#":
+                        g_g = row.split(",")[1:]
+                        for xvar in g_g:
+                            x_x = [g.strip() for g in xvar.split("=")]
+                            if x_x[0] == "Volume":
+                                vol = float(x_x[1])
+                            elif x_x[0] == "tend":
+                                tend = float(x_x[1])
+                            elif x_x[0] == "FileUnit":
+                                file_unit = x_x[1]
+                            elif x_x[0] == "steps":
+                                tlen = float(x_x[1])
+                topfile.close()
+            except Exception as e:
+                print(e)
         if 'tend' in optsv:
             tend = float(optsv['tend'])
         if 'tlen' in optsv:
@@ -188,10 +211,6 @@ def process_command(command):
         if 'EdataFile' in optsv:
             edatafile = optsv['EdataFile']
             edatafile = os.path.join(CWD, edatafile)
-        if 'topo' in optsv:
-            topo = optsv['topo']
-            topo = os.path.join(CWD, topo)
-            ffile = topo
 
         fname = CWD + "/" + fout
         process(
@@ -220,17 +239,20 @@ def process_command(command):
         #print("temp.txt file not found")
     elif rowc[0].lower() == "load":
         sslfile = CWD + "/" + rowc[1]
-        fvar = open(sslfile)
-        command = ""
-        for row in fvar:
-            if len(row.strip()) > 0:
-                if row.strip()[-1] == ";":
-                    command = command + row.strip().replace(";", "")
-                    process_command(command)
-                    command = ""
-                else:
-                    command = command + row.strip() + " "
-        fvar.close()
+        try:
+            fvar = open(sslfile)
+            command = ""
+            for row in fvar:
+                if len(row.strip()) > 0:
+                    if row.strip()[-1] == ";":
+                        command = command + row.strip().replace(";", "")
+                        process_command(command)
+                        command = ""
+                    else:
+                        command = command + row.strip() + " "
+            fvar.close()
+        except Exception as e:
+            print(e)
     elif rowc[0].lower() == "pwd":
         print(CWD)
     elif rowc[0].lower() == "mkdir":
@@ -300,9 +322,12 @@ def process_command(command):
             pass
     elif rowc[0].lower() == "plot":
         if len(rowc) == 4:
-            TRAJ[rowc[1].strip()].plot(
-                xvar=rowc[2], y=rowc[3], kind='scatter', s=1)
-            plt.show()
+            try:
+                TRAJ[rowc[1].strip()].plot(
+                    x=rowc[2], y=rowc[3], kind='scatter', s=1)
+                plt.show()
+            except Exception as e:
+                print(e)
         elif len(rowc) > 4:
             q_x = rowc[3:]
             plt.xlabel(rowc[2])
