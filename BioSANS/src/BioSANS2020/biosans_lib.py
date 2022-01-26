@@ -155,8 +155,8 @@ class model():
         topfile.close()
 
         if not FileIn:
-            print("concentration unit used in the file not defined : \
-                  default to 'molar'")
+            print("concentration unit used in the file not defined : "+
+                  "default to 'molar'")
             FileIn = "molar"
         if not Volume:
             print("Volume not defined : default to 1")

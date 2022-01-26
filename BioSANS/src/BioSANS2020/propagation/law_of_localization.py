@@ -227,12 +227,12 @@ def law_loc_symbolic(sp_comp, ks_dict, conc, r_dict, p_dict, stch_var,
             knames.append(kcs[i][1])
 
     ffprint([
-        "For inhibition or downregulation : \n\nWhen k decrease, the \
-            sign of the sensitivity tells what happen to species activity\n"
+        "\nFor inhibition or downregulation : \n\nWhen k decrease, the "+
+            "sign of the sensitivity tells what happen to species activity\n"
     ])
     ffprint([
-        "When k increase, the reverse of the sign of the sensitivity \
-            tells what happen to species activity\n\n"
+        "When k increase, the reverse of the sign of the sensitivity "+
+            "tells what happen to species activity\n\n"
     ])
 
     if numer:
